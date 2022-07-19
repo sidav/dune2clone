@@ -8,7 +8,7 @@ type game struct {
 
 func (g *game) startGame() {
 	g.battlefield = battlefield{}
-	g.battlefield.create(10, 10)
+	g.battlefield.create(MAP_W, MAP_H)
 	r := renderer{}
 
 	for !rl.WindowShouldClose() {

@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	tileAtlaces        = map[string]*spriteAtlas{}
-	buildingsAtlaces   = map[string]*spriteAtlas{}
-	unitsAtlaces       = map[string]*spriteAtlas{}
-	projectilesAtlaces = map[string]*spriteAtlas{}
+	tilesAtlaces       = map[string]*spriteAtlas{}
+	buildingsAtlaces   = map[int]*spriteAtlas{}
+	unitsAtlaces       = map[int]*spriteAtlas{}
+	projectilesAtlaces = map[int]*spriteAtlas{}
 )
 
 func loadResources() {
@@ -19,8 +19,11 @@ func loadResources() {
 }
 
 func loadSprites() {
-	tileAtlaces = make(map[string]*spriteAtlas)
-	tileAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 1, false)
+	tilesAtlaces = make(map[string]*spriteAtlas)
+	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 1, false)
+
+	buildingsAtlaces = make(map[int]*spriteAtlas)
+	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 1, false)
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

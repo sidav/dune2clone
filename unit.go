@@ -1,5 +1,5 @@
 package main
 
-type unit struct {
+type unit interface {
 
 }

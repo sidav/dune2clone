@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -18,24 +17,24 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 
-	r.renderTiles(b)
-
-	rl.EndDrawing()
-}
-
-func (r *renderer) renderTiles(b *battlefield) {
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
 			r.renderTile(b, x, y)
 		}
 	}
+
+	for i := range b.buildings {
+		r.renderBuilding(b.buildings[i])
+	}
+
+	rl.EndDrawing()
 }
 
 func (r *renderer) renderTile(b *battlefield, x, y int) {
 	t := b.tiles[x][y]
 	spr := t.getSpritesAtlas()
 	if spr != nil {
-		osx, osy := r.physicalToOnScreenCoords(x*TILE_PHYSICAL_SIZE, y*TILE_PHYSICAL_SIZE)
+		osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
 		if r.AreOnScreenCoordsInViewport(osx, osy) {
 			rl.DrawTexture(
 				t.getSprite(),
@@ -47,7 +46,22 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 	}
 }
 
-func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
+func (r *renderer) renderBuilding(b *building) {
+	x, y := b.topLeftX, b.topLeftY
+	osx, osy := r.physicalToOnScreenCoords(x, y)
+	// fmt.Printf("%d, %d \n", osx, osy)
+	if r.AreOnScreenCoordsInViewport(osx, osy) {
+		rl.DrawTexture(
+			b.getSprite(),
+			int32(osx),
+			int32(osy),
+			DEFAULT_TINT,
+		)
+	}
+}
+
+
+func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int, int) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
 	if !r.doesLevelFitInScreenHorizontally() {
 		if r.cameraCenterX > MAP_W*TILE_SIZE_IN_PIXELS-r.viewportW/2 {
@@ -67,11 +81,11 @@ func (r *renderer) physicalToOnScreenCoords(physX, physY int) (int, int) {
 }
 
 func (r *renderer) AreOnScreenCoordsInViewport(osx, osy int) bool {
-	fmt.Printf("%d, %d \n", osx, osy)
+	// fmt.Printf("%d, %d \n", osx, osy)
 	return osx >= 0 && osx < r.viewportW && osy >= 0 && osy < WINDOW_H
 }
 
-func (r *renderer) physicalToPixelCoords(px, py int) (int, int) {
+func (r *renderer) physicalToPixelCoords(px, py float64) (int, int) {
 	return int(float32(px) * PIXEL_TO_PHYSICAL_RATIO), int(float32(py) * PIXEL_TO_PHYSICAL_RATIO)
 }
 

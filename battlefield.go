@@ -2,6 +2,7 @@ package main
 
 type battlefield struct {
 	tiles[][] tile
+	buildings []*building
 }
 
 func (b *battlefield) create(w, h int) {
@@ -12,4 +13,9 @@ func (b *battlefield) create(w, h int) {
 			b.tiles[i][j].code = TILE_SAND
 		}
 	}
+	b.buildings = append(b.buildings, &building{
+		topLeftX: 1,
+		topLeftY: 1,
+		code:     BLD_BASE,
+	})
 }

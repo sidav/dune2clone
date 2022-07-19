@@ -7,11 +7,11 @@ type tile struct {
 }
 
 func (t *tile) getSpritesAtlas() *spriteAtlas {
-	return tileAtlaces[tableTileStatic[t.code].stringCode]
+	return tilesAtlaces[tableTileStatic[t.code].stringCode]
 }
 
 func (t *tile) getSprite() rl.Texture2D {
-	return tileAtlaces[tableTileStatic[t.code].stringCode].atlas[0][0]
+	return tilesAtlaces[tableTileStatic[t.code].stringCode].atlas[0][0]
 }
 
 const (
