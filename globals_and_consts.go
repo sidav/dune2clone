@@ -78,10 +78,10 @@ func debugWritef(msg string, args... interface{}) {
 }
 
 func degreeToRotationFrameNumber(deg int) int {
-	if deg < 0 {
+	for deg < 0 {
 		deg += 360
 	}
-	if deg >= 360 {
+	for deg >= 360 {
 		deg -= 360
 	}
 	deg += 45

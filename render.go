@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -29,6 +30,8 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 	for i := range b.units {
 		r.renderUnit(b.units[i])
 	}
+
+	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 
 	rl.EndDrawing()
 }

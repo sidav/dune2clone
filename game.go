@@ -4,7 +4,6 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 
 type game struct {
 	battlefield battlefield
-	currentTick int
 }
 
 func (g *game) startGame() {
@@ -15,10 +14,23 @@ func (g *game) startGame() {
 	for !rl.WindowShouldClose() {
 		r.renderBattlefield(&g.battlefield)
 
-		if g.currentTick % 4 == 0 {
+		if g.battlefield.currentTick % 1 == 0 {
 			for i := range g.battlefield.units {
 				g.battlefield.executeActionForUnit(g.battlefield.units[i])
 			}
+
+			// TODO: remove this block
+			for i := range g.battlefield.units {
+				if g.battlefield.units[i].currentAction == nil {
+					g.battlefield.units[i].currentAction = &action{
+						code:        ACTION_MOVE,
+						targetTileX: rnd.Rand(MAP_W),
+						targetTileY: rnd.Rand(MAP_H),
+					}
+				}
+			}
 		}
+
+		g.battlefield.currentTick++
 	}
 }

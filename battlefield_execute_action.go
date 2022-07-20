@@ -18,18 +18,25 @@ func (b *battlefield) executeActionForUnit(u *unit) {
 			if !u.rotateChassisTowardsVector(tx-x, 0) {
 				return
 			}
-			u.centerX += u.getStaticData().movementSpeed * (tx-x)/math.Abs(tx-x)
-			if areFloatsAlmostEqual(x, tx) {
+			if math.Abs(tx-x) < u.getStaticData().movementSpeed {
 				u.centerX = tx
+				return
 			}
+			u.centerX += u.getStaticData().movementSpeed * (tx-x)/math.Abs(tx-x)
 		} else if ty != y {
 			if !u.rotateChassisTowardsVector(0, ty-y) {
 				return
 			}
-			u.centerY += u.getStaticData().movementSpeed * (ty-y)/math.Abs(ty-y)
-			if areFloatsAlmostEqual(y, ty) {
+			if math.Abs(ty-y) < u.getStaticData().movementSpeed {
 				u.centerY = ty
+				return
 			}
+			u.centerY += u.getStaticData().movementSpeed * (ty-y)/math.Abs(ty-y)
+		}
+		if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
+			u.centerX = tx
+			u.centerY = ty
+			u.currentAction = nil
 		}
 	}
 }

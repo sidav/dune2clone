@@ -4,6 +4,8 @@ type battlefield struct {
 	tiles     [][]tile
 	buildings []*building
 	units     []*unit
+
+	currentTick int
 }
 
 func (b *battlefield) create(w, h int) {
