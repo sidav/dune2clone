@@ -21,8 +21,13 @@ func (b *battlefield) create(w, h int) {
 	})
 
 	b.units = append(b.units, &unit{
-		code: UNT_TANK,
-		x:    0,
-		y:    0,
+		code:    UNT_TANK,
+		centerX: 0.5,
+		centerY: 0.5,
+		currentAction: &action{
+			code:        ACTION_MOVE,
+			targetTileX: 7,
+			targetTileY: 4,
+		},
 	})
 }

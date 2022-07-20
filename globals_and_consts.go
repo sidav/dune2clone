@@ -37,12 +37,13 @@ func trueCoordsToTileCoords(tx, ty int) (int, int) {
 	return (tx-1) / TILE_PHYSICAL_SIZE, (ty-1) / TILE_PHYSICAL_SIZE
 }
 
-func tileCoordsToPhysicalCoords(tx, ty int) (int, int) {
-	halfTileSize := TILE_PHYSICAL_SIZE/2
-	if TILE_PHYSICAL_SIZE % 2 == 1 {
-		halfTileSize++
-	}
-	return tx * TILE_PHYSICAL_SIZE + halfTileSize, ty * TILE_PHYSICAL_SIZE + halfTileSize
+func tileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
+	//halfTileSize := TILE_PHYSICAL_SIZE/2
+	//if TILE_PHYSICAL_SIZE % 2 == 1 {
+	//	halfTileSize++
+	//}
+	//return tx * TILE_PHYSICAL_SIZE + halfTileSize, ty * TILE_PHYSICAL_SIZE + halfTileSize
+	return float64(tx) + 0.5, float64(ty)+0.5
 }
 
 func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {

@@ -3,8 +3,9 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type unit struct {
-	code int
-	x, y float64
+	code             int
+	centerX, centerY float64
+	currentAction    *action
 }
 
 func (u *unit) getPartsSprites() []rl.Texture2D {
@@ -16,6 +17,10 @@ func (u *unit) getPartsSprites() []rl.Texture2D {
 	}
 }
 
+func (u *unit) getStaticData() *unitStatic {
+	return sTableUnits[u.code]
+}
+
 const (
 	UNT_TANK = iota
 )
@@ -23,11 +28,14 @@ const (
 type unitStatic struct {
 	cannonSpriteCode  string
 	chassisSpriteCode string
+
+	speed float64
 }
 
-var sTableUnits = map[int]unitStatic{
+var sTableUnits = map[int]*unitStatic{
 	UNT_TANK: {
-		cannonSpriteCode: "tank",
+		cannonSpriteCode:  "tank",
 		chassisSpriteCode: "tank",
+		speed: 0.1,
 	},
 }

@@ -64,8 +64,8 @@ func (r *renderer) renderBuilding(b *building) {
 }
 
 func (r *renderer) renderUnit(u *unit) {
-	x, y := u.x, u.y
-	osx, osy := r.physicalToOnScreenCoords(x, y)
+	x, y := u.centerX, u.centerY
+	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
 		sprites := u.getPartsSprites()
