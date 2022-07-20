@@ -28,8 +28,8 @@ func loadSprites() {
 
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	unitCannonsAtlaces = make(map[string]*spriteAtlas)
-	unitChassisAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_chassis.png", 0, 0, 16, 16, 1, false)
-	unitCannonsAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_cannon.png", 0, 0, 16, 16, 1, false)
+	unitChassisAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_chassis.png", 0, 0, 16, 16, 1, true)
+	unitCannonsAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_cannon.png", 0, 0, 16, 16, 1, true)
 
 }
 
@@ -66,7 +66,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 		newAtlas.atlas[0] = append(newAtlas.atlas[0], rl.LoadTextureFromImage(rlImg))
 		if createAllDirections {
 			for i := 1; i < 4; i++ {
-				rl.ImageRotateCCW(rlImg)
+				rl.ImageRotateCW(rlImg)
 				newAtlas.atlas[i] = append(newAtlas.atlas[i], rl.LoadTextureFromImage(rlImg))
 			}
 		}

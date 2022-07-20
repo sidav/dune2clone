@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 var (
 	MAP_W = 20
@@ -8,7 +11,7 @@ var (
 )
 
 const (
-	DEBUG_OUTPUT = false
+	DEBUG_OUTPUT = true
 
 	SPRITE_SCALE_FACTOR     = 4.0
 	ORIGINAL_TILE_SIZE_IN_PIXELS = 16
@@ -57,6 +60,11 @@ func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
 	return false
 }
 
+// trying to overcome rounding issues
+func areFloatsAlmostEqual(f, g float64) bool {
+	return math.Abs(f-g) < 0.0001
+}
+
 func debugWrite(msg string) {
 	if DEBUG_OUTPUT {
 		fmt.Println(msg)
@@ -67,6 +75,24 @@ func debugWritef(msg string, args... interface{}) {
 	if DEBUG_OUTPUT {
 		fmt.Printf(msg, args...)
 	}
+}
+
+func degreeToRotationFrameNumber(deg int) int {
+	if deg < 0 {
+		deg += 360
+	}
+	if deg >= 360 {
+		deg -= 360
+	}
+	deg += 45
+	num := 0
+	const sectorWidth = 90
+	for deg >= sectorWidth {
+		deg -= sectorWidth
+		num++
+	}
+	// +1 is because initial images look up (last frame number)
+	return (num + 1) % (360/sectorWidth)
 }
 
 func abs(x int) int {

@@ -15,7 +15,7 @@ func (g *game) startGame() {
 	for !rl.WindowShouldClose() {
 		r.renderBattlefield(&g.battlefield)
 
-		if g.currentTick % 2 == 0 {
+		if g.currentTick % 4 == 0 {
 			for i := range g.battlefield.units {
 				g.battlefield.executeActionForUnit(g.battlefield.units[i])
 			}

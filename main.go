@@ -12,13 +12,13 @@ func main() {
 
 	loadResources()
 
+	for i := 0; i <= 360; i+=10 {
+		debugWritef("%ddeg is %d sector\n", i, degreeToRotationFrameNumber(i))
+	}
+
 	game := game{}
 	game.startGame()
 	fmt.Println("Yeah, I'm working")
-
-	//for !rl.WindowShouldClose() {
-	//
-	//}
 
 	rl.CloseWindow()
 }
