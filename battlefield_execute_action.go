@@ -3,7 +3,7 @@ package main
 import "math"
 
 func (b *battlefield) executeActionForUnit(u *unit) {
-	if u.currentAction == nil {
+	if u.currentAction.code == ACTION_WAIT {
 		return // TODO: look around for targets etc
 	}
 
@@ -36,7 +36,7 @@ func (b *battlefield) executeActionForUnit(u *unit) {
 		if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
 			u.centerX = tx
 			u.centerY = ty
-			u.currentAction = nil
+			u.currentAction.code = ACTION_WAIT
 		}
 	}
 }

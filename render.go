@@ -80,6 +80,12 @@ func (r *renderer) renderUnit(u *unit) {
 				DEFAULT_TINT,
 			)
 		}
+		if u.isSelected {
+			col := rl.DarkGreen
+			rl.DrawRectangleLines(int32(osx), int32(osy), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
+			rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
+			rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
+		}
 	}
 }
 

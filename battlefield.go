@@ -8,6 +8,18 @@ type battlefield struct {
 	currentTick int
 }
 
+func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
+	for i := range b.units {
+		tx, ty := trueCoordsToTileCoords(b.units[i].centerX, b.units[i].centerY)
+		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
+		if tx == x && ty == y {
+			// debugWrite("got")
+			return b.units[i]
+		}
+	}
+	return nil
+}
+
 func (b *battlefield) create(w, h int) {
 	b.tiles = make([][]tile, w)
 	for i := range b.tiles {
@@ -26,10 +38,5 @@ func (b *battlefield) create(w, h int) {
 		code:    UNT_TANK,
 		centerX: 0.5,
 		centerY: 0.5,
-		currentAction: &action{
-			code:        ACTION_MOVE,
-			targetTileX: 7,
-			targetTileY: 4,
-		},
 	})
 }

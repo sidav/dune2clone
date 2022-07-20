@@ -36,8 +36,8 @@ func areTileCoordsValid(tx, ty int) bool {
 	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
 }
 
-func trueCoordsToTileCoords(tx, ty int) (int, int) {
-	return (tx-1) / TILE_PHYSICAL_SIZE, (ty-1) / TILE_PHYSICAL_SIZE
+func trueCoordsToTileCoords(tx, ty float64) (int, int) {
+	return int(tx), int(ty)
 }
 
 func tileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {

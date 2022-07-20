@@ -8,9 +8,15 @@ import (
 type unit struct {
 	code             int
 	centerX, centerY float64
-	currentAction    *action
+	currentAction    action
 	chassisDegree    int
 	cannonDegree     int
+
+	isSelected bool // for rendering selection thingy
+}
+
+func (u *unit) markSelected(b bool) {
+	u.isSelected = b
 }
 
 func (u *unit) getPartsSprites() []rl.Texture2D {
@@ -36,16 +42,16 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 	if degs < 0 {
 		degs += 360
 	}
-	debugWritef("targetdegs %d, unitdegs %d, cannondegs %d\n", degs, u.chassisDegree, u.cannonDegree)
+	// debugWritef("targetdegs %d, unitdegs %d, cannondegs %d\n", degs, u.chassisDegree, u.cannonDegree)
 	if u.chassisDegree == degs {
 		return true
 	}
-	if u.chassisDegree + 180 > degs {
+	if u.chassisDegree+180 > degs {
 		u.chassisDegree += u.getStaticData().rotationSpeed
 		u.cannonDegree += u.getStaticData().rotationSpeed
 		// rotate speed was greater than needed
 		if u.chassisDegree > degs {
-			u.cannonDegree -= u.chassisDegree-degs
+			u.cannonDegree -= u.chassisDegree - degs
 			u.chassisDegree = degs
 		}
 	} else {
@@ -53,7 +59,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 		u.cannonDegree -= u.getStaticData().rotationSpeed
 		// rotate speed was greater than needed
 		if u.chassisDegree < degs {
-			u.cannonDegree += degs-u.chassisDegree
+			u.cannonDegree += degs - u.chassisDegree
 			u.chassisDegree = degs
 		}
 	}
