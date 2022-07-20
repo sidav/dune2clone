@@ -24,6 +24,16 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 		}
 	}
 
+	// just testing
+	//for i, f := range unitCannonsAtlaces[sTableUnits[b.units[0].code].cannonSpriteCode].atlas {
+	//	rl.DrawTexture(
+	//		f[0],
+	//		int32(i * ORIGINAL_TILE_SIZE_IN_PIXELS*SPRITE_SCALE_FACTOR),
+	//		int32(0),
+	//		DEFAULT_TINT,
+	//	)
+	//}
+
 	for i := range b.buildings {
 		r.renderBuilding(b.buildings[i])
 	}

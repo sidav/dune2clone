@@ -77,22 +77,22 @@ func debugWritef(msg string, args... interface{}) {
 	}
 }
 
-func degreeToRotationFrameNumber(deg int) int {
-	for deg < 0 {
-		deg += 360
+func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
+	sectorWidth := 360/sectorsInCircle
+	degree += sectorWidth/2
+	for degree < 0 {
+		degree += 360
 	}
-	for deg >= 360 {
-		deg -= 360
+	for degree >= 360 {
+		degree -= 360
 	}
-	deg += 45
 	num := 0
-	const sectorWidth = 90
-	for deg >= sectorWidth {
-		deg -= sectorWidth
+	for degree >= sectorWidth {
+		degree -= sectorWidth
 		num++
 	}
 	// +1 is because initial images look up (last frame number)
-	return (num + 1) % (360/sectorWidth)
+	return (num + 90/sectorWidth ) % (360/sectorWidth)
 }
 
 func abs(x int) int {

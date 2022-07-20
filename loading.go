@@ -28,8 +28,8 @@ func loadSprites() {
 
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	unitCannonsAtlaces = make(map[string]*spriteAtlas)
-	unitChassisAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_chassis.png", 0, 0, 16, 16, 1, true)
-	unitCannonsAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_cannon.png", 0, 0, 16, 16, 1, true)
+	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png",16, 16, 1, 2)
+	unitCannonsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
 
 }
 
@@ -68,6 +68,34 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 			for i := 1; i < 4; i++ {
 				rl.ImageRotateCW(rlImg)
 				newAtlas.atlas[i] = append(newAtlas.atlas[i], rl.LoadTextureFromImage(rlImg))
+			}
+		}
+	}
+
+	return &newAtlas
+}
+
+func CreateDirectionalAtlasFromFile(filename string, originalSpriteSize, desiredSpriteSize, totalFrames, directionsInFile int) *spriteAtlas {
+
+	file, _ := os.Open(filename)
+	img, _ := png.Decode(file)
+	file.Close()
+
+	newAtlas := spriteAtlas{
+		spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
+	}
+	newAtlas.atlas = make([][]rl.Texture2D, 4 * directionsInFile)
+
+	for currFrame := 0; currFrame < totalFrames; currFrame++ {
+		for currDirectionFromFile := 0; currDirectionFromFile < directionsInFile; currDirectionFromFile++ {
+			currPic := extractSubimageFromImage(img, currFrame*originalSpriteSize, currDirectionFromFile*originalSpriteSize, originalSpriteSize, originalSpriteSize)
+			rlImg := rl.NewImageFromImage(currPic)
+			rl.ImageResizeNN(rlImg, int32(desiredSpriteSize)*int32(SPRITE_SCALE_FACTOR), int32(desiredSpriteSize)*int32(SPRITE_SCALE_FACTOR))
+			newAtlas.atlas[currDirectionFromFile] = append(newAtlas.atlas[currDirectionFromFile], rl.LoadTextureFromImage(rlImg))
+			for i := 1; i < 4; i++ {
+				rl.ImageRotateCW(rlImg)
+				newAtlas.atlas[i*directionsInFile+currDirectionFromFile] =
+					append(newAtlas.atlas[i*directionsInFile+currDirectionFromFile], rl.LoadTextureFromImage(rlImg))
 			}
 		}
 	}

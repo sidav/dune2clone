@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/fibrandom"
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -19,10 +18,9 @@ func main() {
 	//for i := 0; i <= 360; i+=10 {
 	//	debugWritef("%ddeg is %d sector\n", i, degreeToRotationFrameNumber(i))
 	//}
-
 	game := game{}
 	game.startGame()
-	fmt.Println("Yeah, I'm working")
+
 
 	rl.CloseWindow()
 }
