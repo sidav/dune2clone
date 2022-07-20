@@ -22,24 +22,40 @@ func (u *unit) getPartsSprites() []rl.Texture2D {
 	}
 }
 
+//func (u *unit) normalizeDegrees() {
+//	if u.cannonDegree < 0 {
+//		u.cannonDegree += 360
+//	}
+//	if u.cannonDegree > 360 {
+//		u.cannonDegree -= 360
+//	}
+//}
+
 func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 	degs := int(180 * math.Atan2(vy, vx) / 3.14159265358)
-	// debugWritef("degs %d, unitdegs %d\n", degs, u.chassisDegree)
-	if u.chassisDegree > degs {
-		u.chassisDegree -= u.getStaticData().rotationSpeed
-		u.cannonDegree -= u.getStaticData().rotationSpeed
-		if u.chassisDegree < degs {
-			u.chassisDegree = degs
-		}
-	} else if u.chassisDegree < degs {
-		u.chassisDegree += u.getStaticData().rotationSpeed
-		u.cannonDegree += u.getStaticData().rotationSpeed
-		if u.chassisDegree > degs {
-			u.chassisDegree = degs
-		}
+	if degs < 0 {
+		degs += 360
 	}
+	debugWritef("targetdegs %d, unitdegs %d, cannondegs %d\n", degs, u.chassisDegree, u.cannonDegree)
 	if u.chassisDegree == degs {
 		return true
+	}
+	if u.chassisDegree + 180 > degs {
+		u.chassisDegree += u.getStaticData().rotationSpeed
+		u.cannonDegree += u.getStaticData().rotationSpeed
+		// rotate speed was greater than needed
+		if u.chassisDegree > degs {
+			u.cannonDegree -= u.chassisDegree-degs
+			u.chassisDegree = degs
+		}
+	} else {
+		u.chassisDegree -= u.getStaticData().rotationSpeed
+		u.cannonDegree -= u.getStaticData().rotationSpeed
+		// rotate speed was greater than needed
+		if u.chassisDegree < degs {
+			u.cannonDegree += degs-u.chassisDegree
+			u.chassisDegree = degs
+		}
 	}
 	return false
 }
