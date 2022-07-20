@@ -10,7 +10,8 @@ import (
 var (
 	tilesAtlaces       = map[string]*spriteAtlas{}
 	buildingsAtlaces   = map[int]*spriteAtlas{}
-	unitsAtlaces       = map[int]*spriteAtlas{}
+	unitChassisAtlaces = map[string]*spriteAtlas{}
+	unitCannonsAtlaces = map[string]*spriteAtlas{}
 	projectilesAtlaces = map[int]*spriteAtlas{}
 )
 
@@ -24,6 +25,12 @@ func loadSprites() {
 
 	buildingsAtlaces = make(map[int]*spriteAtlas)
 	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 1, false)
+
+	unitChassisAtlaces = make(map[string]*spriteAtlas)
+	unitCannonsAtlaces = make(map[string]*spriteAtlas)
+	unitChassisAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_chassis.png", 0, 0, 16, 16, 1, false)
+	unitCannonsAtlaces["tank"] = CreateAtlasFromFile("resources/sprites/units/tank_cannon.png", 0, 0, 16, 16, 1, false)
+
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

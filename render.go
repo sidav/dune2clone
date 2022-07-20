@@ -26,6 +26,9 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 	for i := range b.buildings {
 		r.renderBuilding(b.buildings[i])
 	}
+	for i := range b.units {
+		r.renderUnit(b.units[i])
+	}
 
 	rl.EndDrawing()
 }
@@ -60,6 +63,22 @@ func (r *renderer) renderBuilding(b *building) {
 	}
 }
 
+func (r *renderer) renderUnit(u *unit) {
+	x, y := u.x, u.y
+	osx, osy := r.physicalToOnScreenCoords(x, y)
+	// fmt.Printf("%d, %d \n", osx, osy)
+	if r.AreOnScreenCoordsInViewport(osx, osy) {
+		sprites := u.getPartsSprites()
+		for _, s := range sprites {
+			rl.DrawTexture(
+				s,
+				int32(osx),
+				int32(osy),
+				DEFAULT_TINT,
+			)
+		}
+	}
+}
 
 func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int, int) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)

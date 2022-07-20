@@ -1,8 +1,9 @@
 package main
 
 type battlefield struct {
-	tiles[][] tile
+	tiles     [][]tile
 	buildings []*building
+	units     []*unit
 }
 
 func (b *battlefield) create(w, h int) {
@@ -17,5 +18,11 @@ func (b *battlefield) create(w, h int) {
 		topLeftX: 1,
 		topLeftY: 1,
 		code:     BLD_BASE,
+	})
+
+	b.units = append(b.units, &unit{
+		code: UNT_TANK,
+		x:    0,
+		y:    0,
 	})
 }
