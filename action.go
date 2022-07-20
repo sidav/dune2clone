@@ -5,6 +5,7 @@ package main
 type action struct {
 	code                     int
 	targetTileX, targetTileY int
+	targetRotation           int
 	// targetX, targetY         float64
 }
 

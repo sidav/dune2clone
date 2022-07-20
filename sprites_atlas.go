@@ -3,7 +3,7 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type spriteAtlas struct {
-	// first index is sprite number, second is frame number
+	// first index is sprite number (rotation is there), second is frame number (animation)
 	atlas      [][]rl.Texture2D
 	spriteSize int // width of square sprite
 }

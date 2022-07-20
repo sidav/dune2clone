@@ -36,7 +36,12 @@ func (b *battlefield) create(w, h int) {
 
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
-		centerX: 0.5,
-		centerY: 0.5,
+		centerX: 4.5,
+		centerY: 4.5,
+	})
+	b.units = append(b.units, &unit{
+		code:    UNT_TANK,
+		centerX: 5.5,
+		centerY: 5.5,
 	})
 }

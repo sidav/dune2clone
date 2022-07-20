@@ -10,14 +10,13 @@ func (pc *playerController) playerControl(b *battlefield) {
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
 		actr := b.getActorAtTileCoordinates(tx, ty)
+		if pc.selection != nil {
+			pc.selection.markSelected(false)
+			pc.selection = nil
+		}
 		if u, ok := actr.(*unit); ok {
 			u.isSelected = true
 			pc.selection = u
-		} else {
-			if pc.selection != nil {
-				pc.selection.markSelected(false)
-			}
-			pc.selection = nil
 		}
 	}
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
