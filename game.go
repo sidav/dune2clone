@@ -17,17 +17,17 @@ func (g *game) startGame() {
 
 		pc.playerControl(&g.battlefield)
 
-		// execute unit orders
-		if g.battlefield.currentTick % 2 == 0 {
-			for i := range g.battlefield.units {
-				g.battlefield.executeOrderForUnit(g.battlefield.units[i])
-			}
-		}
-
 		// execute unit actions
 		if g.battlefield.currentTick % 2 == 0 {
 			for i := range g.battlefield.units {
 				g.battlefield.executeActionForUnit(g.battlefield.units[i])
+			}
+		}
+
+		// execute unit orders
+		if g.battlefield.currentTick % 2 == 0 {
+			for i := range g.battlefield.units {
+				g.battlefield.executeOrderForUnit(g.battlefield.units[i])
 			}
 		}
 

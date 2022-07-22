@@ -94,14 +94,21 @@ func (r *renderer) renderUnit(u *unit) {
 		}
 		if u.isSelected {
 			col := rl.DarkGreen
-			rl.DrawRectangleLines(int32(osx), int32(osy), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
-			rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
-			rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
+			circleX := osx+TILE_SIZE_IN_PIXELS/2
+			circleY := osy+TILE_SIZE_IN_PIXELS/2
+			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2, col)
+			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-1, col)
+			//rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-2, col)
+			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-3, col)
+			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-4, col)
+			//rl.DrawRectangleLines(int32(osx), int32(osy), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
+			//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
+			//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
 		}
 	}
 }
 
-func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int, int) {
+func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int32, int32) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
 	if !r.doesLevelFitInScreenHorizontally() {
 		if r.cameraCenterX > MAP_W*TILE_SIZE_IN_PIXELS-r.viewportW/2 {
@@ -117,12 +124,12 @@ func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int, int) {
 			pixy = pixy - r.cameraCenterY + WINDOW_H/2
 		}
 	}
-	return pixx, pixy
+	return int32(pixx), int32(pixy)
 }
 
-func (r *renderer) AreOnScreenCoordsInViewport(osx, osy int) bool {
+func (r *renderer) AreOnScreenCoordsInViewport(osx, osy int32) bool {
 	// fmt.Printf("%d, %d \n", osx, osy)
-	return osx >= 0 && osx < r.viewportW && osy >= 0 && osy < WINDOW_H
+	return osx >= 0 && osx < int32(r.viewportW) && osy >= 0 && osy < WINDOW_H
 }
 
 func (r *renderer) physicalToPixelCoords(px, py float64) (int, int) {

@@ -22,6 +22,7 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 	u.currentAction.code = ACTION_MOVE
 	u.currentAction.targetTileX = utx
 	u.currentAction.targetTileY = uty
+	// debugWritef("Tick %d: action assigned\n", b.currentTick)
 
 	if abs(otx-utx) > abs(oty-uty) {
 		u.currentAction.targetTileX = utx + sign(otx-utx)

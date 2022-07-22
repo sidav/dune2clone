@@ -5,9 +5,6 @@ import (
 )
 
 func (b *battlefield) executeActionForUnit(u *unit) {
-	if u.currentAction.code == ACTION_WAIT {
-		return // TODO: look around for targets etc
-	}
 	switch u.currentAction.code {
 	case ACTION_MOVE:
 		b.executeMoveActionForUnit(u)
@@ -24,7 +21,7 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 			return
 		}
 		if math.Abs(tx-x) < u.getStaticData().movementSpeed {
-			u.centerX = tx
+			u.centerX = tx // source of movement lag :(
 		} else {
 			u.centerX += u.getStaticData().movementSpeed * (tx - x) / math.Abs(tx-x)
 		}
@@ -34,7 +31,7 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 			return
 		}
 		if math.Abs(ty-y) < u.getStaticData().movementSpeed {
-			u.centerY = ty
+			u.centerY = ty // source of movement lag :(
 		} else {
 			u.centerY += u.getStaticData().movementSpeed * (ty - y) / math.Abs(ty-y)
 		}
@@ -43,5 +40,6 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 		u.centerX = tx
 		u.centerY = ty
 		u.currentAction.code = ACTION_WAIT
+		// debugWritef("Tick %d: action finished\n", b.currentTick)
 	}
 }
