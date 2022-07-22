@@ -51,22 +51,21 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 	if u.chassisDegree == degs {
 		return true
 	}
-	// debugWritef("targetdegs %d, unitdegs %d, cannondegs %d\n", degs, u.chassisDegree, u.cannonDegree)
 	diff := u.chassisDegree-degs
-	if diff < 0 {
+	for diff < 0 {
 		diff += 360
 	}
 	rotateSpeed := u.getStaticData().rotationSpeed
-	if abs(diff-rotateSpeed) < 0 {
+	if rotateSpeed > diff {
 		rotateSpeed = diff
 	}
-	if diff >= 180 {
-		u.chassisDegree += rotateSpeed
-		u.cannonDegree += rotateSpeed
-	} else {
-		u.chassisDegree -= rotateSpeed
-		u.cannonDegree -= rotateSpeed
+	if diff <= 180 {
+		rotateSpeed = -rotateSpeed
 	}
+
+	// debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree, u.cannonDegree, )
+	u.chassisDegree += rotateSpeed
+	u.cannonDegree += rotateSpeed
 	u.normalizeDegrees()
 	return false
 }
