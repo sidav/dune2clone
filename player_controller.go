@@ -21,9 +21,9 @@ func (pc *playerController) playerControl(b *battlefield) {
 	}
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
 		if u, ok := pc.selection.(*unit); ok {
-			u.currentAction.targetTileX = tx
-			u.currentAction.targetTileY = ty
-			u.currentAction.code = ACTION_MOVE
+			u.currentOrder.targetTileX = tx
+			u.currentOrder.targetTileY = ty
+			u.currentOrder.code = ORDER_MOVE
 		}
 	}
 }

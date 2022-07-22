@@ -126,3 +126,13 @@ func areCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	realSqDistanceAndSqRadiusDiff := (fx-tx)*(fx-tx) + (fy-ty)*(fy-ty) - r*r
 	return realSqDistanceAndSqRadiusDiff < r
 }
+
+func sign(x int) int {
+	if x < 0 {
+		return -1
+	}
+	if x > 0 {
+		return 1
+	}
+	return 0
+}

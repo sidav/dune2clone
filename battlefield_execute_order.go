@@ -1,7 +1,5 @@
 package main
 
-import "math"
-
 func (b *battlefield) executeOrderForUnit(u *unit) {
 	if u.currentAction.code != ACTION_WAIT {
 		return // execute the order only after finishing the action
@@ -17,32 +15,22 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 }
 
 func (b *battlefield) executeMoveOrder(u *unit) {
-	x, y := u.centerX, u.centerY
+	// x, y := u.centerX, u.centerY
+	utx, uty := trueCoordsToTileCoords(u.centerX, u.centerY)
 	// todo: pathfinding
-	tx, ty := tileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	otx, oty := u.currentOrder.targetTileX, u.currentOrder.targetTileY
 
-	if tx != x {
-		if !u.rotateChassisTowardsVector(tx-x, 0) {
-			return
-		}
-		if math.Abs(tx-x) < u.getStaticData().movementSpeed {
-			u.centerX = tx
-			return
-		}
-		u.centerX += u.getStaticData().movementSpeed * (tx-x)/math.Abs(tx-x)
-	} else if ty != y {
-		if !u.rotateChassisTowardsVector(0, ty-y) {
-			return
-		}
-		if math.Abs(ty-y) < u.getStaticData().movementSpeed {
-			u.centerY = ty
-			return
-		}
-		u.centerY += u.getStaticData().movementSpeed * (ty-y)/math.Abs(ty-y)
+	if otx != utx {
+		u.currentAction.code = ACTION_MOVE
+		u.currentAction.targetTileX = utx+sign(otx-utx)
+		u.currentAction.targetTileY = uty
+	} else if oty != uty {
+		u.currentAction.code = ACTION_MOVE
+		u.currentAction.targetTileX = utx
+		u.currentAction.targetTileY = uty+sign(oty-uty)
 	}
-	if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
-		u.centerX = tx
-		u.centerY = ty
-		u.currentAction.code = ACTION_WAIT
+	// debugWritef("Order: %+v, action: %+v\n", u.currentOrder, u.currentAction)
+	if utx == otx && uty == oty {
+		u.currentOrder.code = ORDER_NONE
 	}
 }
