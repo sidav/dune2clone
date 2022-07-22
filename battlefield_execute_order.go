@@ -19,15 +19,14 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 	utx, uty := trueCoordsToTileCoords(u.centerX, u.centerY)
 	// todo: pathfinding
 	otx, oty := u.currentOrder.targetTileX, u.currentOrder.targetTileY
+	u.currentAction.code = ACTION_MOVE
+	u.currentAction.targetTileX = utx
+	u.currentAction.targetTileY = uty
 
-	if otx != utx {
-		u.currentAction.code = ACTION_MOVE
-		u.currentAction.targetTileX = utx+sign(otx-utx)
-		u.currentAction.targetTileY = uty
+	if abs(otx-utx) > abs(oty-uty) {
+		u.currentAction.targetTileX = utx + sign(otx-utx)
 	} else if oty != uty {
-		u.currentAction.code = ACTION_MOVE
-		u.currentAction.targetTileX = utx
-		u.currentAction.targetTileY = uty+sign(oty-uty)
+		u.currentAction.targetTileY = uty + sign(oty-uty)
 	}
 	// debugWritef("Order: %+v, action: %+v\n", u.currentOrder, u.currentAction)
 	if utx == otx && uty == oty {

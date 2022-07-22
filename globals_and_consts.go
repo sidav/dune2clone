@@ -95,6 +95,14 @@ func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
 	return (num + 90/sectorWidth ) % (360/sectorWidth)
 }
 
+func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
+	vectorDegree := int(180 * math.Atan2(vy, vx) / 3.14159265358)
+	for vectorDegree < 0 {
+		vectorDegree += 360
+	}
+	return deg == vectorDegree
+}
+
 func abs(x int) int {
 	if x < 0 {
 		return -x

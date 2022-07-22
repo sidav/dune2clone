@@ -44,13 +44,13 @@ func (u *unit) normalizeDegrees() {
 	}
 }
 
-func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
+func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
+	if isVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
+		return
+	}
 	degs := int(180 * math.Atan2(vy, vx) / 3.14159265358)
 	if degs < 0 {
 		degs += 360
-	}
-	if u.chassisDegree == degs {
-		return true
 	}
 	diff := u.chassisDegree - degs
 	for diff < 0 {
@@ -68,7 +68,6 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 	u.chassisDegree += rotateSpeed
 	u.cannonDegree += rotateSpeed
 	u.normalizeDegrees()
-	return false
 }
 
 func (u *unit) getStaticData() *unitStatic {
