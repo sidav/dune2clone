@@ -9,6 +9,7 @@ type unit struct {
 	code             int
 	centerX, centerY float64
 	currentAction    action
+	currentOrder     order
 	chassisDegree    int
 	cannonDegree     int
 
@@ -51,7 +52,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) bool {
 	if u.chassisDegree == degs {
 		return true
 	}
-	diff := u.chassisDegree-degs
+	diff := u.chassisDegree - degs
 	for diff < 0 {
 		diff += 360
 	}

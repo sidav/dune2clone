@@ -63,7 +63,9 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 }
 
 func (r *renderer) renderBuilding(b *building) {
-	x, y := b.topLeftX, b.topLeftY
+	x, y := tileCoordsToPhysicalCoords(b.topLeftX, b.topLeftY)
+	x -= 0.5
+	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
