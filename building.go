@@ -5,6 +5,12 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 type building struct {
 	topLeftX, topLeftY int // tile coords
 	code               int
+
+	isSelected bool
+}
+
+func (b *building) markSelected(s bool) {
+	b.isSelected = s
 }
 
 func (b *building) getSprite() rl.Texture2D {
@@ -13,7 +19,7 @@ func (b *building) getSprite() rl.Texture2D {
 
 func (b *building) isPresentAt(tileX, tileY int) bool {
 	w, h := b.getStaticData().w, b.getStaticData().h
-	return areCoordsInRect(tileX, tileY, b.topLeftX, b.topLeftY, w-1, h-1)
+	return areCoordsInTileRect(tileX, tileY, b.topLeftX, b.topLeftY, w, h)
 }
 
 func (b *building) getStaticData() *buildingStatic {
@@ -30,7 +36,7 @@ type buildingStatic struct {
 	w, h int
 }
 
-var sTableBuildings = map[int]*buildingStatic {
+var sTableBuildings = map[int]*buildingStatic{
 	BLD_BASE: {
 		w: 2,
 		h: 2,

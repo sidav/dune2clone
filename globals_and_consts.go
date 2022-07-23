@@ -124,7 +124,7 @@ func min(x, y int) int {
 	return x
 }
 
-func areCoordsInRect(x, y, rx, ry, w, h int) bool {
+func areCoordsInTileRect(x, y, rx, ry, w, h int) bool {
 	return x >= rx && x < rx+w && y >= ry && y < ry+h
 }
 

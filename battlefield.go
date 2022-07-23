@@ -20,7 +20,7 @@ func (b *battlefield) create(w, h int) {
 		}
 	}
 	b.pathfinder = &astar.AStarPathfinder{
-		DiagonalMoveAllowed:       false,
+		DiagonalMoveAllowed:       true,
 		ForceGetPath:              true,
 		ForceIncludeFinish:        false,
 		AutoAdjustDefaultMaxSteps: false,
@@ -31,6 +31,17 @@ func (b *battlefield) create(w, h int) {
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 1,
 		topLeftY: 1,
+		code:     BLD_BASE,
+	})
+
+	b.buildings = append(b.buildings, &building{
+		topLeftX: 5,
+		topLeftY: 3,
+		code:     BLD_BASE,
+	})
+	b.buildings = append(b.buildings, &building{
+		topLeftX: 8,
+		topLeftY: 7,
 		code:     BLD_BASE,
 	})
 
@@ -47,6 +58,12 @@ func (b *battlefield) create(w, h int) {
 }
 
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
+	for i := range b.buildings {
+		if b.buildings[i].isPresentAt(x, y) {
+			// debugWrite("got")
+			return b.buildings[i]
+		}
+	}
 	for i := range b.units {
 		tx, ty := trueCoordsToTileCoords(b.units[i].centerX, b.units[i].centerY)
 		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
@@ -63,7 +80,8 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {
 	return b.pathfinder.FindPath(
 		func(x, y int) int {
 			act := b.getActorAtTileCoordinates(x, y)
-			if act != nil && act != u {
+			if act != nil {
+				// debugWritef("At coords %d,%d there is %+v", x, y, act)
 				return -1
 			}
 			return 1
