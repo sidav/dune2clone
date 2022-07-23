@@ -20,7 +20,7 @@ func (b *battlefield) create(w, h int) {
 		}
 	}
 	b.pathfinder = &astar.AStarPathfinder{
-		DiagonalMoveAllowed:       true,
+		DiagonalMoveAllowed:       false,
 		ForceGetPath:              true,
 		ForceIncludeFinish:        false,
 		AutoAdjustDefaultMaxSteps: false,
@@ -75,16 +75,20 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	return nil
 }
 
+func (b *battlefield) costMapForMovement(x, y int) int {
+	act := b.getActorAtTileCoordinates(x, y)
+	if act != nil {
+		// debugWritef("At coords %d,%d there is %+v", x, y, act)
+		return -1
+	}
+	return 10
+}
+
 func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {
 	utx, uty := trueCoordsToTileCoords(u.centerX, u.centerY)
 	return b.pathfinder.FindPath(
 		func(x, y int) int {
-			act := b.getActorAtTileCoordinates(x, y)
-			if act != nil {
-				// debugWritef("At coords %d,%d there is %+v", x, y, act)
-				return -1
-			}
-			return 1
+			return b.costMapForMovement(x, y)
 		},
 		utx, uty, tileX, tileY,
 	)

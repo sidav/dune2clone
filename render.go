@@ -43,6 +43,13 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 
+	//for x := range b.tiles {
+	//	for y := range b.tiles[x] {
+	//		rl.DrawText(fmt.Sprintf("%d", b.costMapForMovement(x, y)),
+	//			int32(x*TILE_SIZE_IN_PIXELS), int32(y * TILE_SIZE_IN_PIXELS), 24, rl.White)
+	//	}
+	//}
+
 	rl.EndDrawing()
 }
 
