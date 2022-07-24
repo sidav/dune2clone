@@ -5,8 +5,8 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 type building struct {
 	topLeftX, topLeftY int // tile coords
 	code               int
-
-	isSelected bool
+	faction            *faction
+	isSelected         bool
 }
 
 func (b *building) markSelected(s bool) {

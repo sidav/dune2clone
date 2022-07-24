@@ -1,6 +1,8 @@
 package main
 
-import "dune2clone/astar"
+import (
+	"dune2clone/astar"
+)
 
 type battlefield struct {
 	tiles     [][]tile
@@ -27,33 +29,51 @@ func (b *battlefield) create(w, h int) {
 		MapWidth:                  len(b.tiles),
 		MapHeight:                 len(b.tiles[0]),
 	}
+	b.placeInitialStuff()
+}
 
+func (b *battlefield) placeInitialStuff() {
+	f1 := &faction{
+		factionColor: factionTints[0],
+		money:        0,
+		team:         0,
+	}
+	f2 := &faction{
+		factionColor: factionTints[1],
+		money:        0,
+		team:         0,
+	}
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 1,
 		topLeftY: 1,
 		code:     BLD_BASE,
+		faction: f1,
 	})
 
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 5,
 		topLeftY: 3,
 		code:     BLD_BASE,
+		faction: f2,
 	})
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 8,
 		topLeftY: 7,
 		code:     BLD_BASE,
+		faction: f2,
 	})
 
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
 		centerX: 4.5,
 		centerY: 4.5,
+		faction: f1,
 	})
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
 		centerX: 5.5,
 		centerY: 5.5,
+		faction: f2,
 	})
 }
 

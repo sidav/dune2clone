@@ -8,6 +8,7 @@ import (
 type unit struct {
 	code             int
 	centerX, centerY float64
+	faction          *faction
 	currentAction    action
 	currentOrder     order
 	chassisDegree    int

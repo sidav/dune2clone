@@ -103,7 +103,7 @@ func (r *renderer) renderUnit(u *unit) {
 				s,
 				osx,
 				osy,
-				DEFAULT_TINT,
+				u.faction.factionColor,
 			)
 		}
 		if u.isSelected {
