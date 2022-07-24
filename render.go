@@ -61,8 +61,8 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 		if r.AreOnScreenCoordsInViewport(osx, osy) {
 			rl.DrawTexture(
 				t.getSprite(),
-				int32(osx),
-				int32(osy),
+				osx,
+				osy,
 				DEFAULT_TINT,
 			)
 		}
@@ -78,10 +78,17 @@ func (r *renderer) renderBuilding(b *building) {
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
 		rl.DrawTexture(
 			b.getSprite(),
-			int32(osx),
-			int32(osy),
+			osx,
+			osy,
 			DEFAULT_TINT,
 		)
+		if b.isSelected {
+			w, h := b.getStaticData().w, b.getStaticData().h
+			col := rl.Green
+			rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS*int32(w), TILE_SIZE_IN_PIXELS*int32(h), col)
+			rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
+			rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
+		}
 	}
 }
 
@@ -94,8 +101,8 @@ func (r *renderer) renderUnit(u *unit) {
 		for _, s := range sprites {
 			rl.DrawTexture(
 				s,
-				int32(osx),
-				int32(osy),
+				osx,
+				osy,
 				DEFAULT_TINT,
 			)
 		}
@@ -108,7 +115,7 @@ func (r *renderer) renderUnit(u *unit) {
 			//rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-2, col)
 			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-3, col)
 			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-4, col)
-			//rl.DrawRectangleLines(int32(osx), int32(osy), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
+			//rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
 			//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
 			//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
 		}
