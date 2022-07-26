@@ -3,6 +3,7 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type building struct {
+	currentAction      action
 	topLeftX, topLeftY int // tile coords
 	code               int
 	faction            *faction
@@ -15,6 +16,14 @@ func (b *building) markSelected(s bool) {
 
 func (b *building) getName() string {
 	return b.getStaticData().displayedName
+}
+
+func (b *building) getCurrentAction() *action {
+	return &b.currentAction
+}
+
+func (b *building) getFaction() *faction {
+	return b.faction
 }
 
 func (b *building) getSprite() rl.Texture2D {
@@ -42,7 +51,7 @@ type buildingStatic struct {
 	w, h          int
 	displayedName string
 	cost          int
-	buildTime     int
+	buildTime     int   // seconds
 	builds        []int // buildings
 	produces      []int // units
 
@@ -65,7 +74,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		h:             2,
 		displayedName: "Power Plant",
 		cost:          500,
-		buildTime:     100,
+		buildTime:     5,
 		builds:        nil,
 		produces:      nil,
 		hotkeyToBuild: "P",
@@ -75,7 +84,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		h:             2,
 		displayedName: "Factory",
 		cost:          1000,
-		buildTime:     100,
+		buildTime:     10,
 		builds:        nil,
 		produces:      []int{UNT_TANK},
 		hotkeyToBuild: "F",

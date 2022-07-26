@@ -4,10 +4,16 @@ import (
 	"math"
 )
 
-func (b *battlefield) executeActionForUnit(u *unit) {
-	switch u.currentAction.code {
+func (b *battlefield) executeActionForActor(a actor) {
+	switch a.getCurrentAction().code {
 	case ACTION_MOVE:
-		b.executeMoveActionForUnit(u)
+		if u, ok := a.(*unit); ok {
+			b.executeMoveActionForUnit(u)
+		} else {
+			panic("Is not unit!")
+		}
+	case ACTION_BUILD:
+		b.executeBuildActionForActor(a)
 	}
 }
 
@@ -41,5 +47,18 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 		u.centerY = ty
 		u.currentAction.code = ACTION_WAIT
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
+	}
+}
+
+func (b *battlefield) executeBuildActionForActor(a actor) {
+	act := a.getCurrentAction()
+	moneySpent := 0.0
+	if bld, ok := act.targetActor.(*building); ok {
+		moneySpent = float64(bld.getStaticData().cost) /
+			float64(bld.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
+	}
+	if act.getCompletionPercent() < 100 && a.getFaction().money > moneySpent {
+		a.getFaction().money -= moneySpent
+		act.completionAmount++
 	}
 }

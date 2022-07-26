@@ -12,7 +12,7 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
-	rl.DrawText(fmt.Sprintf("%d$", pc.controlledFaction.money), WINDOW_W/2, 0, 36, rl.White)
+	rl.DrawText(fmt.Sprintf("%d$", int(pc.controlledFaction.money)), WINDOW_W/2, 0, 36, rl.White)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
@@ -30,10 +30,16 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 }
 
 func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
-	for i, code := range bld.getStaticData().builds {
-		rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
-			sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-			x+4, y+1+32+32*int32(i), 32, rl.Orange)
+	if bld.currentAction.code == ACTION_WAIT {
+		for i, code := range bld.getStaticData().builds {
+			rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
+				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
+				x+4, y+1+32+32*int32(i), 32, rl.Orange)
+		}
+	}
+	if bld.currentAction.code == ACTION_BUILD {
+			rl.DrawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
+				x+4, y+1+32+32, 32, rl.Orange)
 	}
 }
 

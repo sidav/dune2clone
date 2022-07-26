@@ -13,23 +13,27 @@ var (
 const (
 	DEBUG_OUTPUT = true
 
-	SPRITE_SCALE_FACTOR     = 4.0
-	ORIGINAL_TILE_SIZE_IN_PIXELS = 16
-	TILE_SIZE_IN_PIXELS     = ORIGINAL_TILE_SIZE_IN_PIXELS*SPRITE_SCALE_FACTOR
-	TILE_PHYSICAL_SIZE      = 1 // TODO: remove, since we're using floats?
-	PIXEL_TO_PHYSICAL_RATIO = TILE_SIZE_IN_PIXELS / TILE_PHYSICAL_SIZE
+	DESIRED_FPS                 = 60
+	UNIT_ACTIONS_TICK_EACH      = 2
+	BUILDINGS_ACTIONS_TICK_EACH = 5
 
-	WINDOW_W = 25 * TILE_SIZE_IN_PIXELS
-	WINDOW_H = 15 * TILE_SIZE_IN_PIXELS
-	TEXT_SIZE = TILE_SIZE_IN_PIXELS/2
-	TEXT_MARGIN = TEXT_SIZE/4
+	SPRITE_SCALE_FACTOR          = 4.0
+	ORIGINAL_TILE_SIZE_IN_PIXELS = 16
+	TILE_SIZE_IN_PIXELS          = ORIGINAL_TILE_SIZE_IN_PIXELS * SPRITE_SCALE_FACTOR
+	TILE_PHYSICAL_SIZE           = 1 // TODO: remove, since we're using floats?
+	PIXEL_TO_PHYSICAL_RATIO      = TILE_SIZE_IN_PIXELS / TILE_PHYSICAL_SIZE
+
+	WINDOW_W    = 25 * TILE_SIZE_IN_PIXELS
+	WINDOW_H    = 15 * TILE_SIZE_IN_PIXELS
+	TEXT_SIZE   = TILE_SIZE_IN_PIXELS / 2
+	TEXT_MARGIN = TEXT_SIZE / 4
 )
 
 func halfPhysicalTileSize() int {
-	if TILE_PHYSICAL_SIZE % 2 == 1 {
-		return TILE_PHYSICAL_SIZE/2+1
+	if TILE_PHYSICAL_SIZE%2 == 1 {
+		return TILE_PHYSICAL_SIZE/2 + 1
 	}
-	return TILE_PHYSICAL_SIZE/2
+	return TILE_PHYSICAL_SIZE / 2
 }
 
 func areTileCoordsValid(tx, ty int) bool {
@@ -46,13 +50,13 @@ func tileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
 	//	halfTileSize++
 	//}
 	//return tx * TILE_PHYSICAL_SIZE + halfTileSize, ty * TILE_PHYSICAL_SIZE + halfTileSize
-	return float64(tx) + 0.5, float64(ty)+0.5
+	return float64(tx) + 0.5, float64(ty) + 0.5
 }
 
 func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
-	tx := x2-x1
-	ty := y2-y1
-	r := r1+r2
+	tx := x2 - x1
+	ty := y2 - y1
+	r := r1 + r2
 
 	if tx*tx+ty*ty < r*r {
 		return true
@@ -71,15 +75,15 @@ func debugWrite(msg string) {
 	}
 }
 
-func debugWritef(msg string, args... interface{}) {
+func debugWritef(msg string, args ...interface{}) {
 	if DEBUG_OUTPUT {
 		fmt.Printf(msg, args...)
 	}
 }
 
 func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
-	sectorWidth := 360/sectorsInCircle
-	degree += sectorWidth/2
+	sectorWidth := 360 / sectorsInCircle
+	degree += sectorWidth / 2
 	for degree < 0 {
 		degree += 360
 	}
@@ -92,7 +96,7 @@ func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
 		num++
 	}
 	// +1 is because initial images look up (last frame number)
-	return (num + 90/sectorWidth ) % (360/sectorWidth)
+	return (num + 90/sectorWidth) % (360 / sectorWidth)
 }
 
 func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {

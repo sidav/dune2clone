@@ -25,6 +25,14 @@ func (u *unit) getName() string {
 	return u.getStaticData().displayedName
 }
 
+func (u *unit) getCurrentAction() *action {
+	return &u.currentAction
+}
+
+func (u *unit) getFaction() *faction {
+	return u.faction
+}
+
 func (u *unit) getPartsSprites() []rl.Texture2D {
 	chassisSprite := unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0]
 	cannonSprite := unitCannonsAtlaces[sTableUnits[u.code].cannonSpriteCode].atlas[degreeToRotationFrameNumber(u.cannonDegree, 8)][0]
