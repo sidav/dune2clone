@@ -3,7 +3,8 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type playerController struct {
-	selection actor
+	controlledFaction *faction
+	selection         actor
 }
 
 func (pc *playerController) playerControl(b *battlefield) {

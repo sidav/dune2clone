@@ -85,7 +85,7 @@ func CreateDirectionalAtlasFromFile(filename string, originalSpriteSize, desired
 	file.Close()
 
 	newAtlas := spriteAtlas{
-		spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
+		// spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
 	}
 	newAtlas.atlas = make([][]rl.Texture2D, 4 * directionsInFile)
 

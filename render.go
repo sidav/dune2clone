@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -12,7 +11,7 @@ type renderer struct {
 	viewportW                    int
 }
 
-func (r *renderer) renderBattlefield(b *battlefield) {
+func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	r.viewportW = WINDOW_W
 
 	rl.BeginDrawing()
@@ -41,14 +40,14 @@ func (r *renderer) renderBattlefield(b *battlefield) {
 		r.renderUnit(b.units[i])
 	}
 
-	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
-
 	//for x := range b.tiles {
 	//	for y := range b.tiles[x] {
 	//		rl.DrawText(fmt.Sprintf("%d", b.costMapForMovement(x, y)),
 	//			int32(x*TILE_SIZE_IN_PIXELS), int32(y * TILE_SIZE_IN_PIXELS), 24, rl.White)
 	//	}
 	//}
+
+	r.renderUI(b, pc)
 
 	rl.EndDrawing()
 }

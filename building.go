@@ -13,6 +13,10 @@ func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
 
+func (b *building) getName() string {
+	return b.getStaticData().displayedName
+}
+
 func (b *building) getSprite() rl.Texture2D {
 	return buildingsAtlaces[b.code].atlas[0][0]
 }
@@ -42,6 +46,8 @@ type buildingStatic struct {
 	builds        []int // buildings
 	produces      []int // units
 
+	// ui-only things:
+	hotkeyToBuild string
 }
 
 var sTableBuildings = map[int]*buildingStatic{
@@ -51,7 +57,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          0,
 		buildTime:     100,
-		builds:        nil,
+		builds:        []int{BLD_POWERPLANT, BLD_FACTORY},
 		produces:      nil,
 	},
 	BLD_POWERPLANT: {
@@ -62,14 +68,16 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:     100,
 		builds:        nil,
 		produces:      nil,
+		hotkeyToBuild: "P",
 	},
 	BLD_FACTORY: {
 		w:             3,
 		h:             2,
 		displayedName: "Factory",
-		cost:          0,
+		cost:          1000,
 		buildTime:     100,
 		builds:        nil,
-		produces:      nil,
+		produces:      []int{UNT_TANK},
+		hotkeyToBuild: "F",
 	},
 }

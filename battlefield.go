@@ -6,6 +6,7 @@ import (
 
 type battlefield struct {
 	tiles     [][]tile
+	factions  []*faction
 	buildings []*building
 	units     []*unit
 
@@ -33,47 +34,47 @@ func (b *battlefield) create(w, h int) {
 }
 
 func (b *battlefield) placeInitialStuff() {
-	f1 := &faction{
+	b.factions = append(b.factions, &faction{
 		factionColor: factionTints[0],
 		money:        10000,
 		team:         0,
-	}
-	f2 := &faction{
+	})
+	b.factions = append(b.factions, &faction{
 		factionColor: factionTints[1],
 		money:        10000,
 		team:         0,
-	}
+	})
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 1,
 		topLeftY: 1,
 		code:     BLD_BASE,
-		faction: f1,
+		faction:  b.factions[0],
 	})
 
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 5,
 		topLeftY: 3,
 		code:     BLD_POWERPLANT,
-		faction: f2,
+		faction:  b.factions[1],
 	})
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 8,
 		topLeftY: 7,
 		code:     BLD_FACTORY,
-		faction: f2,
+		faction:  b.factions[1],
 	})
 
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
 		centerX: 4.5,
 		centerY: 4.5,
-		faction: f1,
+		faction: b.factions[0],
 	})
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
 		centerX: 5.5,
 		centerY: 5.5,
-		faction: f2,
+		faction: b.factions[1],
 	})
 }
 

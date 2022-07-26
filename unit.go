@@ -21,6 +21,10 @@ func (u *unit) markSelected(b bool) {
 	u.isSelected = b
 }
 
+func (u *unit) getName() string {
+	return u.getStaticData().displayedName
+}
+
 func (u *unit) getPartsSprites() []rl.Texture2D {
 	chassisSprite := unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0]
 	cannonSprite := unitCannonsAtlaces[sTableUnits[u.code].cannonSpriteCode].atlas[degreeToRotationFrameNumber(u.cannonDegree, 8)][0]
@@ -80,6 +84,8 @@ const (
 )
 
 type unitStatic struct {
+	displayedName string
+
 	cannonSpriteCode  string
 	chassisSpriteCode string
 
@@ -89,6 +95,7 @@ type unitStatic struct {
 
 var sTableUnits = map[int]*unitStatic{
 	UNT_TANK: {
+		displayedName:     "Super duper tank",
 		cannonSpriteCode:  "tank",
 		chassisSpriteCode: "tank",
 		movementSpeed:     0.1,
