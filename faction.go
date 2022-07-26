@@ -7,6 +7,7 @@ import (
 type faction struct {
 	factionColor color.RGBA
 	money        int
+	energy       int
 	team         int // 0 means "enemy to all"
 }
 

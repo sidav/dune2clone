@@ -35,12 +35,12 @@ func (b *battlefield) create(w, h int) {
 func (b *battlefield) placeInitialStuff() {
 	f1 := &faction{
 		factionColor: factionTints[0],
-		money:        0,
+		money:        10000,
 		team:         0,
 	}
 	f2 := &faction{
 		factionColor: factionTints[1],
-		money:        0,
+		money:        10000,
 		team:         0,
 	}
 	b.buildings = append(b.buildings, &building{
@@ -53,13 +53,13 @@ func (b *battlefield) placeInitialStuff() {
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 5,
 		topLeftY: 3,
-		code:     BLD_BASE,
+		code:     BLD_POWERPLANT,
 		faction: f2,
 	})
 	b.buildings = append(b.buildings, &building{
 		topLeftX: 8,
 		topLeftY: 7,
-		code:     BLD_BASE,
+		code:     BLD_FACTORY,
 		faction: f2,
 	})
 

@@ -30,15 +30,46 @@ func (b *building) getStaticData() *buildingStatic {
 
 const (
 	BLD_BASE = iota
+	BLD_POWERPLANT
+	BLD_FACTORY
 )
 
 type buildingStatic struct {
-	w, h int
+	w, h          int
+	displayedName string
+	cost          int
+	buildTime     int
+	builds        []int // buildings
+	produces      []int // units
+
 }
 
 var sTableBuildings = map[int]*buildingStatic{
 	BLD_BASE: {
-		w: 2,
-		h: 2,
+		w:             2,
+		h:             2,
+		displayedName: "Construction Yard",
+		cost:          0,
+		buildTime:     100,
+		builds:        nil,
+		produces:      nil,
+	},
+	BLD_POWERPLANT: {
+		w:             2,
+		h:             2,
+		displayedName: "Power Plant",
+		cost:          500,
+		buildTime:     100,
+		builds:        nil,
+		produces:      nil,
+	},
+	BLD_FACTORY: {
+		w:             3,
+		h:             2,
+		displayedName: "Factory",
+		cost:          0,
+		buildTime:     100,
+		builds:        nil,
+		produces:      nil,
 	},
 }

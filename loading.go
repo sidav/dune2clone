@@ -21,10 +21,12 @@ func loadResources() {
 
 func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
-	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 1, false)
+	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 16,16, 1, false)
 
 	buildingsAtlaces = make(map[int]*spriteAtlas)
-	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 1, false)
+	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 32,32, 1, false)
+	buildingsAtlaces[BLD_POWERPLANT] = CreateAtlasFromFile("resources/sprites/buildings/powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
+	buildingsAtlaces[BLD_FACTORY] = CreateAtlasFromFile("resources/sprites/buildings/factory.png", 0, 0, 48, 32, 48, 32, 1, false)
 
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	unitCannonsAtlaces = make(map[string]*spriteAtlas)
@@ -44,14 +46,15 @@ func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Ima
 	return subImg
 }
 
-func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize, desiredSpriteSize, totalFrames int, createAllDirections bool) *spriteAtlas {
+func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteW, originalSpriteH,
+	desiredSpriteW, desiredSpriteH, totalFrames int, createAllDirections bool) *spriteAtlas {
 
 	file, _ := os.Open(filename)
 	img, _ := png.Decode(file)
 	file.Close()
 
 	newAtlas := spriteAtlas{
-		spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
+		// spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
 	}
 	if createAllDirections {
 		newAtlas.atlas = make([][]rl.Texture2D, 4)
@@ -60,9 +63,9 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteSize
 	}
 	// newAtlas.atlas
 	for currFrame := 0; currFrame < totalFrames; currFrame++ {
-		currPic := extractSubimageFromImage(img, topleftx+currFrame*originalSpriteSize, toplefty, originalSpriteSize, originalSpriteSize)
+		currPic := extractSubimageFromImage(img, topleftx+currFrame*originalSpriteW, toplefty, originalSpriteW, originalSpriteH)
 		rlImg := rl.NewImageFromImage(currPic)
-		rl.ImageResizeNN(rlImg, int32(desiredSpriteSize)*int32(SPRITE_SCALE_FACTOR), int32(desiredSpriteSize)*int32(SPRITE_SCALE_FACTOR))
+		rl.ImageResizeNN(rlImg, int32(desiredSpriteW)*int32(SPRITE_SCALE_FACTOR), int32(desiredSpriteH)*int32(SPRITE_SCALE_FACTOR))
 		newAtlas.atlas[0] = append(newAtlas.atlas[0], rl.LoadTextureFromImage(rlImg))
 		if createAllDirections {
 			for i := 1; i < 4; i++ {
