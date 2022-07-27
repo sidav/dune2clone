@@ -99,6 +99,27 @@ func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
 	return (num + 90/sectorWidth) % (360 / sectorWidth)
 }
 
+func getDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
+	if targetDegree == currDegree {
+		return 0
+	}
+	if targetDegree < 0 {
+		targetDegree += 360
+	}
+	diff := currDegree - targetDegree
+	for diff < 0 {
+		diff += 360
+	}
+	if rotateSpeed > diff {
+		rotateSpeed = diff
+	}
+	if diff <= 180 {
+		rotateSpeed = -rotateSpeed
+	}
+	return rotateSpeed
+}
+
+
 func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 	vectorDegree := int(180 * math.Atan2(vy, vx) / 3.14159265358)
 	for vectorDegree < 0 {

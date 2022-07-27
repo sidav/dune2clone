@@ -65,20 +65,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 		return
 	}
 	degs := int(180 * math.Atan2(vy, vx) / 3.14159265358)
-	if degs < 0 {
-		degs += 360
-	}
-	diff := u.chassisDegree - degs
-	for diff < 0 {
-		diff += 360
-	}
-	rotateSpeed := u.getStaticData().chassisRotationSpeed
-	if rotateSpeed > diff {
-		rotateSpeed = diff
-	}
-	if diff <= 180 {
-		rotateSpeed = -rotateSpeed
-	}
+	rotateSpeed := getDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
 
 	// debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree, u.cannonDegree, )
 	u.chassisDegree += rotateSpeed
