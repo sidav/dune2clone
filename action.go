@@ -27,7 +27,8 @@ func (a *action) getCompletionPercent() int {
 		} else {
 		}
 	}
-	panic("Something is wrong in %")
+	return -1
+	// panic("Something is wrong in %")
 }
 
 const (
