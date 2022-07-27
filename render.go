@@ -163,20 +163,3 @@ func (r *renderer) doesLevelFitInScreenHorizontally() bool {
 func (r *renderer) doesLevelFitInScreenVertically() bool {
 	return MAP_H*TILE_SIZE_IN_PIXELS <= WINDOW_H
 }
-
-func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.Color) {
-	const OUTLINE_THICKNESS = 4
-	rl.DrawCircleSector(rl.Vector2{
-		X: float32(x),
-		Y: float32(y),
-	},
-		float32(radius-OUTLINE_THICKNESS/2),
-		180, 180-float32(360*percent)/100, 8, color)
-	for i := -OUTLINE_THICKNESS/2; i <= OUTLINE_THICKNESS/2; i++ {
-		rl.DrawCircleLines(
-			x,
-			y,
-			float32(radius+int32(i)),
-			color)
-	}
-}

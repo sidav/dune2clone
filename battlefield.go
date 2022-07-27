@@ -52,28 +52,22 @@ func (b *battlefield) placeInitialStuff() {
 	})
 
 	b.buildings = append(b.buildings, &building{
-		topLeftX: 5,
-		topLeftY: 3,
-		code:     BLD_POWERPLANT,
-		faction:  b.factions[1],
-	})
-	b.buildings = append(b.buildings, &building{
-		topLeftX: 8,
-		topLeftY: 7,
-		code:     BLD_FACTORY,
+		topLeftX: 14,
+		topLeftY: 8,
+		code:     BLD_BASE,
 		faction:  b.factions[1],
 	})
 
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
-		centerX: 4.5,
-		centerY: 4.5,
+		centerX: 3.5,
+		centerY: 3.5,
 		faction: b.factions[0],
 	})
 	b.units = append(b.units, &unit{
 		code:    UNT_TANK,
-		centerX: 5.5,
-		centerY: 5.5,
+		centerX: 13.5,
+		centerY: 7.5,
 		faction: b.factions[1],
 	})
 }

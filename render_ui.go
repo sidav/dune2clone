@@ -59,23 +59,3 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 				x+4, y+1+32+32, 32, rl.Orange)
 	}
 }
-
-func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineColor, fillColor rl.Color) {
-	// draw outline
-	for i := int32(0); i < outlineThickness; i++ {
-		rl.DrawRectangleLines(x+i, y+i, w-i*outlineThickness, h-i*outlineThickness, outlineColor)
-	}
-	rl.DrawRectangle(x+outlineThickness, y+outlineThickness, w-outlineThickness*2, h-outlineThickness*2, fillColor)
-}
-
-func (r *renderer) drawDitheredRect(x, y, w, h int32, color rl.Color) {
-	const PIXEL_SIZE = 4
-	// draw outline
-	for i := x; i < x+w; i++ {
-		for j := y; j < y+h; j++ {
-			if (i/PIXEL_SIZE) % 2 == (j/PIXEL_SIZE) % 2 {
-				rl.DrawPixel(i, j, color)
-			}
-		}
-	}
-}
