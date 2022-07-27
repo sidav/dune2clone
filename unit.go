@@ -34,11 +34,14 @@ func (u *unit) getFaction() *faction {
 }
 
 func (u *unit) getPartsSprites() []rl.Texture2D {
-	chassisSprite := unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0]
-	cannonSprite := unitCannonsAtlaces[sTableUnits[u.code].cannonSpriteCode].atlas[degreeToRotationFrameNumber(u.cannonDegree, 8)][0]
+	if u.getStaticData().cannonRotationSpeed > 0 {
+		return []rl.Texture2D{
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+			unitCannonsAtlaces[sTableUnits[u.code].cannonSpriteCode].atlas[degreeToRotationFrameNumber(u.cannonDegree, 8)][0],
+		}
+	}
 	return []rl.Texture2D{
-		chassisSprite,
-		cannonSprite,
+		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
 	}
 }
 
@@ -69,7 +72,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 	for diff < 0 {
 		diff += 360
 	}
-	rotateSpeed := u.getStaticData().rotationSpeed
+	rotateSpeed := u.getStaticData().chassisRotationSpeed
 	if rotateSpeed > diff {
 		rotateSpeed = diff
 	}
@@ -89,6 +92,7 @@ func (u *unit) getStaticData() *unitStatic {
 
 const (
 	UNT_TANK = iota
+	UNT_QUAD
 )
 
 type unitStatic struct {
@@ -97,23 +101,36 @@ type unitStatic struct {
 	cannonSpriteCode  string
 	chassisSpriteCode string
 
-	movementSpeed float64
-	rotationSpeed int
+	movementSpeed        float64
+	chassisRotationSpeed int
+	cannonRotationSpeed  int // 0 means that the unit doesn't have separate cannon
 
 	cost          int
-	buildTime     int   // seconds
+	buildTime     int // seconds
 	hotkeyToBuild string
 }
 
 var sTableUnits = map[int]*unitStatic{
+	UNT_QUAD: {
+		displayedName:    "Quad",
+		// cannonSpriteCode: "quad",
+		chassisSpriteCode: "quad",
+		movementSpeed:        0.25,
+		chassisRotationSpeed: 7,
+		cannonRotationSpeed:  0,
+		cost:                 350,
+		buildTime:            3,
+		hotkeyToBuild:        "Q",
+	},
 	UNT_TANK: {
-		displayedName:     "Super duper tank",
-		cannonSpriteCode:  "tank",
-		chassisSpriteCode: "tank",
-		movementSpeed:     0.1,
-		rotationSpeed:     5,
-		cost:              450,
-		buildTime:         7,
-		hotkeyToBuild:     "T",
+		displayedName:        "Super duper tank",
+		cannonSpriteCode:     "tank",
+		chassisSpriteCode:    "tank",
+		movementSpeed:        0.1,
+		chassisRotationSpeed: 5,
+		cannonRotationSpeed:  7,
+		cost:                 450,
+		buildTime:            7,
+		hotkeyToBuild:        "T",
 	},
 }

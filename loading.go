@@ -33,6 +33,8 @@ func loadSprites() {
 	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png",16, 16, 1, 2)
 	unitCannonsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
 
+	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile("resources/sprites/units/quad.png",16, 16, 1, 2)
+
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

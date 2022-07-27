@@ -84,9 +84,9 @@ var sTableBuildings = map[int]*buildingStatic{
 		h:             2,
 		displayedName: "Factory",
 		cost:          1000,
-		buildTime:     10,
+		buildTime:     7,
 		builds:        nil,
-		produces:      []int{UNT_TANK},
+		produces:      []int{UNT_TANK, UNT_QUAD},
 		hotkeyToBuild: "F",
 	},
 }
