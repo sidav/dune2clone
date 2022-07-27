@@ -99,6 +99,10 @@ type unitStatic struct {
 
 	movementSpeed float64
 	rotationSpeed int
+
+	cost          int
+	buildTime     int   // seconds
+	hotkeyToBuild string
 }
 
 var sTableUnits = map[int]*unitStatic{
@@ -108,5 +112,8 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode: "tank",
 		movementSpeed:     0.1,
 		rotationSpeed:     5,
+		cost:              450,
+		buildTime:         7,
+		hotkeyToBuild:     "T",
 	},
 }

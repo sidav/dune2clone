@@ -67,7 +67,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		cost:          0,
 		buildTime:     100,
 		builds:        []int{BLD_POWERPLANT, BLD_FACTORY},
-		produces:      nil,
+		produces:      []int{UNT_TANK},
 	},
 	BLD_POWERPLANT: {
 		w:             2,

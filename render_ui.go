@@ -21,7 +21,7 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
 	// draw outline
-	r.drawOutlinedRect(x, y, int32(WINDOW_W)/3, WINDOW_H/4, 2, rl.Green, rl.Black)
+	r.drawOutlinedRect(x, y, 2*int32(WINDOW_W)/5, WINDOW_H/4, 2, rl.Green, rl.Black)
 	if pc.selection == nil {
 		return
 	}
@@ -47,11 +47,19 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 }
 
 func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
+	var line int32
 	if bld.currentAction.code == ACTION_WAIT {
-		for i, code := range bld.getStaticData().builds {
+		for _, code := range bld.getStaticData().builds {
 			rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
 				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-				x+4, y+1+32+32*int32(i), 32, rl.Orange)
+				x+4, y+1+32+32*line, 32, rl.Orange)
+			line++
+		}
+		for _, code := range bld.getStaticData().produces {
+			rl.DrawText(fmt.Sprintf("%s - Make %s ($%d)", sTableUnits[code].hotkeyToBuild,
+				sTableUnits[code].displayedName,sTableUnits[code].cost),
+				x+4, y+1+32+32*line, 32, rl.Orange)
+			line++
 		}
 	}
 	if bld.currentAction.code == ACTION_BUILD {
