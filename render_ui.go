@@ -3,16 +3,20 @@ package main
 import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"math"
 )
 
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
 	r.renderSelectedActorUI(b, pc, 0, 3*WINDOW_H/4)
+	if pc.mode == PCMODE_PLACE_BUILDING {
+		r.renderBuildCursor(b, pc)
+	}
 }
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
-	rl.DrawText(fmt.Sprintf("%d$", int(pc.controlledFaction.money)), WINDOW_W/2, 0, 36, rl.White)
+	rl.DrawText(fmt.Sprintf("%.f$", math.Round(pc.controlledFaction.money)), WINDOW_W/2, 0, 36, rl.White)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
@@ -27,6 +31,19 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		r.renderSelectedBuildingUI(bld, x, y)
 	}
 
+}
+
+func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
+	tx, ty := pc.mouseCoordsToTileCoords()
+	for i := 0; i < pc.cursorW; i++ {
+		for j := 0; j < pc.cursorH; j++ {
+			color := rl.Red
+			if b.isRectClearForBuilding(tx+i, ty+j, 1, 1) {
+				color = rl.Green
+			}
+			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS), int32((ty+j) * TILE_SIZE_IN_PIXELS), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
+		}
+	}
 }
 
 func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
@@ -49,4 +66,16 @@ func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineC
 		rl.DrawRectangleLines(x+i, y+i, w-i*outlineThickness, h-i*outlineThickness, outlineColor)
 	}
 	rl.DrawRectangle(x+outlineThickness, y+outlineThickness, w-outlineThickness*2, h-outlineThickness*2, fillColor)
+}
+
+func (r *renderer) drawDitheredRect(x, y, w, h int32, color rl.Color) {
+	const PIXEL_SIZE = 4
+	// draw outline
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
+			if (i/PIXEL_SIZE) % 2 == (j/PIXEL_SIZE) % 2 {
+				rl.DrawPixel(i, j, color)
+			}
+		}
+	}
 }

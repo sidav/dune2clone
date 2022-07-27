@@ -14,6 +14,12 @@ type action struct {
 	completionAmount   int
 }
 
+func (a *action) reset() {
+	a.targetActor = nil
+	a.code = ACTION_WAIT
+	a.completionAmount = 0
+}
+
 func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {

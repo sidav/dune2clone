@@ -114,3 +114,15 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {
 		utx, uty, tileX, tileY,
 	)
 }
+
+func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool {
+	for x := topLeftX; x < topLeftX+w; x++ {
+		for y := topLeftY; y < topLeftY+h; y++ {
+			if b.costMapForMovement(x, y) == -1 {
+				return false
+			}
+		}
+	}
+	return true
+}
+
