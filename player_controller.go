@@ -43,14 +43,22 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 	kk := rl.GetKeyPressed()
 	if bld.currentAction.code == ACTION_WAIT {
 		// maybe build?
-		if len(bld.getStaticData().builds) > 0 {
-			for _, code := range bld.getStaticData().builds {
-				if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) {
-					bld.currentAction.code = ACTION_BUILD
-					bld.currentAction.targetActor = &building{
-						code:    code,
-						faction: bld.faction,
-					}
+		for _, code := range bld.getStaticData().builds {
+			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) {
+				bld.currentAction.code = ACTION_BUILD
+				bld.currentAction.targetActor = &building{
+					code:    code,
+					faction: bld.faction,
+				}
+			}
+		}
+		// maybe product?
+		for _, code := range bld.getStaticData().produces {
+			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild) {
+				bld.currentAction.code = ACTION_BUILD
+				bld.currentAction.targetActor = &unit{
+					code:    code,
+					faction: bld.faction,
 				}
 			}
 		}

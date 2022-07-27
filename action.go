@@ -24,7 +24,9 @@ func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
 			return 100*a.completionAmount/(b.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
-		} else {
+		}
+		if b, ok := a.targetActor.(*unit); ok {
+			return 100*a.completionAmount/(b.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
 	return -1

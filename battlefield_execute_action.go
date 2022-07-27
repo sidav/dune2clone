@@ -45,7 +45,7 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 	if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
 		u.centerX = tx
 		u.centerY = ty
-		u.currentAction.code = ACTION_WAIT
+		u.currentAction.reset()
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
 	}
 }
@@ -57,8 +57,30 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 		moneySpent = float64(bld.getStaticData().cost) /
 			float64(bld.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
 	}
+	if unt, ok := act.targetActor.(*unit); ok {
+		moneySpent = float64(unt.getStaticData().cost) /
+			float64(unt.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
+	}
 	if act.getCompletionPercent() < 100 && a.getFaction().money > moneySpent {
 		a.getFaction().money -= moneySpent
 		act.completionAmount++
+	}
+	// if it was a unit, place it right away
+	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {
+		if bld, ok := a.(*building); ok {
+			for x := bld.topLeftX-1; x <= bld.topLeftX+bld.getStaticData().w; x++ {
+				for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
+					if b.costMapForMovement(x, y) != -1 {
+						unt.centerX, unt.centerY = tileCoordsToPhysicalCoords(x, y)
+						debugWritef("+%v", unt)
+						b.addActor(unt)
+						bld.currentAction.reset()
+						return
+					}
+				}
+			}
+		} else {
+			panic("wat")
+		}
 	}
 }

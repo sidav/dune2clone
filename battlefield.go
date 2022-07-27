@@ -72,6 +72,17 @@ func (b *battlefield) placeInitialStuff() {
 	})
 }
 
+func (b *battlefield) addActor(a actor) {
+	switch a.(type) {
+	case *unit:
+		b.units = append(b.units, a.(*unit))
+	case *building:
+		b.buildings = append(b.buildings, a.(*building))
+	default:
+		panic("wat")
+	}
+}
+
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	for i := range b.buildings {
 		if b.buildings[i].isPresentAt(x, y) {
