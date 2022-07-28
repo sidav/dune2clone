@@ -58,18 +58,8 @@ func (b *battlefield) placeInitialStuff() {
 		faction:  b.factions[1],
 	})
 
-	b.units = append(b.units, &unit{
-		code:    UNT_TANK,
-		centerX: 3.5,
-		centerY: 3.5,
-		faction: b.factions[0],
-	})
-	b.units = append(b.units, &unit{
-		code:    UNT_TANK,
-		centerX: 13.5,
-		centerY: 7.5,
-		faction: b.factions[1],
-	})
+	b.addActor(createUnit(UNT_TANK, 4, 4, b.factions[0]))
+	b.addActor(createUnit(UNT_TANK, 14, 8, b.factions[1]))
 }
 
 func (b *battlefield) addActor(a actor) {

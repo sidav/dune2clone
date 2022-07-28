@@ -9,12 +9,24 @@ type unit struct {
 	code             int
 	centerX, centerY float64
 	faction          *faction
+	turret           turret // maybe turrets array?..
 	currentAction    action
 	currentOrder     order
 	chassisDegree    int
-	cannonDegree     int
 
 	isSelected bool // for rendering selection thingy
+}
+
+func createUnit(code, tx, ty int, fact *faction) *unit {
+	cx, cy := tileCoordsToPhysicalCoords(tx, ty)
+	return &unit{
+		code:          code,
+		centerX:       cx,
+		centerY:       cy,
+		faction:       fact,
+		turret:        turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
+		chassisDegree: 270,
+	}
 }
 
 func (u *unit) markSelected(b bool) {
@@ -34,10 +46,10 @@ func (u *unit) getFaction() *faction {
 }
 
 func (u *unit) getPartsSprites() []rl.Texture2D {
-	if u.getStaticData().cannonRotationSpeed > 0 {
+	if u.turret.canRotate() {
 		return []rl.Texture2D{
 			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
-			unitCannonsAtlaces[sTableUnits[u.code].cannonSpriteCode].atlas[degreeToRotationFrameNumber(u.cannonDegree, 8)][0],
+			unitCannonsAtlaces[u.turret.getStaticData().spriteCode].atlas[degreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
 		}
 	}
 	return []rl.Texture2D{
@@ -46,16 +58,10 @@ func (u *unit) getPartsSprites() []rl.Texture2D {
 }
 
 func (u *unit) normalizeDegrees() {
-	if u.cannonDegree < 0 {
-		u.cannonDegree += 360
-	}
-	if u.cannonDegree > 360 {
-		u.cannonDegree -= 360
-	}
 	if u.chassisDegree < 0 {
 		u.chassisDegree += 360
 	}
-	if u.chassisDegree > 360 {
+	if u.chassisDegree >= 360 {
 		u.chassisDegree -= 360
 	}
 }
@@ -69,7 +75,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 
 	// debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree, u.cannonDegree, )
 	u.chassisDegree += rotateSpeed
-	u.cannonDegree += rotateSpeed
+	u.turret.rotationDegree += rotateSpeed
 	u.normalizeDegrees()
 }
 
@@ -83,14 +89,13 @@ const (
 )
 
 type unitStatic struct {
-	displayedName string
-
-	cannonSpriteCode  string
+	displayedName     string
 	chassisSpriteCode string
+
+	turretCode int
 
 	movementSpeed        float64
 	chassisRotationSpeed int
-	cannonRotationSpeed  int // 0 means that the unit doesn't have separate cannon
 
 	cost          int
 	buildTime     int // seconds
@@ -99,23 +104,21 @@ type unitStatic struct {
 
 var sTableUnits = map[int]*unitStatic{
 	UNT_QUAD: {
-		displayedName:    "Quad",
-		// cannonSpriteCode: "quad",
-		chassisSpriteCode: "quad",
+		displayedName:        "Quad",
+		chassisSpriteCode:    "quad",
 		movementSpeed:        0.25,
+		turretCode:           TRT_QUAD,
 		chassisRotationSpeed: 7,
-		cannonRotationSpeed:  0,
 		cost:                 350,
 		buildTime:            3,
 		hotkeyToBuild:        "Q",
 	},
 	UNT_TANK: {
 		displayedName:        "Super duper tank",
-		cannonSpriteCode:     "tank",
 		chassisSpriteCode:    "tank",
 		movementSpeed:        0.1,
+		turretCode:           TRT_TANK,
 		chassisRotationSpeed: 5,
-		cannonRotationSpeed:  7,
 		cost:                 450,
 		buildTime:            7,
 		hotkeyToBuild:        "T",

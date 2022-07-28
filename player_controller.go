@@ -56,10 +56,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 		for _, code := range bld.getStaticData().produces {
 			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild) {
 				bld.currentAction.code = ACTION_BUILD
-				bld.currentAction.targetActor = &unit{
-					code:    code,
-					faction: bld.faction,
-				}
+				bld.currentAction.targetActor = createUnit(code, 0, 0, bld.faction)
 			}
 		}
 	}
