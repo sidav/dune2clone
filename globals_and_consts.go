@@ -112,6 +112,8 @@ func getDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
 	}
 	if rotateSpeed > diff {
 		rotateSpeed = diff
+	} else if rotateSpeed > 360-diff {
+		rotateSpeed = 360-diff
 	}
 	if diff <= 180 {
 		rotateSpeed = -rotateSpeed
@@ -119,6 +121,15 @@ func getDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
 	return rotateSpeed
 }
 
+func normalizeDegree(deg int) int {
+	for deg < 0 {
+		deg += 360
+	}
+	for deg >= 360 {
+		deg -= 360
+	}
+	return deg
+}
 
 func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 	vectorDegree := int(180 * math.Atan2(vy, vx) / 3.14159265358)

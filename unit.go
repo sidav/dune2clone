@@ -58,12 +58,8 @@ func (u *unit) getPartsSprites() []rl.Texture2D {
 }
 
 func (u *unit) normalizeDegrees() {
-	if u.chassisDegree < 0 {
-		u.chassisDegree += 360
-	}
-	if u.chassisDegree >= 360 {
-		u.chassisDegree -= 360
-	}
+	u.chassisDegree = normalizeDegree(u.chassisDegree)
+	u.turret.normalizeDegrees()
 }
 
 func (u *unit) rotateChassisTowardsVector(vx, vy float64) {

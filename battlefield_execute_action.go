@@ -6,6 +6,14 @@ import (
 
 func (b *battlefield) executeActionForActor(a actor) {
 	switch a.getCurrentAction().code {
+	case ACTION_WAIT:
+		if u, ok := a.(*unit); ok {
+			b.executeWaitActionForUnit(u)
+		}
+	case ACTION_ROTATE:
+		if u, ok := a.(*unit); ok {
+			b.executeRotateActionForUnit(u)
+		}
 	case ACTION_MOVE:
 		if u, ok := a.(*unit); ok {
 			b.executeMoveActionForUnit(u)
@@ -14,6 +22,31 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 	case ACTION_BUILD:
 		b.executeBuildActionForActor(a)
+	}
+}
+
+func (b *battlefield) executeWaitActionForUnit(u *unit) {
+	if b.currentTick % DESIRED_FPS == 0 && rnd.OneChanceFrom(4) {
+		u.currentAction.code = ACTION_ROTATE
+		u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
+	}
+}
+
+func (b *battlefield) executeRotateActionForUnit(u *unit) {
+	if u.turret.canRotate() {
+		if u.turret.rotationDegree == u.currentAction.targetRotation {
+			u.currentAction.code = ACTION_WAIT
+		} else {
+			u.turret.rotationDegree += getDiffForRotationStep(u.turret.rotationDegree, u.currentAction.targetRotation, u.turret.getStaticData().rotateSpeed)
+			u.normalizeDegrees()
+		}
+	} else {
+		if u.chassisDegree == u.currentAction.targetRotation {
+			u.currentAction.code = ACTION_WAIT
+		} else {
+			u.chassisDegree += getDiffForRotationStep(u.chassisDegree, u.currentAction.targetRotation, u.getStaticData().chassisRotationSpeed)
+			u.normalizeDegrees()
+		}
 	}
 }
 

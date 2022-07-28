@@ -4,6 +4,9 @@ type turret struct {
 	code           int
 	rotationDegree int
 	nextTickToAct  int
+
+	targetActor              *actor
+	targetTileX, targetTileY int
 }
 
 func (t *turret) canRotate() bool {
@@ -15,12 +18,7 @@ func (t *turret) getStaticData() *turretStatic {
 }
 
 func (t *turret) normalizeDegrees() {
-	if t.rotationDegree < 0 {
-		t.rotationDegree += 360
-	}
-	if t.rotationDegree >= 360 {
-		t.rotationDegree -= 360
-	}
+	t.rotationDegree = normalizeDegree(t.rotationDegree)
 }
 
 const (
@@ -37,5 +35,9 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
 		spriteCode:  "tank",
 		rotateSpeed: 7,
+	},
+	TRT_QUAD: {
+		spriteCode:  "",
+		rotateSpeed: 0,
 	},
 }
