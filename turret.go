@@ -27,17 +27,22 @@ const (
 )
 
 type turretStatic struct {
-	spriteCode  string
-	rotateSpeed int
+	spriteCode                string
+	rotateSpeed               int
+	fireRange, attackCooldown int
 }
 
 var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
-		spriteCode:  "tank",
-		rotateSpeed: 7,
+		spriteCode:     "tank",
+		rotateSpeed:    7,
+		fireRange:      5,
+		attackCooldown: 15,
 	},
 	TRT_QUAD: {
-		spriteCode:  "",
-		rotateSpeed: 0,
+		spriteCode:     "",
+		rotateSpeed:    0,
+		fireRange:      4,
+		attackCooldown: 25,
 	},
 }

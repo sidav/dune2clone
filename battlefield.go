@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/list"
 	"dune2clone/astar"
 )
 
@@ -98,6 +99,20 @@ func (b *battlefield) costMapForMovement(x, y int) int {
 		return -1
 	}
 	return 10
+}
+
+func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
+	lst := list.List{}
+	for _, u := range b.units {
+		tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
+		if (tx-x)*(tx-x) + (ty-y)*(ty-y) <= r*r {
+			lst.PushFront(u)
+		}
+	}
+	//for _, bld := range b.buildings {
+	//	// TODO!
+	//}
+	return &lst
 }
 
 func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {

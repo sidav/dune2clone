@@ -139,6 +139,10 @@ func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 	return deg == vectorDegree
 }
 
+func getDegreeOfIntVector(vx, vy int) int {
+	return int(180 * math.Atan2(float64(vy), float64(vx)) / 3.14159265358)
+}
+
 func abs(x int) int {
 	if x < 0 {
 		return -x

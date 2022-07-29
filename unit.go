@@ -9,7 +9,7 @@ type unit struct {
 	code             int
 	centerX, centerY float64
 	faction          *faction
-	turret           turret // maybe turrets array?..
+	turret           *turret // maybe turrets array?..
 	currentAction    action
 	currentOrder     order
 	chassisDegree    int
@@ -24,7 +24,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 		centerX:       cx,
 		centerY:       cy,
 		faction:       fact,
-		turret:        turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
+		turret:        &turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
 		chassisDegree: 270,
 	}
 }
