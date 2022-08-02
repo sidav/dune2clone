@@ -87,9 +87,8 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 		}
 	}
 	for i := range b.units {
-		tx, ty := trueCoordsToTileCoords(b.units[i].centerX, b.units[i].centerY)
 		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
-		if tx == x && ty == y {
+		if b.units[i].isPresentAt(x, y) {
 			// debugWrite("got")
 			return b.units[i]
 		}

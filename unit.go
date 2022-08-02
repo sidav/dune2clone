@@ -33,6 +33,11 @@ func (u *unit) markSelected(b bool) {
 	u.isSelected = b
 }
 
+func (u *unit) isPresentAt(tileX, tileY int) bool {
+	tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
+	return tx == tileX && ty == tileY
+}
+
 func (u *unit) getName() string {
 	return u.getStaticData().displayedName
 }

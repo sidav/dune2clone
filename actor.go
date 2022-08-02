@@ -5,4 +5,5 @@ type actor interface {
 	getCurrentAction() *action
 	getName() string
 	getFaction() *faction
+	isPresentAt(int, int) bool
 }
