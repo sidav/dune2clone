@@ -35,19 +35,21 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 			t.targetActor = targetCandidate.(actor)
 			targX, targY := trueCoordsToTileCoords(tc.centerX, tc.centerY)
 			rotateTo := getDegreeOfIntVector(targX-tx, targY-ty)
-			if a.getFaction() == b.factions[1] {
-				debugWritef("TARGET ACQUIRED, rot from %d to %d\n", t.rotationDegree, rotateTo)
-			}
+			//if a.getFaction() == b.factions[1] {
+			//	debugWritef("TARGET ACQUIRED, rot from %d to %d\n", t.rotationDegree, rotateTo)
+			//}
 			if t.rotationDegree == rotateTo {
 				// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
 				projX, projY := tileCoordsToPhysicalCoords(tx, ty)
+				degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
+				rangeSpread := 0.0 // t.getStaticData().shotRangeSpread * 100 / float64(rnd.RandInRange(-100, 100))
 				b.addProjectile(&projectile{
 					faction:        a.getFaction(),
 					code:           PRJ_CANNON,
 					centerX:        projX,
 					centerY:        projY,
-					rotationDegree: t.rotationDegree,
-					fuel:           math.Sqrt((tc.centerX-shooterX)*(tc.centerX-shooterX) + (tc.centerY-shooterY)*(tc.centerY-shooterY)),
+					rotationDegree: t.rotationDegree + degreeSpread,
+					fuel:           math.Sqrt((tc.centerX-shooterX)*(tc.centerX-shooterX)+(tc.centerY-shooterY)*(tc.centerY-shooterY)) + rangeSpread,
 				})
 				t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 			} else if t.canRotate() {

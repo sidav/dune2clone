@@ -30,19 +30,26 @@ type turretStatic struct {
 	spriteCode                string
 	rotateSpeed               int
 	fireRange, attackCooldown int
+
+	fireSpreadDegrees int
+	shotRangeSpread   float64
 }
 
 var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
-		spriteCode:     "tank",
-		rotateSpeed:    7,
-		fireRange:      5,
-		attackCooldown: 15,
+		spriteCode:        "tank",
+		rotateSpeed:       7,
+		fireRange:         5,
+		fireSpreadDegrees: 7,
+		shotRangeSpread:   0.5,
+		attackCooldown:    15,
 	},
 	TRT_QUAD: {
-		spriteCode:     "",
-		rotateSpeed:    0,
-		fireRange:      4,
-		attackCooldown: 25,
+		spriteCode:        "",
+		rotateSpeed:       0,
+		fireRange:         4,
+		fireSpreadDegrees: 7,
+		shotRangeSpread:   0.3,
+		attackCooldown:    25,
 	},
 }
