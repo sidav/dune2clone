@@ -26,17 +26,17 @@ func (b *battlefield) executeActionForActor(a actor) {
 }
 
 func (b *battlefield) executeWaitActionForUnit(u *unit) {
-	if b.currentTick % DESIRED_FPS == 0 && rnd.OneChanceFrom(4) {
-		u.currentAction.code = ACTION_ROTATE
-		u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
-	}
+	//if b.currentTick%DESIRED_FPS == 0 && rnd.OneChanceFrom(4) {
+	//	u.currentAction.code = ACTION_ROTATE
+	//	u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
+	//}
 }
 
 func (b *battlefield) executeRotateActionForUnit(u *unit) {
 	if u.turret.canRotate() {
 		if u.turret.rotationDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
-		} else {
+		} else if u.turret.targetActor == nil {
 			u.turret.rotationDegree += getDiffForRotationStep(u.turret.rotationDegree, u.currentAction.targetRotation, u.turret.getStaticData().rotateSpeed)
 			u.normalizeDegrees()
 		}
@@ -105,7 +105,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 		if bld, ok := a.(*building); ok {
 			for x := bld.topLeftX - 1; x <= bld.topLeftX+bld.getStaticData().w; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
-				y := bld.topLeftY+bld.getStaticData().h
+				y := bld.topLeftY + bld.getStaticData().h
 				if b.costMapForMovement(x, y) != -1 {
 					unt.centerX, unt.centerY = tileCoordsToPhysicalCoords(x, y)
 					// debugWritef("+%v", unt)

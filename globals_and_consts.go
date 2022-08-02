@@ -141,7 +141,7 @@ func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 }
 
 func getDegreeOfIntVector(vx, vy int) int {
-	return int(180 * math.Atan2(float64(vy), float64(vx)) / 3.14159265358)
+	return normalizeDegree(int(180 * math.Atan2(float64(vy), float64(vx)) / 3.14159265358))
 }
 
 func degreeToUnitVector(deg int) (float64, float64) {

@@ -110,7 +110,7 @@ func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	lst := list.List{}
 	for _, u := range b.units {
 		tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
-		if (tx-x)*(tx-x)+(ty-y)*(ty-y) <= r*r {
+		if areCoordsInRange(tx, ty, x, y, r) {
 			lst.PushFront(u)
 		}
 	}

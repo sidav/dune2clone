@@ -23,6 +23,7 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 	if _, ok := a.(*building); ok {
 		panic("Not implemented")
 	}
+	t.targetActor = nil
 	// if targetActor not set...
 	actorsInRange := b.getListOfActorsInRangeFrom(tx, ty, t.getStaticData().fireRange)
 	for l := actorsInRange.Front(); l != nil; l = l.Next() {
@@ -31,8 +32,12 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 			continue
 		}
 		if tc, ok := targetCandidate.(*unit); ok {
+			t.targetActor = targetCandidate.(actor)
 			targX, targY := trueCoordsToTileCoords(tc.centerX, tc.centerY)
 			rotateTo := getDegreeOfIntVector(targX-tx, targY-ty)
+			if a.getFaction() == b.factions[1] {
+				debugWritef("TARGET ACQUIRED, rot from %d to %d\n", t.rotationDegree, rotateTo)
+			}
 			if t.rotationDegree == rotateTo {
 				// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
 				projX, projY := tileCoordsToPhysicalCoords(tx, ty)

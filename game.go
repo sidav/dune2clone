@@ -39,7 +39,7 @@ func (g *game) startGame() {
 				g.battlefield.actForProjectile(proj)
 				tx, ty := trueCoordsToTileCoords(proj.centerX, proj.centerY)
 				if !areCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.fuel <= 0 {
-					debugWrite("Projectile deleted.")
+					// debugWrite("Projectile deleted.")
 					g.battlefield.projectiles.Remove(i)
 				}
 			}

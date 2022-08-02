@@ -5,7 +5,7 @@ type turret struct {
 	rotationDegree int
 	nextTickToAct  int
 
-	targetActor              *actor
+	targetActor              actor
 	targetTileX, targetTileY int
 }
 
