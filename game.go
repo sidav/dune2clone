@@ -30,7 +30,9 @@ func (g *game) startGame() {
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
 			for i := range g.battlefield.buildings {
 				g.battlefield.executeActionForActor(g.battlefield.buildings[i])
-				g.battlefield.actorForActorsTurret(g.battlefield.buildings[i])
+				if g.battlefield.buildings[i].turret != nil {
+					g.battlefield.actorForActorsTurret(g.battlefield.buildings[i])
+				}
 			}
 		}
 		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {

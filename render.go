@@ -77,12 +77,15 @@ func (r *renderer) renderBuilding(b *building) {
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
-		rl.DrawTexture(
-			b.getSprite(),
-			osx,
-			osy,
-			DEFAULT_TINT,
-		)
+		sprites := b.getPartsSprites()
+		for _, s := range sprites {
+			rl.DrawTexture(
+				s,
+				osx,
+				osy,
+				DEFAULT_TINT,
+			)
+		}
 
 		w, h := b.getStaticData().w, b.getStaticData().h
 		if b.isSelected {

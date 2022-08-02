@@ -54,7 +54,7 @@ func (u *unit) getPartsSprites() []rl.Texture2D {
 	if u.turret.canRotate() {
 		return []rl.Texture2D{
 			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
-			unitCannonsAtlaces[u.turret.getStaticData().spriteCode].atlas[degreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
+			turretsAtlaces[u.turret.getStaticData().spriteCode].atlas[degreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
 		}
 	}
 	return []rl.Texture2D{

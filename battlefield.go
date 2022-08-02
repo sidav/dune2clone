@@ -46,19 +46,9 @@ func (b *battlefield) placeInitialStuff() {
 		money:        10000,
 		team:         0,
 	})
-	b.addActor(&building{
-		topLeftX: 1,
-		topLeftY: 1,
-		code:     BLD_BASE,
-		faction:  b.factions[0],
-	})
 
-	b.addActor(&building{
-		topLeftX: 14,
-		topLeftY: 8,
-		code:     BLD_BASE,
-		faction:  b.factions[1],
-	})
+	b.addActor(createBuilding(BLD_BASE, 1, 1, b.factions[0]))
+	b.addActor(createBuilding(BLD_BASE, 14, 8, b.factions[1]))
 
 	b.addActor(createUnit(UNT_TANK, 3, 3, b.factions[0]))
 	b.addActor(createUnit(UNT_TANK, 13, 7, b.factions[1]))

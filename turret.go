@@ -22,8 +22,10 @@ func (t *turret) normalizeDegrees() {
 }
 
 const (
-	TRT_TANK = iota
+	TRT_NONE = iota
+	TRT_TANK
 	TRT_QUAD
+	TRT_CANNON_BUILDING
 )
 
 type turretStatic struct {
@@ -42,7 +44,7 @@ var sTableTurrets = map[int]*turretStatic{
 		fireRange:         5,
 		fireSpreadDegrees: 7,
 		shotRangeSpread:   0.5,
-		attackCooldown:    15,
+		attackCooldown:    25,
 	},
 	TRT_QUAD: {
 		spriteCode:        "",
@@ -51,5 +53,13 @@ var sTableTurrets = map[int]*turretStatic{
 		fireSpreadDegrees: 7,
 		shotRangeSpread:   0.3,
 		attackCooldown:    25,
+	},
+	TRT_CANNON_BUILDING: {
+		spriteCode:        "tank",
+		rotateSpeed:       3,
+		fireRange:         7,
+		fireSpreadDegrees: 7,
+		shotRangeSpread:   0.5,
+		attackCooldown:    50,
 	},
 }
