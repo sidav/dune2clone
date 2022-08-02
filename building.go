@@ -53,6 +53,10 @@ func (b *building) getFaction() *faction {
 	return b.faction
 }
 
+func (b *building) getPhysicalCenterCoords() (float64, float64) {
+	return float64(b.topLeftX) + float64(b.getStaticData().w)/2, float64(b.topLeftY) + float64(b.getStaticData().h)/2
+}
+
 func (b *building) isPresentAt(tileX, tileY int) bool {
 	w, h := b.getStaticData().w, b.getStaticData().h
 	return areCoordsInTileRect(tileX, tileY, b.topLeftX, b.topLeftY, w, h)

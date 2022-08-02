@@ -140,8 +140,31 @@ func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 	return deg == vectorDegree
 }
 
+func AreCoordsInRangeFromRect(fx, fy, tx, ty, w, h, r int) bool { // considering ANY of the tiles in the rect.
+	return AreRectsInRange(fx, fy, 1, 1, tx, ty, w, h, r)
+}
+
+func getDegreeOfFloatVector(vx, vy float64) int {
+	return normalizeDegree(int(180 * math.Atan2(vy, vx) / 3.14159265358))
+}
+
 func getDegreeOfIntVector(vx, vy int) int {
-	return normalizeDegree(int(180 * math.Atan2(float64(vy), float64(vx)) / 3.14159265358))
+	return getDegreeOfFloatVector(float64(vy), float64(vx))
+}
+
+func AreTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
+	// WARNING:
+	// ALL "-1"s HERE ARE BECAUSE OF WE ARE IN CELLS SPACE
+	// I.E. A SINGLE CELL IS 1x1 RECTANGLE
+	// SO RECTS (0, 0, 1x1) AND (1, 0, 1x1) ARE NOT OVERLAPPING IN THIS SPACE (BUT SHOULD IN EUCLIDEAN OF COURSE)
+	right1 := x1 + w1 - 1
+	bot1 := y1 + h1 - 1
+	right2 := x2 + w2 - 1
+	bot2 := y2 + h2 - 1
+	return !(x2 > right1 ||
+		right2 < x1 ||
+		y2 > bot1 ||
+		bot2 < y1)
 }
 
 func degreeToUnitVector(deg int) (float64, float64) {
@@ -173,7 +196,7 @@ func areCoordsInTileRect(x, y, rx, ry, w, h int) bool {
 	return x >= rx && x < rx+w && y >= ry && y < ry+h
 }
 
-func areCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
+func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	// uses more wide circle (like in Bresenham's circle) than the real geometric one.
 	// It is much more handy for spaces with discrete coords (cells).
 	realSqDistanceAndSqRadiusDiff := (fx-tx)*(fx-tx) + (fy-ty)*(fy-ty) - r*r
