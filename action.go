@@ -25,7 +25,7 @@ func (a *action) getTextDescription() string {
 	case ACTION_BUILD:
 		return "Constructing"
 	}
-	panic(any("No action description!"))
+	panic("No action description!")
 }
 
 func (a *action) reset() {
