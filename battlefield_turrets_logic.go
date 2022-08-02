@@ -1,6 +1,9 @@
 package main
 
-import "math"
+import (
+	"dune2clone/geometry"
+	"math"
+)
 
 func (b *battlefield) actorForActorsTurret(a actor) {
 	if a.getCurrentAction().code != ACTION_ROTATE {
@@ -20,7 +23,7 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 	shooterTileX, shooterTileY := 0, 0
 	shooterX, shooterY := 0.0, 0.0
 	if u, ok := a.(*unit); ok {
-		shooterTileX, shooterTileY = trueCoordsToTileCoords(u.centerX, u.centerY)
+		shooterTileX, shooterTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		shooterX, shooterY = u.centerX, u.centerY
 	}
 	if bld, ok := a.(*building); ok {
@@ -44,14 +47,14 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 	rotateTo := 0
 	if tc, ok := t.targetActor.(*unit); ok {
 		targetCenterX, targetCenterY = tc.centerX, tc.centerY
-		rotateTo = getDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
+		rotateTo = geometry.GetDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
 	} else if tc, ok := t.targetActor.(*building); ok {
 		targetCenterX, targetCenterY = tc.getPhysicalCenterCoords()
-		rotateTo = getDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
+		rotateTo = geometry.GetDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
 	}
 	if t.rotationDegree == rotateTo {
 		// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
-		projX, projY := tileCoordsToPhysicalCoords(shooterTileX, shooterTileY)
+		projX, projY := geometry.TileCoordsToPhysicalCoords(shooterTileX, shooterTileY)
 		degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
 		rangeSpread := 0.0 // t.getStaticData().shotRangeSpread * 100 / float64(rnd.RandInRange(-100, 100))
 		b.addProjectile(&projectile{
@@ -64,7 +67,7 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 		})
 		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 	} else if t.canRotate() {
-		t.rotationDegree += getDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
+		t.rotationDegree += geometry.GetDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
 		t.normalizeDegrees()
 	}
 }

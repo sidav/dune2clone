@@ -1,6 +1,9 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"dune2clone/geometry"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type game struct {
 	battlefield battlefield
@@ -39,8 +42,8 @@ func (g *game) startGame() {
 			for i := g.battlefield.projectiles.Front(); i != nil; i = i.Next() {
 				proj := i.Value.(*projectile)
 				g.battlefield.actForProjectile(proj)
-				tx, ty := trueCoordsToTileCoords(proj.centerX, proj.centerY)
-				if !areCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.fuel <= 0 {
+				tx, ty := geometry.TrueCoordsToTileCoords(proj.centerX, proj.centerY)
+				if !geometry.AreCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.fuel <= 0 {
 					// debugWrite("Projectile deleted.")
 					g.battlefield.projectiles.Remove(i)
 				}

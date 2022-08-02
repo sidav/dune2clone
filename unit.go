@@ -1,8 +1,8 @@
 package main
 
 import (
+	"dune2clone/geometry"
 	rl "github.com/gen2brain/raylib-go/raylib"
-	"math"
 )
 
 type unit struct {
@@ -18,7 +18,7 @@ type unit struct {
 }
 
 func createUnit(code, tx, ty int, fact *faction) *unit {
-	cx, cy := tileCoordsToPhysicalCoords(tx, ty)
+	cx, cy := geometry.TileCoordsToPhysicalCoords(tx, ty)
 	return &unit{
 		code:          code,
 		centerX:       cx,
@@ -34,7 +34,7 @@ func (u *unit) markSelected(b bool) {
 }
 
 func (u *unit) isPresentAt(tileX, tileY int) bool {
-	tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
+	tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	return tx == tileX && ty == tileY
 }
 
@@ -53,28 +53,28 @@ func (u *unit) getFaction() *faction {
 func (u *unit) getPartsSprites() []rl.Texture2D {
 	if u.turret.canRotate() {
 		return []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
-			turretsAtlaces[u.turret.getStaticData().spriteCode].atlas[degreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+			turretsAtlaces[u.turret.getStaticData().spriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
 		}
 	}
 	return []rl.Texture2D{
-		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[degreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
 	}
 }
 
 func (u *unit) normalizeDegrees() {
-	u.chassisDegree = normalizeDegree(u.chassisDegree)
+	u.chassisDegree = geometry.NormalizeDegree(u.chassisDegree)
 	u.turret.normalizeDegrees()
 }
 
 func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
-	if isVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
+	if geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
 		return
 	}
-	degs := int(180 * math.Atan2(vy, vx) / 3.14159265358)
-	rotateSpeed := getDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
+	degs := geometry.GetDegreeOfFloatVector(vx, vy)
+	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
 
-	// debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree, u.cannonDegree, )
+	debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
 	u.chassisDegree += rotateSpeed
 	u.turret.rotationDegree += rotateSpeed
 	u.normalizeDegrees()

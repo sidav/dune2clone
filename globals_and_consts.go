@@ -37,34 +37,6 @@ func halfPhysicalTileSize() int {
 	return TILE_PHYSICAL_SIZE / 2
 }
 
-func areTileCoordsValid(tx, ty int) bool {
-	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
-}
-
-func trueCoordsToTileCoords(tx, ty float64) (int, int) {
-	return int(tx), int(ty)
-}
-
-func tileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
-	//halfTileSize := TILE_PHYSICAL_SIZE/2
-	//if TILE_PHYSICAL_SIZE % 2 == 1 {
-	//	halfTileSize++
-	//}
-	//return tx * TILE_PHYSICAL_SIZE + halfTileSize, ty * TILE_PHYSICAL_SIZE + halfTileSize
-	return float64(tx) + 0.5, float64(ty) + 0.5
-}
-
-func circlesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
-	tx := x2 - x1
-	ty := y2 - y1
-	r := r1 + r2
-
-	if tx*tx+ty*ty < r*r {
-		return true
-	}
-	return false
-}
-
 // trying to overcome rounding issues
 func areFloatsAlmostEqual(f, g float64) bool {
 	return math.Abs(f-g) < 0.0001
@@ -82,93 +54,18 @@ func debugWritef(msg string, args ...interface{}) {
 	}
 }
 
-func degreeToRotationFrameNumber(degree, sectorsInCircle int) int {
-	sectorWidth := 360 / sectorsInCircle
-	degree += sectorWidth / 2
-	for degree < 0 {
-		degree += 360
-	}
-	for degree >= 360 {
-		degree -= 360
-	}
-	num := 0
-	for degree >= sectorWidth {
-		degree -= sectorWidth
-		num++
-	}
-	// +1 is because initial images look up (last frame number)
-	return (num + 90/sectorWidth) % (360 / sectorWidth)
+func areTileCoordsValid(tx, ty int) bool {
+	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
 }
 
-func getDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
-	if targetDegree == currDegree {
-		return 0
+func sign(x int) int {
+	if x < 0 {
+		return -1
 	}
-	if targetDegree < 0 {
-		targetDegree += 360
+	if x > 0 {
+		return 1
 	}
-	diff := currDegree - targetDegree
-	for diff < 0 {
-		diff += 360
-	}
-	if rotateSpeed > diff {
-		rotateSpeed = diff
-	} else if rotateSpeed > 360-diff {
-		rotateSpeed = 360 - diff
-	}
-	if diff <= 180 {
-		rotateSpeed = -rotateSpeed
-	}
-	return rotateSpeed
-}
-
-func normalizeDegree(deg int) int {
-	for deg < 0 {
-		deg += 360
-	}
-	for deg >= 360 {
-		deg -= 360
-	}
-	return deg
-}
-
-func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
-	vectorDegree := int(180 * math.Atan2(vy, vx) / 3.14159265358)
-	for vectorDegree < 0 {
-		vectorDegree += 360
-	}
-	return deg == vectorDegree
-}
-
-func AreCoordsInRangeFromRect(fx, fy, tx, ty, w, h, r int) bool { // considering ANY of the tiles in the rect.
-	return AreRectsInRange(fx, fy, 1, 1, tx, ty, w, h, r)
-}
-
-func getDegreeOfFloatVector(vx, vy float64) int {
-	return normalizeDegree(int(180 * math.Atan2(vy, vx) / 3.14159265358))
-}
-
-func getDegreeOfIntVector(vx, vy int) int {
-	return getDegreeOfFloatVector(float64(vy), float64(vx))
-}
-
-func AreTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
-	// WARNING:
-	// ALL "-1"s HERE ARE BECAUSE OF WE ARE IN CELLS SPACE
-	// I.E. A SINGLE CELL IS 1x1 RECTANGLE
-	// SO RECTS (0, 0, 1x1) AND (1, 0, 1x1) ARE NOT OVERLAPPING IN THIS SPACE (BUT SHOULD IN EUCLIDEAN OF COURSE)
-	right1 := x1 + w1 - 1
-	bot1 := y1 + h1 - 1
-	right2 := x2 + w2 - 1
-	bot2 := y2 + h2 - 1
-	return !(x2 > right1 ||
-		right2 < x1 ||
-		y2 > bot1 ||
-		bot2 < y1)
-}
-
-func degreeToUnitVector(deg int) (float64, float64) {
-	return math.Cos(float64(deg) * 3.14159265358 / 180.0), math.Sin(float64(deg) * 3.14159265358 / 180.0)
+	return 0
 }
 
 func abs(x int) int {
@@ -190,25 +87,4 @@ func min(x, y int) int {
 		return y
 	}
 	return x
-}
-
-func areCoordsInTileRect(x, y, rx, ry, w, h int) bool {
-	return x >= rx && x < rx+w && y >= ry && y < ry+h
-}
-
-func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
-	// uses more wide circle (like in Bresenham's circle) than the real geometric one.
-	// It is much more handy for spaces with discrete coords (cells).
-	realSqDistanceAndSqRadiusDiff := (fx-tx)*(fx-tx) + (fy-ty)*(fy-ty) - r*r
-	return realSqDistanceAndSqRadiusDiff < r
-}
-
-func sign(x int) int {
-	if x < 0 {
-		return -1
-	}
-	if x > 0 {
-		return 1
-	}
-	return 0
 }

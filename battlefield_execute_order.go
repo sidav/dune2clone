@@ -1,5 +1,7 @@
 package main
 
+import "dune2clone/geometry"
+
 func (b *battlefield) executeOrderForUnit(u *unit) {
 	if u.currentAction.code != ACTION_WAIT {
 		return // execute the order only after finishing the action
@@ -16,7 +18,7 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 
 func (b *battlefield) executeMoveOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
-	utx, uty := trueCoordsToTileCoords(u.centerX, u.centerY)
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
 	path := b.findPathForUnitTo(u, orderTileX, orderTileY)
 	vx, vy := path.GetNextStepVector()

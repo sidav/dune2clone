@@ -1,5 +1,7 @@
 package main
 
+import "dune2clone/geometry"
+
 type turret struct {
 	code           int
 	rotationDegree int
@@ -18,7 +20,7 @@ func (t *turret) getStaticData() *turretStatic {
 }
 
 func (t *turret) normalizeDegrees() {
-	t.rotationDegree = normalizeDegree(t.rotationDegree)
+	t.rotationDegree = geometry.NormalizeDegree(t.rotationDegree)
 }
 
 const (

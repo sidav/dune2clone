@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dune2clone/geometry"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -71,7 +72,7 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 }
 
 func (r *renderer) renderBuilding(b *building) {
-	x, y := tileCoordsToPhysicalCoords(b.topLeftX, b.topLeftY)
+	x, y := geometry.TileCoordsToPhysicalCoords(b.topLeftX, b.topLeftY)
 	x -= 0.5
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
@@ -139,7 +140,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
 		sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode].
-			atlas[degreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
+			atlas[geometry.DegreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
 		rl.DrawTexture(
 			sprite,
 			osx,

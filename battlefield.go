@@ -3,6 +3,7 @@ package main
 import (
 	"container/list"
 	"dune2clone/astar"
+	"dune2clone/geometry"
 )
 
 type battlefield struct {
@@ -98,59 +99,21 @@ func (b *battlefield) costMapForMovement(x, y int) int {
 func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	lst := list.List{}
 	for _, u := range b.units {
-		tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
-		if AreCoordsInRange(tx, ty, x, y, r) {
+		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+		if geometry.AreCoordsInRange(tx, ty, x, y, r) {
 			lst.PushBack(u)
 		}
 	}
 	for _, bld := range b.buildings {
-		if AreCoordsInRangeFromRect(x, y, bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, r) {
+		if geometry.AreCoordsInRangeFromRect(x, y, bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, r) {
 			lst.PushBack(bld)
 		}
 	}
 	return &lst
 }
 
-func AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
-	// all -1's are beacuse of TILED geometry
-	x1b := x1+w1-1
-	x2b := x2+w2-1
-	y1b := y1+h1-1
-	y2b := y2+h2-1
-
-	left := x2b < x1
-	right := x1b < x2
-	bottom := y1b < y2
-	top := y2b < y1
-	if top && left {
-		return AreCoordsInRange(x1, y1, x2b, y2b, r) // dist((x1, y1b), (x2b, y2))
-	}
-	if left && bottom {
-		return AreCoordsInRange(x1, y1b, x2b, y2, r)
-	}
-	if bottom && right {
-		return AreCoordsInRange(x1b, y1b, x2, y2, r)
-	}
-	if right && top {
-		return AreCoordsInRange(x1b, y1, x2, y2b, r)
-	}
-	if left {
-		return x1 - x2b <= r
-	}
-	if right {
-		return x2 - x1b <= r
-	}
-	if bottom {
-		return y2 - y1b <= r
-	}
-	if top {
-		return y1 - y2b <= r
-	}
-	return true // intersect detected
-}
-
 func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {
-	utx, uty := trueCoordsToTileCoords(u.centerX, u.centerY)
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	return b.pathfinder.FindPath(
 		func(x, y int) int {
 			return b.costMapForMovement(x, y)

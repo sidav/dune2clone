@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dune2clone/geometry"
 	"math"
 )
 
@@ -37,14 +38,14 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 		if u.turret.rotationDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
 		} else if u.turret.targetActor == nil {
-			u.turret.rotationDegree += getDiffForRotationStep(u.turret.rotationDegree, u.currentAction.targetRotation, u.turret.getStaticData().rotateSpeed)
+			u.turret.rotationDegree += geometry.GetDiffForRotationStep(u.turret.rotationDegree, u.currentAction.targetRotation, u.turret.getStaticData().rotateSpeed)
 			u.normalizeDegrees()
 		}
 	} else {
 		if u.chassisDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
 		} else {
-			u.chassisDegree += getDiffForRotationStep(u.chassisDegree, u.currentAction.targetRotation, u.getStaticData().chassisRotationSpeed)
+			u.chassisDegree += geometry.GetDiffForRotationStep(u.chassisDegree, u.currentAction.targetRotation, u.getStaticData().chassisRotationSpeed)
 			u.normalizeDegrees()
 		}
 	}
@@ -52,10 +53,10 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 
 func (b *battlefield) executeMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
-	tx, ty := tileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	tx, ty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 
 	if tx != x {
-		if !isVectorDegreeEqualTo(tx-x, 0, u.chassisDegree) {
+		if !geometry.IsVectorDegreeEqualTo(tx-x, 0, u.chassisDegree) {
 			u.rotateChassisTowardsVector(tx-x, 0)
 			return
 		}
@@ -65,7 +66,7 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 			u.centerX += u.getStaticData().movementSpeed * (tx - x) / math.Abs(tx-x)
 		}
 	} else if ty != y {
-		if !isVectorDegreeEqualTo(0, ty-y, u.chassisDegree) {
+		if !geometry.IsVectorDegreeEqualTo(0, ty-y, u.chassisDegree) {
 			u.rotateChassisTowardsVector(0, ty-y)
 			return
 		}
@@ -107,7 +108,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
 				if b.costMapForMovement(x, y) != -1 {
-					unt.centerX, unt.centerY = tileCoordsToPhysicalCoords(x, y)
+					unt.centerX, unt.centerY = geometry.TileCoordsToPhysicalCoords(x, y)
 					// debugWritef("+%v", unt)
 					b.addActor(unt)
 					bld.currentAction.reset()

@@ -1,6 +1,9 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"dune2clone/geometry"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type building struct {
 	currentAction      action
@@ -29,7 +32,7 @@ func (b *building) getPartsSprites() []rl.Texture2D {
 	if b.turret != nil {
 		return []rl.Texture2D{
 			buildingsAtlaces[b.code].atlas[0][0],
-			turretsAtlaces[b.turret.getStaticData().spriteCode].atlas[degreeToRotationFrameNumber(b.turret.rotationDegree, 8)][0],
+			turretsAtlaces[b.turret.getStaticData().spriteCode].atlas[geometry.DegreeToRotationFrameNumber(b.turret.rotationDegree, 8)][0],
 		}
 	}
 	return []rl.Texture2D{
@@ -59,7 +62,7 @@ func (b *building) getPhysicalCenterCoords() (float64, float64) {
 
 func (b *building) isPresentAt(tileX, tileY int) bool {
 	w, h := b.getStaticData().w, b.getStaticData().h
-	return areCoordsInTileRect(tileX, tileY, b.topLeftX, b.topLeftY, w, h)
+	return geometry.AreCoordsInTileRect(tileX, tileY, b.topLeftX, b.topLeftY, w, h)
 }
 
 func (b *building) getStaticData() *buildingStatic {
