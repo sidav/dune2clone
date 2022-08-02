@@ -25,7 +25,8 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 	if pc.selection == nil {
 		return
 	}
-	rl.DrawText(pc.selection.getName(), x+15, y+1, 32, rl.Green)
+	rl.DrawText(fmt.Sprintf("%s (%s)", pc.selection.getName(), pc.selection.getCurrentAction().getTextDescription()),
+		x+15, y+1, 32, rl.Green)
 	// if u, ok := pc.selection.(*unit); ok {}
 	if bld, ok := pc.selection.(*building); ok {
 		r.renderSelectedBuildingUI(bld, x, y)
@@ -41,7 +42,7 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 			if b.isRectClearForBuilding(tx+i, ty+j, 1, 1) {
 				color = rl.Green
 			}
-			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS), int32((ty+j) * TILE_SIZE_IN_PIXELS), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
+			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS), int32((ty+j)*TILE_SIZE_IN_PIXELS), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
 		}
 	}
 }
@@ -57,13 +58,13 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 		}
 		for _, code := range bld.getStaticData().produces {
 			rl.DrawText(fmt.Sprintf("%s - Make %s ($%d)", sTableUnits[code].hotkeyToBuild,
-				sTableUnits[code].displayedName,sTableUnits[code].cost),
+				sTableUnits[code].displayedName, sTableUnits[code].cost),
 				x+4, y+1+32+32*line, 32, rl.Orange)
 			line++
 		}
 	}
 	if bld.currentAction.code == ACTION_BUILD {
-			rl.DrawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
-				x+4, y+1+32+32, 32, rl.Orange)
+		rl.DrawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
+			x+4, y+1+32+32, 32, rl.Orange)
 	}
 }

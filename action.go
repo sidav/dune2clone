@@ -14,6 +14,20 @@ type action struct {
 	completionAmount   int
 }
 
+func (a *action) getTextDescription() string {
+	switch a.code {
+	case ACTION_WAIT:
+		return "Standing by"
+	case ACTION_MOVE:
+		return "Moving to position"
+	case ACTION_ROTATE:
+		return "Rotating"
+	case ACTION_BUILD:
+		return "Constructing"
+	}
+	panic(any("No action description!"))
+}
+
 func (a *action) reset() {
 	a.targetActor = nil
 	a.code = ACTION_WAIT
@@ -23,10 +37,10 @@ func (a *action) reset() {
 func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
-			return 100*a.completionAmount/(b.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
+			return 100 * a.completionAmount / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
-			return 100*a.completionAmount/(b.getStaticData().buildTime * (DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
+			return 100 * a.completionAmount / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
 	return -1
