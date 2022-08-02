@@ -35,7 +35,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	//}
 
 	for i := range b.buildings {
-		r.renderBuilding(b.buildings[i])
+		r.renderBuilding(b, b.buildings[i])
 	}
 	for i := range b.units {
 		r.renderUnit(b.units[i])
@@ -71,14 +71,14 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 	}
 }
 
-func (r *renderer) renderBuilding(b *building) {
-	x, y := geometry.TileCoordsToPhysicalCoords(b.topLeftX, b.topLeftY)
+func (r *renderer) renderBuilding(b *battlefield, bld *building) {
+	x, y := geometry.TileCoordsToPhysicalCoords(bld.topLeftX, bld.topLeftY)
 	x -= 0.5
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
-		sprites := b.getPartsSprites()
+		sprites := bld.getPartsSprites()
 		for _, s := range sprites {
 			rl.DrawTexture(
 				s,
@@ -88,18 +88,28 @@ func (r *renderer) renderBuilding(b *building) {
 			)
 		}
 
-		w, h := b.getStaticData().w, b.getStaticData().h
-		if b.isSelected {
+		w, h := bld.getStaticData().w, bld.getStaticData().h
+		if bld.isSelected {
 			col := rl.Green
 			rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS*int32(w), TILE_SIZE_IN_PIXELS*int32(h), col)
 			rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
 			rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
 		}
 		// render completion circle
-		if b.currentAction.getCompletionPercent() >= 0 {
+		if bld.currentAction.getCompletionPercent() >= 0 {
 			r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
 				osy+int32(TILE_SIZE_IN_PIXELS*h/2),
-				TILE_SIZE_IN_PIXELS/4, b.currentAction.getCompletionPercent(), rl.Green)
+				TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
+		}
+		// render faction flag
+		if bld.faction != nil {
+			degree := (b.currentTick*6) % 360
+			rl.DrawTexture(
+				uiAtlaces["factionflag"].atlas[geometry.DegreeToRotationFrameNumber(degree, 8)][0],
+				osx+2,
+				osy+int32(bld.getStaticData().h * TILE_SIZE_IN_PIXELS) - uiAtlaces["factionflag"].atlas[0][0].Height-2,
+				bld.faction.factionColor,
+			)
 		}
 	}
 }

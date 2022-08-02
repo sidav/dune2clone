@@ -11,7 +11,7 @@ type faction struct {
 	team         int // 0 means "enemy to all"
 }
 
-const zeroTiltColor = 48
+const zeroTiltColor = 32
 const strongerTiltColor = 128
 
 var factionTints = []color.RGBA{

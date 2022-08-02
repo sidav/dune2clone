@@ -13,6 +13,8 @@ var (
 	unitChassisAtlaces = map[string]*spriteAtlas{}
 	turretsAtlaces     = map[string]*spriteAtlas{}
 	projectilesAtlaces = map[string]*spriteAtlas{}
+
+	uiAtlaces = map[string]*spriteAtlas{}
 )
 
 func loadResources() {
@@ -38,6 +40,9 @@ func loadSprites() {
 
 	projectilesAtlaces = make(map[string]*spriteAtlas)
 	projectilesAtlaces["cannon"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/cannon.png", 16, 16, 1, 2)
+
+	uiAtlaces = make(map[string]*spriteAtlas)
+	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile("resources/sprites/ui/building_faction_flag.png", 8, 8, 1, 2)
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {
