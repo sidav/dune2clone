@@ -46,14 +46,14 @@ func (b *battlefield) placeInitialStuff() {
 		money:        10000,
 		team:         0,
 	})
-	b.buildings = append(b.buildings, &building{
+	b.addActor(&building{
 		topLeftX: 1,
 		topLeftY: 1,
 		code:     BLD_BASE,
 		faction:  b.factions[0],
 	})
 
-	b.buildings = append(b.buildings, &building{
+	b.addActor(&building{
 		topLeftX: 14,
 		topLeftY: 8,
 		code:     BLD_BASE,

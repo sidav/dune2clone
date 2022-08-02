@@ -70,7 +70,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 				targetBld := bld.currentAction.targetActor.(*building)
 				targetBld.topLeftX = tx
 				targetBld.topLeftY = ty
-				b.buildings = append(b.buildings, targetBld)
+				b.addActor(targetBld)
 				pc.mode = PCMODE_NONE
 				bld.currentAction.reset()
 			}
