@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"image"
 	"image/png"
+	"os"
 )
 
 var (
@@ -12,7 +12,7 @@ var (
 	buildingsAtlaces   = map[int]*spriteAtlas{}
 	unitChassisAtlaces = map[string]*spriteAtlas{}
 	unitCannonsAtlaces = map[string]*spriteAtlas{}
-	projectilesAtlaces = map[int]*spriteAtlas{}
+	projectilesAtlaces = map[string]*spriteAtlas{}
 )
 
 func loadResources() {
@@ -21,20 +21,22 @@ func loadResources() {
 
 func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
-	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 16,16, 1, false)
+	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 16, 16, 1, false)
 
 	buildingsAtlaces = make(map[int]*spriteAtlas)
-	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 32,32, 1, false)
+	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 32, 32, 1, false)
 	buildingsAtlaces[BLD_POWERPLANT] = CreateAtlasFromFile("resources/sprites/buildings/powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
 	buildingsAtlaces[BLD_FACTORY] = CreateAtlasFromFile("resources/sprites/buildings/factory.png", 0, 0, 48, 32, 48, 32, 1, false)
 
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	unitCannonsAtlaces = make(map[string]*spriteAtlas)
-	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png",16, 16, 1, 2)
+	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png", 16, 16, 1, 2)
 	unitCannonsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
 
-	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile("resources/sprites/units/quad.png",16, 16, 1, 2)
+	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile("resources/sprites/units/quad.png", 16, 16, 1, 2)
 
+	projectilesAtlaces = make(map[string]*spriteAtlas)
+	projectilesAtlaces["cannon"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/cannon.png", 16, 16, 1, 2)
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {
@@ -89,7 +91,7 @@ func CreateDirectionalAtlasFromFile(filename string, originalSpriteSize, desired
 	newAtlas := spriteAtlas{
 		// spriteSize: desiredSpriteSize * int(SPRITE_SCALE_FACTOR),
 	}
-	newAtlas.atlas = make([][]rl.Texture2D, 4 * directionsInFile)
+	newAtlas.atlas = make([][]rl.Texture2D, 4*directionsInFile)
 
 	for currFrame := 0; currFrame < totalFrames; currFrame++ {
 		for currDirectionFromFile := 0; currDirectionFromFile < directionsInFile; currDirectionFromFile++ {

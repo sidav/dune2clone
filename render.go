@@ -39,7 +39,9 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	for i := range b.units {
 		r.renderUnit(b.units[i])
 	}
-
+	for p := b.projectiles.Front(); p != nil; p = p.Next() {
+		r.renderProjectile(p.Value.(*projectile))
+	}
 	//for x := range b.tiles {
 	//	for y := range b.tiles[x] {
 	//		rl.DrawText(fmt.Sprintf("%d", b.costMapForMovement(x, y)),
@@ -114,8 +116,8 @@ func (r *renderer) renderUnit(u *unit) {
 		}
 		if u.isSelected {
 			col := rl.DarkGreen
-			circleX := osx+TILE_SIZE_IN_PIXELS/2
-			circleY := osy+TILE_SIZE_IN_PIXELS/2
+			circleX := osx + TILE_SIZE_IN_PIXELS/2
+			circleY := osy + TILE_SIZE_IN_PIXELS/2
 			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2, col)
 			rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-1, col)
 			//rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-2, col)
@@ -125,6 +127,22 @@ func (r *renderer) renderUnit(u *unit) {
 			//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
 			//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
 		}
+	}
+}
+
+func (r *renderer) renderProjectile(proj *projectile) {
+	x, y := proj.centerX, proj.centerY
+	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
+	// fmt.Printf("%d, %d \n", osx, osy)
+	if r.AreOnScreenCoordsInViewport(osx, osy) {
+		sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode].
+			atlas[degreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
+		rl.DrawTexture(
+			sprite,
+			osx,
+			osy,
+			proj.faction.factionColor,
+		)
 	}
 }
 

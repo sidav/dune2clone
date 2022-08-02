@@ -13,9 +13,10 @@ var (
 const (
 	DEBUG_OUTPUT = true
 
-	DESIRED_FPS                 = 60
-	UNIT_ACTIONS_TICK_EACH      = 2
-	BUILDINGS_ACTIONS_TICK_EACH = 5
+	DESIRED_FPS                   = 60
+	UNIT_ACTIONS_TICK_EACH        = 2
+	PROJECTILES_ACTIONS_TICK_EACH = 2
+	BUILDINGS_ACTIONS_TICK_EACH   = 5
 
 	SPRITE_SCALE_FACTOR          = 4.0
 	ORIGINAL_TILE_SIZE_IN_PIXELS = 16
@@ -113,7 +114,7 @@ func getDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
 	if rotateSpeed > diff {
 		rotateSpeed = diff
 	} else if rotateSpeed > 360-diff {
-		rotateSpeed = 360-diff
+		rotateSpeed = 360 - diff
 	}
 	if diff <= 180 {
 		rotateSpeed = -rotateSpeed
@@ -141,6 +142,10 @@ func isVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 
 func getDegreeOfIntVector(vx, vy int) int {
 	return int(180 * math.Atan2(float64(vy), float64(vx)) / 3.14159265358)
+}
+
+func degreeToUnitVector(deg int) (float64, float64) {
+	return math.Cos(float64(deg) * 3.14159265358 / 180.0), math.Sin(float64(deg) * 3.14159265358 / 180.0)
 }
 
 func abs(x int) int {

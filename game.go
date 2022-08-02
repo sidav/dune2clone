@@ -20,22 +20,32 @@ func (g *game) startGame() {
 
 		pc.playerControl(&g.battlefield)
 
-		// execute unit actions
-		if g.battlefield.currentTick % UNIT_ACTIONS_TICK_EACH == 0 {
+		// execute actions
+		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 0 {
 			for i := range g.battlefield.units {
 				g.battlefield.executeActionForActor(g.battlefield.units[i])
 				g.battlefield.actorForActorsTurret(g.battlefield.units[i])
 			}
 		}
-		if g.battlefield.currentTick % BUILDINGS_ACTIONS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
 			for i := range g.battlefield.buildings {
 				g.battlefield.executeActionForActor(g.battlefield.buildings[i])
 				g.battlefield.actorForActorsTurret(g.battlefield.buildings[i])
 			}
 		}
-
-		// execute unit orders
-		if g.battlefield.currentTick % UNIT_ACTIONS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {
+			for i := g.battlefield.projectiles.Front(); i != nil; i = i.Next() {
+				proj := i.Value.(*projectile)
+				g.battlefield.actForProjectile(proj)
+				tx, ty := trueCoordsToTileCoords(proj.centerX, proj.centerY)
+				if !areCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.fuel <= 0 {
+					debugWrite("Projectile deleted.")
+					g.battlefield.projectiles.Remove(i)
+				}
+			}
+		}
+		// execute orders
+		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
 			for i := range g.battlefield.units {
 				g.battlefield.executeOrderForUnit(g.battlefield.units[i])
 			}

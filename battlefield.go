@@ -6,10 +6,11 @@ import (
 )
 
 type battlefield struct {
-	tiles     [][]tile
-	factions  []*faction
-	buildings []*building
-	units     []*unit
+	tiles       [][]tile
+	factions    []*faction
+	buildings   []*building
+	units       []*unit
+	projectiles list.List
 
 	pathfinder  *astar.AStarPathfinder
 	currentTick int
@@ -74,6 +75,10 @@ func (b *battlefield) addActor(a actor) {
 	}
 }
 
+func (b *battlefield) addProjectile(p *projectile) {
+	b.projectiles.PushFront(p)
+}
+
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	for i := range b.buildings {
 		if b.buildings[i].isPresentAt(x, y) {
@@ -105,7 +110,7 @@ func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	lst := list.List{}
 	for _, u := range b.units {
 		tx, ty := trueCoordsToTileCoords(u.centerX, u.centerY)
-		if (tx-x)*(tx-x) + (ty-y)*(ty-y) <= r*r {
+		if (tx-x)*(tx-x)+(ty-y)*(ty-y) <= r*r {
 			lst.PushFront(u)
 		}
 	}
@@ -135,4 +140,3 @@ func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool 
 	}
 	return true
 }
-

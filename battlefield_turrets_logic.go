@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func (b *battlefield) actorForActorsTurret(a actor) {
 	if a.getCurrentAction().code != ACTION_ROTATE {
 		if u, ok := a.(*unit); ok {
@@ -13,8 +15,10 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 		return
 	}
 	tx, ty := 0, 0
+	shooterX, shooterY := 0.0, 0.0
 	if u, ok := a.(*unit); ok {
 		tx, ty = trueCoordsToTileCoords(u.centerX, u.centerY)
+		shooterX, shooterY = u.centerX, u.centerY
 	}
 	if _, ok := a.(*building); ok {
 		panic("Not implemented")
@@ -30,7 +34,16 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 			targX, targY := trueCoordsToTileCoords(tc.centerX, tc.centerY)
 			rotateTo := getDegreeOfIntVector(targX-tx, targY-ty)
 			if t.rotationDegree == rotateTo {
-				debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
+				// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
+				projX, projY := tileCoordsToPhysicalCoords(tx, ty)
+				b.addProjectile(&projectile{
+					faction:        a.getFaction(),
+					code:           PRJ_CANNON,
+					centerX:        projX,
+					centerY:        projY,
+					rotationDegree: t.rotationDegree,
+					fuel:           math.Sqrt((tc.centerX-shooterX)*(tc.centerX-shooterX) + (tc.centerY-shooterY)*(tc.centerY-shooterY)),
+				})
 				t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 			} else if t.canRotate() {
 				t.rotationDegree += getDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
