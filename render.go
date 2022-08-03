@@ -78,7 +78,20 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
-		sprites := bld.getPartsSprites()
+		// get sprite
+		var sprites []rl.Texture2D
+		if bld.turret != nil {
+			sprites = []rl.Texture2D{
+				buildingsAtlaces[bld.code].atlas[0][0],
+				turretsAtlaces[bld.turret.getStaticData().spriteCode].
+					getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
+			}
+		} else {
+			sprites = []rl.Texture2D{
+				buildingsAtlaces[bld.code].atlas[0][0],
+			}
+		}
+		// draw sprite
 		for _, s := range sprites {
 			rl.DrawTexture(
 				s,
@@ -103,11 +116,11 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 		}
 		// render faction flag
 		if bld.faction != nil {
-			degree := (b.currentTick*6) % 360
+			degree := (b.currentTick * 6) % 360
 			rl.DrawTexture(
-				uiAtlaces["factionflag"].atlas[geometry.DegreeToRotationFrameNumber(degree, 8)][0],
+				uiAtlaces["factionflag"].getSpriteByDegreeAndFrameNumber(degree, 0),
 				osx+2,
-				osy+int32(bld.getStaticData().h * TILE_SIZE_IN_PIXELS) - uiAtlaces["factionflag"].atlas[0][0].Height-2,
+				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"].atlas[0][0].Height-2,
 				bld.faction.factionColor,
 			)
 		}
@@ -119,7 +132,19 @@ func (r *renderer) renderUnit(u *unit) {
 	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
-		sprites := u.getPartsSprites()
+		// get sprites
+		var sprites []rl.Texture2D
+		if u.turret.canRotate() {
+			sprites = []rl.Texture2D{
+				unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
+				turretsAtlaces[u.turret.getStaticData().spriteCode].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),
+			}
+		} else {
+			sprites = []rl.Texture2D{
+				unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+			}
+		}
+		// draw sprites
 		for _, s := range sprites {
 			rl.DrawTexture(
 				s,

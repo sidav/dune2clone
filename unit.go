@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/geometry"
-	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type unit struct {
@@ -48,18 +47,6 @@ func (u *unit) getCurrentAction() *action {
 
 func (u *unit) getFaction() *faction {
 	return u.faction
-}
-
-func (u *unit) getPartsSprites() []rl.Texture2D {
-	if u.turret.canRotate() {
-		return []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
-			turretsAtlaces[u.turret.getStaticData().spriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.turret.rotationDegree, 8)][0],
-		}
-	}
-	return []rl.Texture2D{
-		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
-	}
 }
 
 func (u *unit) normalizeDegrees() {

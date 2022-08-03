@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/geometry"
-	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type building struct {
@@ -25,18 +24,6 @@ func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
 		topLeftY: topLeftY,
 		faction:  fact,
 		turret:   turr,
-	}
-}
-
-func (b *building) getPartsSprites() []rl.Texture2D {
-	if b.turret != nil {
-		return []rl.Texture2D{
-			buildingsAtlaces[b.code].atlas[0][0],
-			turretsAtlaces[b.turret.getStaticData().spriteCode].atlas[geometry.DegreeToRotationFrameNumber(b.turret.rotationDegree, 8)][0],
-		}
-	}
-	return []rl.Texture2D{
-		buildingsAtlaces[b.code].atlas[0][0],
 	}
 }
 

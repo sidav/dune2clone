@@ -1,6 +1,9 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"dune2clone/geometry"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type spriteAtlas struct {
 	// first index is sprite number (rotation is there), second is frame number (animation)
@@ -29,3 +32,10 @@ func (sa *spriteAtlas) getSpriteByDirectionAndFrameNumber(dx, dy, num int) rl.Te
 	num = num % len(sa.atlas[spriteGroup])
 	return sa.atlas[spriteGroup][num]
 }
+
+func (sa *spriteAtlas) getSpriteByDegreeAndFrameNumber(degree, num int) rl.Texture2D {
+	rotFrame := geometry.DegreeToRotationFrameNumber(degree, len(sa.atlas))
+	num = num % len(sa.atlas[rotFrame])
+	return sa.atlas[rotFrame][num]
+}
+
