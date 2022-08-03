@@ -11,6 +11,7 @@ type unit struct {
 	turret           *turret // maybe turrets array?..
 	currentAction    action
 	currentOrder     order
+	currentHitpoints int
 	chassisDegree    int
 
 	isSelected bool // for rendering selection thingy
@@ -19,12 +20,13 @@ type unit struct {
 func createUnit(code, tx, ty int, fact *faction) *unit {
 	cx, cy := geometry.TileCoordsToPhysicalCoords(tx, ty)
 	return &unit{
-		code:          code,
-		centerX:       cx,
-		centerY:       cy,
-		faction:       fact,
-		turret:        &turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
-		chassisDegree: 270,
+		code:             code,
+		centerX:          cx,
+		centerY:          cy,
+		currentHitpoints: sTableUnits[code].maxHitpoints,
+		faction:          fact,
+		turret:           &turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
+		chassisDegree:    270,
 	}
 }
 
@@ -85,6 +87,8 @@ type unitStatic struct {
 	chassisSpriteCode string
 
 	turretCode int
+
+	maxHitpoints int
 
 	movementSpeed        float64
 	chassisRotationSpeed int
