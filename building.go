@@ -116,7 +116,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:     1,
 		builds:        nil,
 		produces:      nil,
-		turretCode:    TRT_TANK,
+		turretCode:    TRT_CANNON_BUILDING,
 		hotkeyToBuild: "T",
 	},
 }

@@ -23,6 +23,9 @@ func loadResources() {
 
 func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
+	unitChassisAtlaces = make(map[string]*spriteAtlas)
+	turretsAtlaces = make(map[string]*spriteAtlas)
+
 	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 16, 16, 1, false)
 
 	buildingsAtlaces = make(map[int]*spriteAtlas)
@@ -30,9 +33,9 @@ func loadSprites() {
 	buildingsAtlaces[BLD_POWERPLANT] = CreateAtlasFromFile("resources/sprites/buildings/powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
 	buildingsAtlaces[BLD_FACTORY] = CreateAtlasFromFile("resources/sprites/buildings/factory.png", 0, 0, 48, 32, 48, 32, 1, false)
 	buildingsAtlaces[BLD_TURRET] = CreateAtlasFromFile("resources/sprites/buildings/cannon.png", 0, 0, 16, 16, 16, 16, 1, false)
+	turretsAtlaces["cannon_turret"] = CreateDirectionalAtlasFromFile("resources/sprites/buildings/cannon_turret.png", 16, 16, 1, 2)
 
-	unitChassisAtlaces = make(map[string]*spriteAtlas)
-	turretsAtlaces = make(map[string]*spriteAtlas)
+
 	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png", 16, 16, 1, 2)
 	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
 

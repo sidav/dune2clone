@@ -57,7 +57,7 @@ var sTableTurrets = map[int]*turretStatic{
 		attackCooldown:    25,
 	},
 	TRT_CANNON_BUILDING: {
-		spriteCode:        "tank",
+		spriteCode:        "cannon_turret",
 		rotateSpeed:       3,
 		fireRange:         7,
 		fireSpreadDegrees: 7,
