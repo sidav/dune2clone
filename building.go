@@ -105,7 +105,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		cost:          1000,
 		buildTime:     7,
 		builds:        nil,
-		produces:      []int{UNT_TANK, UNT_QUAD},
+		produces:      []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK},
 		hotkeyToBuild: "F",
 	},
 	BLD_TURRET: {

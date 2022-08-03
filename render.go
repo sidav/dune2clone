@@ -180,7 +180,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 			sprite,
 			osx,
 			osy,
-			proj.faction.factionColor,
+			DEFAULT_TINT, // proj.faction.factionColor,
 		)
 	}
 }

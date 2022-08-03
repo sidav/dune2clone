@@ -56,14 +56,15 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 		// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
 		projX, projY := geometry.TileCoordsToPhysicalCoords(shooterTileX, shooterTileY)
 		degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
-		rangeSpread := t.getStaticData().shotRangeSpread * (float64(rnd.RandInRange(-100, 100))/100)
+		rangeSpread := t.getStaticData().shotRangeSpread * (float64(rnd.RandInRange(-100, 100)) / 100)
 		b.addProjectile(&projectile{
 			faction:        a.getFaction(),
-			code:           PRJ_CANNON,
+			code:           t.getStaticData().firesProjectileOfCode,
 			centerX:        projX,
 			centerY:        projY,
 			rotationDegree: t.rotationDegree + degreeSpread,
 			fuel:           math.Sqrt((targetCenterX-shooterX)*(targetCenterX-shooterX)+(targetCenterY-shooterY)*(targetCenterY-shooterY)) + rangeSpread*rangeSpread,
+			targetActor:    t.targetActor,
 		})
 		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 	} else if t.canRotate() {

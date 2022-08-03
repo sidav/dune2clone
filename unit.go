@@ -32,6 +32,10 @@ func (u *unit) markSelected(b bool) {
 	u.isSelected = b
 }
 
+func (u *unit) getPhysicalCenterCoords() (float64, float64) {
+	return u.centerX, u.centerY
+}
+
 func (u *unit) isPresentAt(tileX, tileY int) bool {
 	tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	return tx == tileX && ty == tileY
@@ -73,6 +77,7 @@ func (u *unit) getStaticData() *unitStatic {
 const (
 	UNT_TANK = iota
 	UNT_QUAD
+	UNT_MSLTANK
 )
 
 type unitStatic struct {
@@ -109,5 +114,15 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 450,
 		buildTime:            7,
 		hotkeyToBuild:        "T",
+	},
+	UNT_MSLTANK: {
+		displayedName:        "Missile tank",
+		chassisSpriteCode:    "quad",
+		movementSpeed:        0.05,
+		turretCode:           TRT_MSLTANK,
+		chassisRotationSpeed: 8,
+		cost:                 1150,
+		buildTime:            12,
+		hotkeyToBuild:        "M",
 	},
 }

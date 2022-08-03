@@ -26,12 +26,14 @@ func (t *turret) normalizeDegrees() {
 const (
 	TRT_NONE = iota
 	TRT_TANK
+	TRT_MSLTANK
 	TRT_QUAD
 	TRT_CANNON_BUILDING
 )
 
 type turretStatic struct {
 	spriteCode                string
+	firesProjectileOfCode     int
 	rotateSpeed               int
 	fireRange, attackCooldown int
 
@@ -41,27 +43,39 @@ type turretStatic struct {
 
 var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
-		spriteCode:        "tank",
-		rotateSpeed:       7,
-		fireRange:         5,
-		fireSpreadDegrees: 7,
-		shotRangeSpread:   0.7,
-		attackCooldown:    25,
+		spriteCode:            "tank",
+		firesProjectileOfCode: PRJ_SHELL,
+		rotateSpeed:           7,
+		fireRange:             5,
+		fireSpreadDegrees:     7,
+		shotRangeSpread:       0.7,
+		attackCooldown:        45,
+	},
+	TRT_MSLTANK: {
+		spriteCode:            "tank",
+		firesProjectileOfCode: PRJ_MISSILE,
+		rotateSpeed:           15,
+		fireRange:             10,
+		fireSpreadDegrees:     50,
+		shotRangeSpread:       0.7,
+		attackCooldown:        75,
 	},
 	TRT_QUAD: {
-		spriteCode:        "",
-		rotateSpeed:       0,
-		fireRange:         4,
-		fireSpreadDegrees: 7,
-		shotRangeSpread:   0.3,
-		attackCooldown:    25,
+		spriteCode:            "",
+		firesProjectileOfCode: PRJ_SHELL,
+		rotateSpeed:           0,
+		fireRange:             4,
+		fireSpreadDegrees:     7,
+		shotRangeSpread:       0.3,
+		attackCooldown:        25,
 	},
 	TRT_CANNON_BUILDING: {
-		spriteCode:        "cannon_turret",
-		rotateSpeed:       3,
-		fireRange:         7,
-		fireSpreadDegrees: 7,
-		shotRangeSpread:   0.7,
-		attackCooldown:    50,
+		spriteCode:            "cannon_turret",
+		firesProjectileOfCode: PRJ_SHELL,
+		rotateSpeed:           3,
+		fireRange:             7,
+		fireSpreadDegrees:     7,
+		shotRangeSpread:       0.7,
+		attackCooldown:        50,
 	},
 }

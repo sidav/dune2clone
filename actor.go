@@ -5,5 +5,6 @@ type actor interface {
 	getCurrentAction() *action
 	getName() string
 	getFaction() *faction
+	getPhysicalCenterCoords() (float64, float64)
 	isPresentAt(int, int) bool
 }
