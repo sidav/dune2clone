@@ -60,8 +60,7 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 	}
 	degs := geometry.GetDegreeOfFloatVector(vx, vy)
 	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
-
-	debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
+	//debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
 	u.chassisDegree += rotateSpeed
 	u.turret.rotationDegree += rotateSpeed
 	u.normalizeDegrees()

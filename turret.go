@@ -45,7 +45,7 @@ var sTableTurrets = map[int]*turretStatic{
 		rotateSpeed:       7,
 		fireRange:         5,
 		fireSpreadDegrees: 7,
-		shotRangeSpread:   0.5,
+		shotRangeSpread:   0.7,
 		attackCooldown:    25,
 	},
 	TRT_QUAD: {
@@ -61,7 +61,7 @@ var sTableTurrets = map[int]*turretStatic{
 		rotateSpeed:       3,
 		fireRange:         7,
 		fireSpreadDegrees: 7,
-		shotRangeSpread:   0.5,
+		shotRangeSpread:   0.7,
 		attackCooldown:    50,
 	},
 }
