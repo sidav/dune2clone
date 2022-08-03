@@ -35,15 +35,14 @@ func loadSprites() {
 	buildingsAtlaces[BLD_TURRET] = CreateAtlasFromFile("resources/sprites/buildings/cannon.png", 0, 0, 16, 16, 16, 16, 1, false)
 	turretsAtlaces["cannon_turret"] = CreateDirectionalAtlasFromFile("resources/sprites/buildings/cannon_turret.png", 16, 16, 1, 2)
 
-
 	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png", 16, 16, 1, 2)
 	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
 
 	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile("resources/sprites/units/quad.png", 16, 16, 1, 2)
 
 	projectilesAtlaces = make(map[string]*spriteAtlas)
-	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/shell.png", 16, 16, 1, 2)
-	projectilesAtlaces["missile"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/missile.png", 16, 16, 1, 2)
+	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/shell.png", 16, 8, 1, 2)
+	projectilesAtlaces["missile"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/missile.png", 16, 8, 1, 2)
 
 	uiAtlaces = make(map[string]*spriteAtlas)
 	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile("resources/sprites/ui/building_faction_flag.png", 8, 8, 1, 2)

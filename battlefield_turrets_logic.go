@@ -52,7 +52,7 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 		targetCenterX, targetCenterY = tc.getPhysicalCenterCoords()
 		rotateTo = geometry.GetDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
 	}
-	if t.rotationDegree == rotateTo {
+	if abs(t.rotationDegree-rotateTo) <= t.getStaticData().fireSpreadDegrees/2 {
 		// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
 		projX, projY := geometry.TileCoordsToPhysicalCoords(shooterTileX, shooterTileY)
 		degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
@@ -67,7 +67,8 @@ func (b *battlefield) actTurret(a actor, t *turret) {
 			targetActor:    t.targetActor,
 		})
 		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
-	} else if t.canRotate() {
+	}
+	if t.canRotate() {
 		t.rotationDegree += geometry.GetDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
 		t.normalizeDegrees()
 	}
