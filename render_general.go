@@ -20,6 +20,19 @@ func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.
 	}
 }
 
+func (r *renderer) drawProgressBar(x, y, w int32, curr, max int, color *rl.Color) {
+	const PG_H = 8
+	const OUTLINE_THICKNESS = PG_H/2 - 2
+	if color == nil {
+		color = &rl.Green
+	}
+	for i := int32(0); i <= OUTLINE_THICKNESS/2; i++ {
+		rl.DrawRectangleLines(x+i, y+i, w-i*2, PG_H-i*2, *color)
+	}
+	calculatedWidth := int32(curr) * w / int32(max)
+	rl.DrawRectangle(x+OUTLINE_THICKNESS/2, y+OUTLINE_THICKNESS/2, calculatedWidth-OUTLINE_THICKNESS, PG_H-OUTLINE_THICKNESS, *color)
+}
+
 func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineColor, fillColor rl.Color) {
 	// draw outline
 	for i := int32(0); i < outlineThickness; i++ {

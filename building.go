@@ -6,6 +6,7 @@ import (
 
 type building struct {
 	currentAction      action
+	currentHitpoints   int
 	topLeftX, topLeftY int // tile coords
 	code               int
 	faction            *faction
@@ -19,11 +20,12 @@ func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
 		turr = &turret{code: sTableBuildings[code].turretCode, rotationDegree: 270}
 	}
 	return &building{
-		code:     code,
-		topLeftX: topLeftX,
-		topLeftY: topLeftY,
-		faction:  fact,
-		turret:   turr,
+		code:             code,
+		currentHitpoints: sTableBuildings[code].maxHitpoints,
+		topLeftX:         topLeftX,
+		topLeftY:         topLeftY,
+		faction:          fact,
+		turret:           turr,
 	}
 }
 
@@ -72,6 +74,7 @@ type buildingStatic struct {
 	buildTime     int   // seconds
 	builds        []int // buildings
 	produces      []int // units
+	maxHitpoints  int
 
 	turretCode int
 
@@ -81,6 +84,7 @@ type buildingStatic struct {
 
 var sTableBuildings = map[int]*buildingStatic{
 	BLD_BASE: {
+		maxHitpoints:  1000,
 		w:             2,
 		h:             2,
 		displayedName: "Construction Yard",
@@ -89,6 +93,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		builds:        []int{BLD_POWERPLANT, BLD_FACTORY, BLD_TURRET},
 	},
 	BLD_POWERPLANT: {
+		maxHitpoints:  500,
 		w:             2,
 		h:             2,
 		displayedName: "Power Plant",
@@ -99,6 +104,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "P",
 	},
 	BLD_FACTORY: {
+		maxHitpoints:  750,
 		w:             3,
 		h:             2,
 		displayedName: "Factory",
@@ -109,6 +115,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "F",
 	},
 	BLD_TURRET: {
+		maxHitpoints:  250,
 		w:             1,
 		h:             1,
 		displayedName: "Defense tower",

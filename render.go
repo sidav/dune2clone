@@ -108,11 +108,16 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 			rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
 			rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
 		}
-		// render completion circle
+		// render completion bar
 		if bld.currentAction.getCompletionPercent() >= 0 {
 			r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
 				osy+int32(TILE_SIZE_IN_PIXELS*h/2),
 				TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
+		}
+		if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
+				&bld.getFaction().factionColor)
 		}
 		// render faction flag
 		if bld.faction != nil {
@@ -152,6 +157,10 @@ func (r *renderer) renderUnit(u *unit) {
 				osy,
 				u.faction.factionColor,
 			)
+		}
+		if u.currentHitpoints < u.getStaticData().maxHitpoints {
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getStaticData().maxHitpoints,
+				&u.getFaction().factionColor)
 		}
 		if u.isSelected {
 			col := rl.DarkGreen

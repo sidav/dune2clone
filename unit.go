@@ -102,6 +102,7 @@ var sTableUnits = map[int]*unitStatic{
 	UNT_QUAD: {
 		displayedName:        "Quad",
 		chassisSpriteCode:    "quad",
+		maxHitpoints:         75,
 		movementSpeed:        0.25,
 		turretCode:           TRT_QUAD,
 		chassisRotationSpeed: 7,
@@ -113,6 +114,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:        "Super duper tank",
 		chassisSpriteCode:    "tank",
 		movementSpeed:        0.1,
+		maxHitpoints:         120,
 		turretCode:           TRT_TANK,
 		chassisRotationSpeed: 5,
 		cost:                 450,
@@ -123,6 +125,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:        "Missile tank",
 		chassisSpriteCode:    "quad",
 		movementSpeed:        0.05,
+		maxHitpoints:         50,
 		turretCode:           TRT_MSLTANK,
 		chassisRotationSpeed: 8,
 		cost:                 1150,

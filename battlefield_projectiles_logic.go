@@ -15,4 +15,11 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().rotationSpeed)
 		p.rotationDegree = geometry.NormalizeDegree(p.rotationDegree)
 	}
+	if p.fuel <= 0 {
+		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
+		targ := b.getActorAtTileCoordinates(tilex, tiley)
+		if targ != nil {
+			b.dealDamageToActor(5, targ)
+		}
+	}
 }
