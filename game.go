@@ -49,6 +49,23 @@ func (g *game) startGame() {
 				}
 			}
 		}
+
+		// cleanup
+		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
+			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+				if i.Value.(*unit).currentHitpoints <= 0 {
+					g.battlefield.units.Remove(i)
+				}
+			}
+		}
+		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 1 {
+			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+				if i.Value.(*building).currentHitpoints <= 0 {
+					g.battlefield.buildings.Remove(i)
+				}
+			}
+		}
+
 		// execute orders
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
