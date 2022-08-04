@@ -25,16 +25,16 @@ func (g *game) startGame() {
 
 		// execute actions
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 0 {
-			for i := range g.battlefield.units {
-				g.battlefield.executeActionForActor(g.battlefield.units[i])
-				g.battlefield.actorForActorsTurret(g.battlefield.units[i])
+			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+				g.battlefield.executeActionForActor(i.Value.(*unit))
+				g.battlefield.actorForActorsTurret(i.Value.(*unit))
 			}
 		}
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
-			for i := range g.battlefield.buildings {
-				g.battlefield.executeActionForActor(g.battlefield.buildings[i])
-				if g.battlefield.buildings[i].turret != nil {
-					g.battlefield.actorForActorsTurret(g.battlefield.buildings[i])
+			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+				g.battlefield.executeActionForActor(i.Value.(*building))
+				if i.Value.(*building).turret != nil {
+					g.battlefield.actorForActorsTurret(i.Value.(*building))
 				}
 			}
 		}
@@ -51,11 +51,10 @@ func (g *game) startGame() {
 		}
 		// execute orders
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
-			for i := range g.battlefield.units {
-				g.battlefield.executeOrderForUnit(g.battlefield.units[i])
+			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+					g.battlefield.executeOrderForUnit(i.Value.(*unit))
 			}
 		}
-
 		g.battlefield.currentTick++
 	}
 }

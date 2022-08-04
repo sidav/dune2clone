@@ -34,11 +34,11 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	//	)
 	//}
 
-	for i := range b.buildings {
-		r.renderBuilding(b, b.buildings[i])
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		r.renderBuilding(b, i.Value.(*building))
 	}
-	for i := range b.units {
-		r.renderUnit(b.units[i])
+	for i := b.units.Front(); i != nil; i = i.Next() {
+		r.renderUnit(i.Value.(*unit))
 	}
 	for p := b.projectiles.Front(); p != nil; p = p.Next() {
 		r.renderProjectile(p.Value.(*projectile))

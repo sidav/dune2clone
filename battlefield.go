@@ -9,8 +9,8 @@ import (
 type battlefield struct {
 	tiles       [][]tile
 	factions    []*faction
-	buildings   []*building
-	units       []*unit
+	buildings   list.List
+	units       list.List
 	projectiles list.List
 
 	pathfinder  *astar.AStarPathfinder
@@ -58,9 +58,9 @@ func (b *battlefield) placeInitialStuff() {
 func (b *battlefield) addActor(a actor) {
 	switch a.(type) {
 	case *unit:
-		b.units = append(b.units, a.(*unit))
+		b.units.PushBack(a)
 	case *building:
-		b.buildings = append(b.buildings, a.(*building))
+		b.buildings.PushBack(a)
 	default:
 		panic("wat")
 	}
@@ -71,17 +71,17 @@ func (b *battlefield) addProjectile(p *projectile) {
 }
 
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
-	for i := range b.buildings {
-		if b.buildings[i].isPresentAt(x, y) {
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		if i.Value.(*building).isPresentAt(x, y) {
 			// debugWrite("got")
-			return b.buildings[i]
+			return i.Value.(actor)
 		}
 	}
-	for i := range b.units {
+	for i := b.units.Front(); i != nil; i = i.Next() {
 		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
-		if b.units[i].isPresentAt(x, y) {
+		if i.Value.(*unit).isPresentAt(x, y) {
 			// debugWrite("got")
-			return b.units[i]
+			return i.Value.(actor)
 		}
 	}
 	return nil
@@ -98,13 +98,15 @@ func (b *battlefield) costMapForMovement(x, y int) int {
 
 func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	lst := list.List{}
-	for _, u := range b.units {
+	for i := b.units.Front(); i != nil; i = i.Next() {
+		u := i.Value.(*unit)
 		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		if geometry.AreCoordsInRange(tx, ty, x, y, r) {
 			lst.PushBack(u)
 		}
 	}
-	for _, bld := range b.buildings {
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
 		if geometry.AreCoordsInRangeFromRect(x, y, bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, r) {
 			lst.PushBack(bld)
 		}
