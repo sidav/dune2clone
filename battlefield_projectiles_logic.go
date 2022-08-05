@@ -19,7 +19,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
 		targ := b.getActorAtTileCoordinates(tilex, tiley)
 		if targ != nil {
-			b.dealDamageToActor(5, targ)
+			b.dealDamageToActor(p.damage, targ)
 		}
 	}
 }
