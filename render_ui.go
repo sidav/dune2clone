@@ -6,6 +6,8 @@ import (
 	"math"
 )
 
+const UI_FONT_SIZE = 28
+
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
 	r.renderSelectedActorUI(b, pc, 0, 3*WINDOW_H/4)
@@ -26,8 +28,15 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		return
 	}
 	rl.DrawText(fmt.Sprintf("%s (%s)", pc.selection.getName(), pc.selection.getCurrentAction().getTextDescription()),
-		x+15, y+1, 32, rl.Green)
-	// if u, ok := pc.selection.(*unit); ok {}
+		x+15, y+1, UI_FONT_SIZE, rl.Green)
+
+	if u, ok := pc.selection.(*unit); ok {
+		if u.getStaticData().maxCargoAmount > 0 {
+			rl.DrawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
+				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
+		}
+	}
+
 	if bld, ok := pc.selection.(*building); ok {
 		r.renderSelectedBuildingUI(bld, x, y)
 	}
@@ -53,18 +62,18 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 		for _, code := range bld.getStaticData().builds {
 			rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
 				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-				x+4, y+1+32+32*line, 32, rl.Orange)
+				x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE*line, UI_FONT_SIZE, rl.Orange)
 			line++
 		}
 		for _, code := range bld.getStaticData().produces {
 			rl.DrawText(fmt.Sprintf("%s - Make %s ($%d)", sTableUnits[code].hotkeyToBuild,
 				sTableUnits[code].displayedName, sTableUnits[code].cost),
-				x+4, y+1+32+32*line, 32, rl.Orange)
+				x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE*line, UI_FONT_SIZE, rl.Orange)
 			line++
 		}
 	}
 	if bld.currentAction.code == ACTION_BUILD {
 		rl.DrawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
-			x+4, y+1+32+32, 32, rl.Orange)
+			x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE, UI_FONT_SIZE, rl.Orange)
 	}
 }

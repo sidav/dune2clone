@@ -65,6 +65,7 @@ const (
 	BLD_POWERPLANT
 	BLD_FACTORY
 	BLD_TURRET
+	BLD_REFINERY
 )
 
 type buildingStatic struct {
@@ -90,7 +91,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          0,
 		buildTime:     100,
-		builds:        []int{BLD_POWERPLANT, BLD_FACTORY, BLD_TURRET},
+		builds:        []int{BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET},
 	},
 	BLD_POWERPLANT: {
 		maxHitpoints:  500,
@@ -113,6 +114,17 @@ var sTableBuildings = map[int]*buildingStatic{
 		builds:        nil,
 		produces:      []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
 		hotkeyToBuild: "F",
+	},
+	BLD_REFINERY: {
+		maxHitpoints:  550,
+		w:             3,
+		h:             2,
+		displayedName: "Refinery",
+		cost:          2000,
+		buildTime:     7,
+		builds:        nil,
+		produces:      nil,
+		hotkeyToBuild: "R",
 	},
 	BLD_TURRET: {
 		maxHitpoints:  250,

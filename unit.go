@@ -14,6 +14,8 @@ type unit struct {
 	currentHitpoints int
 	chassisDegree    int
 
+	currentCargoAmount int // for harvesters. TODO: separate struct?
+
 	isSelected bool // for rendering selection thingy
 }
 
@@ -102,6 +104,8 @@ type unitStatic struct {
 	movementSpeed        float64
 	chassisRotationSpeed int
 
+	maxCargoAmount int // for harvesters
+
 	cost          int
 	buildTime     int // seconds
 	hotkeyToBuild string
@@ -144,6 +148,7 @@ var sTableUnits = map[int]*unitStatic{
 	UNT_HARVESTER: {
 		displayedName:        "Harvester",
 		chassisSpriteCode:    "harvester",
+		maxCargoAmount:       1000,
 		movementSpeed:        0.05,
 		maxHitpoints:         250,
 		turretCode:           TRT_NONE,
