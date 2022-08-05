@@ -144,7 +144,7 @@ func (r *renderer) renderUnit(u *unit) {
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
 		// get sprites
 		var sprites []rl.Texture2D
-		if u.turret.canRotate() {
+		if u.turret != nil && u.turret.canRotate() {
 			sprites = []rl.Texture2D{
 				unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
 				turretsAtlaces[u.turret.getStaticData().spriteCode].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),

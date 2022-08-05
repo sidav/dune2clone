@@ -17,7 +17,7 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 }
 
 func (b *battlefield) actTurret(a actor, t *turret) {
-	if t.nextTickToAct > b.currentTick {
+	if t == nil || t.nextTickToAct > b.currentTick {
 		return
 	}
 	shooterTileX, shooterTileY := 0, 0

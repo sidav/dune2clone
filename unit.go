@@ -19,13 +19,17 @@ type unit struct {
 
 func createUnit(code, tx, ty int, fact *faction) *unit {
 	cx, cy := geometry.TileCoordsToPhysicalCoords(tx, ty)
+	var turr *turret
+	if sTableUnits[code].turretCode != TRT_NONE {
+		turr = &turret{code: sTableUnits[code].turretCode, rotationDegree: 270}
+	}
 	return &unit{
 		code:             code,
 		centerX:          cx,
 		centerY:          cy,
 		currentHitpoints: sTableUnits[code].maxHitpoints,
 		faction:          fact,
-		turret:           &turret{code: sTableUnits[code].turretCode, rotationDegree: 270},
+		turret:           turr,
 		chassisDegree:    270,
 	}
 }
@@ -57,7 +61,9 @@ func (u *unit) getFaction() *faction {
 
 func (u *unit) normalizeDegrees() {
 	u.chassisDegree = geometry.NormalizeDegree(u.chassisDegree)
-	u.turret.normalizeDegrees()
+	if u.turret != nil {
+		u.turret.normalizeDegrees()
+	}
 }
 
 func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
@@ -68,7 +74,9 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
 	//debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
 	u.chassisDegree += rotateSpeed
-	u.turret.rotationDegree += rotateSpeed
+	if u.turret != nil {
+		u.turret.rotationDegree += rotateSpeed
+	}
 	u.normalizeDegrees()
 }
 
@@ -80,6 +88,7 @@ const (
 	UNT_TANK = iota
 	UNT_QUAD
 	UNT_MSLTANK
+	UNT_HARVESTER
 )
 
 type unitStatic struct {
@@ -131,5 +140,16 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 1150,
 		buildTime:            12,
 		hotkeyToBuild:        "M",
+	},
+	UNT_HARVESTER: {
+		displayedName:        "Harvester",
+		chassisSpriteCode:    "harvester",
+		movementSpeed:        0.05,
+		maxHitpoints:         250,
+		turretCode:           TRT_NONE,
+		chassisRotationSpeed: 4,
+		cost:                 1600,
+		buildTime:            12,
+		hotkeyToBuild:        "H",
 	},
 }
