@@ -34,9 +34,23 @@ func (b *battlefield) create(w, h int) {
 		MapHeight:                 len(b.tiles[0]),
 	}
 	b.placeInitialStuff()
+	b.finalizeTileVariants()
+}
+
+func (b *battlefield) finalizeTileVariants() {
+	for i := range b.tiles {
+		for j := range b.tiles[i] {
+			b.tiles[i][j].spriteVariantIndex = rnd.Rand(len(sTableTiles[b.tiles[i][j].code].spriteCodes))
+		}
+	}
 }
 
 func (b *battlefield) placeInitialStuff() {
+	for x := 7; x < 10; x++ {
+		for y := 0; y < 3; y++ {
+			b.tiles[x][y].resourcesAmount = rnd.RandInRange(100, 300)
+		}
+	}
 	b.factions = append(b.factions, &faction{
 		factionColor: factionTints[0],
 		money:        10000,

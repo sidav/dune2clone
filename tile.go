@@ -1,17 +1,9 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
-
 type tile struct {
-	code int
-}
-
-func (t *tile) getSpritesAtlas() *spriteAtlas {
-	return tilesAtlaces[tableTileStatic[t.code].stringCode]
-}
-
-func (t *tile) getSprite() rl.Texture2D {
-	return tilesAtlaces[tableTileStatic[t.code].stringCode].atlas[0][0]
+	code               int
+	spriteVariantIndex int
+	resourcesAmount    int
 }
 
 const (
@@ -21,9 +13,9 @@ const (
 )
 
 type tileStaticData struct {
-	stringCode string
+	spriteCodes []string
 }
 
-var tableTileStatic = map[int]tileStaticData{
-	TILE_SAND: {stringCode: "sand"},
+var sTableTiles = map[int]tileStaticData{
+	TILE_SAND: {spriteCodes: []string{"sand1", "sand2", "sand3"}},
 }

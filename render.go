@@ -57,12 +57,17 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 
 func (r *renderer) renderTile(b *battlefield, x, y int) {
 	t := b.tiles[x][y]
-	spr := t.getSpritesAtlas()
-	if spr != nil {
-		osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
-		if r.AreOnScreenCoordsInViewport(osx, osy) {
+	osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
+	if r.AreOnScreenCoordsInViewport(osx, osy) {
+		rl.DrawTexture(
+			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
+			osx,
+			osy,
+			DEFAULT_TINT,
+		)
+		if t.resourcesAmount > 0 {
 			rl.DrawTexture(
-				t.getSprite(),
+				tilesAtlaces["melange"].atlas[0][0],
 				osx,
 				osy,
 				DEFAULT_TINT,

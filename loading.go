@@ -26,7 +26,10 @@ func loadSprites() {
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	turretsAtlaces = make(map[string]*spriteAtlas)
 
-	tilesAtlaces["sand"] = CreateAtlasFromFile("resources/sprites/terrain/sand.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["sand1"] = CreateAtlasFromFile("resources/sprites/terrain/sand1.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["sand2"] = CreateAtlasFromFile("resources/sprites/terrain/sand2.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["sand3"] = CreateAtlasFromFile("resources/sprites/terrain/sand3.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["melange"] = CreateAtlasFromFile("resources/sprites/terrain/melange.png", 0, 0, 16, 16, 16, 16, 1, false)
 
 	buildingsAtlaces = make(map[int]*spriteAtlas)
 	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 32, 32, 1, false)
