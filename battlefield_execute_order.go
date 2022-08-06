@@ -13,6 +13,8 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 	switch u.currentOrder.code {
 	case ORDER_MOVE:
 		b.executeMoveOrder(u)
+	case ORDER_HARVEST:
+		b.executeHarvestOrder(u)
 	}
 }
 
@@ -37,5 +39,29 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 
 	if utx == orderTileX && uty == orderTileY {
 		u.currentOrder.code = ORDER_NONE
+	}
+}
+
+func (b *battlefield) executeHarvestOrder(u *unit) {
+	// x, y := u.centerX, u.centerY
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
+	path := b.findPathForUnitTo(u, orderTileX, orderTileY)
+	vx, vy := path.GetNextStepVector()
+
+	if vx*vy != 0 {
+		if b.currentTick % 2 == 0 {
+			vx = 0
+		} else {
+			vy = 0
+		}
+	}
+
+	u.currentAction.code = ACTION_MOVE
+	u.currentAction.targetTileX = utx + vx
+	u.currentAction.targetTileY = uty + vy
+
+	if utx == orderTileX && uty == orderTileY {
+		u.currentAction.code = ACTION_HARVEST
 	}
 }

@@ -17,6 +17,9 @@ func (pc *playerController) playerControl(b *battlefield) {
 			u.currentOrder.targetTileX = tx
 			u.currentOrder.targetTileY = ty
 			u.currentOrder.code = ORDER_MOVE
+			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
+				u.currentOrder.code = ORDER_HARVEST
+			}
 		}
 	}
 	if bld, ok := pc.selection.(*building); ok {

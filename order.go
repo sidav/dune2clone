@@ -12,5 +12,7 @@ type orderCode uint8
 const (
 	ORDER_NONE orderCode = iota
 	ORDER_MOVE
+	ORDER_HARVEST
+	ORDER_RETURN_TO_REFINERY
 )
 

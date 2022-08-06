@@ -23,6 +23,8 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 	case ACTION_BUILD:
 		b.executeBuildActionForActor(a)
+	case ACTION_HARVEST:
+		b.executeHarvestActionForActor(a)
 	}
 }
 
@@ -31,6 +33,20 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 	//	u.currentAction.code = ACTION_ROTATE
 	//	u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
 	//}
+}
+
+func (b *battlefield) executeHarvestActionForActor(a actor) {
+	if u, ok := a.(*unit); ok {
+		x, y := u.getPhysicalCenterCoords()
+		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
+		if b.tiles[utx][uty].resourcesAmount > 0 {
+			const harvestedAmount = 1 // TODO: replace
+			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
+			u.currentCargoAmount += harvestedAmount
+		} else {
+			u.currentAction.code = ACTION_WAIT
+		}
+	}
 }
 
 func (b *battlefield) executeRotateActionForUnit(u *unit) {
