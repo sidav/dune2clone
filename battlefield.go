@@ -149,3 +149,19 @@ func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool 
 	}
 	return true
 }
+
+func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (int, int) {
+	// TODO: optimize this shit
+	lowestRange := len(b.tiles)*len(b.tiles) + len(b.tiles[0])*len(b.tiles[0])
+	currX, currY := -1, -1
+	for x := range b.tiles {
+		for y := range b.tiles[x] {
+			currRange := (tx-x)*(tx-x)+(ty-y)*(ty-y)
+			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange {
+				currX, currY = x, y
+				lowestRange = currRange
+			}
+		}
+	}
+	return currX, currY
+}

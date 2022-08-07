@@ -46,6 +46,17 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
+
+	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 {
+		// find resources coords
+		rx, ry := b.getCoordsOfClosestEmptyTileWithResourcesTo(orderTileX, orderTileY)
+		if rx < 0 || ry < 0 {
+			return
+		}
+		u.currentOrder.targetTileX, u.currentOrder.targetTileY = rx, ry
+		orderTileX, orderTileY = rx, ry
+	}
+
 	path := b.findPathForUnitTo(u, orderTileX, orderTileY)
 	vx, vy := path.GetNextStepVector()
 
