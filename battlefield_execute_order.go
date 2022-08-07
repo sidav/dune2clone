@@ -28,7 +28,7 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 	vx, vy := path.GetNextStepVector()
 
 	if vx*vy != 0 {
-		if b.currentTick % 2 == 0 {
+		if b.currentTick%2 == 0 {
 			vx = 0
 		} else {
 			vy = 0
@@ -66,7 +66,7 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 	vx, vy := path.GetNextStepVector()
 
 	if vx*vy != 0 {
-		if b.currentTick % 2 == 0 {
+		if b.currentTick%2 == 0 {
 			vx = 0
 		} else {
 			vy = 0
@@ -105,11 +105,18 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	orderTileX += u.currentOrder.targetActor.(*building).getStaticData().unitPlacementX
 	orderTileY += u.currentOrder.targetActor.(*building).getStaticData().unitPlacementY
 
+	if orderTileX == utx && orderTileY == uty {
+		u.currentOrder.code = ORDER_HARVEST
+		u.currentAction.code = ACTION_ENTER_BUILDING
+		u.currentAction.targetActor = u.currentOrder.targetActor
+		return
+	}
+
 	path := b.findPathForUnitTo(u, orderTileX, orderTileY, true)
 	vx, vy := path.GetNextStepVector()
 
 	if vx*vy != 0 {
-		if b.currentTick % 2 == 0 {
+		if b.currentTick%2 == 0 {
 			vx = 0
 		} else {
 			vy = 0

@@ -11,6 +11,9 @@ func (b *battlefield) executeActionForActor(a actor) {
 		if u, ok := a.(*unit); ok {
 			b.executeWaitActionForUnit(u)
 		}
+		if bld, ok := a.(*building); ok {
+			b.executeWaitActionForBuilding(bld)
+		}
 	case ACTION_ROTATE:
 		if u, ok := a.(*unit); ok {
 			b.executeRotateActionForUnit(u)
@@ -25,6 +28,13 @@ func (b *battlefield) executeActionForActor(a actor) {
 		b.executeBuildActionForActor(a)
 	case ACTION_HARVEST:
 		b.executeHarvestActionForActor(a)
+	case ACTION_ENTER_BUILDING:
+		if u, ok := a.(*unit); ok {
+			b.executeEnterBuildingActionForUnit(u)
+		}
+
+	default:
+		panic("No action execution func!")
 	}
 }
 
@@ -33,6 +43,29 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 	//	u.currentAction.code = ACTION_ROTATE
 	//	u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
 	//}
+}
+
+func (b *battlefield) executeWaitActionForBuilding(bld *building) {
+	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
+		if bld.unitPlacedInside.currentCargoAmount > 0 {
+			received := 1 // TODO: replace
+			bld.getFaction().money += float64(received)
+			bld.unitPlacedInside.currentCargoAmount -= received
+		} else {
+			//unitToPlace := bld.unitPlacedInside
+			//x, y := bld.topLeftX, bld.topLeftY
+			//x += bld.getStaticData().unitPlacementX
+			//y += bld.getStaticData().unitPlacementY
+			b.addActor(bld.unitPlacedInside)
+			bld.unitPlacedInside = nil
+		}
+	}
+}
+
+func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
+	u.currentAction.code = ACTION_WAIT
+	b.removeActor(u)
+	u.currentAction.targetActor.(*building).unitPlacedInside = u
 }
 
 func (b *battlefield) executeHarvestActionForActor(a actor) {

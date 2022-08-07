@@ -124,6 +124,10 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
 				&bld.getFaction().factionColor)
 		}
+		// render unit inside
+		if bld.unitPlacedInside != nil {
+			r.renderUnit(bld.unitPlacedInside)
+		}
 		// render faction flag
 		if bld.faction != nil {
 			degree := (b.currentTick * 6) % 360

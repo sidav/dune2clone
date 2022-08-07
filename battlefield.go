@@ -81,6 +81,25 @@ func (b *battlefield) addActor(a actor) {
 	}
 }
 
+func (b *battlefield) removeActor(a actor) {
+	switch a.(type) {
+	case *unit:
+		for i := b.units.Front(); i != nil; i = i.Next() {
+			if i.Value == a {
+				b.units.Remove(i)
+			}
+		}
+	case *building:
+		for i := b.buildings.Front(); i != nil; i = i.Next() {
+			if i.Value == a {
+				b.buildings.Remove(i)
+			}
+		}
+	default:
+		panic("wat")
+	}
+}
+
 func (b *battlefield) addProjectile(p *projectile) {
 	b.projectiles.PushFront(p)
 }
@@ -157,7 +176,7 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 	currX, currY := -1, -1
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
-			currRange := (tx-x)*(tx-x)+(ty-y)*(ty-y)
+			currRange := (tx-x)*(tx-x) + (ty-y)*(ty-y)
 			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange {
 				currX, currY = x, y
 				lowestRange = currRange
