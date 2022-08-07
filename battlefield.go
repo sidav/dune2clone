@@ -129,8 +129,9 @@ func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	return &lst
 }
 
-func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int) *astar.Cell {
+func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeFinish bool) *astar.Cell {
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	b.pathfinder.ForceIncludeFinish = forceIncludeFinish
 	return b.pathfinder.FindPath(
 		func(x, y int) int {
 			return b.costMapForMovement(x, y)

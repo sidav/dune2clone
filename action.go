@@ -26,6 +26,8 @@ func (a *action) getTextDescription() string {
 		return "Constructing"
 	case ACTION_HARVEST:
 		return "Harvesting"
+	case ACTION_ENTER_BUILDING:
+		return "Harvesting"
 	}
 	panic("No action description!")
 }
@@ -58,4 +60,6 @@ const (
 	// unit or tower cannon
 	ACTION_ROTATE
 	ACTION_HARVEST
+
+	ACTION_ENTER_BUILDING
 )

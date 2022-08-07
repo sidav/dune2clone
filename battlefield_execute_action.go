@@ -39,7 +39,7 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 	if u, ok := a.(*unit); ok {
 		x, y := u.getPhysicalCenterCoords()
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
-		if b.tiles[utx][uty].resourcesAmount > 0 {
+		if u.currentCargoAmount < u.getStaticData().maxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
 			const harvestedAmount = 1 // TODO: replace
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount

@@ -27,8 +27,13 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 	if pc.selection == nil {
 		return
 	}
-	rl.DrawText(fmt.Sprintf("%s (%s)", pc.selection.getName(), pc.selection.getCurrentAction().getTextDescription()),
-		x+15, y+1, UI_FONT_SIZE, rl.Green)
+	if u, ok := pc.selection.(*unit); ok {
+		rl.DrawText(fmt.Sprintf("%s (%s-%s)", u.getName(), u.currentOrder.getTextDescription(), u.getCurrentAction().getTextDescription()),
+			x+15, y+1, UI_FONT_SIZE, rl.Green)
+	} else {
+		rl.DrawText(fmt.Sprintf("%s (%s)", pc.selection.getName(), pc.selection.getCurrentAction().getTextDescription()),
+			x+15, y+1, UI_FONT_SIZE, rl.Green)
+	}
 
 	if u, ok := pc.selection.(*unit); ok {
 		if u.getStaticData().maxCargoAmount > 0 {

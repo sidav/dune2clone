@@ -12,6 +12,8 @@ type building struct {
 	faction            *faction
 	isSelected         bool
 	turret             *turret
+
+	unitPlacedInside *unit
 }
 
 func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
@@ -79,6 +81,10 @@ type buildingStatic struct {
 
 	turretCode int
 
+	receivesResources bool // is refinery
+	// CanUnitBePlacedHere            bool // Removed for now, as duplicated by receivesResources
+	unitPlacementX, unitPlacementY int // tile coords for placed unit draw
+
 	// ui-only things:
 	hotkeyToBuild string
 }
@@ -125,6 +131,9 @@ var sTableBuildings = map[int]*buildingStatic{
 		builds:        nil,
 		produces:      nil,
 		hotkeyToBuild: "R",
+
+		receivesResources: true,
+		unitPlacementX:    1, unitPlacementY: 1,
 	},
 	BLD_TURRET: {
 		maxHitpoints:  250,
