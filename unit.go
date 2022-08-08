@@ -155,7 +155,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:          "Harvester",
 		chassisSpriteCode:      "harvester",
 		defaultOrderOnCreation: ORDER_HARVEST,
-		maxCargoAmount:         1200,
+		maxCargoAmount:         700,
 		movementSpeed:          0.07,
 		maxHitpoints:           250,
 		turretCode:             TRT_NONE,

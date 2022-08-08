@@ -48,7 +48,7 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 		orderTileX, orderTileY = utx, uty
 	}
 
-	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 || b.getActorAtTileCoordinates(orderTileX, orderTileY) != u {
+	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 || !b.isTileClearToBeMovedInto(orderTileX, orderTileY, u) {
 		// find resources coords
 		rx, ry := b.getCoordsOfClosestEmptyTileWithResourcesTo(orderTileX, orderTileY)
 		if rx < 0 || ry < 0 {

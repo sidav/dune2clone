@@ -127,9 +127,34 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	return nil
 }
 
+func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool {
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		if i.Value.(*building).isPresentAt(x, y) {
+			// debugWrite("got")
+			return false
+		}
+	}
+	for i := b.units.Front(); i != nil; i = i.Next() {
+		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
+		if movingUnit != nil && i.Value == movingUnit {
+			continue
+		}
+		unt := i.Value.(*unit)
+		if unt.isPresentAt(x, y) {
+			return false
+		}
+		if unt.currentAction.code == ACTION_MOVE {
+			// x, y := geometry.TrueCoordsToTileCoords(unt.centerX, unt.centerY)
+			if unt.currentAction.targetTileX == x && unt.currentAction.targetTileY == y {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func (b *battlefield) costMapForMovement(x, y int) int {
-	act := b.getActorAtTileCoordinates(x, y)
-	if act != nil {
+	if !b.isTileClearToBeMovedInto(x, y, nil) {
 		// debugWritef("At coords %d,%d there is %+v", x, y, act)
 		return -1
 	}
@@ -183,7 +208,7 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
 			currRange := (tx-x)*(tx-x) + (ty-y)*(ty-y)
-			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange && b.getActorAtTileCoordinates(x, y) == nil {
+			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange && b.isTileClearToBeMovedInto(x, y, nil) {
 				currX, currY = x, y
 				lowestRange = currRange
 			}
