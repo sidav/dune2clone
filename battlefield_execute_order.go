@@ -48,10 +48,15 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 		orderTileX, orderTileY = utx, uty
 	}
 
-	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 {
+	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 || b.getActorAtTileCoordinates(orderTileX, orderTileY) != u {
 		// find resources coords
 		rx, ry := b.getCoordsOfClosestEmptyTileWithResourcesTo(orderTileX, orderTileY)
 		if rx < 0 || ry < 0 {
+			if u.currentCargoAmount > 0 {
+				u.currentOrder.code = ORDER_RETURN_TO_REFINERY
+			} else {
+				u.currentOrder.code = ORDER_MOVE
+			}
 			return
 		}
 		u.currentOrder.targetTileX, u.currentOrder.targetTileY = rx, ry
@@ -74,11 +79,11 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	// for this, target tile is resource tile. Target refinery is in targetActor.
-	if u.currentOrder.targetActor == nil {
+	if u.currentOrder.targetActor == nil || u.currentOrder.targetActor.(*building).unitPlacedInside != nil {
 		// find refinery TODO: find closest one
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			if bld, ok := i.Value.(*building); ok {
-				if bld.getStaticData().receivesResources && bld.getFaction() == u.getFaction() {
+				if bld.getStaticData().receivesResources && bld.getFaction() == u.getFaction() && bld.unitPlacedInside == nil {
 					u.currentOrder.targetActor = bld
 					break
 				}

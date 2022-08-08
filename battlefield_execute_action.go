@@ -65,6 +65,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 	if u.currentAction.targetActor.(*building).unitPlacedInside == nil {
 		u.currentAction.code = ACTION_WAIT
+		u.chassisDegree = 90
 		b.removeActor(u)
 		u.currentAction.targetActor.(*building).unitPlacedInside = u
 	}
@@ -75,7 +76,7 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 		x, y := u.getPhysicalCenterCoords()
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
 		if u.currentCargoAmount < u.getStaticData().maxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
-			const harvestedAmount = 1 // TODO: replace
+			const harvestedAmount = 2 // TODO: replace
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount
 		} else {

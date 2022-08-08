@@ -46,9 +46,9 @@ func (b *battlefield) finalizeTileVariants() {
 }
 
 func (b *battlefield) placeInitialStuff() {
-	for x := 7; x < 11; x++ {
-		for y := 0; y < 4; y++ {
-			b.tiles[x][y].resourcesAmount = rnd.RandInRange(100, 300)
+	for x := 6; x < 18; x++ {
+		for y := 0; y < 6; y++ {
+			b.tiles[x][y].resourcesAmount = rnd.RandInRange(250, 500)
 		}
 	}
 	b.factions = append(b.factions, &faction{
@@ -63,11 +63,11 @@ func (b *battlefield) placeInitialStuff() {
 	})
 
 	b.addActor(createBuilding(BLD_BASE, 1, 1, b.factions[0]))
-	b.addActor(createBuilding(BLD_BASE, 14, 8, b.factions[1]))
+	b.addActor(createBuilding(BLD_BASE, 15, 10, b.factions[1]))
 
 	b.addActor(createUnit(UNT_TANK, 3, 3, b.factions[0]))
 	b.addActor(createUnit(UNT_HARVESTER, 4, 3, b.factions[0]))
-	b.addActor(createUnit(UNT_TANK, 13, 7, b.factions[1]))
+	b.addActor(createUnit(UNT_TANK, 17, 10, b.factions[1]))
 }
 
 func (b *battlefield) addActor(a actor) {
@@ -183,7 +183,7 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
 			currRange := (tx-x)*(tx-x) + (ty-y)*(ty-y)
-			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange {
+			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange && b.getActorAtTileCoordinates(x, y) == nil {
 				currX, currY = x, y
 				lowestRange = currRange
 			}
