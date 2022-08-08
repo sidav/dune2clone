@@ -48,7 +48,7 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
-			received := 1 // TODO: replace
+			received := min(5, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
 			bld.getFaction().money += float64(received)
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {

@@ -51,6 +51,10 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
+	if orderTileX == -1 || orderTileY == -1 {
+		u.currentOrder.targetTileX, u.currentOrder.targetTileY = utx, uty
+		orderTileX, orderTileY = utx, uty
+	}
 
 	if b.tiles[orderTileX][orderTileY].resourcesAmount == 0 {
 		// find resources coords

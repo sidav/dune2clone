@@ -35,6 +35,8 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 		chassisDegree:    270,
 	}
 	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
+	u.currentOrder.targetTileX = -1
+	u.currentOrder.targetTileY = -1
 	return u
 }
 

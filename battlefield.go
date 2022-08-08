@@ -46,8 +46,8 @@ func (b *battlefield) finalizeTileVariants() {
 }
 
 func (b *battlefield) placeInitialStuff() {
-	for x := 7; x < 10; x++ {
-		for y := 0; y < 3; y++ {
+	for x := 7; x < 11; x++ {
+		for y := 0; y < 4; y++ {
 			b.tiles[x][y].resourcesAmount = rnd.RandInRange(100, 300)
 		}
 	}
