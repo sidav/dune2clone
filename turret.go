@@ -66,13 +66,13 @@ var sTableTurrets = map[int]*turretStatic{
 	},
 	TRT_QUAD: {
 		spriteCode:            "",
-		firesProjectileOfCode: PRJ_SHELL,
+		firesProjectileOfCode: PRJ_BULLETS,
 		rotateSpeed:           0,
 		fireRange:             4,
-		fireSpreadDegrees:     7,
+		fireSpreadDegrees:     6,
 		shotRangeSpread:       0.3,
-		attackCooldown:        15,
-		projectileDamage:      5,
+		attackCooldown:        5,
+		projectileDamage:      1,
 	},
 	TRT_CANNON_BUILDING: {
 		spriteCode:            "cannon_turret",

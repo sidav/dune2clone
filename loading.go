@@ -47,6 +47,7 @@ func loadSprites() {
 
 	projectilesAtlaces = make(map[string]*spriteAtlas)
 	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/shell.png", 16, 8, 1, 2)
+	projectilesAtlaces["bullets"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/bullets.png", 16, 8, 1, 2)
 	projectilesAtlaces["missile"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/missile.png", 16, 8, 1, 2)
 
 	uiAtlaces = make(map[string]*spriteAtlas)

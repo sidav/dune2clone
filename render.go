@@ -189,15 +189,15 @@ func (r *renderer) renderUnit(u *unit) {
 
 func (r *renderer) renderProjectile(proj *projectile) {
 	x, y := proj.centerX, proj.centerY
-	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
+	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if r.AreOnScreenCoordsInViewport(osx, osy) {
 		sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode].
 			atlas[geometry.DegreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
 		rl.DrawTexture(
 			sprite,
-			osx,
-			osy,
+			osx-sprite.Width/2,
+			osy-sprite.Height/2,
 			DEFAULT_TINT, // proj.faction.factionColor,
 		)
 	}

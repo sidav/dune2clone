@@ -56,10 +56,10 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		t.rotationDegree += geometry.GetDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
 		t.normalizeDegrees()
 	}
-	
+
 	if abs(t.rotationDegree-rotateTo) <= t.getStaticData().fireSpreadDegrees/2 {
 		// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
-		projX, projY := geometry.TileCoordsToPhysicalCoords(shooterTileX, shooterTileY)
+		projX, projY := shooterX, shooterY
 		degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
 		rangeSpread := t.getStaticData().shotRangeSpread * (float64(rnd.RandInRange(-100, 100)) / 100)
 		b.addProjectile(&projectile{

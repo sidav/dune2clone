@@ -66,7 +66,7 @@ func (b *battlefield) placeInitialStuff() {
 	b.addActor(createBuilding(BLD_BASE, 15, 10, b.factions[1]))
 
 	b.addActor(createUnit(UNT_TANK, 3, 3, b.factions[0]))
-	b.addActor(createUnit(UNT_HARVESTER, 4, 3, b.factions[0]))
+	b.addActor(createUnit(UNT_QUAD, 4, 3, b.factions[0]))
 	b.addActor(createUnit(UNT_TANK, 17, 10, b.factions[1]))
 }
 
