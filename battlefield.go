@@ -26,7 +26,7 @@ func (b *battlefield) create(w, h int) {
 		}
 	}
 	b.pathfinder = &astar.AStarPathfinder{
-		DiagonalMoveAllowed:       false,
+		DiagonalMoveAllowed:       true,
 		ForceGetPath:              true,
 		ForceIncludeFinish:        false,
 		AutoAdjustDefaultMaxSteps: false,

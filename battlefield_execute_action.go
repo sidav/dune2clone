@@ -106,32 +106,30 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
 	tx, ty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 
-	if tx != x {
-		if !geometry.IsVectorDegreeEqualTo(tx-x, 0, u.chassisDegree) {
-			u.rotateChassisTowardsVector(tx-x, 0)
-			return
-		}
-		if math.Abs(tx-x) < u.getStaticData().movementSpeed {
-			u.centerX = tx // source of movement lag :(
-		} else {
-			u.centerX += u.getStaticData().movementSpeed * (tx - x) / math.Abs(tx-x)
-		}
-	} else if ty != y {
-		if !geometry.IsVectorDegreeEqualTo(0, ty-y, u.chassisDegree) {
-			u.rotateChassisTowardsVector(0, ty-y)
-			return
-		}
-		if math.Abs(ty-y) < u.getStaticData().movementSpeed {
-			u.centerY = ty // source of movement lag :(
-		} else {
-			u.centerY += u.getStaticData().movementSpeed * (ty - y) / math.Abs(ty-y)
-		}
-	}
 	if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
 		u.centerX = tx
 		u.centerY = ty
 		u.currentAction.reset()
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
+	}
+
+	vx, vy := tx-x, ty-y
+
+	if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
+		u.rotateChassisTowardsVector(vx, vy)
+		return
+	}
+
+	if math.Abs(vx) < u.getStaticData().movementSpeed {
+		u.centerX = tx // source of movement lag :(
+	} else {
+		u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
+	}
+
+	if math.Abs(vy) < u.getStaticData().movementSpeed {
+		u.centerY = ty // source of movement lag :(
+	} else {
+		u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
 	}
 }
 
