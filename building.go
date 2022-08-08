@@ -35,6 +35,10 @@ func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
 
+func (b *building) getUnitPlacementCoords() (int, int) {
+	return b.topLeftX + b.getStaticData().unitPlacementX, b.topLeftY + b.getStaticData().unitPlacementY
+}
+
 func (b *building) getName() string {
 	return b.getStaticData().displayedName
 }
@@ -85,6 +89,9 @@ type buildingStatic struct {
 	// CanUnitBePlacedHere            bool // Removed for now, as duplicated by receivesResources
 	unitPlacementX, unitPlacementY int // tile coords for placed unit draw
 
+	givesFreeUnitOnCreation   bool
+	codeForFreeUnitOnCreation int
+
 	// ui-only things:
 	hotkeyToBuild string
 }
@@ -134,6 +141,9 @@ var sTableBuildings = map[int]*buildingStatic{
 
 		receivesResources: true,
 		unitPlacementX:    1, unitPlacementY: 1,
+
+		givesFreeUnitOnCreation:   true,
+		codeForFreeUnitOnCreation: UNT_HARVESTER,
 	},
 	BLD_TURRET: {
 		maxHitpoints:  250,

@@ -101,9 +101,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 		// nothing found, doing nothing
 		return
 	}
-	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).topLeftX, u.currentOrder.targetActor.(*building).topLeftY
-	orderTileX += u.currentOrder.targetActor.(*building).getStaticData().unitPlacementX
-	orderTileY += u.currentOrder.targetActor.(*building).getStaticData().unitPlacementY
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
 
 	if orderTileX == utx && orderTileY == uty {
 		u.currentOrder.code = ORDER_HARVEST

@@ -63,9 +63,11 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 }
 
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
-	u.currentAction.code = ACTION_WAIT
-	b.removeActor(u)
-	u.currentAction.targetActor.(*building).unitPlacedInside = u
+	if u.currentAction.targetActor.(*building).unitPlacedInside == nil {
+		u.currentAction.code = ACTION_WAIT
+		b.removeActor(u)
+		u.currentAction.targetActor.(*building).unitPlacedInside = u
+	}
 }
 
 func (b *battlefield) executeHarvestActionForActor(a actor) {
@@ -153,7 +155,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	// if it was a unit, place it right away
 	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {
 		if bld, ok := a.(*building); ok {
-			for x := bld.topLeftX - 1; x <= bld.topLeftX+bld.getStaticData().w; x++ {
+			for x := bld.topLeftX; x <= bld.topLeftX+bld.getStaticData().w; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
 				if b.costMapForMovement(x, y) != -1 {

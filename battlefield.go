@@ -75,6 +75,12 @@ func (b *battlefield) addActor(a actor) {
 	case *unit:
 		b.units.PushBack(a)
 	case *building:
+		bld := a.(*building)
+		if bld.getStaticData().givesFreeUnitOnCreation {
+			x, y := bld.getUnitPlacementCoords()
+			unt := createUnit(bld.getStaticData().codeForFreeUnitOnCreation, x, y, bld.getFaction())
+			bld.unitPlacedInside = unt
+		}
 		b.buildings.PushBack(a)
 	default:
 		panic("wat")

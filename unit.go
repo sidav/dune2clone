@@ -25,7 +25,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	if sTableUnits[code].turretCode != TRT_NONE {
 		turr = &turret{code: sTableUnits[code].turretCode, rotationDegree: 270}
 	}
-	return &unit{
+	u := &unit{
 		code:             code,
 		centerX:          cx,
 		centerY:          cy,
@@ -34,6 +34,8 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 		turret:           turr,
 		chassisDegree:    270,
 	}
+	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
+	return u
 }
 
 func (u *unit) markSelected(b bool) {
@@ -106,6 +108,8 @@ type unitStatic struct {
 
 	maxCargoAmount int // for harvesters
 
+	defaultOrderOnCreation orderCode
+
 	cost          int
 	buildTime     int // seconds
 	hotkeyToBuild string
@@ -146,15 +150,16 @@ var sTableUnits = map[int]*unitStatic{
 		hotkeyToBuild:        "M",
 	},
 	UNT_HARVESTER: {
-		displayedName:        "Harvester",
-		chassisSpriteCode:    "harvester",
-		maxCargoAmount:       10,
-		movementSpeed:        0.15,
-		maxHitpoints:         250,
-		turretCode:           TRT_NONE,
-		chassisRotationSpeed: 4,
-		cost:                 1600,
-		buildTime:            12,
-		hotkeyToBuild:        "H",
+		displayedName:          "Harvester",
+		chassisSpriteCode:      "harvester",
+		defaultOrderOnCreation: ORDER_HARVEST,
+		maxCargoAmount:         1000,
+		movementSpeed:          0.05,
+		maxHitpoints:           250,
+		turretCode:             TRT_NONE,
+		chassisRotationSpeed:   4,
+		cost:                   1600,
+		buildTime:              12,
+		hotkeyToBuild:          "H",
 	},
 }
