@@ -39,10 +39,13 @@ func (b *battlefield) executeActionForActor(a actor) {
 }
 
 func (b *battlefield) executeWaitActionForUnit(u *unit) {
-	//if b.currentTick%DESIRED_FPS == 0 && rnd.OneChanceFrom(4) {
-	//	u.currentAction.code = ACTION_ROTATE
-	//	u.currentAction.targetRotation = normalizeDegree(rnd.RandInRange(u.chassisDegree-90, u.chassisDegree+90))
-	//}
+	// rotate the unit to target if unit's turret can't rotate itself
+	if u.turret != nil && !u.turret.canRotate() && u.turret.targetActor != nil {
+		x, y := u.turret.targetActor.getPhysicalCenterCoords()
+		x -= u.centerX
+		y -= u.centerY
+		u.rotateChassisTowardsVector(x, y)
+	}
 }
 
 func (b *battlefield) executeWaitActionForBuilding(bld *building) {
