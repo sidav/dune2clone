@@ -157,6 +157,21 @@ func AreTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
 		bot2 < y1)
 }
 
+func AreTwoCellRectsOverlapping32(x1, y1, w1, h1, x2, y2, w2, h2 int32) bool {
+	// WARNING:
+	// ALL "-1"s HERE ARE BECAUSE OF WE ARE IN CELLS SPACE
+	// I.E. A SINGLE CELL IS 1x1 RECTANGLE
+	// SO RECTS (0, 0, 1x1) AND (1, 0, 1x1) ARE NOT OVERLAPPING IN THIS SPACE (BUT SHOULD IN EUCLIDEAN OF COURSE)
+	right1 := x1 + w1 - 1
+	bot1 := y1 + h1 - 1
+	right2 := x2 + w2 - 1
+	bot2 := y2 + h2 - 1
+	return !(x2 > right1 ||
+		right2 < x1 ||
+		y2 > bot1 ||
+		bot2 < y1)
+}
+
 func DegreeToUnitVector(deg int) (float64, float64) {
 	return math.Cos(float64(deg) * 3.14159265358 / (degreesInCircleFloat/2)), math.Sin(float64(deg) * 3.14159265358 / (degreesInCircleFloat/2))
 }

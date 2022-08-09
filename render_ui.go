@@ -56,7 +56,8 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 			if b.isRectClearForBuilding(tx+i, ty+j, 1, 1) {
 				color = rl.Green
 			}
-			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS), int32((ty+j)*TILE_SIZE_IN_PIXELS), TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
+			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS) - r.camTopLeftX, int32((ty+j)*TILE_SIZE_IN_PIXELS) - r.camTopLeftY,
+				TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
 		}
 	}
 }

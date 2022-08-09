@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	MAP_W = 20
-	MAP_H = 14
+	MAP_W = 64
+	MAP_H = 64
 )
 
 const (

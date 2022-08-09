@@ -3,14 +3,20 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type playerController struct {
-	controlledFaction *faction
-	selection         actor
-	mode              int
-	cursorW, cursorH  int
+	camTopLeftX, camTopLeftY int // real coords, in pixels
+	controlledFaction        *faction
+	selection                actor
+	mode                     int
+	cursorW, cursorH         int
+	scrollCooldown           int
 }
 
 func (pc *playerController) playerControl(b *battlefield) {
 	pc.mode = PCMODE_NONE
+
+	pc.scrollCooldown--
+	pc.scroll()
+
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
 		if u, ok := pc.selection.(*unit); ok {
@@ -78,9 +84,45 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 	}
 }
 
+func (pc *playerController) scroll() {
+	const SCROLL_MARGIN = TILE_SIZE_IN_PIXELS
+	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(6)
+	const SCROLL_CD = 1
+	if pc.scrollCooldown > 0 {
+		return
+	}
+	v := rl.GetMousePosition()
+	if v.X < SCROLL_MARGIN {
+		pc.camTopLeftX -= SCROLL_AMOUNT
+	}
+	if v.X > WINDOW_W-SCROLL_MARGIN {
+		pc.camTopLeftX += SCROLL_AMOUNT
+	}
+	if v.Y < SCROLL_MARGIN {
+		pc.camTopLeftY -= SCROLL_AMOUNT
+	}
+	if v.Y > WINDOW_H-SCROLL_MARGIN {
+		pc.camTopLeftY += SCROLL_AMOUNT
+	}
+	if pc.camTopLeftX < 0 {
+		pc.camTopLeftX = 0
+	}
+	if pc.camTopLeftX > (MAP_W-10)*TILE_SIZE_IN_PIXELS {
+		pc.camTopLeftX = (MAP_W-10)*TILE_SIZE_IN_PIXELS
+	}
+	if pc.camTopLeftY > (MAP_H-10)*TILE_SIZE_IN_PIXELS {
+		pc.camTopLeftY = (MAP_H-10)*TILE_SIZE_IN_PIXELS
+	}
+	if pc.camTopLeftY < 0 {
+		pc.camTopLeftY = 0
+	}
+
+	pc.scrollCooldown = SCROLL_CD
+}
+
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
 	v := rl.GetMousePosition()
-	return int(v.X) / TILE_SIZE_IN_PIXELS, int(v.Y) / TILE_SIZE_IN_PIXELS
+	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY) + v.Y) / TILE_SIZE_IN_PIXELS
 }
 
 func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString string) bool {
