@@ -51,7 +51,8 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
-			received := min(5, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
+			const HARVEST_PER_TICK = 11
+			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
 			bld.getFaction().money += float64(received)
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {
@@ -75,11 +76,13 @@ func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 }
 
 func (b *battlefield) executeHarvestActionForActor(a actor) {
+	const HARVEST_PER_TICK = 3
 	if u, ok := a.(*unit); ok {
 		x, y := u.getPhysicalCenterCoords()
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
 		if u.currentCargoAmount < u.getStaticData().maxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
-			harvestedAmount := min(b.tiles[utx][uty].resourcesAmount, 2) // TODO: replace
+			harvestedAmount := min(b.tiles[utx][uty].resourcesAmount, HARVEST_PER_TICK) // TODO: replace
+			harvestedAmount = min(harvestedAmount, u.getStaticData().maxCargoAmount - u.currentCargoAmount)
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount
 		} else {

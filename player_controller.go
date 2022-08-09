@@ -85,23 +85,25 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 }
 
 func (pc *playerController) scroll() {
+	if pc.scrollCooldown > 0 || !rl.IsWindowFocused() || !rl.IsCursorOnScreen() {
+		return
+	}
+
 	const SCROLL_MARGIN = TILE_SIZE_IN_PIXELS
 	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(6)
 	const SCROLL_CD = 1
-	if pc.scrollCooldown > 0 {
-		return
-	}
+
 	v := rl.GetMousePosition()
 	if v.X < SCROLL_MARGIN {
 		pc.camTopLeftX -= SCROLL_AMOUNT
 	}
-	if v.X > WINDOW_W-SCROLL_MARGIN {
+	if v.X > float32(WINDOW_W-SCROLL_MARGIN) {
 		pc.camTopLeftX += SCROLL_AMOUNT
 	}
 	if v.Y < SCROLL_MARGIN {
 		pc.camTopLeftY -= SCROLL_AMOUNT
 	}
-	if v.Y > WINDOW_H-SCROLL_MARGIN {
+	if v.Y > float32(WINDOW_H-SCROLL_MARGIN) {
 		pc.camTopLeftY += SCROLL_AMOUNT
 	}
 	if pc.camTopLeftX < 0 {

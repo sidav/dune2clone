@@ -46,8 +46,8 @@ func (b *battlefield) finalizeTileVariants() {
 }
 
 func (b *battlefield) placeInitialStuff() {
-	for x := 6; x < 18; x++ {
-		for y := 0; y < 6; y++ {
+	for x := MAP_W/5; x < 4*MAP_W/5; x++ {
+		for y := 0; y < MAP_H; y++ {
 			b.tiles[x][y].resourcesAmount = rnd.RandInRange(250, 500)
 		}
 	}
@@ -63,11 +63,11 @@ func (b *battlefield) placeInitialStuff() {
 	})
 
 	b.addActor(createBuilding(BLD_BASE, 1, 1, b.factions[0]))
-	b.addActor(createBuilding(BLD_BASE, 15, 10, b.factions[1]))
-
 	b.addActor(createUnit(UNT_TANK, 3, 3, b.factions[0]))
 	b.addActor(createUnit(UNT_QUAD, 4, 3, b.factions[0]))
-	b.addActor(createUnit(UNT_TANK, 17, 10, b.factions[1]))
+
+	b.addActor(createBuilding(BLD_BASE, MAP_W-3, MAP_H-3, b.factions[1]))
+	b.addActor(createUnit(UNT_TANK, MAP_W-4, MAP_H-4, b.factions[1]))
 }
 
 func (b *battlefield) addActor(a actor) {

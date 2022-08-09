@@ -13,6 +13,10 @@ type renderer struct {
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
+	if rl.IsWindowResized() || rl.IsWindowMaximized() {
+		WINDOW_W = int32(rl.GetScreenWidth())
+		WINDOW_H = int32(rl.GetScreenHeight())
+	}
 	r.viewportW = WINDOW_W
 	r.viewportH = WINDOW_H
 	r.camTopLeftX, r.camTopLeftY = int32(pc.camTopLeftX), int32(pc.camTopLeftY)
@@ -60,9 +64,6 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 func (r *renderer) renderTile(b *battlefield, x, y int) {
 	t := b.tiles[x][y]
 	osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
-	if x == 5 && y == 5 {
-		debugWritef("Onscreen: %d, %d\n", osx, osy)
-	}
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
