@@ -3,6 +3,9 @@ package main
 import "dune2clone/geometry"
 
 func (b *battlefield) actForProjectile(p *projectile) {
+	if p.setToRemove {
+		return // workaround for emptying the list
+	}
 	// move forward
 	vx, vy := geometry.DegreeToUnitVector(p.rotationDegree)
 	spd := p.getStaticData().speed
@@ -21,5 +24,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		if targ != nil {
 			b.dealDamageToActor(p.damage, targ)
 		}
+		p.setToRemove = true
 	}
+	// debugWritef("%+v spd: %f\n", p, spd)
 }

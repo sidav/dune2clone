@@ -8,6 +8,7 @@ type projectile struct {
 	fuel             float64 // how many 'speeds' it spends until it is destroyed
 	targetActor      actor   // for homing projectiles
 	damage           int     // set by turret, not proj static data
+	setToRemove      bool
 }
 
 func (p *projectile) getStaticData() *projectileStatic {

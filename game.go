@@ -59,9 +59,14 @@ func (g *game) startGame() {
 				proj := i.Value.(*projectile)
 				g.battlefield.actForProjectile(proj)
 				tx, ty := geometry.TrueCoordsToTileCoords(proj.centerX, proj.centerY)
-				if !geometry.AreCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.fuel <= 0 {
+				if !geometry.AreCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.setToRemove {
 					// debugWrite("Projectile deleted.")
-					g.battlefield.projectiles.Remove(i)
+					// deleting while iterating
+					setI := i
+					if i.Prev() != nil {
+						i = i.Prev()
+					}
+					g.battlefield.projectiles.Remove(setI)
 				}
 			}
 			timeReportString += fmt.Sprintf("projs: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
@@ -72,14 +77,23 @@ func (g *game) startGame() {
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				if i.Value.(*unit).currentHitpoints <= 0 {
-					g.battlefield.units.Remove(i)
+					setI := i
+					if i.Prev() != nil {
+						i = i.Prev()
+					}
+					g.battlefield.units.Remove(setI)
 				}
 			}
 		}
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 1 {
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				if i.Value.(*building).currentHitpoints <= 0 {
-					g.battlefield.buildings.Remove(i)
+					// deleting while iterating
+					setI := i
+					if i.Prev() != nil {
+						i = i.Prev()
+					}
+					g.battlefield.buildings.Remove(setI)
 				}
 			}
 		}
