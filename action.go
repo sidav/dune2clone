@@ -17,7 +17,7 @@ type action struct {
 func (a *action) getTextDescription() string {
 	switch a.code {
 	case ACTION_WAIT:
-		return "Standing by"
+		return "Awaiting orders"
 	case ACTION_MOVE:
 		return "Moving to position"
 	case ACTION_ROTATE:
