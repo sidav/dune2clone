@@ -80,15 +80,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	// for this, target tile is resource tile. Target refinery is in targetActor.
 	if u.currentOrder.targetActor == nil || u.currentOrder.targetActor.(*building).unitPlacedInside != nil {
-		// find refinery TODO: find closest one
-		for i := b.buildings.Front(); i != nil; i = i.Next() {
-			if bld, ok := i.Value.(*building); ok {
-				if bld.getStaticData().receivesResources && bld.getFaction() == u.getFaction() && bld.unitPlacedInside == nil {
-					u.currentOrder.targetActor = bld
-					break
-				}
-			}
-		}
+		u.currentOrder.targetActor = b.getClosestEmptyFactionRefineryFromCoords(u.faction, u.centerX, u.centerY)
 	}
 	if u.currentOrder.targetActor == nil {
 		// nothing found, doing nothing

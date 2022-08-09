@@ -28,6 +28,14 @@ func TileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
 	return float64(tx) + 0.5, float64(ty) + 0.5
 }
 
+func SquareDistanceFloat64(x1, y1, x2, y2 float64) float64 {
+	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+}
+
+func SquareDistanceInt(x1, y1, x2, y2 int) int {
+	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+}
+
 func CirclesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
 	tx := x2 - x1
 	ty := y2 - y1

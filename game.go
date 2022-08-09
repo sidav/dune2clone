@@ -90,7 +90,10 @@ func (g *game) startGame() {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 					g.battlefield.executeOrderForUnit(i.Value.(*unit))
 			}
-			timeReportString += fmt.Sprintf("orders: %dms, ", time.Since(timeLogicStarted) / time.Millisecond)
+			timeReportString += fmt.Sprintf("orders: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
+			if g.battlefield.currentTick % (UNIT_ACTIONS_TICK_EACH*30) == 1 {
+				debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick,  time.Since(timeCurrentActionStarted) / time.Millisecond)
+			}
 		}
 		g.battlefield.currentTick++
 

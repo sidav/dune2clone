@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"dune2clone/astar"
 	"dune2clone/geometry"
+	"math"
 )
 
 type battlefield struct {
@@ -127,6 +128,24 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	return nil
 }
 
+func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y float64) actor {
+	var selected actor = nil
+	closestDist := math.MaxFloat64
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
+		if !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
+			continue
+		}
+		bldCX, bldCY := bld.getPhysicalCenterCoords()
+		distFromBld := geometry.SquareDistanceFloat64(x, y, bldCX, bldCY)
+		if selected == nil || distFromBld < closestDist {
+			closestDist = distFromBld
+			selected = bld
+		}
+	}
+	return selected
+}
+
 func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool {
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if i.Value.(*building).isPresentAt(x, y) {
@@ -207,7 +226,7 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 	currX, currY := -1, -1
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
-			currRange := (tx-x)*(tx-x) + (ty-y)*(ty-y)
+			currRange := geometry.SquareDistanceInt(x, y, tx, ty)
 			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange && b.isTileClearToBeMovedInto(x, y, nil) {
 				currX, currY = x, y
 				lowestRange = currRange

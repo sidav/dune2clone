@@ -68,7 +68,7 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 			centerX:        projX,
 			centerY:        projY,
 			rotationDegree: t.rotationDegree + degreeSpread,
-			fuel:           math.Sqrt((targetCenterX-shooterX)*(targetCenterX-shooterX)+(targetCenterY-shooterY)*(targetCenterY-shooterY)) + rangeSpread*rangeSpread,
+			fuel:           math.Sqrt(geometry.SquareDistanceFloat64(targetCenterX, targetCenterY, shooterX, shooterY)) + rangeSpread*rangeSpread,
 			targetActor:    t.targetActor,
 			damage:         t.getStaticData().projectileDamage,
 		})
