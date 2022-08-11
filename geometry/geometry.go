@@ -194,3 +194,37 @@ func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	realSqDistanceAndSqRadiusDiff := (fx-tx)*(fx-tx) + (fy-ty)*(fy-ty) - r*r
 	return realSqDistanceAndSqRadiusDiff < r
 }
+
+func spiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius int) (int, int) {
+	vx, vy := 1, 0
+	currRadius := 1
+	x, y := startX-currRadius, startY-currRadius
+	currStartX, currStartY := x, y
+	for {
+		if condition(x, y) {
+			return x, y
+		}
+		x += vx
+		y += vy
+		// rotate if we are at corner of current square
+		if x == startX+currRadius && y == startY-currRadius || // right top
+			x == startX+currRadius && y == startY+currRadius || // right bottom
+			x == startX-currRadius && y == startY+currRadius || // left bottom
+			x == startX-currRadius && y == startY-currRadius {
+
+			t := vx
+			vx = -vy
+			vy = t
+		}
+		// increasing radius
+		if x == currStartX && y == currStartY {
+			currRadius++
+			if currRadius > maxSearchRadius {
+				return -1, -1
+			}
+			x, y = startX-currRadius, startY-currRadius
+			currStartX, currStartY = x, y
+		}
+	}
+	// return -1, -1
+}
