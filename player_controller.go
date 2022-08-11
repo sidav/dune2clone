@@ -20,6 +20,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
 		if u, ok := pc.selection.(*unit); ok {
+			u.currentOrder.resetOrder()
 			u.currentOrder.targetTileX = tx
 			u.currentOrder.targetTileY = ty
 			u.currentOrder.code = ORDER_MOVE

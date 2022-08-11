@@ -18,6 +18,10 @@ type battlefield struct {
 	currentTick int
 }
 
+func (b *battlefield) areTileCoordsValid(x, y int) bool {
+	return x > 0 && y > 0 && x < len(b.tiles) && y < len(b.tiles[0])
+}
+
 func (b *battlefield) addActor(a actor) {
 	switch a.(type) {
 	case *unit:
@@ -169,16 +173,11 @@ func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool 
 
 func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (int, int) {
 	// TODO: optimize this shit
-	lowestRange := len(b.tiles)*len(b.tiles) + len(b.tiles[0])*len(b.tiles[0])
-	currX, currY := -1, -1
-	for x := range b.tiles {
-		for y := range b.tiles[x] {
-			currRange := geometry.SquareDistanceInt(x, y, tx, ty)
-			if b.tiles[x][y].resourcesAmount > 0 && currRange < lowestRange && b.isTileClearToBeMovedInto(x, y, nil) {
-				currX, currY = x, y
-				lowestRange = currRange
-			}
-		}
-	}
-	return currX, currY
+	return geometry.SpiralSearchForConditionFrom(
+		func(x, y int) bool {
+			return areTileCoordsValid(x, y) &&
+				b.tiles[x][y].resourcesAmount > 0 &&
+				b.isTileClearToBeMovedInto(x, y, nil)
+		},
+		tx, ty, len(b.tiles)/2)
 }

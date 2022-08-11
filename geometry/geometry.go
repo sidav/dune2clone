@@ -195,7 +195,7 @@ func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	return realSqDistanceAndSqRadiusDiff < r
 }
 
-func spiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius int) (int, int) {
+func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius int) (int, int) {
 	vx, vy := 1, 0
 	currRadius := 1
 	x, y := startX-currRadius, startY-currRadius
