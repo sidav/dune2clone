@@ -1,0 +1,50 @@
+package map_generator
+
+type automat struct {
+	drawsChar                                int
+	canDrawOn                                []int
+	totalDraws, desiredTotalDraws, drawTries int
+	x, y                                     int
+	symmV, symmH                             bool
+}
+
+// true if finished
+func (a *automat) perform(gm *GameMap) bool {
+	a.moveOnMap(gm)
+	return a.totalDraws == a.desiredTotalDraws || a.drawTries == a.desiredTotalDraws*100
+}
+
+func (a *automat) moveOnMap(gm *GameMap) {
+	if a.totalDraws == a.desiredTotalDraws {
+		return
+	}
+	w, h := len(gm.Tiles), len(gm.Tiles[0])
+	vx, vy := 999, 999
+	for vx*vy != 0 {
+		vx, vy = rnd.RandomUnitVectorInt()
+	}
+	for a.x+vx < 0 || a.y+vy < 0 || a.x+vx >= w || a.y+vy >= h {
+		vx, vy = rnd.RandomUnitVectorInt()
+	}
+	a.x += vx
+	a.y += vy
+	allowedToDrawHere := false
+	for _, c := range a.canDrawOn {
+		if c == gm.Tiles[a.x][a.y] {
+			allowedToDrawHere = true
+			break
+		}
+	}
+	if allowedToDrawHere {
+		gm.Tiles[a.x][a.y] = a.drawsChar
+		if a.symmV && a.symmH {
+			gm.Tiles[w-1-a.x][h-1-a.y] = a.drawsChar
+		} else if a.symmV {
+			gm.Tiles[a.x][h-1-a.y] = a.drawsChar
+		} else if a.symmH {
+			gm.Tiles[w-1-a.x][a.y] = a.drawsChar
+		}
+		a.totalDraws++
+	}
+	a.drawTries++
+}
