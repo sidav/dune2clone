@@ -57,4 +57,5 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY 
 	scrRectW := int32(tileSize) * WINDOW_W / TILE_SIZE_IN_PIXELS
 	scrRectH := int32(tileSize) * WINDOW_H / TILE_SIZE_IN_PIXELS
 	rl.DrawRectangleLines(posX+scrRectX, posY+scrRectY, scrRectW, scrRectH, rl.White)
+	rl.DrawRectangleLines(posX+scrRectX+1, posY+scrRectY+1, scrRectW-2, scrRectH-2, rl.White)
 }

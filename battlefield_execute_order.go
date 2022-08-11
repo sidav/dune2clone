@@ -24,16 +24,11 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
-	path := b.findPathForUnitTo(u, orderTileX, orderTileY, false)
-	vx, vy := path.GetNextStepVector()
-
-	u.currentAction.code = ACTION_MOVE
-	u.currentAction.targetTileX = utx + vx
-	u.currentAction.targetTileY = uty + vy
-
 	if utx == orderTileX && uty == orderTileY {
 		u.currentOrder.code = ORDER_NONE
+		return
 	}
+	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 }
 
 func (b *battlefield) executeHarvestOrder(u *unit) {
@@ -63,12 +58,7 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 		orderTileX, orderTileY = rx, ry
 	}
 
-	path := b.findPathForUnitTo(u, orderTileX, orderTileY, false)
-	vx, vy := path.GetNextStepVector()
-
-	u.currentAction.code = ACTION_MOVE
-	u.currentAction.targetTileX = utx + vx
-	u.currentAction.targetTileY = uty + vy
+	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 
 	if utx == orderTileX && uty == orderTileY {
 		u.currentAction.code = ACTION_HARVEST
@@ -95,8 +85,29 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 		return
 	}
 
-	path := b.findPathForUnitTo(u, orderTileX, orderTileY, true)
+	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+}
+
+func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+
+	path := b.findPathForUnitTo(u, tx, ty, true)
 	vx, vy := path.GetNextStepVector()
+
+	// creating BIG move action for several same-vector path cells
+	currPathChild := path.Child
+	multiplier := 1
+	for currPathChild != nil {
+		vxNext, vyNext := currPathChild.GetNextStepVector()
+		if vx == vxNext && vy == vyNext {
+			multiplier++
+		} else {
+			break
+		}
+		currPathChild = currPathChild.Child
+	}
+	vx *= multiplier
+	vy *= multiplier
 
 	u.currentAction.code = ACTION_MOVE
 	u.currentAction.targetTileX = utx + vx

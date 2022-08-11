@@ -128,13 +128,13 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 	}
 
 	if math.Abs(vx) < u.getStaticData().movementSpeed {
-		u.centerX = tx // source of movement lag :(
+		u.centerX = tx // source of possible movement lag :(
 	} else {
 		u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
 	}
 
 	if math.Abs(vy) < u.getStaticData().movementSpeed {
-		u.centerY = ty // source of movement lag :(
+		u.centerY = ty // source of possible movement lag :(
 	} else {
 		u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
 	}
