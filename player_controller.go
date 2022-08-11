@@ -29,7 +29,10 @@ func (pc *playerController) playerControl(b *battlefield) {
 		}
 	}
 	if bld, ok := pc.selection.(*building); ok {
-		pc.GiveOrderToBuilding(b, bld)
+		built := pc.GiveOrderToBuilding(b, bld)
+		if built {
+			return
+		}
 	}
 
 	// selection
@@ -48,7 +51,8 @@ func (pc *playerController) playerControl(b *battlefield) {
 	}
 }
 
-func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
+// returns true if order was given (for not auto-clicking, for example)
+func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) bool {
 	kk := rl.GetKeyPressed()
 	if bld.currentAction.code == ACTION_WAIT {
 		// maybe build?
@@ -79,9 +83,11 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) {
 				b.addActor(targetBld)
 				pc.mode = PCMODE_NONE
 				bld.currentAction.reset()
+				return true
 			}
 		}
 	}
+	return false
 }
 
 func (pc *playerController) scroll() {
