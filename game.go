@@ -2,6 +2,7 @@ package main
 
 import (
 	"dune2clone/geometry"
+	"dune2clone/map_generator"
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"time"
@@ -12,8 +13,8 @@ type game struct {
 }
 
 func (g *game) startGame() {
-	g.battlefield = battlefield{}
-	g.battlefield.create(MAP_W, MAP_H)
+	g.selectMapToGenerateBattlefield()
+
 	pc := &playerController{
 		controlledFaction: g.battlefield.factions[0],
 		selection:         nil,
@@ -118,4 +119,23 @@ func (g *game) startGame() {
 			debugWrite(timeReportString)
 		}
 	}
+}
+
+func (g *game) selectMapToGenerateBattlefield() {
+	map_generator.SetRandom(&rnd)
+	generatedMap := &map_generator.GameMap{}
+	generatedMap.Init(64, 64)
+	generatedMap.Generate()
+	for {
+		rl.BeginDrawing()
+		rl.EndDrawing()
+		drawGeneratedMap(generatedMap)
+		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
+			break
+		} else if rl.GetKeyPressed() != 0 {
+			generatedMap.Init(64, 64)
+			generatedMap.Generate()
+		}
+	}
+	g.battlefield.initFromRandomMap(generatedMap)
 }

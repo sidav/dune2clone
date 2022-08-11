@@ -11,6 +11,7 @@ const UI_FONT_SIZE = 28
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
 	r.renderSelectedActorUI(b, pc, 0, 3*WINDOW_H/4)
+	r.drawMinimap(b, pc, WINDOW_W-256, WINDOW_H-256, 256, 256)
 	if pc.mode == PCMODE_PLACE_BUILDING {
 		r.renderBuildCursor(b, pc)
 	}
@@ -18,7 +19,11 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
-	rl.DrawText(fmt.Sprintf("%.f$", math.Round(pc.controlledFaction.money)), WINDOW_W/2, 0, 36, rl.White)
+	// draw money
+	r.drawOutlinedRect(WINDOW_W-200, 0, 200, 36, 2, rl.Green, rl.Black)
+	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.money))
+	rl.DrawText("$", WINDOW_W-192, 0, 36, rl.White)
+	rl.DrawText(moneyStr, WINDOW_W-int32((2*36/3)*len(moneyStr)), 0, 36, rl.White)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
