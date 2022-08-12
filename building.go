@@ -102,6 +102,9 @@ type buildingStatic struct {
 	givesFreeUnitOnCreation   bool
 	codeForFreeUnitOnCreation int
 
+	givesEnergy, consumesEnergy int
+	storageAmount               float64
+
 	// ui-only things:
 	hotkeyToBuild string
 }
@@ -115,6 +118,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		cost:          2500,
 		buildTime:     30,
 		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET},
+		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
 	BLD_POWERPLANT: {
@@ -126,6 +130,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:     5,
 		builds:        nil,
 		produces:      nil,
+		givesEnergy:   20,
 		hotkeyToBuild: "P",
 	},
 	BLD_FACTORY: {
@@ -151,6 +156,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "R",
 
 		receivesResources: true,
+		storageAmount:     1000,
 		unitPlacementX:    1, unitPlacementY: 1,
 
 		givesFreeUnitOnCreation:   true,

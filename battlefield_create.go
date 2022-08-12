@@ -74,13 +74,13 @@ func (b *battlefield) finalizeTileVariants() {
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	b.factions = append(b.factions, &faction{
 		factionColor:        factionTints[0],
-		money:               10000,
+		resources:           10000,
 		team:                0,
 		resourcesMultiplier: 5,
 	})
 	b.factions = append(b.factions, &faction{
 		factionColor:        factionTints[1],
-		money:               10000,
+		resources:           10000,
 		team:                0,
 		resourcesMultiplier: 5,
 	})

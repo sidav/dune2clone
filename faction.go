@@ -5,11 +5,30 @@ import (
 )
 
 type faction struct {
-	factionColor        color.RGBA
-	money               float64 // float because of division when spending
-	energy              int
+	factionColor                  color.RGBA
+	resources, maxResources       float64
+	// money                         float64 // float because of division when spending
+	currentEnergy, requiredEnergy int
+
 	team                int // 0 means "enemy to all"
 	resourcesMultiplier float64
+}
+
+func (f *faction) getMoney() float64 {
+	return f.resources
+}
+
+func (f *faction) spendMoney(spent float64) {
+	f.resources -= spent
+}
+func (f *faction) receiveResources(amount float64) {
+	f.resources += amount * f.resourcesMultiplier
+}
+
+func (f *faction) resetCurrents() {
+	f.maxResources = 0
+	f.currentEnergy = 0
+	f.requiredEnergy = 0
 }
 
 const zeroTiltColor = 32

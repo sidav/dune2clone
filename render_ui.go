@@ -20,10 +20,15 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 	// draw money
-	r.drawOutlinedRect(WINDOW_W-200, 0, 200, 36, 2, rl.Green, rl.Black)
-	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.money))
-	rl.DrawText("$", WINDOW_W-192, 0, 36, rl.White)
+	r.drawOutlinedRect(WINDOW_W-400, 0, 400, 36, 2, rl.Green, rl.Black)
+	moneyStr := fmt.Sprintf("%.f/%.f", math.Round(pc.controlledFaction.getMoney()), pc.controlledFaction.maxResources)
+	rl.DrawText("$", WINDOW_W-392, 0, 36, rl.White)
 	rl.DrawText(moneyStr, WINDOW_W-int32((2*36/3)*len(moneyStr)), 0, 36, rl.White)
+	// draw energy
+	r.drawOutlinedRect(WINDOW_W-300, 36, 300, 36, 2, rl.Green, rl.Black)
+	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.requiredEnergy, pc.controlledFaction.currentEnergy)
+	rl.DrawText("ENERGY", WINDOW_W-292, 36, 36, rl.White)
+	rl.DrawText(energyStr, WINDOW_W-int32((2*36/3)*len(energyStr)), 36, 36, rl.White)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {

@@ -91,7 +91,7 @@ func (g *game) startGame() {
 		}
 		timeReportString += fmt.Sprintf("all actions: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
 
-		// cleanup
+		// cleanup and faction calculations
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				if i.Value.(*unit).currentHitpoints <= 0 {
@@ -104,14 +104,22 @@ func (g *game) startGame() {
 			}
 		}
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 1 {
+			for _, f := range g.battlefield.factions {
+				f.resetCurrents()
+			}
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
-				if i.Value.(*building).currentHitpoints <= 0 {
+				bld := i.Value.(*building)
+				if bld.currentHitpoints <= 0 {
 					// deleting while iterating
 					setI := i
 					if i.Prev() != nil {
 						i = i.Prev()
 					}
 					g.battlefield.buildings.Remove(setI)
+				} else {
+					bld.faction.currentEnergy += bld.getStaticData().givesEnergy
+					bld.faction.requiredEnergy += bld.getStaticData().consumesEnergy
+					bld.faction.maxResources += bld.getStaticData().storageAmount
 				}
 			}
 		}
@@ -137,7 +145,6 @@ func (g *game) startGame() {
 				debugWritef("Tick %d, bld orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			}
 		}
-
 
 		g.battlefield.currentTick++
 
