@@ -28,7 +28,7 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 	for sp := range gm.StartPoints {
 		const spSize = tileSize * 4
 		rl.DrawRectangle(int32(tileSize*gm.StartPoints[sp][0])-spSize/3, int32(tileSize*gm.StartPoints[sp][1]), spSize, spSize, rl.Black)
-		rl.DrawText(strconv.Itoa(sp+1), int32(tileSize*gm.StartPoints[sp][0]), int32(tileSize*gm.StartPoints[sp][1]), spSize, factionTints[sp])
+		rl.DrawText(strconv.Itoa(sp+1), int32(tileSize*gm.StartPoints[sp][0]), int32(tileSize*gm.StartPoints[sp][1]), spSize, factionColors[sp])
 	}
 
 	rl.EndDrawing()

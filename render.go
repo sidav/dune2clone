@@ -97,7 +97,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	if bld.turret != nil {
 		sprites = []rl.Texture2D{
 			buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
-			turretsAtlaces[bld.turret.getStaticData().spriteCode].
+			turretsAtlaces[bld.turret.getStaticData().spriteCode][bld.faction.colorNumber].
 				getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
 		}
 	} else {
@@ -131,7 +131,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	}
 	if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
-			&bld.getFaction().factionColor)
+			&factionColors[bld.getFaction().colorNumber])
 	}
 	// render unit inside
 	if bld.unitPlacedInside != nil {
@@ -141,10 +141,10 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	if bld.faction != nil {
 		degree := (b.currentTick * 6) % 360
 		rl.DrawTexture(
-			uiAtlaces["factionflag"].getSpriteByDegreeAndFrameNumber(degree, 0),
+			uiAtlaces["factionflag"][bld.getFaction().colorNumber].getSpriteByDegreeAndFrameNumber(degree, 0),
 			osx+2,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"].atlas[0][0].Height-2,
-			bld.faction.factionColor,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"][bld.faction.colorNumber].atlas[0][0].Height-2,
+			DEFAULT_TINT,
 		)
 	}
 }
@@ -160,12 +160,12 @@ func (r *renderer) renderUnit(u *unit) {
 	var sprites []rl.Texture2D
 	if u.turret != nil && u.turret.canRotate() {
 		sprites = []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
-			turretsAtlaces[u.turret.getStaticData().spriteCode].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
+			turretsAtlaces[u.turret.getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),
 		}
 	} else {
 		sprites = []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
 		}
 	}
 	// draw sprites
@@ -174,12 +174,12 @@ func (r *renderer) renderUnit(u *unit) {
 			s,
 			osx,
 			osy,
-			u.faction.factionColor,
+			DEFAULT_TINT,
 		)
 	}
 	if u.currentHitpoints < u.getStaticData().maxHitpoints {
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getStaticData().maxHitpoints,
-			&u.getFaction().factionColor)
+			&factionColors[u.getFaction().colorNumber])
 	}
 	if u.isSelected {
 		col := rl.DarkGreen
@@ -203,7 +203,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode].
+	sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode][0].
 		atlas[geometry.DegreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
 	rl.DrawTexture(
 		sprite,

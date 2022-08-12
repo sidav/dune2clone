@@ -5,8 +5,8 @@ import (
 )
 
 type faction struct {
-	factionColor                  color.RGBA
-	resources, maxResources       float64
+	colorNumber             int
+	resources, maxResources float64
 	// money                         float64 // float because of division when spending
 	currentEnergy, requiredEnergy int
 
@@ -34,7 +34,7 @@ func (f *faction) resetCurrents() {
 const zeroTiltColor = 32
 const strongerTiltColor = 128
 
-var factionTints = []color.RGBA{
+var factionColors = []color.RGBA{
 	{
 		R: zeroTiltColor,
 		G: zeroTiltColor,
