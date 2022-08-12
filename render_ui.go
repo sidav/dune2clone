@@ -55,16 +55,22 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 
 func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 	tx, ty := pc.mouseCoordsToTileCoords()
-	for i := 0; i < pc.cursorW; i++ {
-		for j := 0; j < pc.cursorH; j++ {
-			color := rl.Red
-			if b.isRectClearForBuilding(tx+i, ty+j, 1, 1) {
-				color = rl.Green
-			}
-			r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS) - r.camTopLeftX, int32((ty+j)*TILE_SIZE_IN_PIXELS) - r.camTopLeftY,
-				TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
-		}
+	color := rl.Red
+	if b.isRectClearForBuilding(tx, ty, pc.cursorW, pc.cursorH, pc.controlledFaction, false) {
+		color = rl.Green
 	}
+	r.drawDitheredRect(int32((tx)*TILE_SIZE_IN_PIXELS)-r.camTopLeftX, int32((ty)*TILE_SIZE_IN_PIXELS)-r.camTopLeftY,
+		int32(pc.cursorW)*TILE_SIZE_IN_PIXELS, int32(pc.cursorH)*TILE_SIZE_IN_PIXELS, color)
+	//for i := 0; i < pc.cursorW; i++ {
+	//	for j := 0; j < pc.cursorH; j++ {
+	//		color := rl.Red
+	//		if b.isRectClearForBuilding(tx+i, ty+j, 1, 1, pc.controlledFaction) {
+	//			color = rl.Green
+	//		}
+	//		r.drawDitheredRect(int32((tx+i)*TILE_SIZE_IN_PIXELS)-r.camTopLeftX, int32((ty+j)*TILE_SIZE_IN_PIXELS)-r.camTopLeftY,
+	//			TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, color)
+	//	}
+	//}
 }
 
 func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {

@@ -160,9 +160,8 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeF
 	)
 }
 
-func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool {
-	//satisfiesDistanceRequirement := false
-	//const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
+func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int, f *faction, ignoreDistanceFromBase bool) bool {
+	const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	for x := topLeftX; x < topLeftX+w; x++ {
 		for y := topLeftY; y < topLeftY+h; y++ {
 			if !b.areTileCoordsValid(x, y) {
@@ -174,9 +173,32 @@ func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool 
 			if b.costMapForMovement(x, y) == -1 {
 				return false
 			}
+			for i := b.buildings.Front(); i != nil; i = i.Next() {
+				if bld, ok := i.Value.(*building); ok {
+					bx, by, bw, bh := bld.getDimensionsForConstructon()
+					if geometry.AreCoordsInTileRect(x, y, bx, by, bw, bh) {
+						return false
+					}
+				}
+			}
 		}
 	}
-	return true
+	if ignoreDistanceFromBase {
+		return true
+	}
+	// check distance requirement
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		if bld, ok := i.Value.(*building); ok {
+			if bld.getFaction() != f {
+				continue
+			}
+			bx, by, bw, bh := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+			if geometry.AreRectsInRange(bx, by, bw, bh, topLeftX, topLeftY, w, h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (int, int) {

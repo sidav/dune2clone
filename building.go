@@ -35,6 +35,15 @@ func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
 
+func (b *building) getDimensionsForConstructon() (int, int, int, int) {
+	h := b.getStaticData().h
+	// prevent closing bottom side for producing buildings
+	if b.getStaticData().produces != nil || b.getStaticData().receivesResources {
+		h++
+	}
+	return b.topLeftX, b.topLeftY, b.getStaticData().w, h
+}
+
 func (b *building) getUnitPlacementCoords() (int, int) {
 	return b.topLeftX + b.getStaticData().unitPlacementX, b.topLeftY + b.getStaticData().unitPlacementY
 }
