@@ -9,7 +9,7 @@ import (
 
 var (
 	tilesAtlaces       = map[string]*spriteAtlas{}
-	buildingsAtlaces   = map[int]*spriteAtlas{}
+	buildingsAtlaces   = map[string]*spriteAtlas{}
 	unitChassisAtlaces = map[string]*spriteAtlas{}
 	turretsAtlaces     = map[string]*spriteAtlas{}
 	projectilesAtlaces = map[string]*spriteAtlas{}
@@ -25,35 +25,41 @@ func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
 	unitChassisAtlaces = make(map[string]*spriteAtlas)
 	turretsAtlaces = make(map[string]*spriteAtlas)
-
-	tilesAtlaces["sand1"] = CreateAtlasFromFile("resources/sprites/terrain/sand1.png", 0, 0, 16, 16, 16, 16, 1, false)
-	tilesAtlaces["sand2"] = CreateAtlasFromFile("resources/sprites/terrain/sand2.png", 0, 0, 16, 16, 16, 16, 1, false)
-	tilesAtlaces["sand3"] = CreateAtlasFromFile("resources/sprites/terrain/sand3.png", 0, 0, 16, 16, 16, 16, 1, false)
-	tilesAtlaces["buildable1"] = CreateAtlasFromFile("resources/sprites/terrain/buildable1.png", 0, 0, 16, 16, 16, 16, 1, false)
-	tilesAtlaces["melange"] = CreateAtlasFromFile("resources/sprites/terrain/melange.png", 0, 0, 16, 16, 16, 16, 1, false)
-
-	buildingsAtlaces = make(map[int]*spriteAtlas)
-	buildingsAtlaces[BLD_BASE] = CreateAtlasFromFile("resources/sprites/buildings/base.png", 0, 0, 32, 32, 32, 32, 1, false)
-	buildingsAtlaces[BLD_POWERPLANT] = CreateAtlasFromFile("resources/sprites/buildings/powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
-	buildingsAtlaces[BLD_FACTORY] = CreateAtlasFromFile("resources/sprites/buildings/factory.png", 0, 0, 48, 32, 48, 32, 1, false)
-	buildingsAtlaces[BLD_REFINERY] = CreateAtlasFromFile("resources/sprites/buildings/refinery.png", 0, 0, 48, 32, 48, 32, 1, false)
-	buildingsAtlaces[BLD_SILO] = CreateAtlasFromFile("resources/sprites/buildings/silo.png", 0, 0, 16, 32, 16, 32, 1, false)
-	buildingsAtlaces[BLD_TURRET_CANNON] = CreateAtlasFromFile("resources/sprites/buildings/cannon.png", 0, 0, 16, 16, 16, 16, 1, false)
-	turretsAtlaces["cannon_turret"] = CreateDirectionalAtlasFromFile("resources/sprites/buildings/cannon_turret.png", 16, 16, 1, 2)
-
-	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_chassis.png", 16, 16, 1, 2)
-	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile("resources/sprites/units/tank_cannon.png", 16, 16, 1, 2)
-
-	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile("resources/sprites/units/quad.png", 16, 16, 1, 2)
-	unitChassisAtlaces["harvester"] = CreateDirectionalAtlasFromFile("resources/sprites/units/harvester.png", 16, 16, 1, 2)
-
 	projectilesAtlaces = make(map[string]*spriteAtlas)
-	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/shell.png", 16, 8, 1, 2)
-	projectilesAtlaces["bullets"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/bullets.png", 16, 8, 1, 2)
-	projectilesAtlaces["missile"] = CreateDirectionalAtlasFromFile("resources/sprites/projectiles/missile.png", 16, 8, 1, 2)
-
 	uiAtlaces = make(map[string]*spriteAtlas)
-	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile("resources/sprites/ui/building_faction_flag.png", 8, 8, 1, 2)
+
+	currPath := "resources/sprites/terrain/"
+	tilesAtlaces["sand1"] = CreateAtlasFromFile(currPath+"sand1.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["sand2"] = CreateAtlasFromFile(currPath+"sand2.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["sand3"] = CreateAtlasFromFile(currPath+"sand3.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["buildable1"] = CreateAtlasFromFile(currPath+"buildable1.png", 0, 0, 16, 16, 16, 16, 1, false)
+	tilesAtlaces["melange"] = CreateAtlasFromFile(currPath+"melange.png", 0, 0, 16, 16, 16, 16, 1, false)
+
+	currPath = "resources/sprites/buildings/"
+	buildingsAtlaces = make(map[string]*spriteAtlas)
+	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 32, 32, 32, 32, 1, false)
+	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
+	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 48, 32, 48, 32, 1, false)
+	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 48, 32, 48, 32, 1, false)
+	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 16, 32, 16, 32, 1, false)
+	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false)
+	turretsAtlaces["bld_turret_cannon"] = CreateDirectionalAtlasFromFile(currPath+"cannon_turret.png", 16, 16, 1, 2)
+	turretsAtlaces["bld_turret_minigun"] = CreateDirectionalAtlasFromFile(currPath+"minigun_turret.png", 16, 16, 1, 2)
+
+	currPath = "resources/sprites/units/"
+	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile(currPath+"tank_chassis.png", 16, 16, 1, 2)
+	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile(currPath+"tank_cannon.png", 16, 16, 1, 2)
+	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile(currPath+"quad.png", 16, 16, 1, 2)
+	unitChassisAtlaces["harvester"] = CreateDirectionalAtlasFromFile(currPath+"harvester.png", 16, 16, 1, 2)
+
+	currPath = "resources/sprites/projectiles/"
+	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile(currPath+"shell.png", 16, 8, 1, 2)
+	projectilesAtlaces["bullets"] = CreateDirectionalAtlasFromFile(currPath+"bullets.png", 16, 8, 1, 2)
+	projectilesAtlaces["missile"] = CreateDirectionalAtlasFromFile(currPath+"missile.png", 16, 8, 1, 2)
+
+
+	currPath = "resources/sprites/ui/"
+	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile(currPath+"building_faction_flag.png", 8, 8, 1, 2)
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

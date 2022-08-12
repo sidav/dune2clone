@@ -96,13 +96,13 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	var sprites []rl.Texture2D
 	if bld.turret != nil {
 		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.code].atlas[0][0],
+			buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
 			turretsAtlaces[bld.turret.getStaticData().spriteCode].
 				getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
 		}
 	} else {
 		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.code].atlas[0][0],
+			buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
 		}
 	}
 	// draw sprite

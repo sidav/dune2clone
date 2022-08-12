@@ -29,6 +29,7 @@ const (
 	TRT_MSLTANK
 	TRT_QUAD
 	TRT_CANNON_BUILDING
+	TRT_MINIGUN_BUILDING
 )
 
 type turretStatic struct {
@@ -74,11 +75,21 @@ var sTableTurrets = map[int]*turretStatic{
 		attackCooldown:        5,
 		projectileDamage:      1,
 	},
+	TRT_MINIGUN_BUILDING: {
+		spriteCode:            "bld_turret_minigun",
+		firesProjectileOfCode: PRJ_BULLETS,
+		rotateSpeed:           15,
+		fireRange:             6,
+		fireSpreadDegrees:     7,
+		shotRangeSpread:       0.7,
+		attackCooldown:        5,
+		projectileDamage:      2,
+	},
 	TRT_CANNON_BUILDING: {
-		spriteCode:            "cannon_turret",
+		spriteCode:            "bld_turret_cannon",
 		firesProjectileOfCode: PRJ_SHELL,
-		rotateSpeed:           3,
-		fireRange:             7,
+		rotateSpeed:           5,
+		fireRange:             6,
 		fireSpreadDegrees:     7,
 		shotRangeSpread:       0.7,
 		attackCooldown:        50,

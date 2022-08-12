@@ -97,6 +97,8 @@ type buildingStatic struct {
 	givesEnergy, consumesEnergy int
 	storageAmount               float64
 
+	spriteCode string
+
 	// ui-only things:
 	hotkeyToBuild string
 }
@@ -113,17 +115,19 @@ const (
 
 var sTableBuildings = map[int]*buildingStatic{
 	BLD_BASE: {
+		spriteCode:    "base",
 		maxHitpoints:  1000,
 		w:             2,
 		h:             2,
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_SILO},
+		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO},
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
 	BLD_POWERPLANT: {
+		spriteCode:    "powerplant",
 		maxHitpoints:  500,
 		w:             2,
 		h:             2,
@@ -136,6 +140,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "P",
 	},
 	BLD_FACTORY: {
+		spriteCode:    "factory",
 		maxHitpoints:  750,
 		w:             3,
 		h:             2,
@@ -147,6 +152,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "F",
 	},
 	BLD_REFINERY: {
+		spriteCode:    "refinery",
 		maxHitpoints:  550,
 		w:             3,
 		h:             2,
@@ -164,23 +170,25 @@ var sTableBuildings = map[int]*buildingStatic{
 		givesFreeUnitOnCreation:   true,
 		codeForFreeUnitOnCreation: UNT_HARVESTER,
 	},
-	//BLD_TURRET_MINIGUN: {
-	//	maxHitpoints:  750,
-	//	w:             1,
-	//	h:             1,
-	//	displayedName: "Defense tower",
-	//	cost:          750,
-	//	buildTime:     10,
-	//	builds:        nil,
-	//	produces:      nil,
-	//	turretCode:    TRT_CANNON_BUILDING,
-	//	hotkeyToBuild: "T",
-	//},
-	BLD_TURRET_CANNON: {
-		maxHitpoints:  750,
+	BLD_TURRET_MINIGUN: {
+		spriteCode:    "turret_base",
+		maxHitpoints:  500,
 		w:             1,
 		h:             1,
-		displayedName: "Defense tower",
+		displayedName: "Minigun tower",
+		cost:          550,
+		buildTime:     10,
+		builds:        nil,
+		produces:      nil,
+		turretCode:    TRT_MINIGUN_BUILDING,
+		hotkeyToBuild: "M",
+	},
+	BLD_TURRET_CANNON: {
+		spriteCode:    "turret_base",
+		maxHitpoints:  500,
+		w:             1,
+		h:             1,
+		displayedName: "Heavy tower",
 		cost:          750,
 		buildTime:     10,
 		builds:        nil,
@@ -189,6 +197,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		hotkeyToBuild: "T",
 	},
 	BLD_SILO: {
+		spriteCode:    "silo",
 		maxHitpoints:  500,
 		w:             1,
 		h:             2,
