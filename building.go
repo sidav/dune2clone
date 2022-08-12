@@ -105,7 +105,8 @@ const (
 	BLD_BASE = iota
 	BLD_POWERPLANT
 	BLD_FACTORY
-	BLD_TURRET
+	BLD_TURRET_MINIGUN
+	BLD_TURRET_CANNON
 	BLD_REFINERY
 	BLD_SILO
 )
@@ -118,7 +119,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET, BLD_SILO},
+		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_SILO},
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
@@ -151,7 +152,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		h:             2,
 		displayedName: "Refinery",
 		cost:          2000,
-		buildTime:     1,
+		buildTime:     10,
 		builds:        nil,
 		produces:      nil,
 		hotkeyToBuild: "R",
@@ -163,7 +164,19 @@ var sTableBuildings = map[int]*buildingStatic{
 		givesFreeUnitOnCreation:   true,
 		codeForFreeUnitOnCreation: UNT_HARVESTER,
 	},
-	BLD_TURRET: {
+	//BLD_TURRET_MINIGUN: {
+	//	maxHitpoints:  750,
+	//	w:             1,
+	//	h:             1,
+	//	displayedName: "Defense tower",
+	//	cost:          750,
+	//	buildTime:     10,
+	//	builds:        nil,
+	//	produces:      nil,
+	//	turretCode:    TRT_CANNON_BUILDING,
+	//	hotkeyToBuild: "T",
+	//},
+	BLD_TURRET_CANNON: {
 		maxHitpoints:  750,
 		w:             1,
 		h:             1,

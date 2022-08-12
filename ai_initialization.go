@@ -1,7 +1,8 @@
 package main
 
-func createAi(f *faction) *aiStruct {
+func createAi(f *faction, n string) *aiStruct {
 	ai := aiStruct{
+		name:            n,
 		controlsFaction: f,
 		current:         aiAnalytics{},
 		desired: aiAnalytics{

@@ -151,7 +151,7 @@ func (g *game) startGame() {
 		timeReportString += fmt.Sprintf("Whole logic: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
 
 		timeReportString += fmt.Sprintf("whole tick took %dms", time.Since(timeLoopStarted)/time.Millisecond)
-		if (g.battlefield.currentTick-1)%10 == 0 {
+		if (g.battlefield.currentTick-1)%1000 == 0 {
 			debugWrite(timeReportString)
 		}
 	}
