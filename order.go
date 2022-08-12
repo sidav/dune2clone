@@ -6,6 +6,7 @@ type order struct {
 	targetTileX, targetTileY   int
 	targetTile2X, targetTile2Y int // when only single target tile coords are not enough
 	targetActor                actor
+	targetActorCode            int
 	// targetX, targetY         float64
 }
 
@@ -30,6 +31,14 @@ func (o *order) getTextDescription() string {
 		return "Harvesting"
 	case ORDER_RETURN_TO_REFINERY:
 		return "Returning with cargo"
+	case ORDER_BUILD:
+		return "Building"
+	case ORDER_PRODUCE:
+		return "Training"
+	case ORDER_WAIT_FOR_BUILDING_PLACEMENT:
+		return "Waiting for placement"
+	case ORDER_CANCEL_BUILD:
+		return ""
 	}
 	panic("No action description!")
 }
@@ -39,4 +48,8 @@ const (
 	ORDER_MOVE
 	ORDER_HARVEST
 	ORDER_RETURN_TO_REFINERY
+	ORDER_BUILD
+	ORDER_PRODUCE
+	ORDER_WAIT_FOR_BUILDING_PLACEMENT
+	ORDER_CANCEL_BUILD
 )

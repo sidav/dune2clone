@@ -45,20 +45,20 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 }
 
 func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
-	if bld.currentAction.code == ACTION_BUILD && bld.currentAction.getCompletionPercent() >= 100 {
+	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
 		ai.placeBuilding(b, bld, bld.currentAction.targetActor.(*building))
 	}
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
 	if bld.getStaticData().builds != nil && ai.current.buildings < ai.max.buildings {
-		bld.currentAction.code = ACTION_BUILD
-		bld.currentAction.targetActor = createBuilding(ai.selectWhatToBuild(bld), 0, 0, bld.faction)
+		bld.currentOrder.code = ORDER_BUILD
+		bld.currentOrder.targetActorCode = ai.selectWhatToBuild(bld)
 	}
 	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units {
 		code := bld.getStaticData().produces[rnd.Rand(len(bld.getStaticData().produces))]
-		bld.currentAction.code = ACTION_BUILD
-		bld.currentAction.targetActor = createUnit(code, 0, 0, bld.faction)
+		bld.currentOrder.code = ORDER_PRODUCE
+		bld.currentOrder.targetActorCode = code
 	}
 }
 
@@ -97,8 +97,7 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 		},
 		startX, startY, 16, 0)
 	if sx != -1 && sy != -1 {
-		whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = sx, sy
-		b.addActor(whatIsBuilt)
-		builder.currentAction.reset()
+		builder.currentOrder.targetTileX = sx
+		builder.currentOrder.targetTileY = sy
 	}
 }

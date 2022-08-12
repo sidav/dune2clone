@@ -6,6 +6,7 @@ import (
 
 type building struct {
 	currentAction      action
+	currentOrder       order
 	currentHitpoints   int
 	topLeftX, topLeftY int // tile coords
 	code               int

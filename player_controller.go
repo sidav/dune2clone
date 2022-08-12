@@ -59,19 +59,19 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 		// maybe build?
 		for _, code := range bld.getStaticData().builds {
 			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) {
-				bld.currentAction.code = ACTION_BUILD
-				bld.currentAction.targetActor = createBuilding(code, 0, 0, bld.faction)
+				bld.currentOrder.code = ORDER_BUILD
+				bld.currentOrder.targetActorCode = code
 			}
 		}
 		// maybe product?
 		for _, code := range bld.getStaticData().produces {
 			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild) {
-				bld.currentAction.code = ACTION_BUILD
-				bld.currentAction.targetActor = createUnit(code, 0, 0, bld.faction)
+				bld.currentOrder.code = ORDER_PRODUCE
+				bld.currentOrder.targetActorCode = code
 			}
 		}
 	}
-	if bld.currentAction.code == ACTION_BUILD {
+	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
 		if bld.currentAction.getCompletionPercent() >= 100 {
 			// if NOT building:
 			if _, ok := bld.currentAction.targetActor.(*building); !ok {
@@ -82,15 +82,14 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 			pc.cursorH = bld.currentAction.targetActor.(*building).getStaticData().h
 			tx, ty := pc.mouseCoordsToTileCoords()
 			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentAction.targetActor.(*building), tx, ty, 0, false) {
-				targetBld := bld.currentAction.targetActor.(*building)
-				targetBld.topLeftX = tx
-				targetBld.topLeftY = ty
-				b.addActor(targetBld)
+				bld.currentOrder.targetTileX = tx
+				bld.currentOrder.targetTileY = ty
 				pc.mode = PCMODE_NONE
-				bld.currentAction.reset()
 			}
 			return true
 		}
+	} else {
+		pc.mode = PCMODE_NONE
 	}
 	return false
 }

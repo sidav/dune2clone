@@ -122,6 +122,17 @@ func (g *game) startGame() {
 				debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			}
 		}
+		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 1 {
+			timeCurrentActionStarted = time.Now()
+			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+				g.battlefield.executeOrderForBuilding(i.Value.(*building))
+			}
+			timeReportString += fmt.Sprintf("bld orders: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
+				debugWritef("Tick %d, bld orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
+			}
+		}
+
 
 		g.battlefield.currentTick++
 

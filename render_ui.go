@@ -54,6 +54,9 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 }
 
 func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
+	if pc.selection.(*building).currentAction.targetActor == nil {
+		return
+	}
 	targetBuilding := pc.selection.(*building).currentAction.targetActor.(*building)
 	tx, ty := pc.mouseCoordsToTileCoords()
 	_, _, w, h := targetBuilding.getDimensionsForConstructon()
