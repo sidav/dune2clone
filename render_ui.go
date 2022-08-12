@@ -58,7 +58,7 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 	tx, ty := pc.mouseCoordsToTileCoords()
 	_, _, w, h := targetBuilding.getDimensionsForConstructon()
 	color := rl.Red
-	if b.canBuildingBePlacedAt(targetBuilding, tx, ty, false) {
+	if b.canBuildingBePlacedAt(targetBuilding, tx, ty, 0, false) {
 		color = rl.Green
 	}
 	r.drawDitheredRect(int32((tx)*TILE_SIZE_IN_PIXELS)-r.camTopLeftX, int32((ty)*TILE_SIZE_IN_PIXELS)-r.camTopLeftY,

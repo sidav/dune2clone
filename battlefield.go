@@ -164,11 +164,15 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeF
 	)
 }
 
-func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topLeftY int, ignoreDistanceFromBase bool) bool {
+func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topLeftY, additionalDistance int, ignoreDistanceFromBase bool) bool {
 	const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	_, _, w, h := placingBld.getDimensionsForConstructon()
-	for x := topLeftX; x < topLeftX+w; x++ {
-		for y := topLeftY; y < topLeftY+h; y++ {
+	if additionalDistance > 0 {
+		w = placingBld.getStaticData().w
+		h = placingBld.getStaticData().h
+	}
+	for x := topLeftX-additionalDistance; x < topLeftX+w+additionalDistance; x++ {
+		for y := topLeftY-additionalDistance; y < topLeftY+h+additionalDistance; y++ {
 			if !b.areTileCoordsValid(x, y) {
 				return false
 			}
@@ -198,7 +202,7 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 				continue
 			}
 			bx, by, bw, bh := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
-			if geometry.AreRectsInRange(bx, by, bw, bh, topLeftX, topLeftY, w, h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
+			if geometry.AreRectsInRange(bx, by, bw, bh, topLeftX, topLeftY, placingBld.getStaticData().w, placingBld.getStaticData().h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
 				return true
 			}
 		}

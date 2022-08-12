@@ -81,7 +81,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 			pc.cursorW = bld.currentAction.targetActor.(*building).getStaticData().w
 			pc.cursorH = bld.currentAction.targetActor.(*building).getStaticData().h
 			tx, ty := pc.mouseCoordsToTileCoords()
-			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentAction.targetActor.(*building), tx, ty, false) {
+			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentAction.targetActor.(*building), tx, ty, 0, false) {
 				targetBld := bld.currentAction.targetActor.(*building)
 				targetBld.topLeftX = tx
 				targetBld.topLeftY = ty

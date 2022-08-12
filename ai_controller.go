@@ -93,9 +93,9 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 	startX, startY := geometry.TrueCoordsToTileCoords(builder.getPhysicalCenterCoords())
 	sx, sy := geometry.SpiralSearchForConditionFrom(
 		func(x, y int) bool {
-			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, false)
+			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1,false)
 		},
-		startX, startY, ai.current.buildings*3, 0)
+		startX, startY, 16, 0)
 	if sx != -1 && sy != -1 {
 		whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = sx, sy
 		b.addActor(whatIsBuilt)
