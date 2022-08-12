@@ -10,6 +10,7 @@ import (
 type battlefield struct {
 	tiles       [][]tile
 	factions    []*faction
+	ais         []*aiController
 	buildings   list.List
 	units       list.List
 	projectiles list.List

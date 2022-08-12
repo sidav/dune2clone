@@ -40,6 +40,12 @@ func (g *game) startGame() {
 
 		pc.playerControl(&g.battlefield)
 
+		if g.battlefield.currentTick%AI_ACTS_EACH == 0 {
+			for i := range g.battlefield.ais {
+				g.battlefield.ais[i].aiControl(&g.battlefield)
+			}
+		}
+
 		// execute actions
 		timeLogicStarted = time.Now()
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 0 {
@@ -116,6 +122,7 @@ func (g *game) startGame() {
 				debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			}
 		}
+
 		g.battlefield.currentTick++
 
 		timeReportString += fmt.Sprintf("Whole logic: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)

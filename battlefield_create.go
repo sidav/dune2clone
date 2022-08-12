@@ -84,6 +84,9 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		team:                0,
 		resourcesMultiplier: 10,
 	})
+	b.ais = append(b.ais, &aiController{
+		controlsFaction: b.factions[1],
+	})
 
 	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))
 	b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))
