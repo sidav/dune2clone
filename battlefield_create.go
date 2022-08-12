@@ -59,7 +59,7 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GameMap) {
 		MapWidth:                  len(b.tiles),
 		MapHeight:                 len(b.tiles[0]),
 	}
-	b.placeInitialStuff()
+	b.placeInitialStuff(rm.StartPoints)
 	b.finalizeTileVariants()
 }
 
@@ -71,7 +71,7 @@ func (b *battlefield) finalizeTileVariants() {
 	}
 }
 
-func (b *battlefield) placeInitialStuff() {
+func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	b.factions = append(b.factions, &faction{
 		factionColor: factionTints[0],
 		money:        10000,
@@ -83,10 +83,10 @@ func (b *battlefield) placeInitialStuff() {
 		team:         0,
 	})
 
-	b.addActor(createBuilding(BLD_BASE, 1, 1, b.factions[0]))
-	b.addActor(createUnit(UNT_TANK, 3, 3, b.factions[0]))
-	b.addActor(createUnit(UNT_QUAD, 4, 3, b.factions[0]))
+	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))
+	b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))
+	b.addActor(createUnit(UNT_QUAD, startPoints[0][0]+3, startPoints[0][1]+2, b.factions[0]))
 
-	b.addActor(createBuilding(BLD_BASE, MAP_W-3, MAP_H-3, b.factions[1]))
-	b.addActor(createUnit(UNT_TANK, MAP_W-4, MAP_H-4, b.factions[1]))
+	b.addActor(createBuilding(BLD_BASE, startPoints[1][0], startPoints[1][1], b.factions[1]))
+	b.addActor(createUnit(UNT_TANK, startPoints[1][0]-1, startPoints[1][1]-1, b.factions[1]))
 }

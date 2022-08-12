@@ -19,6 +19,12 @@ func (g *game) startGame() {
 		controlledFaction: g.battlefield.factions[0],
 		selection:         nil,
 	}
+	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+		if i.Value.(actor).getFaction() == pc.controlledFaction {
+			pc.centerCameraAtTile(geometry.TrueCoordsToTileCoords(i.Value.(actor).getPhysicalCenterCoords()))
+		}
+	}
+
 	r := renderer{}
 
 	timeLoopStarted := time.Now()
@@ -30,7 +36,7 @@ func (g *game) startGame() {
 		timeLoopStarted = time.Now()
 		timeCurrentActionStarted = time.Now()
 		r.renderBattlefield(&g.battlefield, pc)
-		timeReportString += fmt.Sprintf("render: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
+		timeReportString += fmt.Sprintf("render: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 
 		pc.playerControl(&g.battlefield)
 
@@ -42,7 +48,7 @@ func (g *game) startGame() {
 				g.battlefield.executeActionForActor(i.Value.(*unit))
 				g.battlefield.actorForActorsTurret(i.Value.(*unit))
 			}
-			timeReportString += fmt.Sprintf("units: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
+			timeReportString += fmt.Sprintf("units: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 		}
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
@@ -52,7 +58,7 @@ func (g *game) startGame() {
 					g.battlefield.actorForActorsTurret(i.Value.(*building))
 				}
 			}
-			timeReportString += fmt.Sprintf("buildings: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
+			timeReportString += fmt.Sprintf("buildings: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 		}
 		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
@@ -70,9 +76,9 @@ func (g *game) startGame() {
 					g.battlefield.projectiles.Remove(setI)
 				}
 			}
-			timeReportString += fmt.Sprintf("projs: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
+			timeReportString += fmt.Sprintf("projs: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 		}
-		timeReportString += fmt.Sprintf("all actions: %dms, ", time.Since(timeLogicStarted) / time.Millisecond)
+		timeReportString += fmt.Sprintf("all actions: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
 
 		// cleanup
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
@@ -103,19 +109,19 @@ func (g *game) startGame() {
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
-					g.battlefield.executeOrderForUnit(i.Value.(*unit))
+				g.battlefield.executeOrderForUnit(i.Value.(*unit))
 			}
-			timeReportString += fmt.Sprintf("orders: %dms, ", time.Since(timeCurrentActionStarted) / time.Millisecond)
-			if g.battlefield.currentTick % (UNIT_ACTIONS_TICK_EACH*30) == 1 {
-				debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick,  time.Since(timeCurrentActionStarted) / time.Millisecond)
+			timeReportString += fmt.Sprintf("orders: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
+				debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			}
 		}
 		g.battlefield.currentTick++
 
-		timeReportString += fmt.Sprintf("Whole logic: %dms, ", time.Since(timeLogicStarted) / time.Millisecond)
+		timeReportString += fmt.Sprintf("Whole logic: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
 
 		timeReportString += fmt.Sprintf("whole tick took %dms", time.Since(timeLoopStarted)/time.Millisecond)
-		if (g.battlefield.currentTick-1) % 10 == 0 {
+		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
 		}
 	}

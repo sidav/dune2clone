@@ -133,6 +133,12 @@ func (pc *playerController) scroll() {
 	pc.scrollCooldown = SCROLL_CD
 }
 
+func (pc *playerController) centerCameraAtTile(tx, ty int) {
+	pc.camTopLeftX = (tx - 7) * TILE_SIZE_IN_PIXELS
+	pc.camTopLeftY = (ty - 7) * TILE_SIZE_IN_PIXELS
+	pc.scroll()
+}
+
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
 	v := rl.GetMousePosition()
 	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS
