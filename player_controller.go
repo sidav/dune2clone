@@ -96,7 +96,7 @@ func (pc *playerController) scroll() {
 		return
 	}
 
-	const SCROLL_MARGIN = TILE_SIZE_IN_PIXELS
+	var SCROLL_MARGIN = float32(WINDOW_H/8)
 	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(6)
 	const SCROLL_CD = 1
 
@@ -104,13 +104,13 @@ func (pc *playerController) scroll() {
 	if v.X < SCROLL_MARGIN {
 		pc.camTopLeftX -= SCROLL_AMOUNT
 	}
-	if v.X > float32(WINDOW_W-SCROLL_MARGIN) {
+	if v.X > float32(WINDOW_W)-SCROLL_MARGIN {
 		pc.camTopLeftX += SCROLL_AMOUNT
 	}
 	if v.Y < SCROLL_MARGIN {
 		pc.camTopLeftY -= SCROLL_AMOUNT
 	}
-	if v.Y > float32(WINDOW_H-SCROLL_MARGIN) {
+	if v.Y > float32(WINDOW_H)-SCROLL_MARGIN {
 		pc.camTopLeftY += SCROLL_AMOUNT
 	}
 	if pc.camTopLeftX < 0 {
