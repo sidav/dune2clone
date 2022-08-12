@@ -85,7 +85,7 @@ func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y 
 	closestDist := math.MaxFloat64
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
-		if !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
+		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
 			continue
 		}
 		bldCX, bldCY := bld.getPhysicalCenterCoords()
