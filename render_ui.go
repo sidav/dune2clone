@@ -54,13 +54,15 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 }
 
 func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
+	targetBuilding := pc.selection.(*building).currentAction.targetActor.(*building)
 	tx, ty := pc.mouseCoordsToTileCoords()
+	_, _, w, h := targetBuilding.getDimensionsForConstructon()
 	color := rl.Red
-	if b.isRectClearForBuilding(tx, ty, pc.cursorW, pc.cursorH, pc.controlledFaction, false) {
+	if b.canBuildingBePlacedAt(targetBuilding, tx, ty, false) {
 		color = rl.Green
 	}
 	r.drawDitheredRect(int32((tx)*TILE_SIZE_IN_PIXELS)-r.camTopLeftX, int32((ty)*TILE_SIZE_IN_PIXELS)-r.camTopLeftY,
-		int32(pc.cursorW)*TILE_SIZE_IN_PIXELS, int32(pc.cursorH)*TILE_SIZE_IN_PIXELS, color)
+		int32(w)*TILE_SIZE_IN_PIXELS, int32(h)*TILE_SIZE_IN_PIXELS, color)
 	//for i := 0; i < pc.cursorW; i++ {
 	//	for j := 0; j < pc.cursorH; j++ {
 	//		color := rl.Red
