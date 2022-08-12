@@ -76,7 +76,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		factionColor:        factionTints[0],
 		resources:           10000,
 		team:                0,
-		resourcesMultiplier: 5,
+		resourcesMultiplier: 1,
 	})
 	b.factions = append(b.factions, &faction{
 		factionColor:        factionTints[1],
@@ -88,9 +88,9 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	b.ais = append(b.ais, createAi(b.factions[1]))
 
 	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))
-	b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))
-	b.addActor(createUnit(UNT_QUAD, startPoints[0][0]+3, startPoints[0][1]+2, b.factions[0]))
+	// b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))
+	// b.addActor(createUnit(UNT_QUAD, startPoints[0][0]+3, startPoints[0][1]+2, b.factions[0]))
 
 	b.addActor(createBuilding(BLD_BASE, startPoints[1][0], startPoints[1][1], b.factions[1]))
-	b.addActor(createUnit(UNT_TANK, startPoints[1][0]-1, startPoints[1][1]-1, b.factions[1]))
+	// b.addActor(createUnit(UNT_TANK, startPoints[1][0]-1, startPoints[1][1]-1, b.factions[1]))
 }

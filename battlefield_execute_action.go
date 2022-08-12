@@ -51,8 +51,14 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
+			// Receive resources
 			const HARVEST_PER_TICK = 11
 			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
+			if bld.faction.maxResources > bld.faction.resources {
+				received = min(received, int(bld.faction.maxResources-bld.faction.resources))
+			} else {
+				return
+			}
 			bld.getFaction().receiveResources(float64(received))
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {

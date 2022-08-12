@@ -37,6 +37,7 @@ func loadSprites() {
 	buildingsAtlaces[BLD_POWERPLANT] = CreateAtlasFromFile("resources/sprites/buildings/powerplant.png", 0, 0, 32, 32, 32, 32, 1, false)
 	buildingsAtlaces[BLD_FACTORY] = CreateAtlasFromFile("resources/sprites/buildings/factory.png", 0, 0, 48, 32, 48, 32, 1, false)
 	buildingsAtlaces[BLD_REFINERY] = CreateAtlasFromFile("resources/sprites/buildings/refinery.png", 0, 0, 48, 32, 48, 32, 1, false)
+	buildingsAtlaces[BLD_SILO] = CreateAtlasFromFile("resources/sprites/buildings/silo.png", 0, 0, 16, 32, 16, 32, 1, false)
 	buildingsAtlaces[BLD_TURRET] = CreateAtlasFromFile("resources/sprites/buildings/cannon.png", 0, 0, 16, 16, 16, 16, 1, false)
 	turretsAtlaces["cannon_turret"] = CreateDirectionalAtlasFromFile("resources/sprites/buildings/cannon_turret.png", 16, 16, 1, 2)
 

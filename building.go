@@ -76,14 +76,6 @@ func (b *building) getStaticData() *buildingStatic {
 
 //////////////////////////////////////
 
-const (
-	BLD_BASE = iota
-	BLD_POWERPLANT
-	BLD_FACTORY
-	BLD_TURRET
-	BLD_REFINERY
-)
-
 type buildingStatic struct {
 	w, h          int
 	displayedName string
@@ -109,6 +101,15 @@ type buildingStatic struct {
 	hotkeyToBuild string
 }
 
+const (
+	BLD_BASE = iota
+	BLD_POWERPLANT
+	BLD_FACTORY
+	BLD_TURRET
+	BLD_REFINERY
+	BLD_SILO
+)
+
 var sTableBuildings = map[int]*buildingStatic{
 	BLD_BASE: {
 		maxHitpoints:  1000,
@@ -117,7 +118,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET},
+		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET, BLD_SILO},
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
@@ -150,7 +151,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		h:             2,
 		displayedName: "Refinery",
 		cost:          2000,
-		buildTime:     7,
+		buildTime:     1,
 		builds:        nil,
 		produces:      nil,
 		hotkeyToBuild: "R",
@@ -173,5 +174,17 @@ var sTableBuildings = map[int]*buildingStatic{
 		produces:      nil,
 		turretCode:    TRT_CANNON_BUILDING,
 		hotkeyToBuild: "T",
+	},
+	BLD_SILO: {
+		maxHitpoints:  500,
+		w:             1,
+		h:             2,
+		displayedName: "Resource Silo",
+		cost:          500,
+		buildTime:     7,
+		builds:        nil,
+		produces:      nil,
+		hotkeyToBuild: "S",
+		storageAmount: 2500,
 	},
 }
