@@ -10,9 +10,7 @@ type aiStruct struct {
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {
-	debugWritef("AI: It is tick %d\n", b.currentTick)
-	ai.aiAnalyze(b)
-	debugWritef("AI: I have %.f money\n", ai.controlsFaction.money)
+	debugWritef("AI ACT: It is tick %d\n", b.currentTick)
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {
 			if bld.getFaction() == ai.controlsFaction {

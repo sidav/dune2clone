@@ -40,6 +40,11 @@ func (g *game) startGame() {
 
 		pc.playerControl(&g.battlefield)
 
+		if g.battlefield.currentTick%AI_ANALYZES_EACH == 0 {
+			for i := range g.battlefield.ais {
+				g.battlefield.ais[i].aiAnalyze(&g.battlefield)
+			}
+		}
 		if g.battlefield.currentTick%AI_ACTS_EACH == 0 {
 			for i := range g.battlefield.ais {
 				g.battlefield.ais[i].aiControl(&g.battlefield)
