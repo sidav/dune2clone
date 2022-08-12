@@ -11,7 +11,8 @@ func SetRandom(r *fibrandom.FibRandom) {
 }
 
 type GameMap struct {
-	Tiles [][]int
+	Tiles       [][]int
+	StartPoints [][2]int
 }
 
 func (gm *GameMap) Init(w, h int) {
@@ -22,6 +23,7 @@ func (gm *GameMap) Init(w, h int) {
 			gm.Tiles[i][j] = SAND
 		}
 	}
+	gm.StartPoints = make([][2]int, 0)
 }
 
 func (gm *GameMap) Generate() {
@@ -70,6 +72,40 @@ func (gm *GameMap) Generate() {
 		},
 		fromx, fromy, tox, toy,
 	)
+
+	gm.searchAndSetStartPoints(symmH, symmV, 2)
+}
+
+func (gm *GameMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
+	const sRange = 3
+	for cx := range gm.Tiles {
+		for cy := range gm.Tiles[cx] {
+			// search quadrant
+			passes := true
+			for sx := cx - sRange; sx < cx+sRange; sx++ {
+				for sy := cy - sRange; sy < cy+sRange; sy++ {
+					if !(sx >= 0 && sy >= 0 && sx < len(gm.Tiles) && sy < len(gm.Tiles[0])) || gm.Tiles[sx][sy] != BUILDABLE_TERRAIN {
+						passes = false
+						break
+					}
+				}
+				if !passes {
+					break
+				}
+			}
+			if passes {
+				gm.StartPoints = append(gm.StartPoints, [2]int{cx, cy})
+				if symmV && symmH {
+					gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, len(gm.Tiles[0]) - 1 - cy})
+				} else if symmV {
+					gm.StartPoints = append(gm.StartPoints, [2]int{cx, len(gm.Tiles[0]) - 1 - cy})
+				} else if symmH {
+					gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, cy})
+				}
+				return
+			}
+		}
+	}
 }
 
 func (gm *GameMap) performNAutomatasLike(count int, prototype automat, fromx, fromy, tox, toy int) {
