@@ -76,17 +76,16 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		factionColor:        factionTints[0],
 		money:               10000,
 		team:                0,
-		resourcesMultiplier: 1,
+		resourcesMultiplier: 5,
 	})
 	b.factions = append(b.factions, &faction{
 		factionColor:        factionTints[1],
 		money:               10000,
 		team:                0,
-		resourcesMultiplier: 10,
+		resourcesMultiplier: 5,
 	})
-	b.ais = append(b.ais, &aiController{
-		controlsFaction: b.factions[1],
-	})
+	b.ais = append(b.ais, createAi(b.factions[0]))
+	b.ais = append(b.ais, createAi(b.factions[1]))
 
 	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))
 	b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))

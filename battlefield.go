@@ -10,7 +10,7 @@ import (
 type battlefield struct {
 	tiles       [][]tile
 	factions    []*faction
-	ais         []*aiController
+	ais         []*aiStruct
 	buildings   list.List
 	units       list.List
 	projectiles list.List
@@ -99,6 +99,9 @@ func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y 
 }
 
 func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool {
+	if !b.areTileCoordsValid(x, y) {
+		return false
+	}
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if i.Value.(*building).isPresentAt(x, y) {
 			// debugWrite("got")

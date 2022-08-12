@@ -111,9 +111,10 @@ var sTableBuildings = map[int]*buildingStatic{
 		w:             2,
 		h:             2,
 		displayedName: "Construction Yard",
-		cost:          0,
-		buildTime:     100,
-		builds:        []int{BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET},
+		cost:          2500,
+		buildTime:     40,
+		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET},
+		hotkeyToBuild: "B",
 	},
 	BLD_POWERPLANT: {
 		maxHitpoints:  500,
