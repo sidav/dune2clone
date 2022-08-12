@@ -53,7 +53,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
 			const HARVEST_PER_TICK = 11
 			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
-			bld.getFaction().money += float64(received)
+			bld.getFaction().money += float64(received) * bld.faction.resourcesMultiplier
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {
 			//unitToPlace := bld.unitPlacedInside

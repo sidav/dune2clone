@@ -5,10 +5,11 @@ import (
 )
 
 type faction struct {
-	factionColor color.RGBA
-	money        float64 // float because of division when spending
-	energy       int
-	team         int // 0 means "enemy to all"
+	factionColor        color.RGBA
+	money               float64 // float because of division when spending
+	energy              int
+	team                int // 0 means "enemy to all"
+	resourcesMultiplier float64
 }
 
 const zeroTiltColor = 32
