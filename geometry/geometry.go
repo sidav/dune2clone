@@ -195,10 +195,24 @@ func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	return realSqDistanceAndSqRadiusDiff < r
 }
 
-func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius int) (int, int) {
-	vx, vy := 1, 0
+func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius, initialDirection int) (int, int) {
 	currRadius := 1
-	x, y := startX-currRadius, startY-currRadius
+	// direction 0
+	var vx, vy, x, y int
+	switch initialDirection % 4 {
+	case 0:
+		vx, vy = 1, 0
+		x, y = startX, startY-currRadius
+	case 1:
+		vx, vy = 0, 1
+		x, y = startX+currRadius, startY
+	case 2:
+		vx, vy = -1, 0
+		x, y = startX, startY+currRadius
+	case 3:
+		vx, vy = 0, -1
+		x, y = startX-currRadius, startY
+	}
 	currStartX, currStartY := x, y
 	for {
 		if condition(x, y) {
@@ -222,7 +236,20 @@ func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY,
 			if currRadius > maxSearchRadius {
 				return -1, -1
 			}
-			x, y = startX-currRadius, startY-currRadius
+			switch initialDirection % 4 {
+			case 0:
+				vx, vy = 1, 0
+				x, y = startX, startY-currRadius
+			case 1:
+				vx, vy = 0, 1
+				x, y = startX+currRadius, startY
+			case 2:
+				vx, vy = -1, 0
+				x, y = startX, startY+currRadius
+			case 3:
+				vx, vy = 0, -1
+				x, y = startX-currRadius, startY
+			}
 			currStartX, currStartY = x, y
 		}
 	}

@@ -179,5 +179,5 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 				b.tiles[x][y].resourcesAmount > 0 &&
 				b.isTileClearToBeMovedInto(x, y, nil)
 		},
-		tx, ty, len(b.tiles)/2)
+		tx, ty, len(b.tiles)/2, rnd.Rand(4))
 }
