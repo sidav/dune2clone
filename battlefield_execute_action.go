@@ -82,7 +82,7 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
 		if u.currentCargoAmount < u.getStaticData().maxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
 			harvestedAmount := min(b.tiles[utx][uty].resourcesAmount, HARVEST_PER_TICK) // TODO: replace
-			harvestedAmount = min(harvestedAmount, u.getStaticData().maxCargoAmount - u.currentCargoAmount)
+			harvestedAmount = min(harvestedAmount, u.getStaticData().maxCargoAmount-u.currentCargoAmount)
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount
 		} else {
@@ -160,7 +160,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	// if it was a unit, place it right away
 	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {
 		if bld, ok := a.(*building); ok {
-			for x := bld.topLeftX; x <= bld.topLeftX+bld.getStaticData().w; x++ {
+			for x := bld.topLeftX; x < bld.topLeftX+bld.getStaticData().w; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
 				if b.costMapForMovement(x, y) != -1 {

@@ -73,6 +73,10 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	}
 	if bld.currentAction.code == ACTION_BUILD {
 		if bld.currentAction.getCompletionPercent() >= 100 {
+			// if NOT building:
+			if _, ok := bld.currentAction.targetActor.(*building); !ok {
+				return false
+			}
 			pc.mode = PCMODE_PLACE_BUILDING
 			pc.cursorW = bld.currentAction.targetActor.(*building).getStaticData().w
 			pc.cursorH = bld.currentAction.targetActor.(*building).getStaticData().h
