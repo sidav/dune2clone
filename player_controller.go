@@ -84,8 +84,8 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 				b.addActor(targetBld)
 				pc.mode = PCMODE_NONE
 				bld.currentAction.reset()
-				return true
 			}
+			return true
 		}
 	}
 	return false
@@ -96,7 +96,7 @@ func (pc *playerController) scroll() {
 		return
 	}
 
-	var SCROLL_MARGIN = float32(WINDOW_H/8)
+	var SCROLL_MARGIN = float32(WINDOW_H / 8)
 	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(6)
 	const SCROLL_CD = 1
 
@@ -117,10 +117,10 @@ func (pc *playerController) scroll() {
 		pc.camTopLeftX = 0
 	}
 	if pc.camTopLeftX > (MAP_W-10)*TILE_SIZE_IN_PIXELS {
-		pc.camTopLeftX = (MAP_W-10)*TILE_SIZE_IN_PIXELS
+		pc.camTopLeftX = (MAP_W - 10) * TILE_SIZE_IN_PIXELS
 	}
 	if pc.camTopLeftY > (MAP_H-10)*TILE_SIZE_IN_PIXELS {
-		pc.camTopLeftY = (MAP_H-10)*TILE_SIZE_IN_PIXELS
+		pc.camTopLeftY = (MAP_H - 10) * TILE_SIZE_IN_PIXELS
 	}
 	if pc.camTopLeftY < 0 {
 		pc.camTopLeftY = 0
@@ -131,7 +131,7 @@ func (pc *playerController) scroll() {
 
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
 	v := rl.GetMousePosition()
-	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY) + v.Y) / TILE_SIZE_IN_PIXELS
+	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS
 }
 
 func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString string) bool {

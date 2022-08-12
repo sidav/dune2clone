@@ -161,8 +161,16 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeF
 }
 
 func (b *battlefield) isRectClearForBuilding(topLeftX, topLeftY, w, h int) bool {
+	//satisfiesDistanceRequirement := false
+	//const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	for x := topLeftX; x < topLeftX+w; x++ {
 		for y := topLeftY; y < topLeftY+h; y++ {
+			if !b.areTileCoordsValid(x, y) {
+				return false
+			}
+			if !b.tiles[x][y].getStaticData().canBuildHere {
+				return false
+			}
 			if b.costMapForMovement(x, y) == -1 {
 				return false
 			}
