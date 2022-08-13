@@ -58,7 +58,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY 
 				case TILE_SAND:
 					color = rl.Orange
 					if b.tiles[x][y].resourcesAmount > 0 {
-						color = rl.Red
+						color = rl.DarkPurple
 					}
 				case TILE_BUILDABLE:
 					color = rl.Brown
