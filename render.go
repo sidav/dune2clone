@@ -10,6 +10,7 @@ var DEFAULT_TINT = rl.RayWhite
 type renderer struct {
 	camTopLeftX, camTopLeftY int32
 	viewportW, viewportH     int32
+	minimapRenderTextureMask rl.Texture2D
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
@@ -149,7 +150,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	}
 	// render energy if not enough
 	if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
-		if (b.currentTick/30) % 2 == 0 {
+		if (b.currentTick/30)%2 == 0 {
 			icon := uiAtlaces["energyicon"][0].atlas[0][0]
 			rl.DrawTexture(
 				icon,

@@ -11,7 +11,10 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 			b.actTurret(a, u.turret)
 		}
 		if bld, ok := a.(*building); ok {
-			b.actTurret(a, bld.turret)
+			// buildings' turrets won't shoot without energy
+			if bld.faction.getAvailableEnergy() >= 0 {
+				b.actTurret(a, bld.turret)
+			}
 		}
 	}
 }
