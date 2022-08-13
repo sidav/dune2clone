@@ -159,9 +159,11 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 			float64(unt.getStaticData().buildTime*(DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
 	}
 	// spend money
+	coeff := a.getFaction().getEnergyProductionMultiplier()
+	moneySpent *= coeff
 	if act.getCompletionPercent() < 100 && a.getFaction().getMoney() > moneySpent {
 		a.getFaction().spendMoney(moneySpent)
-		act.completionAmount++
+		act.completionAmount += coeff
 	}
 	// if it was a unit, place it right away
 	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {

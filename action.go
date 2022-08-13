@@ -11,7 +11,7 @@ type action struct {
 
 	// construction-related
 	moneySpentOnAction int
-	completionAmount   int
+	completionAmount   float64
 }
 
 func (a *action) getTextDescription() string {
@@ -41,10 +41,10 @@ func (a *action) reset() {
 func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
-			return 100 * a.completionAmount / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
+			return int(100 * a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
-			return 100 * a.completionAmount / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
+			return int(100 * a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
 	return -1
