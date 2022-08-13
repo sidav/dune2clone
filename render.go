@@ -89,7 +89,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
-	if !r.isRectInViewport(osx, osy, int32(bld.getStaticData().w * TILE_SIZE_IN_PIXELS), int32(bld.getStaticData().h * TILE_SIZE_IN_PIXELS)) {
+	if !r.isRectInViewport(osx, osy, int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS), int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)) {
 		return
 	}
 	// get sprite
@@ -124,9 +124,9 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	}
 	// render completion bar
 	if bld.currentAction.getCompletionPercent() >= 0 {
-		r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
-			osy+int32(TILE_SIZE_IN_PIXELS*h/2),
-			TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
+		//r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
+		//	osy+int32(TILE_SIZE_IN_PIXELS*h/2),
+		//	TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
 	}
 	if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
@@ -138,7 +138,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 		r.renderUnit(bld.unitPlacedInside)
 	}
 	// render faction flag
-	if bld.faction != nil && bld.getStaticData().w > 1 ||  bld.getStaticData().h > 1 {
+	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
 		degree := (b.currentTick * 6) % 360
 		rl.DrawTexture(
 			uiAtlaces["factionflag"][bld.getFaction().colorNumber].getSpriteByDegreeAndFrameNumber(degree, 0),
@@ -146,6 +146,18 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"][bld.faction.colorNumber].atlas[0][0].Height-2,
 			DEFAULT_TINT,
 		)
+	}
+	// render energy if not enough
+	if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
+		if (b.currentTick/30) % 2 == 0 {
+			icon := uiAtlaces["energyicon"][0].atlas[0][0]
+			rl.DrawTexture(
+				icon,
+				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2-icon.Width/2,
+				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2-icon.Height/2,
+				DEFAULT_TINT,
+			)
+		}
 	}
 }
 

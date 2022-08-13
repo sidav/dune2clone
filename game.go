@@ -117,8 +117,8 @@ func (g *game) startGame() {
 					}
 					g.battlefield.buildings.Remove(setI)
 				} else {
-					bld.faction.currentEnergy += bld.getStaticData().givesEnergy
-					bld.faction.requiredEnergy += bld.getStaticData().consumesEnergy
+					bld.faction.energyProduction += bld.getStaticData().givesEnergy
+					bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
 					bld.faction.resourceStorage += bld.getStaticData().storageAmount
 				}
 			}

@@ -25,7 +25,7 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	// draw storage
 	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()))
 	// draw energy
-	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.requiredEnergy, pc.controlledFaction.currentEnergy)
+	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.energyConsumption, pc.controlledFaction.energyProduction)
 	r.drawLineInfoBox(WINDOW_W-300, 32, 300, "ENERGY", energyStr)
 }
 

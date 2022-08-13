@@ -63,6 +63,7 @@ func loadSprites() {
 
 	currPath = "resources/sprites/ui/"
 	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile(currPath+"building_faction_flag.png", 8, 8, 1, 2, true)
+	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

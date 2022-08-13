@@ -6,10 +6,10 @@ import (
 )
 
 type faction struct {
-	colorNumber                       int
-	currentResources, resourceStorage float64
-	money                             float64 // float because of division when spending
-	currentEnergy, requiredEnergy     int
+	colorNumber                         int
+	currentResources, resourceStorage   float64
+	money                               float64 // float because of division when spending
+	energyProduction, energyConsumption int
 
 	team                int // 0 means "enemy to all"
 	resourcesMultiplier float64
@@ -21,6 +21,24 @@ func (f *faction) getMoney() float64 {
 
 func (f *faction) getStorageRemaining() float64 {
 	return f.resourceStorage - f.currentResources
+}
+
+func (f *faction) getAvailableEnergy() int {
+	//if f.energyProduction <= f.energyConsumption {
+	//	return 0
+	//}
+	return f.energyProduction - f.energyConsumption
+}
+
+func (f *faction) getEnergyProductionMultiplier() float64 {
+	if f.energyProduction >= f.energyConsumption {
+		return 1.0
+	}
+	factor := float64(f.energyProduction)/float64(f.energyConsumption)
+	if factor < 0.25 {
+		factor = 0.25
+	}
+	return factor
 }
 
 func (f *faction) spendMoney(spent float64) {
@@ -46,8 +64,8 @@ func (f *faction) receiveResources(amount float64, asMoney bool) {
 
 func (f *faction) resetCurrents() {
 	f.resourceStorage = 0
-	f.currentEnergy = 0
-	f.requiredEnergy = 0
+	f.energyProduction = 0
+	f.energyConsumption = 0
 }
 
 const zeroTiltColor = 32
