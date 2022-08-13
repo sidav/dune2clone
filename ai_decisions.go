@@ -13,7 +13,7 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
 	// create weights according to the needs
 	// eco
-	if ai.current.eco == 0 {
+	if ai.current.eco == 0 && ai.controlsFaction.getMoney() < 7500 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 200})
 	} else if ai.current.eco < ai.desired.eco {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 3})
@@ -22,15 +22,19 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	if ai.controlsFaction.getAvailableEnergy() <= 0 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
 	} else if ai.controlsFaction.getAvailableEnergy() <= 5 {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 3})
 	}
 	// silos
 	if ai.controlsFaction.getStorageRemaining() < 500 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 10})
 	}
 	// builders
-	if ai.current.builders < ai.desired.builders {
+	if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
+	}
+	// defenses
+	if ai.current.defenses < ai.desired.defenses && ai.current.defenses < ai.max.defenses {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 2})
 	}
 	// production
 	if ai.current.production == 0 {
@@ -73,6 +77,12 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 	case "production":
 		for _, code := range availableCodes {
 			if sTableBuildings[code].produces != nil {
+				candidates = append(candidates, code)
+			}
+		}
+	case "defense":
+		for _, code := range availableCodes {
+			if sTableBuildings[code].turretCode != TRT_NONE {
 				candidates = append(candidates, code)
 			}
 		}

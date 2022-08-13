@@ -6,10 +6,13 @@ type aiStruct struct {
 	current         aiAnalytics
 	desired         aiAnalytics
 	max             aiAnalytics
+
+	alreadyOrderedBuildThisTick bool
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {
 	debugWritef("AI ACT: It is tick %d\n", b.currentTick)
+	ai.alreadyOrderedBuildThisTick = false
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {
 			if bld.getFaction() == ai.controlsFaction {
@@ -48,9 +51,10 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
-	if bld.getStaticData().builds != nil && ai.current.buildings < ai.max.buildings {
+	if bld.getStaticData().builds != nil && ai.current.buildings < ai.max.buildings && !ai.alreadyOrderedBuildThisTick {
 		bld.currentOrder.code = ORDER_BUILD
 		bld.currentOrder.targetActorCode = ai.selectWhatToBuild(bld)
+		ai.alreadyOrderedBuildThisTick = true
 	}
 	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units {
 		code := bld.getStaticData().produces[rnd.Rand(len(bld.getStaticData().produces))]

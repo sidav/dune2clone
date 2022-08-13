@@ -14,6 +14,28 @@ func (aa *aiAnalytics) reset() {
 	*aa = aiAnalytics{}
 }
 
+func (aa *aiAnalytics) increaseCountersForBuilding(bld *building) {
+	aa.buildings++
+	if bld.getStaticData().receivesResources {
+		aa.eco++
+	}
+	if bld.getStaticData().produces != nil {
+		aa.production++
+	}
+	if bld.getStaticData().builds != nil {
+		aa.builders++
+	}
+	if bld.turret != nil {
+		aa.defenses++
+	}
+	if bld.currentAction.code == ACTION_BUILD {
+		// count not yet built structures too
+		if underConstruction, ok := bld.currentAction.targetActor.(*building); ok {
+			aa.increaseCountersForBuilding(underConstruction)
+		}
+	}
+}
+
 func (ai *aiStruct) aiAnalyze(b *battlefield) {
 	debugWritef("AI %s ANALYZE: It is tick %d\n", ai.name, b.currentTick)
 	debugWritef("AI %s ANALYZE: I have %.f money\n", ai.name, ai.controlsFaction.getMoney())
@@ -23,19 +45,7 @@ func (ai *aiStruct) aiAnalyze(b *battlefield) {
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {
 			if bld.getFaction() == ai.controlsFaction {
-				ai.current.buildings++
-				if bld.getStaticData().receivesResources {
-					ai.current.eco++
-				}
-				if bld.getStaticData().produces != nil {
-					ai.current.production++
-				}
-				if bld.getStaticData().builds != nil {
-					ai.current.builders++
-				}
-				if bld.turret != nil {
-					ai.current.defenses++
-				}
+				ai.current.increaseCountersForBuilding(bld)
 			}
 		}
 	}
