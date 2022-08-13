@@ -54,7 +54,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 		}
 	case "energy":
 		for _, code := range availableCodes {
-			if sTableBuildings[code].givesEnergy > 0 {
+			if sTableBuildings[code].givesEnergy > 0 && sTableBuildings[code].builds == nil {
 				candidates = append(candidates, code)
 			}
 		}
