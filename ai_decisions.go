@@ -2,63 +2,45 @@ package main
 
 import "dune2clone/geometry"
 
+type aiDecisionWeight struct {
+	weightCode string
+	weight     int
+}
+
 func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	availableCodes := builder.getStaticData().builds
 	// make the list of weights
-	decisionWeights := []struct {
-		key    string
-		weight int
-	}{
-		{"eco", 0},
-		{"energy", 0},
-		{"silo", 0},
-		{"builder", 0},
-		{"production", 0},
-		{"any", 0},
-	}
+	decisionWeights := []aiDecisionWeight{{"any", 1}}
 	// create weights according to the needs
-	for i := range decisionWeights {
-		switch decisionWeights[i].key {
-		case "eco":
-			if ai.current.eco == 0 {
-				decisionWeights[i].weight = 200
-			} else if ai.current.eco < ai.desired.eco {
-				decisionWeights[i].weight = 3
-			}
-		case "energy":
-			if ai.controlsFaction.getAvailableEnergy() <= 0 {
-				decisionWeights[i].weight = 100
-			} else if ai.controlsFaction.getAvailableEnergy() <= 5 {
-				decisionWeights[i].weight = 3
-			}
-		case "silo":
-			if ai.controlsFaction.getStorageRemaining() < 500 {
-				decisionWeights[i].weight = 10
-			}
-		case "builder":
-			if ai.current.builders < ai.desired.builders {
-				decisionWeights[i].weight = 1
-			} else {
-				decisionWeights[i].weight = 0
-			}
-		case "production":
-			if ai.current.production == 0 {
-				decisionWeights[i].weight = 10
-			}
-			if ai.current.production < ai.desired.production {
-				decisionWeights[i].weight = 3
-			} else {
-				decisionWeights[i].weight = 1
-			}
-		case "any":
-			decisionWeights[i].weight = 1
-		default:
-			panic("No such function: " + decisionWeights[i].key)
-		}
+	// eco
+	if ai.current.eco == 0 {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 200})
+	} else if ai.current.eco < ai.desired.eco {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 3})
+	}
+	// energy
+	if ai.controlsFaction.getAvailableEnergy() <= 0 {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
+	} else if ai.controlsFaction.getAvailableEnergy() <= 5 {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
+	}
+	// silos
+	if ai.controlsFaction.getStorageRemaining() < 500 {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 10})
+	}
+	// builders
+	if ai.current.builders < ai.desired.builders {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
+	}
+	// production
+	if ai.current.production == 0 {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 10})
+	} else if ai.current.production < ai.desired.production {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 3})
 	}
 
 	decidedIndex := rnd.SelectRandomIndexFromWeighted(len(decisionWeights), func(i int) int { return decisionWeights[i].weight })
-	return ai.selectRandomBuildableCodeByFunction(availableCodes, decisionWeights[decidedIndex].key)
+	return ai.selectRandomBuildableCodeByFunction(availableCodes, decisionWeights[decidedIndex].weightCode)
 }
 
 func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, function string) int {
