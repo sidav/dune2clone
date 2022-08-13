@@ -21,12 +21,18 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 	// draw money
 	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.getMoney()))
-	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr)
+	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, rl.Black, rl.White)
 	// draw storage
-	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()))
+	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()), rl.Black, rl.White)
 	// draw energy
 	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.energyConsumption, pc.controlledFaction.energyProduction)
-	r.drawLineInfoBox(WINDOW_W-300, 32, 300, "ENERGY", energyStr)
+	energyBgColor := rl.Black
+	energyFgColor := rl.White
+	if pc.controlledFaction.getAvailableEnergy() < 0 && (b.currentTick/60) % 2 == 0 {
+		energyBgColor = rl.Red
+		energyFgColor = rl.Black
+	}
+	r.drawLineInfoBox(WINDOW_W-300, 32, 300, "ENERGY", energyStr, energyBgColor, energyFgColor)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
