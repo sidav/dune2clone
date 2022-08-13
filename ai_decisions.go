@@ -19,7 +19,7 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 			}
 		}
 	}
-	if ai.controlsFaction.maxResources - ai.controlsFaction.resources < 500 && rnd.OneChanceFrom(3) {
+	if ai.controlsFaction.getStorageRemaining() < 500 && rnd.OneChanceFrom(3) {
 		for _, code := range availableCodes {
 			if sTableBuildings[code].storageAmount > 0 && !sTableBuildings[code].receivesResources {
 				return code
@@ -40,13 +40,13 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 	startX, startY := geometry.TrueCoordsToTileCoords(builder.getPhysicalCenterCoords())
 	sx, sy := geometry.SpiralSearchForConditionFrom(
 		func(x, y int) bool {
-			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1,false)
+			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1, false)
 		},
 		startX, startY, 16, 0)
 	if sx == -1 || sy == -1 {
 		sx, sy = geometry.SpiralSearchForConditionFrom(
 			func(x, y int) bool {
-				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0,false)
+				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0, false)
 			},
 			startX, startY, 16, 0)
 	}

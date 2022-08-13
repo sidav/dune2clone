@@ -16,7 +16,7 @@ func (aa *aiAnalytics) reset() {
 
 func (ai *aiStruct) aiAnalyze(b *battlefield) {
 	debugWritef("AI %s ANALYZE: It is tick %d\n", ai.name, b.currentTick)
-	debugWritef("AI %s ANALYZE: I have %.f money\n", ai.name, ai.controlsFaction.resources)
+	debugWritef("AI %s ANALYZE: I have %.f money\n", ai.name, ai.controlsFaction.getMoney())
 
 	ai.current.reset()
 

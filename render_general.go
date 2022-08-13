@@ -1,7 +1,22 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
+func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string) {
+	var textSize int32 = 32
+	var textCharW int32 = 22
+	r.drawOutlinedRect(x, y, w, textSize+2, 2, rl.Green, rl.Black)
+	titleBoxW := int32((len(title)+1)*int(textCharW) + 2)
+	r.drawOutlinedRect(x, y, titleBoxW, textSize+2, 2, rl.Green, rl.Black)
+	r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, rl.Black)
+
+	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2
+	rl.DrawText(title, titlePosition-1, y+1, textSize, rl.White)
+	infoPosition := x + titleBoxW + int32(len(info))*textCharW/3
+	rl.DrawText(info, infoPosition, y+1, textSize, rl.White)
+}
 
 func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.Color) {
 	const OUTLINE_THICKNESS = 4
@@ -11,7 +26,7 @@ func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.
 	},
 		float32(radius-OUTLINE_THICKNESS/2),
 		180, 180-float32(360*percent)/100, 8, color)
-	for i := -OUTLINE_THICKNESS/2; i <= OUTLINE_THICKNESS/2; i++ {
+	for i := -OUTLINE_THICKNESS / 2; i <= OUTLINE_THICKNESS/2; i++ {
 		rl.DrawCircleLines(
 			x,
 			y,
@@ -46,7 +61,7 @@ func (r *renderer) drawDitheredRect(x, y, w, h int32, color rl.Color) {
 	// draw outline
 	for i := x; i < x+w; i++ {
 		for j := y; j < y+h; j++ {
-			if (i/PIXEL_SIZE) % 2 == (j/PIXEL_SIZE) % 2 {
+			if (i/PIXEL_SIZE)%2 == (j/PIXEL_SIZE)%2 {
 				rl.DrawPixel(i, j, color)
 			}
 		}

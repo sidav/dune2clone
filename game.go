@@ -119,7 +119,7 @@ func (g *game) startGame() {
 				} else {
 					bld.faction.currentEnergy += bld.getStaticData().givesEnergy
 					bld.faction.requiredEnergy += bld.getStaticData().consumesEnergy
-					bld.faction.maxResources += bld.getStaticData().storageAmount
+					bld.faction.resourceStorage += bld.getStaticData().storageAmount
 				}
 			}
 		}

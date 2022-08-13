@@ -2,31 +2,50 @@ package main
 
 import (
 	"image/color"
+	"math"
 )
 
 type faction struct {
-	colorNumber             int
-	resources, maxResources float64
-	// money                         float64 // float because of division when spending
-	currentEnergy, requiredEnergy int
+	colorNumber                       int
+	currentResources, resourceStorage float64
+	money                             float64 // float because of division when spending
+	currentEnergy, requiredEnergy     int
 
 	team                int // 0 means "enemy to all"
 	resourcesMultiplier float64
 }
 
 func (f *faction) getMoney() float64 {
-	return f.resources
+	return f.currentResources + f.money
+}
+
+func (f *faction) getStorageRemaining() float64 {
+	return f.resourceStorage - f.currentResources
 }
 
 func (f *faction) spendMoney(spent float64) {
-	f.resources -= spent
+	if f.currentResources > 0 {
+		spentFromResources := math.Min(f.currentResources, spent)
+		f.currentResources -= spentFromResources
+		spent -= spentFromResources
+	}
+	if spent > 0 {
+		f.money -= spent
+	}
 }
-func (f *faction) receiveResources(amount float64) {
-	f.resources += amount * f.resourcesMultiplier
+func (f *faction) receiveResources(amount float64, asMoney bool) {
+	if asMoney {
+		f.money += amount * f.resourcesMultiplier
+	} else {
+		f.currentResources += amount * f.resourcesMultiplier
+		if f.currentResources > f.resourceStorage {
+			f.currentResources = f.resourceStorage
+		}
+	}
 }
 
 func (f *faction) resetCurrents() {
-	f.maxResources = 0
+	f.resourceStorage = 0
 	f.currentEnergy = 0
 	f.requiredEnergy = 0
 }

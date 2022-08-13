@@ -54,12 +54,12 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 			// Receive resources
 			const HARVEST_PER_TICK = 11
 			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
-			if bld.faction.maxResources > bld.faction.resources {
-				received = min(received, int(bld.faction.maxResources-bld.faction.resources))
+			if bld.faction.getStorageRemaining() > 0 {
+				received = min(received, int(bld.faction.getStorageRemaining()))
 			} else {
 				return
 			}
-			bld.getFaction().receiveResources(float64(received))
+			bld.getFaction().receiveResources(float64(received), false)
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {
 			//unitToPlace := bld.unitPlacedInside
