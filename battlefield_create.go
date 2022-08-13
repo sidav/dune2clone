@@ -84,7 +84,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		team:                0,
 		resourcesMultiplier: 5,
 	})
-	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
+	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
 
 	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))

@@ -43,6 +43,13 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1,false)
 		},
 		startX, startY, 16, 0)
+	if sx == -1 || sy == -1 {
+		sx, sy = geometry.SpiralSearchForConditionFrom(
+			func(x, y int) bool {
+				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0,false)
+			},
+			startX, startY, 16, 0)
+	}
 	if sx != -1 && sy != -1 {
 		builder.currentOrder.targetTileX = sx
 		builder.currentOrder.targetTileY = sy

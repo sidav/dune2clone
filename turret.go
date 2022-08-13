@@ -23,15 +23,6 @@ func (t *turret) normalizeDegrees() {
 	t.rotationDegree = geometry.NormalizeDegree(t.rotationDegree)
 }
 
-const (
-	TRT_NONE = iota
-	TRT_TANK
-	TRT_MSLTANK
-	TRT_QUAD
-	TRT_CANNON_BUILDING
-	TRT_MINIGUN_BUILDING
-)
-
 type turretStatic struct {
 	spriteCode  string
 	rotateSpeed int
@@ -43,6 +34,16 @@ type turretStatic struct {
 	firesProjectileOfCode int
 	projectileDamage      int
 }
+
+const (
+	TRT_NONE = iota
+	TRT_TANK
+	TRT_MSLTANK
+	TRT_QUAD
+	TRT_CANNON_BUILDING
+	TRT_MINIGUN_BUILDING
+	TRT_BUILDING_FORTRESS
+)
 
 var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
@@ -94,5 +95,15 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        50,
 		projectileDamage:      15,
+	},
+	TRT_BUILDING_FORTRESS: {
+		spriteCode:            "bld_fortress_cannon",
+		firesProjectileOfCode: PRJ_SHELL,
+		rotateSpeed:           5,
+		fireRange:             15,
+		fireSpreadDegrees:     5,
+		shotRangeSpread:       0.3,
+		attackCooldown:        50,
+		projectileDamage:      25,
 	},
 }

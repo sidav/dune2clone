@@ -138,7 +138,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 		r.renderUnit(bld.unitPlacedInside)
 	}
 	// render faction flag
-	if bld.faction != nil {
+	if bld.faction != nil && bld.getStaticData().w > 1 ||  bld.getStaticData().h > 1 {
 		degree := (b.currentTick * 6) % 360
 		rl.DrawTexture(
 			uiAtlaces["factionflag"][bld.getFaction().colorNumber].getSpriteByDegreeAndFrameNumber(degree, 0),

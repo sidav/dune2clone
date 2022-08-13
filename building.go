@@ -111,6 +111,7 @@ const (
 	BLD_TURRET_CANNON
 	BLD_REFINERY
 	BLD_SILO
+	BLD_FORTRESS
 )
 
 var sTableBuildings = map[int]*buildingStatic{
@@ -122,7 +123,8 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO},
+		builds:        []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_TURRET_MINIGUN,
+			BLD_SILO, BLD_FORTRESS},
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
@@ -208,5 +210,18 @@ var sTableBuildings = map[int]*buildingStatic{
 		produces:      nil,
 		hotkeyToBuild: "S",
 		storageAmount: 2500,
+	},
+	BLD_FORTRESS: {
+		spriteCode:    "fortress",
+		maxHitpoints:  1500,
+		w:             2,
+		h:             2,
+		displayedName: "Fortress",
+		cost:          2500,
+		buildTime:     1,
+		builds:        nil,
+		produces:      nil,
+		hotkeyToBuild: "O",
+		turretCode:    TRT_BUILDING_FORTRESS,
 	},
 }
