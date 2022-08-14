@@ -27,7 +27,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
-			r.renderTile(b, x, y)
+			r.renderTile(b, pc, x, y)
 		}
 	}
 
@@ -62,10 +62,14 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	rl.EndDrawing()
 }
 
-func (r *renderer) renderTile(b *battlefield, x, y int) {
+func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	t := b.tiles[x][y]
 	osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
+		return
+	}
+	if !pc.controlledFaction.exploredTilesMap[x][y] {
+		rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		return
 	}
 	rl.DrawTexture(
@@ -81,6 +85,10 @@ func (r *renderer) renderTile(b *battlefield, x, y int) {
 			osy,
 			DEFAULT_TINT,
 		)
+	}
+	if !pc.controlledFaction.visibleTilesMap[x][y] {
+		r.drawDitheredRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
+		return
 	}
 }
 

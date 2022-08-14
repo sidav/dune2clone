@@ -13,6 +13,56 @@ type faction struct {
 
 	team                int // 0 means "enemy to all"
 	resourcesMultiplier float64
+
+	exploredTilesMap, visibleTilesMap [][]bool
+}
+
+func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier float64) *faction {
+	f := &faction{
+		colorNumber:         colorNumber,
+		money:               initialMoney,
+		energyProduction:    999, // will be overwritten anyway
+		team:                team,
+		resourcesMultiplier: resourcesMultiplier,
+	}
+	return f
+}
+
+func (f *faction) resetVisibilityMaps(mapW, mapH int) {
+	if f.visibleTilesMap == nil {
+		f.visibleTilesMap = make([][]bool, mapW)
+		for i := range f.visibleTilesMap {
+			f.visibleTilesMap[i] = make([]bool, mapH)
+		}
+	}
+	for x := range f.visibleTilesMap {
+		for y := range f.visibleTilesMap[x] {
+			f.visibleTilesMap[x][y] = false
+		}
+	}
+
+	if f.exploredTilesMap == nil {
+		f.exploredTilesMap = make([][]bool, mapW)
+		for i := range f.exploredTilesMap {
+			f.exploredTilesMap[i] = make([]bool, mapH)
+		}
+	}
+	//for x := range f.exploredTilesMap {
+	//	for y := range f.exploredTilesMap[x] {
+	//		f.exploredTilesMap[x][y] = false
+	//	}
+	//}
+}
+
+func (f *faction) exploreAround(tileX, tileY, fromW, fromH, radius int) {
+	for x := tileX - radius; x < tileX+fromW+radius; x++ {
+		for y := tileY - radius; y < tileY+fromH+radius; y++ {
+			if x >= 0 && x < len(f.visibleTilesMap) && y >= 0 && y < len(f.visibleTilesMap) {
+				f.exploredTilesMap[x][y] = true
+				f.visibleTilesMap[x][y] = true
+			}
+		}
+	}
 }
 
 func (f *faction) getMoney() float64 {
@@ -34,7 +84,7 @@ func (f *faction) getEnergyProductionMultiplier() float64 {
 	if f.energyProduction >= f.energyConsumption {
 		return 1.0
 	}
-	factor := float64(f.energyProduction)/float64(f.energyConsumption)
+	factor := float64(f.energyProduction) / float64(f.energyConsumption)
 	if factor < 0.25 {
 		factor = 0.25
 	}

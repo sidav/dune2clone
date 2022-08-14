@@ -72,25 +72,14 @@ func (b *battlefield) finalizeTileVariants() {
 }
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
-	b.factions = append(b.factions, &faction{
-		colorNumber:         0,
-		money:               10000,
-		team:                0,
-		resourcesMultiplier: 2,
-	})
-	b.factions = append(b.factions, &faction{
-		colorNumber:         1,
-		money:               10000,
-		team:                0,
-		resourcesMultiplier: 2,
-	})
+	for spNumber := range startPoints {
+		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 2))
+		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
+		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2,3)
+		b.addActor(createBuilding(BLD_BASE, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		b.addActor(createUnit(UNT_QUAD, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
+	}
+	// b.factions[0].resourcesMultiplier = 1 // for player
 	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
-
-	b.addActor(createBuilding(BLD_BASE, startPoints[0][0], startPoints[0][1], b.factions[0]))
-	// b.addActor(createUnit(UNT_TANK, startPoints[0][0]+2, startPoints[0][1]+2, b.factions[0]))
-	// b.addActor(createUnit(UNT_QUAD, startPoints[0][0]+3, startPoints[0][1]+2, b.factions[0]))
-
-	b.addActor(createBuilding(BLD_BASE, startPoints[1][0], startPoints[1][1], b.factions[1]))
-	// b.addActor(createUnit(UNT_TANK, startPoints[1][0]-1, startPoints[1][1]-1, b.factions[1]))
 }

@@ -57,12 +57,11 @@ func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineC
 }
 
 func (r *renderer) drawDitheredRect(x, y, w, h int32, color rl.Color) {
-	const PIXEL_SIZE = 4
-	// draw outline
-	for i := x; i < x+w; i++ {
-		for j := y; j < y+h; j++ {
-			if (i/PIXEL_SIZE)%2 == (j/PIXEL_SIZE)%2 {
-				rl.DrawPixel(i, j, color)
+	pixelSize := int32(TILE_SIZE_IN_PIXELS/16)
+	for i := int32(0); i < w/pixelSize; i++ {
+		for j := int32(0); j < h/pixelSize; j++ {
+			if i%2 == j%2 {
+				rl.DrawRectangle(x+i*pixelSize, y+j*pixelSize, pixelSize, pixelSize, color)
 			}
 		}
 	}

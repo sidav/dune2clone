@@ -19,7 +19,7 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 			case map_generator.SAND:
 				color = rl.Orange
 			case map_generator.RESOURCES:
-				color = rl.Red
+				color = rl.DarkPurple
 			default:
 				color = rl.Brown
 			}
@@ -54,16 +54,20 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY 
 		for x := range b.tiles {
 			for y := range b.tiles[x] {
 				color := rl.Magenta
-				switch b.tiles[x][y].code {
-				case TILE_SAND:
-					color = rl.Orange
-					if b.tiles[x][y].resourcesAmount > 0 {
-						color = rl.DarkPurple
+				if pc.controlledFaction.exploredTilesMap[x][y] {
+					switch b.tiles[x][y].code {
+					case TILE_SAND:
+						color = rl.Orange
+						if b.tiles[x][y].resourcesAmount > 0 {
+							color = rl.DarkPurple
+						}
+					case TILE_BUILDABLE:
+						color = rl.Brown
+					default:
+						color = rl.Magenta
 					}
-				case TILE_BUILDABLE:
-					color = rl.Brown
-				default:
-					color = rl.Magenta
+				} else {
+					color = rl.Black
 				}
 				rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(tileSize), int32(tileSize), color)
 			}
