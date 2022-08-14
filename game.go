@@ -21,7 +21,8 @@ func (g *game) startGame() {
 	}
 	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 		if i.Value.(actor).getFaction() == pc.controlledFaction {
-			pc.centerCameraAtTile(geometry.TrueCoordsToTileCoords(i.Value.(actor).getPhysicalCenterCoords()))
+			tx, ty := geometry.TrueCoordsToTileCoords(i.Value.(actor).getPhysicalCenterCoords())
+			pc.centerCameraAtTile(&g.battlefield, tx, ty)
 		}
 	}
 
@@ -77,7 +78,7 @@ func (g *game) startGame() {
 				proj := i.Value.(*projectile)
 				g.battlefield.actForProjectile(proj)
 				tx, ty := geometry.TrueCoordsToTileCoords(proj.centerX, proj.centerY)
-				if !geometry.AreCoordsInTileRect(tx, ty, 0, 0, MAP_W, MAP_H) || proj.setToRemove {
+				if !g.battlefield.areTileCoordsValid(tx, ty) || proj.setToRemove {
 					// debugWrite("Projectile deleted.")
 					// deleting while iterating
 					setI := i
@@ -165,17 +166,32 @@ func (g *game) startGame() {
 func (g *game) selectMapToGenerateBattlefield() {
 	map_generator.SetRandom(&rnd)
 	generatedMap := &map_generator.GameMap{}
-	generatedMap.Init(64, 64)
-	generatedMap.Generate()
+	w := 64
+	h := 64
+	generatedMap.Generate(w, h)
 	for {
 		rl.BeginDrawing()
-		rl.EndDrawing()
 		drawGeneratedMap(generatedMap)
+		rl.EndDrawing()
+		time.Sleep(100 * time.Millisecond)
 		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
 			break
-		} else if rl.GetKeyPressed() != 0 {
-			generatedMap.Init(64, 64)
-			generatedMap.Generate()
+		} else if rl.IsKeyDown(rl.KeySpace) {
+			generatedMap.Generate(w, h)
+		} else if rl.IsKeyDown(rl.KeyRight) {
+			w += 16
+			h += 16
+			generatedMap.Generate(w, h)
+		} else if rl.IsKeyDown(rl.KeyLeft) {
+			w -= 16
+			h -= 16
+			if w < 32 {
+				w = 32
+			}
+			if h < 32 {
+				h = 32
+			}
+			generatedMap.Generate(w, h)
 		}
 	}
 	g.battlefield.initFromRandomMap(generatedMap)

@@ -2,6 +2,8 @@ package map_generator
 
 import (
 	"dune2clone/fibrandom"
+	"dune2clone/geometry"
+	"fmt"
 )
 
 var rnd fibrandom.FibRandom
@@ -15,7 +17,7 @@ type GameMap struct {
 	StartPoints [][2]int
 }
 
-func (gm *GameMap) Init(w, h int) {
+func (gm *GameMap) init(w, h int) {
 	gm.Tiles = make([][]int, w)
 	for i := range gm.Tiles {
 		gm.Tiles[i] = make([]int, h)
@@ -26,9 +28,21 @@ func (gm *GameMap) Init(w, h int) {
 	gm.StartPoints = make([][2]int, 0)
 }
 
-func (gm *GameMap) Generate() {
-	for len(gm.StartPoints) == 0 {
-		w, h := len(gm.Tiles), len(gm.Tiles[0])
+func (gm *GameMap) reset() {
+	for i := range gm.Tiles {
+		for j := range gm.Tiles[i] {
+			gm.Tiles[i][j] = SAND
+		}
+	}
+	gm.StartPoints = make([][2]int, 0)
+}
+
+func (gm *GameMap) Generate(w, h int) {
+	gm.init(w, h)
+	tries := 0
+	for len(gm.StartPoints) == 0 || !gm.areAllStartPointsGood() {
+		tries++
+		gm.reset()
 		symmV := rnd.OneChanceFrom(2)
 		symmH := true // rnd.OneChanceFrom(2) || !symmV
 		fromx, fromy, tox, toy := 0, 0, w-1, h-1
@@ -76,6 +90,7 @@ func (gm *GameMap) Generate() {
 
 		gm.searchAndSetStartPoints(symmH, symmV, 2)
 	}
+	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
 }
 
 func (gm *GameMap) performNAutomatasLike(count int, prototype automat, fromx, fromy, tox, toy int) {
@@ -124,15 +139,29 @@ func (gm *GameMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
 }
 
 func (gm *GameMap) areCoordsGoodForStartPoint(x, y int) bool {
-	// check if not too close to center (4/8 of the map to 6/8)
-	w, h := len(gm.Tiles), len(gm.Tiles[0])
-	if x > 3*w/8 && x < 6*w/8 || y > 3*h/8 && y < 6*h/8 {
-		return false
-	}
-	const sRange = 3
+	const sRange = 5
 	for sx := x - sRange; sx <= x+sRange; sx++ {
 		for sy := y - sRange; sy <= y+sRange; sy++ {
 			if !(sx >= 0 && sy >= 0 && sx < len(gm.Tiles) && sy < len(gm.Tiles[0])) || gm.Tiles[sx][sy] != BUILDABLE_TERRAIN {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func (gm *GameMap) areAllStartPointsGood() bool {
+	w, h := len(gm.Tiles), len(gm.Tiles[0])
+	minDistance := w/len(gm.StartPoints)
+	if h < w {
+		minDistance = h/len(gm.StartPoints)
+	}
+	for i := range gm.StartPoints {
+		for j := range gm.StartPoints {
+			if i == j {
+				continue
+			}
+			if geometry.GetApproxDistFromTo(gm.StartPoints[i][0],gm.StartPoints[i][1],gm.StartPoints[j][0],gm.StartPoints[j][1]) < minDistance {
 				return false
 			}
 		}

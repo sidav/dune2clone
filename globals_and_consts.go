@@ -5,11 +5,6 @@ import (
 	"math"
 )
 
-var (
-	MAP_W = 64
-	MAP_H = 64
-)
-
 const (
 	DEBUG_OUTPUT = true
 
@@ -59,10 +54,6 @@ func debugWritef(msg string, args ...interface{}) {
 	if DEBUG_OUTPUT {
 		fmt.Printf(msg, args...)
 	}
-}
-
-func areTileCoordsValid(tx, ty int) bool {
-	return tx >= 0 && tx < MAP_W && ty >= 0 && ty < MAP_H
 }
 
 func sign(x int) int {

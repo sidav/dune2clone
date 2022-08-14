@@ -15,7 +15,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 	pc.mode = PCMODE_NONE
 
 	pc.scrollCooldown--
-	pc.scroll()
+	pc.scroll(b)
 
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
@@ -94,13 +94,13 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	return false
 }
 
-func (pc *playerController) scroll() {
+func (pc *playerController) scroll(b *battlefield) {
 	if pc.scrollCooldown > 0 || !rl.IsWindowFocused() || !rl.IsCursorOnScreen() {
 		return
 	}
 
 	var SCROLL_MARGIN = float32(WINDOW_H / 8)
-	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(6)
+	const SCROLL_AMOUNT = TILE_SIZE_IN_PIXELS / int(5)
 	const SCROLL_CD = 1
 
 	v := rl.GetMousePosition()
@@ -119,11 +119,12 @@ func (pc *playerController) scroll() {
 	if pc.camTopLeftX < 0 {
 		pc.camTopLeftX = 0
 	}
-	if pc.camTopLeftX > (MAP_W-10)*TILE_SIZE_IN_PIXELS {
-		pc.camTopLeftX = (MAP_W - 10) * TILE_SIZE_IN_PIXELS
+	mapW, mapH := b.getSize()
+	if pc.camTopLeftX > (mapW-10)*TILE_SIZE_IN_PIXELS {
+		pc.camTopLeftX = (mapW - 10) * TILE_SIZE_IN_PIXELS
 	}
-	if pc.camTopLeftY > (MAP_H-10)*TILE_SIZE_IN_PIXELS {
-		pc.camTopLeftY = (MAP_H - 10) * TILE_SIZE_IN_PIXELS
+	if pc.camTopLeftY > (mapH-10)*TILE_SIZE_IN_PIXELS {
+		pc.camTopLeftY = (mapH - 10) * TILE_SIZE_IN_PIXELS
 	}
 	if pc.camTopLeftY < 0 {
 		pc.camTopLeftY = 0
@@ -132,10 +133,10 @@ func (pc *playerController) scroll() {
 	pc.scrollCooldown = SCROLL_CD
 }
 
-func (pc *playerController) centerCameraAtTile(tx, ty int) {
+func (pc *playerController) centerCameraAtTile(b *battlefield, tx, ty int) {
 	pc.camTopLeftX = (tx - 7) * TILE_SIZE_IN_PIXELS
 	pc.camTopLeftY = (ty - 7) * TILE_SIZE_IN_PIXELS
-	pc.scroll()
+	pc.scroll(b)
 }
 
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {

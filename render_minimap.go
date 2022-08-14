@@ -3,6 +3,7 @@ package main
 import (
 	"dune2clone/geometry"
 	"dune2clone/map_generator"
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"strconv"
 )
@@ -10,7 +11,9 @@ import (
 func drawGeneratedMap(gm *map_generator.GameMap) {
 	rl.BeginDrawing()
 	rl.DrawText("Select map. SPACE to generate new, ENTER to select current.", 0, 0, 28, rl.White)
-	const tileSize = 10
+	rl.DrawText(fmt.Sprintf("<- and -> to change size (current: %dx%d)", len(gm.Tiles), len(gm.Tiles[0])), 0, 30, 28, rl.White)
+	offset := int32(60)
+	var tileSize = int((WINDOW_H-offset)/int32(len(gm.Tiles[0])))
 	rl.ClearBackground(rl.Black)
 	for x := range gm.Tiles {
 		for y := range gm.Tiles[x] {
@@ -23,13 +26,13 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 			default:
 				color = rl.Brown
 			}
-			rl.DrawRectangle(int32(x*tileSize), 32+int32(y*tileSize), tileSize, tileSize, color)
+			rl.DrawRectangle(int32(x*tileSize), offset+int32(y*tileSize), int32(tileSize), int32(tileSize), color)
 		}
 	}
 	for sp := range gm.StartPoints {
-		const spSize = tileSize * 4
-		rl.DrawRectangle(int32(tileSize*gm.StartPoints[sp][0])-spSize/3, int32(tileSize*gm.StartPoints[sp][1]), spSize, spSize, rl.Black)
-		rl.DrawText(strconv.Itoa(sp+1), int32(tileSize*gm.StartPoints[sp][0]), int32(tileSize*gm.StartPoints[sp][1]), spSize, factionColors[sp])
+		spSize := int32(tileSize) * 4
+		rl.DrawRectangle(int32(tileSize*gm.StartPoints[sp][0])-spSize/3, offset+int32(tileSize*gm.StartPoints[sp][1]), spSize, spSize, rl.Black)
+		rl.DrawText(strconv.Itoa(sp+1), int32(tileSize*gm.StartPoints[sp][0]), offset+int32(tileSize*gm.StartPoints[sp][1]), spSize, factionColors[sp])
 	}
 
 	rl.EndDrawing()

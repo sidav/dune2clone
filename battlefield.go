@@ -19,6 +19,10 @@ type battlefield struct {
 	currentTick int
 }
 
+func (b *battlefield) getSize() (int, int) {
+	return len(b.tiles), len(b.tiles[0])
+}
+
 func (b *battlefield) areTileCoordsValid(x, y int) bool {
 	return x > 0 && y > 0 && x < len(b.tiles) && y < len(b.tiles[0])
 }
@@ -214,7 +218,7 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 	// TODO: optimize this shit
 	return geometry.SpiralSearchForConditionFrom(
 		func(x, y int) bool {
-			return areTileCoordsValid(x, y) &&
+			return b.areTileCoordsValid(x, y) &&
 				b.tiles[x][y].resourcesAmount > 0 &&
 				b.isTileClearToBeMovedInto(x, y, nil)
 		},
