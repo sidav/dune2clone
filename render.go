@@ -42,10 +42,10 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	//}
 
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
-		r.renderBuilding(b, i.Value.(*building))
+		r.renderBuilding(b, pc, i.Value.(*building))
 	}
 	for i := b.units.Front(); i != nil; i = i.Next() {
-		r.renderUnit(i.Value.(*unit))
+		r.renderUnit(pc, i.Value.(*unit))
 	}
 	for p := b.projectiles.Front(); p != nil; p = p.Next() {
 		r.renderProjectile(p.Value.(*projectile))
@@ -92,15 +92,20 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	}
 }
 
-func (r *renderer) renderBuilding(b *battlefield, bld *building) {
+func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *building) {
 	x, y := geometry.TileCoordsToPhysicalCoords(bld.topLeftX, bld.topLeftY)
 	x -= 0.5
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
+	w, h := bld.getStaticData().w, bld.getStaticData().h
 	// fmt.Printf("%d, %d \n", osx, osy)
-	if !r.isRectInViewport(osx, osy, int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS), int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)) {
+	if !r.isRectInViewport(osx, osy, int32(w*TILE_SIZE_IN_PIXELS), int32(h*TILE_SIZE_IN_PIXELS)) {
 		return
 	}
+	if !pc.controlledFaction.canSeeActor(bld) {
+		return
+	}
+
 	// get sprite
 	var sprites []rl.Texture2D
 	if bld.turret != nil {
@@ -124,7 +129,6 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 		)
 	}
 
-	w, h := bld.getStaticData().w, bld.getStaticData().h
 	if bld.isSelected {
 		col := rl.Green
 		rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS*int32(w), TILE_SIZE_IN_PIXELS*int32(h), col)
@@ -144,7 +148,7 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	}
 	// render unit inside
 	if bld.unitPlacedInside != nil {
-		r.renderUnit(bld.unitPlacedInside)
+		r.renderUnit(pc, bld.unitPlacedInside)
 	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
@@ -170,11 +174,14 @@ func (r *renderer) renderBuilding(b *battlefield, bld *building) {
 	}
 }
 
-func (r *renderer) renderUnit(u *unit) {
+func (r *renderer) renderUnit(pc *playerController, u *unit) {
 	x, y := u.centerX, u.centerY
 	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
+		return
+	}
+	if !pc.controlledFaction.canSeeActor(u) {
 		return
 	}
 	// get sprites

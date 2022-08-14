@@ -35,10 +35,10 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 	rl.EndDrawing()
 }
 
-func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY int32, w, h int32) {
+func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY, w, h int32) {
 	var tileSize = int(w) / len(b.tiles)
 	if h > w {
-		tileSize = int(w) / len(b.tiles)
+		tileSize = int(h) / len(b.tiles)
 	}
 	// draw random noise if energy is insufficient
 	if pc.controlledFaction.getAvailableEnergy() < 0 {
@@ -66,6 +66,11 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY 
 					default:
 						color = rl.Magenta
 					}
+					if !pc.controlledFaction.visibleTilesMap[x][y] {
+						color.R /= 3
+						color.G /= 3
+						color.B /= 3
+					}
 				} else {
 					color = rl.Black
 				}
@@ -75,13 +80,17 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY 
 		// draw units and buildings TODO: optimize by reducing loop traversion?
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			bld := i.Value.(*building)
-			x, y, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
-			rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(w*tileSize), int32(h*tileSize), factionColors[bld.faction.colorNumber])
+			if pc.controlledFaction.canSeeActor(bld) {
+				x, y, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+				rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(w*tileSize), int32(h*tileSize), factionColors[bld.faction.colorNumber])
+			}
 		}
 		for i := b.units.Front(); i != nil; i = i.Next() {
 			unt := i.Value.(actor)
-			x, y := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
-			rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(tileSize), int32(tileSize), factionColors[unt.getFaction().colorNumber])
+			if pc.controlledFaction.canSeeActor(unt) {
+				x, y := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
+				rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(tileSize), int32(tileSize), factionColors[unt.getFaction().colorNumber])
+			}
 
 		}
 	}
