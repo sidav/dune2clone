@@ -14,6 +14,7 @@ var (
 	buildingsAtlaces   = map[string]*spriteAtlas{}
 	unitChassisAtlaces = map[string][]*spriteAtlas{}
 	turretsAtlaces     = map[string][]*spriteAtlas{}
+	aircraftsAtlaces   = map[string][]*spriteAtlas{}
 	projectilesAtlaces = map[string][]*spriteAtlas{}
 
 	uiAtlaces = map[string][]*spriteAtlas{}
@@ -27,6 +28,7 @@ func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
 	buildingsAtlaces = make(map[string]*spriteAtlas)
 	unitChassisAtlaces = make(map[string][]*spriteAtlas)
+	aircraftsAtlaces = make(map[string][]*spriteAtlas)
 	turretsAtlaces = make(map[string][]*spriteAtlas)
 	projectilesAtlaces = make(map[string][]*spriteAtlas)
 	uiAtlaces = make(map[string][]*spriteAtlas)
@@ -55,6 +57,10 @@ func loadSprites() {
 	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile(currPath+"tank_cannon.png", 16, 16, 1, 2, true)
 	unitChassisAtlaces["quad"] = CreateDirectionalAtlasFromFile(currPath+"quad.png", 16, 16, 1, 2, true)
 	unitChassisAtlaces["harvester"] = CreateDirectionalAtlasFromFile(currPath+"harvester.png", 16, 16, 1, 2, true)
+
+	currPath = "resources/sprites/aircrafts/"
+	aircraftsAtlaces["combat"] = CreateDirectionalAtlasFromFile(currPath+"combat_plane.png", 16, 16, 1, 2, true)
+	aircraftsAtlaces["transport"] = CreateDirectionalAtlasFromFile(currPath+"transport_plane.png", 16, 16, 1, 2, true)
 
 	currPath = "resources/sprites/projectiles/"
 	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile(currPath+"shell.png", 16, 8, 1, 2, false)

@@ -7,6 +7,7 @@ import (
 )
 
 const UI_FONT_SIZE = 28
+const BUILD_LIST_FONT_SIZE = 24
 
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
@@ -93,13 +94,13 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 		for _, code := range bld.getStaticData().builds {
 			rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
 				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-				x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE*line, UI_FONT_SIZE, rl.Orange)
+				x+4, y+1+UI_FONT_SIZE+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
 			line++
 		}
 		for _, code := range bld.getStaticData().produces {
 			rl.DrawText(fmt.Sprintf("%s - Make %s ($%d)", sTableUnits[code].hotkeyToBuild,
 				sTableUnits[code].displayedName, sTableUnits[code].cost),
-				x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE*line, UI_FONT_SIZE, rl.Orange)
+				x+4, y+1+UI_FONT_SIZE+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
 			line++
 		}
 	}
