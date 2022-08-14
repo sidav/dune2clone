@@ -5,10 +5,9 @@ import (
 )
 
 var (
-	degreesInCircleInt = 360
+	degreesInCircleInt   = 360
 	degreesInCircleFloat = float64(degreesInCircleInt)
 )
-
 
 func SetDegreesInCircleAmount(degs int) {
 	degreesInCircleInt = degs
@@ -29,11 +28,11 @@ func TileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
 }
 
 func SquareDistanceFloat64(x1, y1, x2, y2 float64) float64 {
-	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+	return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
 }
 
 func SquareDistanceInt(x1, y1, x2, y2 int) int {
-	return (x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)
+	return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
 }
 
 func CirclesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
@@ -93,7 +92,7 @@ func NormalizeDegree(deg int) int {
 }
 
 func IsVectorDegreeEqualTo(vx, vy float64, deg int) bool {
-	vectorDegree := int((degreesInCircleFloat/2) * math.Atan2(vy, vx) / 3.14159265358)
+	vectorDegree := int((degreesInCircleFloat / 2) * math.Atan2(vy, vx) / 3.14159265358)
 	for vectorDegree < 0 {
 		vectorDegree += degreesInCircleInt
 	}
@@ -102,10 +101,10 @@ func IsVectorDegreeEqualTo(vx, vy float64, deg int) bool {
 
 func AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
 	// all -1's are beacuse of TILED geometry
-	x1b := x1+w1-1
-	x2b := x2+w2-1
-	y1b := y1+h1-1
-	y2b := y2+h2-1
+	x1b := x1 + w1 - 1
+	x2b := x2 + w2 - 1
+	y1b := y1 + h1 - 1
+	y2b := y2 + h2 - 1
 
 	left := x2b < x1
 	right := x1b < x2
@@ -124,16 +123,16 @@ func AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
 		return AreCoordsInRange(x1b, y1, x2, y2b, r)
 	}
 	if left {
-		return x1 - x2b <= r
+		return x1-x2b <= r
 	}
 	if right {
-		return x2 - x1b <= r
+		return x2-x1b <= r
 	}
 	if bottom {
-		return y2 - y1b <= r
+		return y2-y1b <= r
 	}
 	if top {
-		return y1 - y2b <= r
+		return y1-y2b <= r
 	}
 	return true // intersect detected
 }
@@ -143,7 +142,7 @@ func AreCoordsInRangeFromRect(fx, fy, tx, ty, w, h, r int) bool { // considering
 }
 
 func GetDegreeOfFloatVector(vx, vy float64) int {
-	return NormalizeDegree(int((degreesInCircleFloat/2) * math.Atan2(vy, vx) / 3.14159265358))
+	return NormalizeDegree(int((degreesInCircleFloat / 2) * math.Atan2(vy, vx) / 3.14159265358))
 }
 
 func GetDegreeOfIntVector(vx, vy int) int {
@@ -181,7 +180,7 @@ func AreTwoCellRectsOverlapping32(x1, y1, w1, h1, x2, y2, w2, h2 int32) bool {
 }
 
 func DegreeToUnitVector(deg int) (float64, float64) {
-	return math.Cos(float64(deg) * 3.14159265358 / (degreesInCircleFloat/2)), math.Sin(float64(deg) * 3.14159265358 / (degreesInCircleFloat/2))
+	return math.Cos(float64(deg) * 3.14159265358 / (degreesInCircleFloat / 2)), math.Sin(float64(deg) * 3.14159265358 / (degreesInCircleFloat / 2))
 }
 
 func AreCoordsInTileRect(x, y, rx, ry, w, h int) bool {
@@ -193,6 +192,22 @@ func AreCoordsInRange(fx, fy, tx, ty, r int) bool { // border including.
 	// It is much more handy for spaces with discrete coords (cells).
 	realSqDistanceAndSqRadiusDiff := (fx-tx)*(fx-tx) + (fy-ty)*(fy-ty) - r*r
 	return realSqDistanceAndSqRadiusDiff < r
+}
+
+func GetApproxDistFromTo(x1, y1, x2, y2 int) int {
+	diffX := x1 - x2
+	if diffX < 0 {
+		diffX = -diffX
+	}
+	diffY := y1 - y2
+	if diffY < 0 {
+		diffY = -diffY
+	}
+	if diffX > diffY {
+		return diffX+(diffY>>1)
+	} else {
+		return diffY+(diffX>>1)
+	}
 }
 
 func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius, initialDirection int) (int, int) {

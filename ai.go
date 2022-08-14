@@ -11,7 +11,7 @@ type aiStruct struct {
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {
-	debugWritef("AI ACT: It is tick %d\n", b.currentTick)
+	// debugWritef("AI ACT: It is tick %d\n", b.currentTick)
 	ai.alreadyOrderedBuildThisTick = false
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {

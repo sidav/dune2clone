@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dune2clone/geometry"
 	"image/color"
 	"math"
 )
@@ -58,8 +59,14 @@ func (f *faction) exploreAround(tileX, tileY, fromW, fromH, radius int) {
 	for x := tileX - radius; x < tileX+fromW+radius; x++ {
 		for y := tileY - radius; y < tileY+fromH+radius; y++ {
 			if x >= 0 && x < len(f.visibleTilesMap) && y >= 0 && y < len(f.visibleTilesMap) {
-				f.exploredTilesMap[x][y] = true
-				f.visibleTilesMap[x][y] = true
+				if geometry.GetApproxDistFromTo(x, y, tileX, tileY) <= radius ||
+					geometry.GetApproxDistFromTo(x, y, tileX+fromW-1, tileY+fromH-1) <= radius ||
+					geometry.GetApproxDistFromTo(x, y, tileX+fromW-1, tileY) <= radius ||
+					geometry.GetApproxDistFromTo(x, y, tileX, tileY+fromH-1) <= radius {
+
+					f.exploredTilesMap[x][y] = true
+					f.visibleTilesMap[x][y] = true
+				}
 			}
 		}
 	}
