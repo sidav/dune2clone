@@ -107,6 +107,7 @@ const (
 	BLD_BASE = iota
 	BLD_POWERPLANT
 	BLD_FACTORY
+	BLD_AIRFACTORY
 	BLD_TURRET_MINIGUN
 	BLD_TURRET_CANNON
 	BLD_REFINERY
@@ -123,8 +124,8 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_TURRET_CANNON, BLD_TURRET_MINIGUN,
-			BLD_SILO, BLD_FORTRESS},
+		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_AIRFACTORY,
+			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},
@@ -153,6 +154,19 @@ var sTableBuildings = map[int]*buildingStatic{
 		consumesEnergy: 15,
 		produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
 		hotkeyToBuild:  "F",
+	},
+	BLD_AIRFACTORY: {
+		spriteCode:     "airfactory",
+		maxHitpoints:   750,
+		w:              3,
+		h:              2,
+		displayedName:  "Aircraft Factory",
+		cost:           1000,
+		buildTime:      7,
+		builds:         nil,
+		consumesEnergy: 15,
+		// produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
+		hotkeyToBuild:  "A",
 	},
 	BLD_REFINERY: {
 		spriteCode:     "refinery",
