@@ -95,6 +95,10 @@ const (
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_HARVESTER
+
+	// aircrafts
+	AIR_TRANSPORT
+	AIR_GUNSHIP
 )
 
 type unitStatic struct {
@@ -111,6 +115,8 @@ type unitStatic struct {
 	maxCargoAmount int // for harvesters
 
 	defaultOrderOnCreation orderCode
+
+	isAircraft bool
 
 	cost          int
 	buildTime     int // seconds
@@ -163,5 +169,30 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                   1600,
 		buildTime:              12,
 		hotkeyToBuild:          "H",
+	},
+	// aircrafts
+	AIR_TRANSPORT: {
+		displayedName:        "Carrier aircraft",
+		chassisSpriteCode:    "air_transport",
+		maxHitpoints:         100,
+		movementSpeed:        0.5,
+		turretCode:           TRT_NONE,
+		chassisRotationSpeed: 30,
+		cost:                 500,
+		buildTime:            10,
+		hotkeyToBuild:        "C",
+		isAircraft:           true,
+	},
+	AIR_GUNSHIP: {
+		displayedName:        "Gunship",
+		chassisSpriteCode:    "air_gunship",
+		maxHitpoints:         50,
+		movementSpeed:        0.3,
+		turretCode:           TRT_NONE,
+		chassisRotationSpeed: 30,
+		cost:                 500,
+		buildTime:            10,
+		hotkeyToBuild:        "C",
+		isAircraft:           true,
 	},
 }
