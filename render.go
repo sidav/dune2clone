@@ -6,6 +6,12 @@ import (
 )
 
 var DEFAULT_TINT = rl.RayWhite
+var FOG_OF_WAR_TINT = rl.Color{
+	R: 96,
+	G: 96,
+	B: 96,
+	A: 255,
+}
 
 type renderer struct {
 	camTopLeftX, camTopLeftY int32
@@ -69,27 +75,34 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 		return
 	}
 	if !pc.controlledFaction.exploredTilesMap[x][y] {
-		rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
+		// rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		return
 	}
-	rl.DrawTexture(
-		tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
-		osx,
-		osy,
-		DEFAULT_TINT,
-	)
-	if t.resourcesAmount > 0 {
+	if pc.controlledFaction.visibleTilesMap[x][y] {
 		rl.DrawTexture(
-			tilesAtlaces["melange"].atlas[0][0],
+			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
 			osx,
 			osy,
 			DEFAULT_TINT,
 		)
+		if t.resourcesAmount > 0 {
+			rl.DrawTexture(
+				tilesAtlaces["melange"].atlas[0][0],
+				osx,
+				osy,
+				DEFAULT_TINT,
+			)
+		}
+	} else {
+		// r.drawDitheredRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
+		rl.DrawTexture(
+			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
+			osx,
+			osy,
+			FOG_OF_WAR_TINT,
+		)
 	}
-	if !pc.controlledFaction.visibleTilesMap[x][y] {
-		r.drawDitheredRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
-		return
-	}
+
 }
 
 func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *building) {
