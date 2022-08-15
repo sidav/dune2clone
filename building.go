@@ -5,16 +5,16 @@ import (
 )
 
 type building struct {
-	currentAction      action
-	currentOrder       order
-	currentHitpoints   int
-	topLeftX, topLeftY int // tile coords
-	code               int
-	faction            *faction
-	isSelected         bool
-	turret             *turret
-
-	unitPlacedInside *unit
+	currentAction          action
+	currentOrder           order
+	currentHitpoints       int
+	topLeftX, topLeftY     int // tile coords
+	code                   int
+	faction                *faction
+	isSelected             bool
+	turret                 *turret
+	unitPlacedInside       *unit
+	rallyTileX, rallytileY int
 }
 
 func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
@@ -29,6 +29,8 @@ func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
 		topLeftY:         topLeftY,
 		faction:          fact,
 		turret:           turr,
+		rallyTileX:       -1,
+		rallytileY:       -1,
 	}
 }
 

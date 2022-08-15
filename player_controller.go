@@ -19,6 +19,9 @@ func (pc *playerController) playerControl(b *battlefield) {
 
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
+		if !b.areTileCoordsValid(tx, ty) {
+			return
+		}
 		if u, ok := pc.selection.(*unit); ok {
 			u.currentOrder.resetOrder()
 			u.currentOrder.targetTileX = tx
@@ -27,6 +30,10 @@ func (pc *playerController) playerControl(b *battlefield) {
 			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
 				u.currentOrder.code = ORDER_HARVEST
 			}
+		}
+		if bld, ok := pc.selection.(*building); ok {
+			// set rally
+			bld.rallyTileX, bld.rallytileY = tx, ty
 		}
 	}
 	if bld, ok := pc.selection.(*building); ok {

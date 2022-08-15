@@ -24,7 +24,7 @@ func (b *battlefield) getSize() (int, int) {
 }
 
 func (b *battlefield) areTileCoordsValid(x, y int) bool {
-	return x > 0 && y > 0 && x < len(b.tiles) && y < len(b.tiles[0])
+	return x >= 0 && y >= 0 && x < len(b.tiles) && y < len(b.tiles[0])
 }
 
 func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
