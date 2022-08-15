@@ -33,7 +33,9 @@ func (pc *playerController) playerControl(b *battlefield) {
 		}
 		if bld, ok := pc.selection.(*building); ok {
 			// set rally
-			bld.rallyTileX, bld.rallytileY = tx, ty
+			if bld.getStaticData().produces != nil {
+				bld.rallyTileX, bld.rallytileY = tx, ty
+			}
 		}
 	}
 	if bld, ok := pc.selection.(*building); ok {

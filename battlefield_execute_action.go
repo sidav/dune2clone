@@ -199,7 +199,10 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 				y := bld.topLeftY + bld.getStaticData().h
 				if b.costMapForMovement(x, y) != -1 {
 					unt.centerX, unt.centerY = geometry.TileCoordsToPhysicalCoords(x, y)
-					// debugWritef("+%v", unt)
+					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {
+						unt.currentOrder.code = ORDER_MOVE
+						unt.currentOrder.setTargetTileCoords(bld.rallyTileX, bld.rallytileY)
+					}
 					b.addActor(unt)
 					bld.currentAction.reset()
 					return

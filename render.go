@@ -147,6 +147,14 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS*int32(w), TILE_SIZE_IN_PIXELS*int32(h), col)
 		rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
 		rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
+		// render rally point
+		if bld.rallyTileX != -1 {
+			centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
+			rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToPhysicalCoords(bld.rallyTileX, bld.rallytileY))
+			rl.DrawLine(centerX, centerY, rallyX, rallyY, rl.White)
+			rl.DrawRectangleLines(rallyX-TILE_SIZE_IN_PIXELS/4, rallyY-TILE_SIZE_IN_PIXELS/4,
+				2*TILE_SIZE_IN_PIXELS/4, 2*TILE_SIZE_IN_PIXELS/4, rl.White)
+		}
 	}
 	// render completion bar
 	if bld.currentAction.getCompletionPercent() >= 0 {

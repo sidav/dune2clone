@@ -21,6 +21,10 @@ func (o *order) resetOrder() {
 	o.targetActor = nil
 }
 
+func (o *order) setTargetTileCoords(x, y int) {
+	o.targetTileX, o.targetTileY = x, y
+}
+
 func (o *order) getTextDescription() string {
 	switch o.code {
 	case ORDER_NONE:
