@@ -51,7 +51,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 		r.renderBuilding(b, pc, i.Value.(*building))
 	}
 	for i := b.units.Front(); i != nil; i = i.Next() {
-		r.renderUnit(pc, i.Value.(*unit))
+		r.renderUnit(b, pc, i.Value.(*unit))
 	}
 	for p := b.projectiles.Front(); p != nil; p = p.Next() {
 		r.renderProjectile(p.Value.(*projectile))
@@ -115,7 +115,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	if !r.isRectInViewport(osx, osy, int32(w*TILE_SIZE_IN_PIXELS), int32(h*TILE_SIZE_IN_PIXELS)) {
 		return
 	}
-	if !pc.controlledFaction.canSeeActor(bld) {
+	if !b.canFactionSeeActor(pc.controlledFaction, bld) {
 		return
 	}
 
@@ -161,7 +161,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	// render unit inside
 	if bld.unitPlacedInside != nil {
-		r.renderUnit(pc, bld.unitPlacedInside)
+		r.renderUnit(b, pc, bld.unitPlacedInside)
 	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
@@ -187,14 +187,14 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 }
 
-func (r *renderer) renderUnit(pc *playerController, u *unit) {
+func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	x, y := u.centerX, u.centerY
 	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	if !pc.controlledFaction.canSeeActor(u) {
+	if !b.canFactionSeeActor(pc.controlledFaction, u) {
 		return
 	}
 	// get sprites

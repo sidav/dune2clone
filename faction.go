@@ -72,26 +72,6 @@ func (f *faction) exploreAround(tileX, tileY, fromW, fromH, radius int) {
 	}
 }
 
-func (f *faction) canSeeActor(a actor) bool {
-	switch a.(type) {
-	case *unit:
-		x, y := geometry.TrueCoordsToTileCoords(a.getPhysicalCenterCoords())
-		return f.visibleTilesMap[x][y]
-	case *building:
-		bld := a.(*building)
-		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
-			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
-				if f.visibleTilesMap[tx][ty] {
-					return true
-				}
-			}
-		}
-	default:
-		panic("wat")
-	}
-	return false
-}
-
 func (f *faction) getMoney() float64 {
 	return f.currentResources + f.money
 }

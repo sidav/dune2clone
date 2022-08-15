@@ -29,7 +29,7 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.energyConsumption, pc.controlledFaction.energyProduction)
 	energyBgColor := rl.Black
 	energyFgColor := rl.White
-	if pc.controlledFaction.getAvailableEnergy() < 0 && (b.currentTick/60) % 2 == 0 {
+	if pc.controlledFaction.getAvailableEnergy() < 0 && (b.currentTick/60)%2 == 0 {
 		energyBgColor = rl.Red
 		energyFgColor = rl.Black
 	}
@@ -55,6 +55,8 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 			rl.DrawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
 				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
 		}
+		rl.DrawText(fmt.Sprintf("Rotation: %d", u.chassisDegree),
+			x+15, y+UI_FONT_SIZE+2, UI_FONT_SIZE, rl.Green)
 	}
 
 	if bld, ok := pc.selection.(*building); ok {

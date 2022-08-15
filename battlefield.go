@@ -27,6 +27,29 @@ func (b *battlefield) areTileCoordsValid(x, y int) bool {
 	return x > 0 && y > 0 && x < len(b.tiles) && y < len(b.tiles[0])
 }
 
+func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
+	switch a.(type) {
+	case *unit:
+		x, y := geometry.TrueCoordsToTileCoords(a.getPhysicalCenterCoords())
+		if !b.areTileCoordsValid(x, y) {
+			return false
+		}
+		return f.visibleTilesMap[x][y]
+	case *building:
+		bld := a.(*building)
+		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
+			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
+				if f.visibleTilesMap[tx][ty] {
+					return true
+				}
+			}
+		}
+	default:
+		panic("wat")
+	}
+	return false
+}
+
 func (b *battlefield) addActor(a actor) {
 	switch a.(type) {
 	case *unit:
@@ -175,8 +198,8 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 		w = placingBld.getStaticData().w
 		h = placingBld.getStaticData().h
 	}
-	for x := topLeftX-additionalDistance; x < topLeftX+w+additionalDistance; x++ {
-		for y := topLeftY-additionalDistance; y < topLeftY+h+additionalDistance; y++ {
+	for x := topLeftX - additionalDistance; x < topLeftX+w+additionalDistance; x++ {
+		for y := topLeftY - additionalDistance; y < topLeftY+h+additionalDistance; y++ {
 			if !b.areTileCoordsValid(x, y) {
 				return false
 			}
