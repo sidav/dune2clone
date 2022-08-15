@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/list"
 	"dune2clone/geometry"
 	"image/color"
 	"math"
@@ -16,6 +17,8 @@ type faction struct {
 	resourcesMultiplier float64
 
 	exploredTilesMap, visibleTilesMap [][]bool
+
+	dispatchRequests                  list.List
 }
 
 func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier float64) *faction {
