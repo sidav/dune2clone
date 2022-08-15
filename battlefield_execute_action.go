@@ -39,6 +39,20 @@ func (b *battlefield) executeActionForActor(a actor) {
 }
 
 func (b *battlefield) executeWaitActionForUnit(u *unit) {
+	if u.getStaticData().isAircraft {
+		if u.currentAction.targetTileX == -1 {
+			u.currentAction.targetTileX, u.currentAction.targetTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+		}
+		targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
+		u.centerX += u.getStaticData().movementSpeed * vx
+		u.centerY += u.getStaticData().movementSpeed * vy
+		orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
+		if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
+			u.rotateChassisTowardsVector(orderVectorX, orderVectorY)
+			return
+		}
+	}
 	// rotate the unit to target if unit's turret can't rotate itself
 	if u.turret != nil && !u.turret.canRotate() && u.turret.targetActor != nil {
 		x, y := u.turret.targetActor.getPhysicalCenterCoords()
@@ -117,32 +131,44 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 
 func (b *battlefield) executeMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
-	tx, ty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
-
-	if areFloatsAlmostEqual(x, tx) && areFloatsAlmostEqual(y, ty) {
-		u.centerX = tx
-		u.centerY = ty
-		u.currentAction.reset()
-		// debugWritef("Tick %d: action finished\n", b.currentTick)
-	}
-
-	vx, vy := tx-x, ty-y
-
-	if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
-		u.rotateChassisTowardsVector(vx, vy)
-		return
-	}
-
-	if math.Abs(vx) < u.getStaticData().movementSpeed {
-		u.centerX = tx // source of possible movement lag :(
+	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	if u.getStaticData().isAircraft {
+		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
+		u.centerX += u.getStaticData().movementSpeed * vx
+		u.centerY += u.getStaticData().movementSpeed * vy
+		orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
+		if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
+			u.rotateChassisTowardsVector(orderVectorX, orderVectorY)
+		}
+		tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
+		if tx == u.currentAction.targetTileX && ty == u.currentAction.targetTileY {
+			u.currentAction.reset()
+		}
 	} else {
-		u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
-	}
+		vx, vy := targetX-x, targetY-y
+		if areFloatsAlmostEqual(x, targetX) && areFloatsAlmostEqual(y, targetY) {
+			u.centerX = targetX
+			u.centerY = targetY
+			u.currentAction.reset()
+			// debugWritef("Tick %d: action finished\n", b.currentTick)
+		}
 
-	if math.Abs(vy) < u.getStaticData().movementSpeed {
-		u.centerY = ty // source of possible movement lag :(
-	} else {
-		u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
+		if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
+			u.rotateChassisTowardsVector(vx, vy)
+			return
+		}
+
+		if math.Abs(vx) < u.getStaticData().movementSpeed {
+			u.centerX = targetX // source of possible movement lag :(
+		} else {
+			u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
+		}
+
+		if math.Abs(vy) < u.getStaticData().movementSpeed {
+			u.centerY = targetY // source of possible movement lag :(
+		} else {
+			u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
+		}
 	}
 }
 

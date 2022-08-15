@@ -33,6 +33,8 @@ func (a *action) getTextDescription() string {
 }
 
 func (a *action) reset() {
+	a.targetTileX = -1
+	a.targetTileY = -1
 	a.targetActor = nil
 	a.code = ACTION_WAIT
 	a.completionAmount = 0
@@ -41,10 +43,10 @@ func (a *action) reset() {
 func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
-			return int(100 * a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
+			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
-			return int(100 * a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
+			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
 	return -1

@@ -28,7 +28,12 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 		u.currentOrder.code = ORDER_NONE
 		return
 	}
-	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+	if u.getStaticData().isAircraft {
+		u.currentAction.code = ACTION_MOVE
+		u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
+	} else {
+		b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+	}
 }
 
 func (b *battlefield) executeHarvestOrder(u *unit) {
@@ -69,7 +74,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	// for this, target tile is resource tile. Target refinery is in targetActor.
-	if (b.currentTick/30) % 2 == 0 || u.currentOrder.targetActor == nil ||
+	if (b.currentTick/30)%2 == 0 || u.currentOrder.targetActor == nil ||
 		u.currentOrder.targetActor.(*building).unitPlacedInside != nil {
 
 		u.currentOrder.targetActor = b.getClosestEmptyFactionRefineryFromCoords(u.faction, u.centerX, u.centerY)

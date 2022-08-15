@@ -37,6 +37,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
 	u.currentOrder.targetTileX = -1
 	u.currentOrder.targetTileY = -1
+	u.currentAction.reset()
 	return u
 }
 
@@ -175,11 +176,11 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:        "Carrier aircraft",
 		chassisSpriteCode:    "air_transport",
 		maxHitpoints:         100,
-		movementSpeed:        0.5,
+		movementSpeed:        0.3,
 		turretCode:           TRT_NONE,
-		chassisRotationSpeed: 30,
+		chassisRotationSpeed: 15,
 		cost:                 500,
-		buildTime:            10,
+		buildTime:            1,
 		hotkeyToBuild:        "C",
 		isAircraft:           true,
 	},
@@ -189,10 +190,10 @@ var sTableUnits = map[int]*unitStatic{
 		maxHitpoints:         50,
 		movementSpeed:        0.3,
 		turretCode:           TRT_NONE,
-		chassisRotationSpeed: 30,
+		chassisRotationSpeed: 1,
 		cost:                 500,
-		buildTime:            10,
-		hotkeyToBuild:        "C",
+		buildTime:            1,
+		hotkeyToBuild:        "G",
 		isAircraft:           true,
 	},
 }
