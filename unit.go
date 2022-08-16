@@ -51,6 +51,15 @@ func (u *unit) getPhysicalCenterCoords() (float64, float64) {
 	return u.centerX, u.centerY
 }
 
+func (u *unit) setPhysicalCenterCoords(x, y float64) {
+	u.centerX = x
+	u.centerY = y
+	if u.carriedUnit != nil {
+		u.carriedUnit.centerX = x
+		u.carriedUnit.centerY = y
+	}
+}
+
 func (u *unit) isPresentAt(tileX, tileY int) bool {
 	tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	return tx == tileX && ty == tileY
@@ -82,6 +91,18 @@ func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
 	degs := geometry.GetDegreeOfFloatVector(vx, vy)
 	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
 	//debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
+	u.chassisDegree += rotateSpeed
+	if u.turret != nil {
+		u.turret.rotationDegree += rotateSpeed
+	}
+	u.normalizeDegrees()
+}
+
+func (u *unit) rotateChassisTowardsDegree(deg int) {
+	if u.chassisDegree == deg {
+		return
+	}
+	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, deg, u.getStaticData().chassisRotationSpeed)
 	u.chassisDegree += rotateSpeed
 	if u.turret != nil {
 		u.turret.rotationDegree += rotateSpeed

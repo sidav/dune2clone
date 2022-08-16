@@ -28,7 +28,15 @@ func (a *action) getTextDescription() string {
 		return "Harvesting"
 	case ACTION_ENTER_BUILDING:
 		return "Harvesting"
+
+	case ACTION_AIR_APPROACH_LAND_TILE:
+		return "Slowly flying to"
+	case ACTION_AIR_PICK_UNIT_UP:
+		return "Picking unit up"
+	case ACTION_AIR_DROP_UNIT:
+		return "Dropping"
 	}
+	return "NO DESC"
 	panic("No action description!")
 }
 
@@ -68,4 +76,8 @@ const (
 	ACTION_HARVEST
 
 	ACTION_ENTER_BUILDING
+
+	ACTION_AIR_APPROACH_LAND_TILE
+	ACTION_AIR_PICK_UNIT_UP
+	ACTION_AIR_DROP_UNIT
 )

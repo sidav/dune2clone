@@ -183,6 +183,16 @@ func DegreeToUnitVector(deg int) (float64, float64) {
 	return math.Cos(float64(deg) * 3.14159265358 / (degreesInCircleFloat / 2)), math.Sin(float64(deg) * 3.14159265358 / (degreesInCircleFloat / 2))
 }
 
+func VectorToUnitVectorFloat64(vx, vy float64) (float64, float64) {
+	if vx != 0 {
+		vx /= math.Abs(vx)
+	}
+	if vy != 0 {
+		vy /= math.Abs(vy)
+	}
+	return vx, vy
+}
+
 func AreCoordsInTileRect(x, y, rx, ry, w, h int) bool {
 	return x >= rx && x < rx+w && y >= ry && y < ry+h
 }
@@ -204,9 +214,9 @@ func GetApproxDistFromTo(x1, y1, x2, y2 int) int {
 		diffY = -diffY
 	}
 	if diffX > diffY {
-		return diffX+(diffY>>1)
+		return diffX + (diffY >> 1)
 	} else {
-		return diffY+(diffX>>1)
+		return diffY + (diffX >> 1)
 	}
 }
 
