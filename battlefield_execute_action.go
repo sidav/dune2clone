@@ -58,20 +58,23 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 		}
 		targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
-		u.centerX += u.getStaticData().movementSpeed * vx
-		u.centerY += u.getStaticData().movementSpeed * vy
+		u.setPhysicalCenterCoords(
+			u.centerX+u.getStaticData().movementSpeed*vx,
+			u.centerY+u.getStaticData().movementSpeed*vy,
+		)
 		orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
 		if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
 			u.rotateChassisTowardsVector(orderVectorX, orderVectorY)
 			return
 		}
-	}
-	// rotate the unit to target if unit's turret can't rotate itself
-	if u.turret != nil && !u.turret.canRotate() && u.turret.targetActor != nil {
-		x, y := u.turret.targetActor.getPhysicalCenterCoords()
-		x -= u.centerX
-		y -= u.centerY
-		u.rotateChassisTowardsVector(x, y)
+	} else {
+		// rotate the unit to target if unit's turret can't rotate itself
+		if u.turret != nil && !u.turret.canRotate() && u.turret.targetActor != nil {
+			x, y := u.turret.targetActor.getPhysicalCenterCoords()
+			x -= u.centerX
+			y -= u.centerY
+			u.rotateChassisTowardsVector(x, y)
+		}
 	}
 }
 
@@ -184,65 +187,6 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 		} else {
 			u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
 		}
-	}
-}
-
-func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
-	const rangeToDropSpeed = 3
-	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-	if geometry.GetApproxDistFromTo(atx, aty, u.currentAction.targetTileX, u.currentAction.targetTileY) > rangeToDropSpeed {
-		b.executeMoveActionForUnit(u)
-		return
-	}
-	if u.isPresentAt(u.currentAction.targetTileX, u.currentAction.targetTileY) {
-		u.currentAction.reset()
-		return
-	}
-	newSpeed := u.getStaticData().movementSpeed / 2
-	targetTrueX, targetTrueY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
-	vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
-	u.rotateChassisTowardsVector(vx, vy)
-	u.setPhysicalCenterCoords(
-		u.centerX+newSpeed*vx,
-		u.centerY+newSpeed*vy,
-	)
-}
-
-func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
-	const rangeToLockOn = 2
-	debugWrite("PICKING UP")
-	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-	ttx, tty := geometry.TrueCoordsToTileCoords(u.currentAction.targetActor.(*unit).getPhysicalCenterCoords())
-	if geometry.GetApproxDistFromTo(atx, aty, ttx, tty) > rangeToLockOn {
-		debugWrite("FLYING TO")
-		u.currentAction.targetTileX, u.currentAction.targetTileY = ttx, tty
-		b.executeAirApproachLandTileActionForUnit(u)
-	}
-	debugWrite("MOVING TO LOCATION")
-	targetTrueX, targetTrueY := u.currentAction.targetActor.getPhysicalCenterCoords()
-	if u.isPresentAt(ttx, tty) {
-		u.centerX, u.centerY = targetTrueX, targetTrueY
-		u.currentAction.targetActor.getCurrentAction().reset()
-		u.carriedUnit = u.currentAction.targetActor.(*unit)
-		b.removeActor(u.currentAction.targetActor)
-		u.currentAction.reset()
-	} else {
-		newSpeed := u.getStaticData().movementSpeed / 2
-		vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
-		u.centerX += newSpeed * vx
-		u.centerY += newSpeed * vy
-		u.rotateChassisTowardsDegree(u.currentAction.targetActor.(*unit).chassisDegree)
-	}
-}
-
-func (b *battlefield) executeAirDropActionForUnit(u *unit) {
-	debugWrite("DROP: STARTING")
-	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-	if b.isTileClearToBeMovedInto(atx, aty, u.carriedUnit) {
-		u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToPhysicalCoords(atx, aty))
-		b.addActor(u.carriedUnit)
-		u.carriedUnit = nil
-		u.currentAction.reset()
 	}
 }
 

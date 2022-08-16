@@ -56,7 +56,7 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
 		}
 		rl.DrawText(fmt.Sprintf("Rotation: %d", u.chassisDegree),
-			x+15, y+UI_FONT_SIZE+2, UI_FONT_SIZE, rl.Green)
+			x+15, y+(UI_FONT_SIZE*2), UI_FONT_SIZE, rl.Green)
 	}
 
 	if bld, ok := pc.selection.(*building); ok {
