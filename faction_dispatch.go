@@ -19,6 +19,7 @@ func (f *faction) addDispatchRequest(requester actor, ttx, tty int, orderCode or
 		requester:         requester,
 		targetTileX:       ttx,
 		targetTileY:       tty,
+		expirationTick:    expirationTick,
 	})
 }
 

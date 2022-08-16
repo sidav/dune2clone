@@ -205,6 +205,9 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {
 						unt.currentOrder.code = ORDER_MOVE
 						unt.currentOrder.setTargetTileCoords(bld.rallyTileX, bld.rallytileY)
+						if !unt.getStaticData().isAircraft {
+							bld.faction.addDispatchRequest(unt, bld.rallyTileX, bld.rallytileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+1250)
+						}
 					}
 					b.addActor(unt)
 					bld.currentAction.reset()

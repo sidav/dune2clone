@@ -9,9 +9,12 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 	i := u.faction.dispatchRequests.Front()
 	if i != nil {
 		dr := i.Value.(*dispatchRequestStruct)
-		u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
-		u.currentOrder.targetActor = dr.requester
-		u.currentOrder.code = dr.assignedOrderCode
+		requesterTileX, requesterTileY := geometry.TrueCoordsToTileCoords(dr.requester.getPhysicalCenterCoords())
+		if geometry.GetApproxDistFromTo(dr.targetTileX, dr.targetTileY, requesterTileX, requesterTileY) > 5 {
+			u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
+			u.currentOrder.targetActor = dr.requester
+			u.currentOrder.code = dr.assignedOrderCode
+		}
 		u.faction.removeDispatchRequest(dr)
 		return
 	}
