@@ -16,6 +16,8 @@ type unit struct {
 
 	currentCargoAmount int // for harvesters. TODO: separate struct?
 
+	carriedUnit *unit // for transports
+
 	isSelected bool // for rendering selection thingy
 }
 
@@ -178,7 +180,7 @@ var sTableUnits = map[int]*unitStatic{
 		maxHitpoints:         100,
 		movementSpeed:        0.2,
 		turretCode:           TRT_NONE,
-		chassisRotationSpeed: 3,
+		chassisRotationSpeed: 5,
 		cost:                 500,
 		buildTime:            1,
 		hotkeyToBuild:        "C",

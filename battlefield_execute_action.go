@@ -112,7 +112,7 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 }
 
 func (b *battlefield) executeRotateActionForUnit(u *unit) {
-	if u.turret.canRotate() {
+	if u.turret != nil && u.turret.canRotate() {
 		if u.turret.rotationDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
 		} else if u.turret.targetActor == nil {
@@ -169,6 +169,9 @@ func (b *battlefield) executeMoveActionForUnit(u *unit) {
 		} else {
 			u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
 		}
+	}
+	if u.carriedUnit != nil {
+		u.carriedUnit.centerX, u.carriedUnit.centerY = u.getPhysicalCenterCoords()
 	}
 }
 

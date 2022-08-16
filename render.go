@@ -205,6 +205,12 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	if !b.canFactionSeeActor(pc.controlledFaction, u) {
 		return
 	}
+
+	// render unit inside
+	if u.carriedUnit != nil {
+		r.renderUnit(b, pc, u.carriedUnit)
+	}
+
 	// get sprites
 	var sprites []rl.Texture2D
 	if u.turret != nil && u.turret.canRotate() {

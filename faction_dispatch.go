@@ -7,7 +7,13 @@ type dispatchRequestStruct struct {
 	expirationTick           int
 }
 
-func (f *faction) addDispatchRequest(requester actor, ttx, tty int, orderCode orderCode) {
+func (f *faction) addDispatchRequest(requester actor, ttx, tty int, orderCode orderCode, expirationTick int) {
+	for i := f.dispatchRequests.Front(); i != nil; i = i.Next() {
+		dr := i.Value.(*dispatchRequestStruct)
+		if dr.assignedOrderCode == orderCode && dr.requester == requester && dr.targetTileX == ttx && dr.targetTileY == tty {
+			return
+		}
+	}
 	f.dispatchRequests.PushBack(&dispatchRequestStruct{
 		assignedOrderCode: orderCode,
 		requester:         requester,

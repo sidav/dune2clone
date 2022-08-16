@@ -141,6 +141,9 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 			continue
 		}
 		unt := i.Value.(*unit)
+		if unt.getStaticData().isAircraft {
+			continue
+		}
 		if unt.isPresentAt(x, y) {
 			return false
 		}

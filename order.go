@@ -7,6 +7,8 @@ type order struct {
 	targetTile2X, targetTile2Y int // when only single target tile coords are not enough
 	targetActor                actor
 	targetActorCode            int
+
+	dispatchCalled bool
 	// targetX, targetY         float64
 }
 
@@ -19,6 +21,7 @@ func (o *order) resetOrder() {
 	o.targetTile2X = -1
 	o.targetTile2Y = -1
 	o.targetActor = nil
+	o.dispatchCalled = false
 }
 
 func (o *order) setTargetTileCoords(x, y int) {
@@ -41,10 +44,12 @@ func (o *order) getTextDescription() string {
 		return "Training"
 	case ORDER_WAIT_FOR_BUILDING_PLACEMENT:
 		return "Waiting for placement"
+	case ORDER_CARRY_UNIT_TO_TARGET_COORDS:
+		return "Transporting"
 	case ORDER_CANCEL_BUILD:
 		return ""
 	}
-	panic("No action description!")
+	panic("No order description!")
 }
 
 const (
@@ -56,4 +61,6 @@ const (
 	ORDER_PRODUCE
 	ORDER_WAIT_FOR_BUILDING_PLACEMENT
 	ORDER_CANCEL_BUILD
+	// aircraft orders
+	ORDER_CARRY_UNIT_TO_TARGET_COORDS
 )

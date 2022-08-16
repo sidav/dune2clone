@@ -96,6 +96,7 @@ func (g *game) startGame() {
 		if g.battlefield.currentTick%TRAVERSE_ALL_ACTORS_TICK_EACH == 0 {
 			for _, f := range g.battlefield.factions {
 				f.resetCurrents()
+				f.cleanExpiredFactionDispatchRequests(g.battlefield.currentTick)
 				f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
 			}
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {

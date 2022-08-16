@@ -32,6 +32,10 @@ func (a *action) getTextDescription() string {
 	panic("No action description!")
 }
 
+func (a *action) setTargetTileCoords(x, y int) {
+	a.targetTileX, a.targetTileY = x, y
+}
+
 func (a *action) reset() {
 	a.targetTileX = -1
 	a.targetTileY = -1

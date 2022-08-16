@@ -4,9 +4,16 @@ import "dune2clone/geometry"
 
 func (b *battlefield) executeOrderForUnit(u *unit) {
 	if u.currentAction.code != ACTION_WAIT {
-		return // execute the order only after finishing the action
+		if u.getStaticData().isAircraft {
+
+		} else {
+			return // execute the order only after finishing the action
+		}
 	}
 	if u.currentOrder.code == ORDER_NONE {
+		if u.getStaticData().isAircraft {
+			b.executeWaitOrderForAircraft(u)
+		}
 		return // TODO: look around for targets etc
 	}
 
@@ -17,6 +24,9 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 		b.executeHarvestOrder(u)
 	case ORDER_RETURN_TO_REFINERY:
 		b.executeReturnResourcesOrder(u)
+
+	case ORDER_CARRY_UNIT_TO_TARGET_COORDS:
+		b.executeCarryUnitOrderForAircraft(u)
 	}
 }
 
@@ -38,6 +48,7 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 
 func (b *battlefield) executeHarvestOrder(u *unit) {
 	if u.currentCargoAmount >= u.getStaticData().maxCargoAmount {
+		u.currentOrder.dispatchCalled = false
 		u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 	}
 
@@ -67,6 +78,9 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 
 	if utx == orderTileX && uty == orderTileY {
 		u.currentAction.code = ACTION_HARVEST
+	} else if !u.currentOrder.dispatchCalled {
+		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+500)
+		u.currentOrder.dispatchCalled = true
 	}
 }
 
@@ -84,9 +98,14 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 		return
 	}
 	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+	if !u.currentOrder.dispatchCalled {
+		u.faction.addDispatchRequest(u, orderTileX, orderTileY+1, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+1000)
+		u.currentOrder.dispatchCalled = true
+	}
 
 	if orderTileX == utx && orderTileY == uty {
 		u.currentOrder.code = ORDER_HARVEST
+		u.currentOrder.dispatchCalled = false
 		u.currentAction.code = ACTION_ENTER_BUILDING
 		u.currentAction.targetActor = u.currentOrder.targetActor
 		return
