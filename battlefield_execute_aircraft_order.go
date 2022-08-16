@@ -9,12 +9,9 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 	i := u.faction.dispatchRequests.Front()
 	if i != nil {
 		dr := i.Value.(*dispatchRequestStruct)
-		requesterTileX, requesterTileY := geometry.TrueCoordsToTileCoords(dr.requester.getPhysicalCenterCoords())
-		if geometry.GetApproxDistFromTo(dr.targetTileX, dr.targetTileY, requesterTileX, requesterTileY) > 5 {
-			u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
-			u.currentOrder.targetActor = dr.requester
-			u.currentOrder.code = dr.assignedOrderCode
-		}
+		u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
+		u.currentOrder.targetActor = dr.requester
+		u.currentOrder.code = dr.assignedOrderCode
 		u.faction.removeDispatchRequest(dr)
 		return
 	}
@@ -26,6 +23,11 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 	if carrier.carriedUnit == nil { // need to pick up
 		targetUnit := carrier.currentOrder.targetActor.(*unit)
 		targetX, targetY := geometry.TrueCoordsToTileCoords(targetUnit.centerX, targetUnit.centerY)
+		if geometry.GetApproxDistFromTo(targetX, targetY, carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) < 5 {
+			// target is too close already, no need for transport
+			carrier.currentOrder.resetOrder()
+			return
+		}
 		if carrierTx == targetX && carrierTy == targetY { // we're over target unit
 			carrier.centerX, carrier.centerY = targetUnit.getPhysicalCenterCoords()
 			if carrier.chassisDegree == targetUnit.chassisDegree { // pick up
