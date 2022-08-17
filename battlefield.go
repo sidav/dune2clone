@@ -14,6 +14,7 @@ type battlefield struct {
 	buildings   list.List
 	units       list.List
 	projectiles list.List
+	effects     list.List
 
 	pathfinder  *astar.AStarPathfinder
 	currentTick int
@@ -116,6 +117,10 @@ func (b *battlefield) removeActor(a actor) {
 
 func (b *battlefield) addProjectile(p *projectile) {
 	b.projectiles.PushFront(p)
+}
+
+func (b *battlefield) addEffect(e *effect) {
+	b.effects.PushFront(e)
 }
 
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {

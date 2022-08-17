@@ -15,6 +15,7 @@ var (
 	unitChassisAtlaces = map[string][]*spriteAtlas{}
 	turretsAtlaces     = map[string][]*spriteAtlas{}
 	projectilesAtlaces = map[string][]*spriteAtlas{}
+	effectsAtlaces     = map[string]*spriteAtlas{}
 
 	uiAtlaces = map[string][]*spriteAtlas{}
 )
@@ -42,7 +43,9 @@ func loadSprites() {
 	tilesAtlaces["melangepoor"] = CreateAtlasFromFile(currPath+"melange_poor.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 
 	currPath = "resources/sprites/buildings/"
+	// WARNING: IT HAS FRAMES
 	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 4, false, false)[0]
+
 	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
@@ -73,6 +76,9 @@ func loadSprites() {
 	currPath = "resources/sprites/ui/"
 	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile(currPath+"building_faction_flag.png", 8, 8, 1, 2, true)
 	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
+
+	currPath = "resources/sprites/effects/"
+	effectsAtlaces["smallexplosion"] = CreateAtlasFromFile(currPath+"explosion.png", 0, 0, 16, 16, 16, 16, 3, false, false)[0]
 }
 
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {

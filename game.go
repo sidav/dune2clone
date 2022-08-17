@@ -52,7 +52,7 @@ func (g *game) startGame() {
 			}
 		}
 
-		if g.battlefield.currentTick % RESOURCES_GROW_EACH_TICK == 0 {
+		if g.battlefield.currentTick%RESOURCES_GROW_EACH_TICK == 0 {
 			g.battlefield.performResourceGrowth()
 		}
 
@@ -94,6 +94,22 @@ func (g *game) startGame() {
 			}
 			timeReportString += fmt.Sprintf("projs: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 		}
+		// effects
+		timeCurrentActionStarted = time.Now()
+		for i := g.battlefield.effects.Front(); i != nil; i = i.Next() {
+			eff := i.Value.(*effect)
+			g.battlefield.actForEffect(eff)
+			if eff.getExpirationPercent(g.battlefield.currentTick) > 100 {
+				// debugWrite("Effect deleted.")
+				// deleting while iterating
+				setI := i
+				if i.Prev() != nil {
+					i = i.Prev()
+				}
+				g.battlefield.effects.Remove(setI)
+			}
+		}
+		timeReportString += fmt.Sprintf("effects: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 		timeReportString += fmt.Sprintf("all actions: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
 
 		// cleanup and faction calculations

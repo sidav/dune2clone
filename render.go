@@ -17,9 +17,11 @@ type renderer struct {
 	camTopLeftX, camTopLeftY int32
 	viewportW, viewportH     int32
 	minimapRenderTextureMask rl.Texture2D
+	btl                      *battlefield
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
+	r.btl = b
 	if rl.IsWindowResized() || rl.IsWindowMaximized() {
 		WINDOW_W = int32(rl.GetScreenWidth())
 		WINDOW_H = int32(rl.GetScreenHeight())
@@ -36,16 +38,6 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 			r.renderTile(b, pc, x, y)
 		}
 	}
-
-	// just testing
-	//for i, f := range unitCannonsAtlaces[sTableUnits[b.units[0].code].cannonSpriteCode].atlas {
-	//	rl.DrawTexture(
-	//		f[0],
-	//		int32(i * ORIGINAL_TILE_SIZE_IN_PIXELS*SPRITE_SCALE_FACTOR),
-	//		int32(0),
-	//		DEFAULT_TINT,
-	//	)
-	//}
 
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		r.renderBuilding(b, pc, i.Value.(*building))
@@ -68,12 +60,9 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 		}
 	}
 
-	//for x := range b.tiles {
-	//	for y := range b.tiles[x] {
-	//		rl.DrawText(fmt.Sprintf("%d", b.costMapForMovement(x, y)),
-	//			int32(x*TILE_SIZE_IN_PIXELS), int32(y * TILE_SIZE_IN_PIXELS), 24, rl.White)
-	//	}
-	//}
+	for i := b.effects.Front(); i != nil; i = i.Next() {
+		r.renderEffect(i.Value.(*effect))
+	}
 
 	r.renderUI(b, pc)
 
@@ -130,7 +119,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	sprite := projectilesAtlaces[sTableProjectiles[proj.code].spriteCode][0].
+	sprite := projectilesAtlaces[proj.getStaticData().spriteCode][0].
 		atlas[geometry.DegreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
 	rl.DrawTexture(
 		sprite,
@@ -138,6 +127,27 @@ func (r *renderer) renderProjectile(proj *projectile) {
 		osy-sprite.Height/2,
 		DEFAULT_TINT, // proj.faction.factionColor,
 	)
+}
+
+func (r *renderer) renderEffect(e *effect) {
+	if e.getExpirationPercent(r.btl.currentTick) <= 100 {
+		x, y := e.centerX, e.centerY
+		osx, osy := r.physicalToOnScreenCoords(x, y)
+		// fmt.Printf("%d, %d \n", osx, osy)
+		if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
+			return
+		}
+		spriteArr := effectsAtlaces[e.getStaticData().spriteCode].
+			atlas[0]
+		currentFrame := (len(spriteArr) - 1) * e.getExpirationPercent(r.btl.currentTick) / 100
+		debugWritef("Percent is %d", e.getExpirationPercent(r.btl.currentTick))
+		rl.DrawTexture(
+			spriteArr[currentFrame],
+			osx-spriteArr[currentFrame].Width/2,
+			osy-spriteArr[currentFrame].Height/2,
+			DEFAULT_TINT, // proj.faction.factionColor,
+		)
+	}
 }
 
 func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int32, int32) {
