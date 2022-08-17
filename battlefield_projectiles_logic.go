@@ -24,12 +24,14 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		if targ != nil {
 			b.dealDamageToActor(p.damage, targ)
 		}
-		b.addEffect(&effect{
-			centerX:      p.centerX,
-			centerY:      p.centerY,
-			code:         EFFECT_SMALL_EXPLOSION,
-			creationTick: b.currentTick,
-		})
+		if p.getStaticData().createsEffectOnImpact {
+			b.addEffect(&effect{
+				centerX:      p.centerX,
+				centerY:      p.centerY,
+				code:         p.getStaticData().effectCreatedOnImpactCode,
+				creationTick: b.currentTick,
+			})
+		}
 		p.setToRemove = true
 	}
 	// debugWritef("%+v spd: %f\n", p, spd)

@@ -22,27 +22,34 @@ const (
 )
 
 type projectileStatic struct {
-	spriteCode    string
-	size          float64
-	speed         float64
-	rotationSpeed int
+	spriteCode                string
+	size                      float64
+	speed                     float64
+	createsEffectOnImpact     bool
+	effectCreatedOnImpactCode effectCode
+	rotationSpeed             int
 }
 
 var sTableProjectiles = map[int]*projectileStatic{
 	PRJ_SHELL: {
-		spriteCode: "shell",
-		size:       0.3,
-		speed:      0.7,
+		spriteCode:                "shell",
+		size:                      0.3,
+		speed:                     0.7,
+		createsEffectOnImpact:     true,
+		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 	},
 	PRJ_BULLETS: {
-		spriteCode: "bullets",
-		size:       0.2,
-		speed:      0.7,
+		spriteCode:            "bullets",
+		size:                  0.2,
+		speed:                 0.7,
+		createsEffectOnImpact: false,
 	},
 	PRJ_MISSILE: {
-		spriteCode:    "missile",
-		size:          0.3,
-		speed:         0.2,
-		rotationSpeed: 1,
+		spriteCode:                "missile",
+		size:                      0.3,
+		speed:                     0.2,
+		rotationSpeed:             1,
+		createsEffectOnImpact:     true,
+		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 	},
 }
