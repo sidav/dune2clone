@@ -42,10 +42,13 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GameMap) {
 				currTileCode = map_generator.SAND
 			case map_generator.BUILDABLE_TERRAIN:
 				currTileCode = map_generator.BUILDABLE_TERRAIN
+			case map_generator.ROCKS:
+				currTileCode = map_generator.SAND
 			case map_generator.RESOURCES:
 				currTileCode = map_generator.SAND
-				b.tiles[i][j].resourcesAmount = rnd.RandInRange(100, 300)
+				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_MIN_GENERATED, RESOURCE_IN_TILE_MAX_GENERATED)
 			default:
+				panic("Unknown tile type!")
 				currTileCode = map_generator.SAND
 			}
 			b.tiles[i][j].code = currTileCode

@@ -98,8 +98,15 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 			DEFAULT_TINT,
 		)
 		if t.resourcesAmount > 0 {
+			amountForPoorTile := RESOURCE_IN_TILE_MAX_GENERATED/3
+			resourceTileAtlasName := "melangerich"
+			if t.resourcesAmount <= amountForPoorTile {
+				resourceTileAtlasName = "melangepoor"
+			} else if t.resourcesAmount <= 2*amountForPoorTile {
+				resourceTileAtlasName = "melangemedium"
+			}
 			rl.DrawTexture(
-				tilesAtlaces["melange"].atlas[0][0],
+				tilesAtlaces[resourceTileAtlasName].atlas[0][0],
 				osx,
 				osy,
 				DEFAULT_TINT,
