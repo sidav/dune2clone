@@ -27,6 +27,7 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 	whatIsBuilt := bld.currentAction.targetActor.(*building)
 	if bld.currentOrder.targetTileX != -1 && bld.currentOrder.targetTileY != -1 {
 		whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = bld.currentOrder.targetTileX, bld.currentOrder.targetTileY
+		whatIsBuilt.currentAction.code = ACTION_BEING_BUILT
 		b.addActor(whatIsBuilt)
 		bld.currentAction.reset()
 		bld.currentOrder.resetOrder()

@@ -19,27 +19,42 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		return
 	}
 
-	// get sprite
-	var sprites []rl.Texture2D
-	if bld.turret != nil {
-		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
-			turretsAtlaces[bld.turret.getStaticData().spriteCode][bld.faction.colorNumber].
-				getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
+	// draw sprite
+	if bld.currentAction.code == ACTION_BEING_BUILT && (b.currentTick/10) % 2 != 0 {
+		// under construction
+		underConstructionAtlas := buildingsAtlaces["underconstruction"]
+		for x := 0; x < w; x++ {
+			for y := 0; y < h; y++ {
+				frameNumber := (x+y+b.currentTick/250)%underConstructionAtlas.totalFrames()
+				rl.DrawTexture(
+					underConstructionAtlas.atlas[0][frameNumber],
+					osx+int32(x)*TILE_SIZE_IN_PIXELS,
+					osy+int32(y)*TILE_SIZE_IN_PIXELS,
+					DEFAULT_TINT,
+				)
+			}
 		}
 	} else {
-		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
+		var sprites []rl.Texture2D
+		if bld.turret != nil {
+			sprites = []rl.Texture2D{
+				buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
+				turretsAtlaces[bld.turret.getStaticData().spriteCode][bld.faction.colorNumber].
+					getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
+			}
+		} else {
+			sprites = []rl.Texture2D{
+				buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
+			}
 		}
-	}
-	// draw sprite
-	for _, s := range sprites {
-		rl.DrawTexture(
-			s,
-			osx,
-			osy,
-			DEFAULT_TINT,
-		)
+		for _, s := range sprites {
+			rl.DrawTexture(
+				s,
+				osx,
+				osy,
+				DEFAULT_TINT,
+			)
+		}
 	}
 
 	if bld.isSelected {

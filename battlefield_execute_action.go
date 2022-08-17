@@ -30,6 +30,8 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 	case ACTION_BUILD:
 		b.executeBuildActionForActor(a)
+	case ACTION_BEING_BUILT:
+		b.executeBeingBuiltActionForBuilding(a.(*building))
 	case ACTION_HARVEST:
 		b.executeHarvestActionForActor(a)
 	case ACTION_ENTER_BUILDING:
@@ -225,5 +227,12 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 		} else {
 			panic("wat")
 		}
+	}
+}
+
+func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
+	bld.currentAction.completionAmount++
+	if bld.currentAction.completionAmount == BUILDING_ANIMATION_TICKS {
+		bld.currentAction.reset()
 	}
 }

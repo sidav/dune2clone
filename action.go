@@ -53,6 +53,7 @@ func (a *action) reset() {
 }
 
 func (a *action) getCompletionPercent() int {
+	// TODO: add maxCompletionAmount and use it in calculations
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
 			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
@@ -60,6 +61,9 @@ func (a *action) getCompletionPercent() int {
 		if b, ok := a.targetActor.(*unit); ok {
 			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
+	}
+	if a.code == ACTION_BEING_BUILT {
+		return int(100*a.completionAmount) / BUILDING_ANIMATION_TICKS
 	}
 	return -1
 	// panic("Something is wrong in %")
@@ -71,6 +75,7 @@ const (
 	ACTION_MOVE
 	// production:
 	ACTION_BUILD
+	ACTION_BEING_BUILT
 	// unit or tower cannon
 	ACTION_ROTATE
 	ACTION_HARVEST
