@@ -31,6 +31,6 @@ var sTableEffects = map[effectCode]*effectStatic{
 	EFFECT_SMALL_EXPLOSION: {
 		spriteCode:      "smallexplosion",
 		frames:          3,
-		defaultLifeTime: 30,
+		defaultLifeTime: 15,
 	},
 }
