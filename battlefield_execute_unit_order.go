@@ -79,7 +79,7 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 	if utx == orderTileX && uty == orderTileY {
 		u.currentAction.code = ACTION_HARVEST
 	} else if !u.currentOrder.dispatchCalled {
-		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+500)
+		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
 		u.currentOrder.dispatchCalled = true
 	}
 }
@@ -99,7 +99,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	}
 	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
 	if !u.currentOrder.dispatchCalled {
-		u.faction.addDispatchRequest(u, orderTileX, orderTileY+1, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+1000)
+		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
 		u.currentOrder.dispatchCalled = true
 	}
 

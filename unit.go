@@ -85,17 +85,8 @@ func (u *unit) normalizeDegrees() {
 }
 
 func (u *unit) rotateChassisTowardsVector(vx, vy float64) {
-	if geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
-		return
-	}
 	degs := geometry.GetDegreeOfFloatVector(vx, vy)
-	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, degs, u.getStaticData().chassisRotationSpeed)
-	//debugWritef("targetdegs %d, unitdegs %d, diff %d, rotateSpeed %d\n", degs, u.chassisDegree)
-	u.chassisDegree += rotateSpeed
-	if u.turret != nil {
-		u.turret.rotationDegree += rotateSpeed
-	}
-	u.normalizeDegrees()
+	u.rotateChassisTowardsDegree(degs)
 }
 
 func (u *unit) rotateChassisTowardsDegree(deg int) {
@@ -108,6 +99,9 @@ func (u *unit) rotateChassisTowardsDegree(deg int) {
 		u.turret.rotationDegree += rotateSpeed
 	}
 	u.normalizeDegrees()
+	if u.carriedUnit != nil {
+		u.carriedUnit.chassisDegree = u.chassisDegree
+	}
 }
 
 func (u *unit) getStaticData() *unitStatic {

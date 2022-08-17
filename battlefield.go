@@ -130,8 +130,14 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 		return false
 	}
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
-		if i.Value.(*building).isPresentAt(x, y) {
-			// debugWrite("got")
+		bld := i.Value.(*building)
+		if bld.isPresentAt(x, y) {
+			if bld.unitPlacedInside == nil {
+				px, py := bld.getUnitPlacementCoords()
+				if px == x && py == y {
+					continue
+				}
+			}
 			return false
 		}
 	}
