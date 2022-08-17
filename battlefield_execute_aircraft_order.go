@@ -20,9 +20,9 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 	// carrierTx, carrierTy := geometry.TrueCoordsToTileCoords(carrier.centerX, carrier.centerY)
 	// Order: pick targetActor up, then move it to target coords, then drop it down
+	targetUnit := carrier.currentOrder.targetActor.(*unit)
+	targetX, targetY := geometry.TrueCoordsToTileCoords(targetUnit.centerX, targetUnit.centerY)
 	if carrier.carriedUnit == nil { // need to pick up
-		targetUnit := carrier.currentOrder.targetActor.(*unit)
-		targetX, targetY := geometry.TrueCoordsToTileCoords(targetUnit.centerX, targetUnit.centerY)
 		if geometry.GetApproxDistFromTo(targetX, targetY, carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) < 5 {
 			// target is too close already, no need for transport
 			carrier.currentOrder.resetOrder()
@@ -33,10 +33,19 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 		carrier.currentAction.targetActor = targetUnit
 	} else { // already picked up
 		if carrier.isPresentAt(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) {
-			debugWrite("DROP ACTION SET")
-			carrier.currentAction.code = ACTION_AIR_DROP_UNIT
-			carrier.currentAction.setTargetTileCoords(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
-			carrier.currentOrder.resetOrder()
+			if b.isTileClearToBeMovedInto(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY, carrier.carriedUnit) {
+
+				debugWrite("DROP ACTION SET")
+				carrier.currentAction.code = ACTION_AIR_DROP_UNIT
+				carrier.currentAction.setTargetTileCoords(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
+				carrier.currentOrder.resetOrder()
+			} else {
+				closestX, closestY := geometry.SpiralSearchForConditionFrom(
+					func(x, y int) bool { return b.isTileClearToBeMovedInto(x, y, carrier.carriedUnit) },
+					carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY, 5, b.tickToNonImportantRandom(4),
+				)
+				carrier.currentOrder.setTargetTileCoords(closestX, closestY)
+			}
 		} else {
 			debugWrite("APPROACH ACTION SET")
 			carrier.currentAction.code = ACTION_AIR_APPROACH_LAND_TILE

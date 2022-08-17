@@ -74,10 +74,8 @@ func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
 func (b *battlefield) executeAirDropActionForUnit(u *unit) {
 	debugWrite("DROP: STARTING")
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-	if b.isTileClearToBeMovedInto(atx, aty, u.carriedUnit) {
-		u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToPhysicalCoords(atx, aty))
-		b.addActor(u.carriedUnit)
-		u.carriedUnit = nil
-		u.currentAction.reset()
-	}
+	u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToPhysicalCoords(atx, aty))
+	b.addActor(u.carriedUnit)
+	u.carriedUnit = nil
+	u.currentAction.reset()
 }

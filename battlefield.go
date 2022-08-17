@@ -19,6 +19,10 @@ type battlefield struct {
 	currentTick int
 }
 
+func (b *battlefield) tickToNonImportantRandom(mod int) (int) {
+	return (b.currentTick / 73) % mod
+}
+
 func (b *battlefield) getSize() (int, int) {
 	return len(b.tiles), len(b.tiles[0])
 }
