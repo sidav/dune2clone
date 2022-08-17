@@ -130,7 +130,8 @@ func (r *renderer) renderProjectile(proj *projectile) {
 }
 
 func (r *renderer) renderEffect(e *effect) {
-	if e.getExpirationPercent(r.btl.currentTick) <= 100 {
+	debugWritef("Percent is %d", e.getExpirationPercent(r.btl.currentTick))
+	if e.creationTick <= r.btl.currentTick && e.getExpirationPercent(r.btl.currentTick) <= 100 {
 		x, y := e.centerX, e.centerY
 		osx, osy := r.physicalToOnScreenCoords(x, y)
 		// fmt.Printf("%d, %d \n", osx, osy)
@@ -140,7 +141,6 @@ func (r *renderer) renderEffect(e *effect) {
 		spriteArr := effectsAtlaces[e.getStaticData().spriteCode].
 			atlas[0]
 		currentFrame := (len(spriteArr) - 1) * e.getExpirationPercent(r.btl.currentTick) / 100
-		debugWritef("Percent is %d", e.getExpirationPercent(r.btl.currentTick))
 		rl.DrawTexture(
 			spriteArr[currentFrame],
 			osx-spriteArr[currentFrame].Width/2,
