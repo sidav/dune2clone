@@ -20,7 +20,11 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 	case ACTION_MOVE:
 		if u, ok := a.(*unit); ok {
-			b.executeMoveActionForUnit(u)
+			if u.getStaticData().isAircraft {
+				b.executeAirMoveActionForUnit(u)
+			} else {
+				b.executeGroundMoveActionForUnit(u)
+			}
 		} else {
 			panic("Is not unit!")
 		}
@@ -149,48 +153,32 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 	}
 }
 
-func (b *battlefield) executeMoveActionForUnit(u *unit) {
+func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
 	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
-	if u.getStaticData().isAircraft {
-		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
-		u.setPhysicalCenterCoords(
-			u.centerX+u.getStaticData().movementSpeed*vx,
-			u.centerY+u.getStaticData().movementSpeed*vy,
-		)
-		orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
-		if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
-			u.rotateChassisTowardsVector(orderVectorX, orderVectorY)
-		}
-		tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-		if tx == u.currentAction.targetTileX && ty == u.currentAction.targetTileY {
-			u.currentAction.reset()
-		}
+	vx, vy := targetX-x, targetY-y
+	if areFloatsAlmostEqual(x, targetX) && areFloatsAlmostEqual(y, targetY) {
+		u.centerX = targetX
+		u.centerY = targetY
+		u.currentAction.reset()
+		// debugWritef("Tick %d: action finished\n", b.currentTick)
+	}
+
+	if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
+		u.rotateChassisTowardsVector(vx, vy)
+		return
+	}
+
+	if math.Abs(vx) < u.getStaticData().movementSpeed {
+		u.centerX = targetX // source of possible movement lag :(
 	} else {
-		vx, vy := targetX-x, targetY-y
-		if areFloatsAlmostEqual(x, targetX) && areFloatsAlmostEqual(y, targetY) {
-			u.centerX = targetX
-			u.centerY = targetY
-			u.currentAction.reset()
-			// debugWritef("Tick %d: action finished\n", b.currentTick)
-		}
+		u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
+	}
 
-		if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
-			u.rotateChassisTowardsVector(vx, vy)
-			return
-		}
-
-		if math.Abs(vx) < u.getStaticData().movementSpeed {
-			u.centerX = targetX // source of possible movement lag :(
-		} else {
-			u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
-		}
-
-		if math.Abs(vy) < u.getStaticData().movementSpeed {
-			u.centerY = targetY // source of possible movement lag :(
-		} else {
-			u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
-		}
+	if math.Abs(vy) < u.getStaticData().movementSpeed {
+		u.centerY = targetY // source of possible movement lag :(
+	} else {
+		u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
 	}
 }
 

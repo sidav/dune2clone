@@ -1,6 +1,8 @@
 package main
 
-import "dune2clone/geometry"
+import (
+	"dune2clone/geometry"
+)
 
 func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
 	apx, apy := u.getPhysicalCenterCoords()
@@ -15,11 +17,28 @@ func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
 	)
 }
 
+func (b *battlefield) executeAirMoveActionForUnit(u *unit) {
+	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
+	u.setPhysicalCenterCoords(
+		u.centerX+u.getStaticData().movementSpeed*vx,
+		u.centerY+u.getStaticData().movementSpeed*vy,
+	)
+	orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
+	if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
+		u.rotateChassisTowardsVector(orderVectorX, orderVectorY)
+	}
+	tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
+	if tx == u.currentAction.targetTileX && ty == u.currentAction.targetTileY {
+		u.currentAction.reset()
+	}
+}
+
 func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
 	const rangeToDropSpeed = 2
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
 	if geometry.GetApproxDistFromTo(atx, aty, u.currentAction.targetTileX, u.currentAction.targetTileY) >= rangeToDropSpeed {
-		b.executeMoveActionForUnit(u)
+		b.executeAirMoveActionForUnit(u)
 		return
 	}
 	newSpeed := 3 * u.getStaticData().movementSpeed / 4
@@ -35,7 +54,7 @@ func (b *battlefield) executeAirApproachTargetActorActionForUnit(u *unit) {
 	targetTileX, targetTileY := geometry.TrueCoordsToTileCoords(targetTrueX, targetTrueY)
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
 	if geometry.GetApproxDistFromTo(atx, aty, targetTileX, targetTileY) >= rangeToDropSpeed {
-		b.executeMoveActionForUnit(u)
+		b.executeAirMoveActionForUnit(u)
 		return
 	}
 	u.rotateChassisTowardsDegree(u.currentAction.targetActor.(*unit).chassisDegree)
