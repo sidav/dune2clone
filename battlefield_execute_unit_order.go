@@ -66,7 +66,7 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 			if u.currentCargoAmount > 0 {
 				u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 			} else {
-				u.currentOrder.code = ORDER_MOVE
+				u.currentOrder.code = ORDER_MOVE // TODO: remove since resources now grow?
 			}
 			return
 		}

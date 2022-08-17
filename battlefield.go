@@ -19,7 +19,7 @@ type battlefield struct {
 	currentTick int
 }
 
-func (b *battlefield) tickToNonImportantRandom(mod int) (int) {
+func (b *battlefield) tickToNonImportantRandom(mod int) int {
 	return (b.currentTick / 73) % mod
 }
 
@@ -36,14 +36,17 @@ func (b *battlefield) performResourceGrowth() {
 		for ty := range b.tiles[tx] {
 			if b.tiles[tx][ty].getStaticData().growsResources {
 				// select resource tile to grow
-				growX, growY := geometry.SpiralSearchForConditionFrom(
-					func(x, y int) bool {
-						return b.areTileCoordsValid(x, y) && b.tiles[x][y].getStaticData().canHaveResources &&
-							b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX &&
-							geometry.GetApproxDistFromTo(tx, ty, x, y) <= RESOURCES_GROWTH_RADIUS
-					},
-					tx, ty, RESOURCES_GROWTH_RADIUS, rnd.Rand(4),
+				growX, growY := tx, ty
+				if b.tiles[tx][ty].resourcesAmount >= RESOURCES_GROWTH_MAX {
+					growX, growY = geometry.SpiralSearchForConditionFrom(
+						func(x, y int) bool {
+							return b.areTileCoordsValid(x, y) && b.tiles[x][y].getStaticData().canHaveResources &&
+								b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX &&
+								geometry.GetApproxDistFromTo(tx, ty, x, y) <= RESOURCES_GROWTH_RADIUS
+						},
+						tx, ty, RESOURCES_GROWTH_RADIUS, rnd.Rand(4),
 					)
+				}
 				if growX != -1 {
 					b.tiles[growX][growY].resourcesAmount += rnd.RandInRange(RESOURCES_GROWTH_MIN, RESOURCES_GROWTH_MAX)
 				}
