@@ -184,11 +184,12 @@ func DegreeToUnitVector(deg int) (float64, float64) {
 }
 
 func VectorToUnitVectorFloat64(vx, vy float64) (float64, float64) {
+	length := math.Sqrt(vx*vx + vy*vy)
 	if vx != 0 {
-		vx /= math.Abs(vx)
+		vx /= length
 	}
 	if vy != 0 {
-		vy /= math.Abs(vy)
+		vy /= length
 	}
 	return vx, vy
 }
