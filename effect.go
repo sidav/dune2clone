@@ -23,14 +23,12 @@ const (
 
 type effectStatic struct {
 	spriteCode      string
-	frames          int
 	defaultLifeTime int
 }
 
 var sTableEffects = map[effectCode]*effectStatic{
 	EFFECT_SMALL_EXPLOSION: {
 		spriteCode:      "smallexplosion",
-		frames:          3,
 		defaultLifeTime: 15,
 	},
 }

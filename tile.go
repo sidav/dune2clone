@@ -13,6 +13,7 @@ func (t *tile) getStaticData() *tileStaticData {
 const (
 	TILE_SAND = iota
 	TILE_BUILDABLE
+	TILE_BUILDABLE_DAMAGED
 	TILE_ROCK
 	TILE_CONCRETE
 	TILE_RESOURCE_VEIN
@@ -33,6 +34,10 @@ var sTableTiles = map[int]*tileStaticData{
 	},
 	TILE_BUILDABLE: {
 		spriteCodes:  []string{"buildable1"},
+		canBuildHere: true,
+	},
+	TILE_BUILDABLE_DAMAGED: {
+		spriteCodes:  []string{"buildabledamaged"},
 		canBuildHere: true,
 	},
 	TILE_RESOURCE_VEIN: {

@@ -144,6 +144,9 @@ func (g *game) startGame() {
 					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 50,
 						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 25,
 					)
+					g.battlefield.changeTilesCodesInRectTo(
+						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
+					)
 					g.battlefield.buildings.Remove(setI)
 				} else {
 					bld.faction.energyProduction += bld.getStaticData().givesEnergy

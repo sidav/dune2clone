@@ -79,9 +79,9 @@ func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 	return false
 }
 
-func (b *battlefield) changeTilesCodeInRectTo(x, y, w, h, code int) {
+func (b *battlefield) changeTilesCodesInRectTo(x, y, w, h, code int) {
 	for i := x; i < x+w; i++ {
-		for j := y; j < j+h; j++ {
+		for j := y; j < y+h; j++ {
 			if b.areTileCoordsValid(i, j) {
 				b.tiles[i][j].code = code
 			}
