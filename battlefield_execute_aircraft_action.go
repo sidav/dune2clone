@@ -2,6 +2,19 @@ package main
 
 import "dune2clone/geometry"
 
+func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
+	apx, apy := u.getPhysicalCenterCoords()
+	if areFloatsAlmostEqual(x, apx) && areFloatsAlmostEqual(y, apy) {
+		u.currentAction.reset()
+		return
+	}
+	vx, vy := geometry.VectorToUnitVectorFloat64(x-u.centerX, y-u.centerY)
+	u.setPhysicalCenterCoords(
+		u.centerX+speed*vx,
+		u.centerY+speed*vy,
+	)
+}
+
 func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
 	const rangeToDropSpeed = 2
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
@@ -9,42 +22,25 @@ func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
 		b.executeMoveActionForUnit(u)
 		return
 	}
-	if u.isPresentAt(u.currentAction.targetTileX, u.currentAction.targetTileY) {
-		u.currentAction.reset()
-		return
-	}
 	newSpeed := 3 * u.getStaticData().movementSpeed / 4
 	targetTrueX, targetTrueY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
 	u.rotateChassisTowardsVector(vx, vy)
-	u.setPhysicalCenterCoords(
-		u.centerX+newSpeed*vx,
-		u.centerY+newSpeed*vy,
-	)
+	u.approachTrueCoordinatesAsAir(targetTrueX, targetTrueY, newSpeed)
 }
 
 func (b *battlefield) executeAirApproachTargetActorActionForUnit(u *unit) {
 	const rangeToDropSpeed = 1
 	targetTrueX, targetTrueY := u.currentAction.targetActor.getPhysicalCenterCoords()
 	targetTileX, targetTileY := geometry.TrueCoordsToTileCoords(targetTrueX, targetTrueY)
-	apx, apy := u.getPhysicalCenterCoords()
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
 	if geometry.GetApproxDistFromTo(atx, aty, targetTileX, targetTileY) >= rangeToDropSpeed {
 		b.executeMoveActionForUnit(u)
 		return
 	}
 	u.rotateChassisTowardsDegree(u.currentAction.targetActor.(*unit).chassisDegree)
-	if areFloatsAlmostEqual(targetTrueX, apx) && areFloatsAlmostEqual(targetTrueY, apy) {
-		u.currentAction.reset()
-		return
-	}
 	newSpeed := 3 * u.getStaticData().movementSpeed / 4
-
-	vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
-	u.setPhysicalCenterCoords(
-		u.centerX+newSpeed*vx,
-		u.centerY+newSpeed*vy,
-	)
+	u.approachTrueCoordinatesAsAir(targetTrueX, targetTrueY, newSpeed)
 }
 
 func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
