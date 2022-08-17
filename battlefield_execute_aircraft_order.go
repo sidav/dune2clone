@@ -31,7 +31,7 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 		debugWrite("PICK ORDER SET")
 		carrier.currentAction.code = ACTION_AIR_PICK_UNIT_UP
 		carrier.currentAction.targetActor = targetUnit
-	} else {
+	} else { // already picked up
 		if carrier.isPresentAt(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) {
 			debugWrite("DROP ACTION SET")
 			carrier.currentAction.code = ACTION_AIR_DROP_UNIT

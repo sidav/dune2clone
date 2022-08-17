@@ -37,6 +37,10 @@ func (b *battlefield) executeActionForActor(a actor) {
 		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
 			b.executeAirApproachLandTileActionForUnit(u)
 		}
+	case ACTION_AIR_APPROACH_ACTOR:
+		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
+			b.executeAirApproachTargetActorActionForUnit(u)
+		}
 	case ACTION_AIR_PICK_UNIT_UP:
 		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
 			b.executeAirPickUnitUpActionForUnit(u)
