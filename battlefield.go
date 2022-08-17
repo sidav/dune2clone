@@ -39,12 +39,13 @@ func (b *battlefield) performResourceGrowth() {
 				growX, growY := geometry.SpiralSearchForConditionFrom(
 					func(x, y int) bool {
 						return b.areTileCoordsValid(x, y) && b.tiles[x][y].getStaticData().canHaveResources &&
-							b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX
+							b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX &&
+							geometry.GetApproxDistFromTo(tx, ty, x, y) <= RESOURCES_GROWTH_RADIUS
 					},
-					tx, ty, 99, rnd.Rand(4),
+					tx, ty, RESOURCES_GROWTH_RADIUS, rnd.Rand(4),
 					)
 				if growX != -1 {
-					b.tiles[growX][growY].resourcesAmount += rnd.Rand(RESOURCE_IN_TILE_POOR_MAX)
+					b.tiles[growX][growY].resourcesAmount += rnd.RandInRange(RESOURCES_GROWTH_MIN, RESOURCES_GROWTH_MAX)
 				}
 			}
 		}
