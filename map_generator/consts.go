@@ -1,8 +1,13 @@
 package map_generator
 
+type tileCode int
+
 const (
-	SAND              = iota
+	SAND tileCode = iota
 	BUILDABLE_TERRAIN
-	RESOURCES
+	RICH_RESOURCES
+	MEDIUM_RESOURCES
+	POOR_RESOURCES
 	ROCKS
+	RESOURCE_VEIN
 )

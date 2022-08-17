@@ -15,6 +15,7 @@ const (
 	TILE_BUILDABLE
 	TILE_ROCK
 	TILE_CONCRETE
+	TILE_RESOURCE_VEIN
 )
 
 type tileStaticData struct {
@@ -30,5 +31,9 @@ var sTableTiles = map[int]*tileStaticData{
 	TILE_BUILDABLE: {
 		spriteCodes:  []string{"buildable1"},
 		canBuildHere: true,
+	},
+	TILE_RESOURCE_VEIN: {
+		spriteCodes:  []string{"resourcevein"},
+		canBuildHere: false,
 	},
 }

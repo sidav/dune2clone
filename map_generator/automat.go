@@ -1,8 +1,8 @@
 package map_generator
 
 type automat struct {
-	drawsChar                                int
-	canDrawOn                                []int
+	drawsChar                                tileCode
+	canDrawOn                                []tileCode
 	totalDraws, desiredTotalDraws, drawTries int
 	x, y                                     int
 	symmV, symmH                             bool

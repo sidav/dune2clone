@@ -13,14 +13,14 @@ func SetRandom(r *fibrandom.FibRandom) {
 }
 
 type GameMap struct {
-	Tiles       [][]int
+	Tiles       [][]tileCode
 	StartPoints [][2]int
 }
 
 func (gm *GameMap) init(w, h int) {
-	gm.Tiles = make([][]int, w)
+	gm.Tiles = make([][]tileCode, w)
 	for i := range gm.Tiles {
-		gm.Tiles[i] = make([]int, h)
+		gm.Tiles[i] = make([]tileCode, h)
 		for j := range gm.Tiles[i] {
 			gm.Tiles[i][j] = SAND
 		}
@@ -58,7 +58,7 @@ func (gm *GameMap) Generate(w, h int) {
 		gm.performNAutomatasLike(3,
 			automat{
 				drawsChar:         BUILDABLE_TERRAIN,
-				canDrawOn:         []int{SAND},
+				canDrawOn:         []tileCode{SAND},
 				desiredTotalDraws: 250,
 				symmV:             symmV,
 				symmH:             symmH,
@@ -68,9 +68,39 @@ func (gm *GameMap) Generate(w, h int) {
 
 		gm.performNAutomatasLike(20,
 			automat{
-				drawsChar:         RESOURCES,
-				canDrawOn:         []int{SAND},
+				drawsChar:         POOR_RESOURCES,
+				canDrawOn:         []tileCode{SAND},
 				desiredTotalDraws: 25,
+				symmV:             symmV,
+				symmH:             symmH,
+			},
+			fromx, fromy, tox, toy,
+		)
+		gm.performNAutomatasLike(10,
+			automat{
+				drawsChar:         MEDIUM_RESOURCES,
+				canDrawOn:         []tileCode{POOR_RESOURCES},
+				desiredTotalDraws: 25,
+				symmV:             symmV,
+				symmH:             symmH,
+			},
+			fromx, fromy, tox, toy,
+		)
+		gm.performNAutomatasLike(5,
+			automat{
+				drawsChar:         RICH_RESOURCES,
+				canDrawOn:         []tileCode{MEDIUM_RESOURCES},
+				desiredTotalDraws: 25,
+				symmV:             symmV,
+				symmH:             symmH,
+			},
+			fromx, fromy, tox, toy,
+		)
+		gm.performNAutomatasLike(5,
+			automat{
+				drawsChar:         RESOURCE_VEIN,
+				canDrawOn:         []tileCode{RICH_RESOURCES},
+				desiredTotalDraws: 1,
 				symmV:             symmV,
 				symmH:             symmH,
 			},
@@ -80,7 +110,7 @@ func (gm *GameMap) Generate(w, h int) {
 		gm.performNAutomatasLike(10,
 			automat{
 				drawsChar:         ROCKS,
-				canDrawOn:         []int{BUILDABLE_TERRAIN},
+				canDrawOn:         []tileCode{BUILDABLE_TERRAIN},
 				desiredTotalDraws: 3,
 				symmV:             symmV,
 				symmH:             symmH,

@@ -21,7 +21,11 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 			switch gm.Tiles[x][y] {
 			case map_generator.SAND:
 				color = rl.Orange
-			case map_generator.RESOURCES:
+			case map_generator.RESOURCE_VEIN:
+				color = rl.Black
+			case map_generator.POOR_RESOURCES, map_generator.MEDIUM_RESOURCES:
+				color = rl.Purple
+			case map_generator.RICH_RESOURCES:
 				color = rl.DarkPurple
 			default:
 				color = rl.Brown
