@@ -31,6 +31,26 @@ func (b *battlefield) areTileCoordsValid(x, y int) bool {
 	return x >= 0 && y >= 0 && x < len(b.tiles) && y < len(b.tiles[0])
 }
 
+func (b *battlefield) performResourceGrowth() {
+	for tx := range b.tiles {
+		for ty := range b.tiles[tx] {
+			if b.tiles[tx][ty].getStaticData().growsResources {
+				// select resource tile to grow
+				growX, growY := geometry.SpiralSearchForConditionFrom(
+					func(x, y int) bool {
+						return b.areTileCoordsValid(x, y) && b.tiles[x][y].getStaticData().canHaveResources &&
+							b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX
+					},
+					tx, ty, 99, rnd.Rand(4),
+					)
+				if growX != -1 {
+					b.tiles[growX][growY].resourcesAmount += rnd.Rand(RESOURCE_IN_TILE_POOR_MAX)
+				}
+			}
+		}
+	}
+}
+
 func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 	switch a.(type) {
 	case *unit:

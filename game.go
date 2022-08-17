@@ -52,6 +52,10 @@ func (g *game) startGame() {
 			}
 		}
 
+		if g.battlefield.currentTick % RESOURCES_GROW_EACH_TICK == 0 {
+			g.battlefield.performResourceGrowth()
+		}
+
 		// execute actions
 		timeLogicStarted = time.Now()
 		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 0 {
