@@ -15,7 +15,7 @@ func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, bgColor, t
 	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2
 	rl.DrawText(title, titlePosition-1, y+1, textSize, textColor)
 	infoPosition := x + titleBoxW + int32(len(info))*textCharW/3
-	rl.DrawText(info, infoPosition, y+1, textSize, textColor)
+	rl.DrawText(info, infoPosition-textCharW/5, y+1, textSize, textColor)
 }
 
 func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.Color) {

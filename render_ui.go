@@ -33,7 +33,7 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 		energyBgColor = rl.Red
 		energyFgColor = rl.Black
 	}
-	r.drawLineInfoBox(WINDOW_W-300, 32, 300, "ENERGY", energyStr, energyBgColor, energyFgColor)
+	r.drawLineInfoBox(WINDOW_W-350, 32, 350, "ENERGY", energyStr, energyBgColor, energyFgColor)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
