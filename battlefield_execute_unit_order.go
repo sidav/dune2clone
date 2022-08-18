@@ -91,7 +91,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	if (b.currentTick/30)%2 == 0 || u.currentOrder.targetActor == nil ||
 		u.currentOrder.targetActor.(*building).unitPlacedInside != nil {
 
-		u.currentOrder.targetActor = b.getClosestEmptyFactionRefineryFromCoords(u.faction, u.centerX, u.centerY)
+		u.currentOrder.targetActor = b.getClosestEmptyFactionRefineryFromCoords(u.faction, utx, uty)
 	}
 	if u.currentOrder.targetActor == nil {
 		// nothing found, doing nothing

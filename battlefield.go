@@ -150,16 +150,16 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 	return nil
 }
 
-func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y float64) actor {
+func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y int) actor {
 	var selected actor = nil
-	closestDist := math.MaxFloat64
+	closestDist := math.MaxInt64
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
 			continue
 		}
-		bldCX, bldCY := bld.getPhysicalCenterCoords()
-		distFromBld := geometry.SquareDistanceFloat64(x, y, bldCX, bldCY)
+		bldCX, bldCY := bld.getUnitPlacementCoords()
+		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
 		if selected == nil || distFromBld < closestDist {
 			closestDist = distFromBld
 			selected = bld
@@ -225,7 +225,7 @@ func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	for i := b.units.Front(); i != nil; i = i.Next() {
 		u := i.Value.(*unit)
 		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
-		if geometry.AreCoordsInRange(tx, ty, x, y, r) {
+		if geometry.GetApproxDistFromTo(tx, ty, x, y) <= r {
 			lst.PushBack(u)
 		}
 	}
