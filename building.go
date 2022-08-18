@@ -90,7 +90,7 @@ type buildingStatic struct {
 	turretCode int
 
 	receivesResources bool // is refinery
-	// CanUnitBePlacedHere            bool // Removed for now, as duplicated by receivesResources
+	// CanUnitBePlacedHere            bool // Removed, implemented in method
 	unitPlacementX, unitPlacementY int // tile coords for placed unit draw
 
 	givesFreeUnitOnCreation   bool
@@ -103,6 +103,10 @@ type buildingStatic struct {
 
 	// ui-only things:
 	hotkeyToBuild string
+}
+
+func (bs *buildingStatic) canUnitBePlacedIn() bool {
+	return bs.receivesResources // TODO: update when needed
 }
 
 const (

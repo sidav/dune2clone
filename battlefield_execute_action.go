@@ -163,6 +163,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 		u.centerX = targetX
 		u.centerY = targetY
 		u.currentAction.reset()
+		return
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
 	}
 	// rotate to target if needed
@@ -178,6 +179,26 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	}
 	if math.Abs(vy) > u.getStaticData().movementSpeed {
 		displacementY = u.getStaticData().movementSpeed * vy / math.Abs(vy)
+	}
+
+	currTx, currTy := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	currTcx, currTcy := geometry.TileCoordsToPhysicalCoords(currTx, currTy)
+	// if we're passing through tile center by our movement...
+	if math.Signbit(currTcx-u.centerX) != math.Signbit(currTcx-u.centerX-displacementX) ||
+		math.Signbit(currTcy-u.centerY) != math.Signbit(currTcy-u.centerY-displacementY) ||
+		// ...or we're starting from this center...
+		areFloatsRoughlyEqual(x, currTcx) && areFloatsRoughlyEqual(y, currTcy) {
+
+		intVx, intVy := geometry.Float64VectorToIntDirectionVector(vx, vy)
+		//debugWritef("Checking: %d, %d ", currTx+intVx, currTy+intVy)
+		//debugWritef("Having %v,%v from cooords %v,%v \n", intVx, intVy, currTx, currTy)
+		// ...then check if there is something on "next" tile.
+		if !b.isTileClearToBeMovedInto(currTx+intVx, currTy+intVy, u) {
+			// If so, stand by.
+			u.centerX, u.centerY = currTcx, currTcy
+			u.currentAction.reset()
+			return
+		}
 	}
 
 	u.centerX += displacementX

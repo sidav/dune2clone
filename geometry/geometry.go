@@ -194,6 +194,23 @@ func VectorToUnitVectorFloat64(vx, vy float64) (float64, float64) {
 	return vx, vy
 }
 
+func Float64VectorToIntDirectionVector(vx, vy float64) (int, int) {
+	intVx, intVy := 0, 0
+	if vx < 0 {
+		intVx = int(vx-0.5)
+	}
+	if vx > 0 {
+		intVx = int(vx+0.5)
+	}
+	if vy < 0 {
+		intVy = int(vy-0.5)
+	}
+	if vy > 0 {
+		intVy = int(vy+0.5)
+	}
+	return intVx, intVy
+}
+
 func AreCoordsInTileRect(x, y, rx, ry, w, h int) bool {
 	return x >= rx && x < rx+w && y >= ry && y < ry+h
 }

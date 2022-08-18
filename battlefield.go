@@ -175,14 +175,20 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if bld.isPresentAt(x, y) {
-			if bld.unitPlacedInside == nil {
+			if bld.unitPlacedInside == nil && bld.getStaticData().canUnitBePlacedIn() {
 				px, py := bld.getUnitPlacementCoords()
 				if px == x && py == y {
 					continue
 				}
 			}
+			//debugWritef("   DENIED: building with coords %d,%d and w,h %d,%d has %v in present at %d, %d!\n",
+			//	bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, bld.isPresentAt(x, y), x, y,
+			//	)
 			return false
 		}
+		//debugWritef("    APPROVED: building with coords %d,%d and w,h %d,%d has %v in present at %d, %d!\n",
+		//	bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, bld.isPresentAt(x, y), x, y,
+		//)
 	}
 	for i := b.units.Front(); i != nil; i = i.Next() {
 		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
@@ -197,8 +203,8 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 			return false
 		}
 		if unt.currentAction.code == ACTION_MOVE {
-			// x, y := geometry.TrueCoordsToTileCoords(unt.centerX, unt.centerY)
-			if unt.currentAction.targetTileX == x && unt.currentAction.targetTileY == y {
+			ux, uy := geometry.TrueCoordsToTileCoords(unt.centerX, unt.centerY)
+			if ux+sign(unt.currentAction.targetTileX-ux) == x && uy+sign(unt.currentAction.targetTileY-uy) == y {
 				return false
 			}
 		}

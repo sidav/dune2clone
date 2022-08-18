@@ -55,7 +55,7 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 			rl.DrawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
 				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
 		}
-		rl.DrawText(fmt.Sprintf("Rotation: %d", u.chassisDegree),
+		rl.DrawText(fmt.Sprintf("(%.1f, %.1f); Rotation: %d", u.centerX, u.centerY, u.chassisDegree),
 			x+15, y+(UI_FONT_SIZE*2), UI_FONT_SIZE, rl.Green)
 	}
 
