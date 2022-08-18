@@ -206,7 +206,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode:    "air_gunship",
 		maxHitpoints:         50,
 		movementSpeed:        0.25,
-		turretCode:           TRT_NONE,
+		turretCode:           TRT_AIR_GUNSHIP,
 		chassisRotationSpeed: 3,
 		cost:                 500,
 		buildTime:            1,

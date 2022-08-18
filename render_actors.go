@@ -128,7 +128,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 
 	// get sprites
 	var sprites []rl.Texture2D
-	if u.turret != nil && u.turret.canRotate() {
+	if u.turret != nil && u.turret.getStaticData().spriteCode != "" {
 		sprites = []rl.Texture2D{
 			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
 			turretsAtlaces[u.turret.getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),

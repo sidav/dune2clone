@@ -24,7 +24,7 @@ func (t *turret) normalizeDegrees() {
 }
 
 type turretStatic struct {
-	spriteCode  string
+	spriteCode  string // empty means invisible turret
 	rotateSpeed int
 
 	fireRange, attackCooldown int
@@ -40,6 +40,7 @@ const (
 	TRT_TANK
 	TRT_MSLTANK
 	TRT_QUAD
+	TRT_AIR_GUNSHIP
 	TRT_CANNON_BUILDING
 	TRT_MINIGUN_BUILDING
 	TRT_BUILDING_FORTRESS
@@ -75,6 +76,16 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.3,
 		attackCooldown:        5,
 		projectileDamage:      1,
+	},
+	TRT_AIR_GUNSHIP: {
+		spriteCode:            "",
+		firesProjectileOfCode: PRJ_SHELL,
+		rotateSpeed:           180,
+		fireRange:             6,
+		fireSpreadDegrees:     15,
+		shotRangeSpread:       2.0,
+		attackCooldown:        15,
+		projectileDamage:      10,
 	},
 	TRT_MINIGUN_BUILDING: {
 		spriteCode:            "bld_turret_minigun",
