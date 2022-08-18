@@ -159,29 +159,29 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
 	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := targetX-x, targetY-y
-	if areFloatsAlmostEqual(x, targetX) && areFloatsAlmostEqual(y, targetY) {
+	if areFloatsRoughlyEqual(x, targetX) && areFloatsRoughlyEqual(y, targetY) {
 		u.centerX = targetX
 		u.centerY = targetY
 		u.currentAction.reset()
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
 	}
-
+	// rotate to target if needed
 	if !geometry.IsVectorDegreeEqualTo(vx, vy, u.chassisDegree) {
 		u.rotateChassisTowardsVector(vx, vy)
 		return
 	}
 
-	if math.Abs(vx) < u.getStaticData().movementSpeed {
-		u.centerX = targetX // source of possible movement lag :(
-	} else {
-		u.centerX += u.getStaticData().movementSpeed * vx / math.Abs(vx)
+	displacementX, displacementY := vx, vy
+
+	if math.Abs(vx) > u.getStaticData().movementSpeed {
+		displacementX = u.getStaticData().movementSpeed * vx / math.Abs(vx)
+	}
+	if math.Abs(vy) > u.getStaticData().movementSpeed {
+		displacementY = u.getStaticData().movementSpeed * vy / math.Abs(vy)
 	}
 
-	if math.Abs(vy) < u.getStaticData().movementSpeed {
-		u.centerY = targetY // source of possible movement lag :(
-	} else {
-		u.centerY += u.getStaticData().movementSpeed * vy / math.Abs(vy)
-	}
+	u.centerX += displacementX
+	u.centerY += displacementY
 }
 
 func (b *battlefield) executeBuildActionForActor(a actor) {

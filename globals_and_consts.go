@@ -55,6 +55,10 @@ func areFloatsAlmostEqual(f, g float64) bool {
 	return math.Abs(f-g) < 0.0001
 }
 
+func areFloatsRoughlyEqual(f, g float64) bool {
+	return math.Abs(f-g) < 0.01
+}
+
 func debugWrite(msg string) {
 	if DEBUG_OUTPUT {
 		fmt.Println(msg)
