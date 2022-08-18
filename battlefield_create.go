@@ -60,14 +60,15 @@ func (b *battlefield) finalizeTileVariants() {
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for spNumber := range startPoints {
-		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 2))
+		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 2, 1))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		b.addActor(createBuilding(BLD_BASE, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
 	b.factions[0].resourcesMultiplier = 1 // for player
-	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
+	b.factions[0].buildSpeedMultiplier = 1
+	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	// b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
 
 	// unt := createUnit(AIR_TRANSPORT, startPoints[0][0], startPoints[0][1], b.factions[0])

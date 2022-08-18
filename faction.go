@@ -13,21 +13,23 @@ type faction struct {
 	money                               float64 // float because of division when spending
 	energyProduction, energyConsumption int
 
-	team                int // 0 means "enemy to all"
-	resourcesMultiplier float64
+	team                 int // 0 means "enemy to all"
+	resourcesMultiplier  float64
+	buildSpeedMultiplier float64
 
 	exploredTilesMap, visibleTilesMap [][]bool
 
-	dispatchRequests                  list.List
+	dispatchRequests list.List
 }
 
-func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier float64) *faction {
+func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier, buildSpeedMultiplier float64) *faction {
 	f := &faction{
-		colorNumber:         colorNumber,
-		money:               initialMoney,
-		energyProduction:    999, // will be overwritten anyway
-		team:                team,
-		resourcesMultiplier: resourcesMultiplier,
+		colorNumber:          colorNumber,
+		money:                initialMoney,
+		energyProduction:     999, // will be overwritten anyway
+		team:                 team,
+		resourcesMultiplier:  resourcesMultiplier,
+		buildSpeedMultiplier: buildSpeedMultiplier,
 	}
 	return f
 }
@@ -92,13 +94,13 @@ func (f *faction) getAvailableEnergy() int {
 
 func (f *faction) getEnergyProductionMultiplier() float64 {
 	if f.energyProduction >= f.energyConsumption {
-		return 1.0
+		return f.buildSpeedMultiplier
 	}
 	factor := float64(f.energyProduction) / float64(f.energyConsumption)
 	if factor < 0.25 {
 		factor = 0.25
 	}
-	return factor
+	return factor*f.buildSpeedMultiplier
 }
 
 func (f *faction) spendMoney(spent float64) {
