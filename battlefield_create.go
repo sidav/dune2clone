@@ -66,8 +66,12 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		b.addActor(createBuilding(BLD_BASE, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
-	b.factions[0].resourcesMultiplier = 1 // for player
+	// player faction settings
+	b.factions[0].resourcesMultiplier = 1
 	b.factions[0].buildSpeedMultiplier = 1
+	// b.factions[0].visibilityCheat = true
+	// b.factions[0].explorationCheat = true
+
 	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	// b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
 

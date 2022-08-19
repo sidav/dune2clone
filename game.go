@@ -152,7 +152,7 @@ func (g *game) startGame() {
 					bld.faction.energyProduction += bld.getStaticData().givesEnergy
 					bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
 					bld.faction.resourceStorage += bld.getStaticData().storageAmount
-					bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 3) // TODO: change to actual building vision
+					bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 4) // TODO: change to actual building vision
 				}
 			}
 		}

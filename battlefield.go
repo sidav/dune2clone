@@ -63,14 +63,12 @@ func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 		if !b.areTileCoordsValid(x, y) {
 			return false
 		}
-		return f.visibleTilesMap[x][y]
+		return f.seesTileAtCoords(x, y)
 	case *building:
 		bld := a.(*building)
 		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
 			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
-				if f.visibleTilesMap[tx][ty] {
-					return true
-				}
+				return f.seesTileAtCoords(tx, ty)
 			}
 		}
 	default:

@@ -18,6 +18,7 @@ type faction struct {
 	buildSpeedMultiplier float64
 
 	exploredTilesMap, visibleTilesMap [][]bool
+	explorationCheat, visibilityCheat bool
 
 	dispatchRequests list.List
 }
@@ -60,6 +61,14 @@ func (f *faction) resetVisibilityMaps(mapW, mapH int) {
 	//}
 }
 
+func (f *faction) isTileAtCoordsExplored(x, y int) bool {
+	return f.explorationCheat || f.visibilityCheat || f.exploredTilesMap[x][y]
+}
+
+func (f *faction) seesTileAtCoords(x, y int) bool {
+	return f.visibilityCheat || f.visibleTilesMap[x][y]
+}
+
 func (f *faction) exploreAround(tileX, tileY, fromW, fromH, radius int) {
 	for x := tileX - radius; x < tileX+fromW+radius; x++ {
 		for y := tileY - radius; y < tileY+fromH+radius; y++ {
@@ -100,7 +109,7 @@ func (f *faction) getEnergyProductionMultiplier() float64 {
 	if factor < 0.25 {
 		factor = 0.25
 	}
-	return factor*f.buildSpeedMultiplier
+	return factor * f.buildSpeedMultiplier
 }
 
 func (f *faction) spendMoney(spent float64) {

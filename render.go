@@ -75,11 +75,11 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	if !pc.controlledFaction.exploredTilesMap[x][y] {
+	if !pc.controlledFaction.isTileAtCoordsExplored(x, y) {
 		// rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		return
 	}
-	if pc.controlledFaction.visibleTilesMap[x][y] {
+	if pc.controlledFaction.seesTileAtCoords(x, y) {
 		rl.DrawTexture(
 			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
 			osx,
@@ -108,6 +108,20 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 			osy,
 			FOG_OF_WAR_TINT,
 		)
+		if t.resourcesAmount > 0 {
+			resourceTileAtlasName := "melangerich"
+			if t.resourcesAmount <= RESOURCE_IN_TILE_POOR_MAX {
+				resourceTileAtlasName = "melangepoor"
+			} else if t.resourcesAmount <= RESOURCE_IN_TILE_MEDIUM_MAX {
+				resourceTileAtlasName = "melangemedium"
+			}
+			rl.DrawTexture(
+				tilesAtlaces[resourceTileAtlasName].atlas[0][0],
+				osx,
+				osy,
+				FOG_OF_WAR_TINT,
+			)
+		}
 	}
 
 }

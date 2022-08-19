@@ -61,7 +61,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 		for x := range b.tiles {
 			for y := range b.tiles[x] {
 				color := rl.Magenta
-				if pc.controlledFaction.exploredTilesMap[x][y] {
+				if pc.controlledFaction.isTileAtCoordsExplored(x, y) {
 					switch b.tiles[x][y].code {
 					case TILE_SAND:
 						color = rl.Orange
@@ -73,7 +73,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 					default:
 						color = rl.Magenta
 					}
-					if !pc.controlledFaction.visibleTilesMap[x][y] {
+					if !pc.controlledFaction.seesTileAtCoords(x, y) {
 						color.R /= 3
 						color.G /= 3
 						color.B /= 3
