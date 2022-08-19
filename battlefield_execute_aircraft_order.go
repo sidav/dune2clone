@@ -9,11 +9,13 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 	i := u.faction.dispatchRequests.Front()
 	if i != nil {
 		dr := i.Value.(*dispatchRequestStruct)
-		u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
-		u.currentOrder.targetActor = dr.requester
-		u.currentOrder.code = dr.assignedOrderCode
-		u.faction.removeDispatchRequest(dr)
-		return
+		if dr.assignedOrderCode == ORDER_CARRY_UNIT_TO_TARGET_COORDS && u.getStaticData().isTransport {
+			u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
+			u.currentOrder.targetActor = dr.requester
+			u.currentOrder.code = dr.assignedOrderCode
+			u.faction.removeDispatchRequest(dr)
+			return
+		}
 	}
 }
 

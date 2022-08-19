@@ -134,7 +134,8 @@ type unitStatic struct {
 
 	defaultOrderOnCreation orderCode
 
-	isAircraft bool
+	isAircraft  bool
+	isTransport bool
 
 	cost          int
 	buildTime     int // seconds
@@ -200,6 +201,7 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            1,
 		hotkeyToBuild:        "C",
 		isAircraft:           true,
+		isTransport:          true,
 	},
 	AIR_GUNSHIP: {
 		displayedName:        "Gunship",
