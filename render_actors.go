@@ -126,27 +126,36 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		r.renderUnit(b, pc, u.carriedUnit)
 	}
 
-	// get sprites
-	var sprites []rl.Texture2D
-	if u.turret != nil && u.turret.getStaticData().spriteCode != "" {
-		sprites = []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
-			turretsAtlaces[u.turret.getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turret.rotationDegree, 0),
+	// draw chassis sprite
+	rl.DrawTexture(
+		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+		osx,
+		osy,
+		DEFAULT_TINT,
+	)
+	// draw turrets
+	for turrIndex := range u.turrets {
+		if u.turrets[turrIndex].getStaticData().spriteCode == "" {
+			continue
 		}
-	} else {
-		sprites = []rl.Texture2D{
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+		usd := u.getStaticData()
+		// calculate turret displacement
+		dsplX, dsplY := usd.turretsData[turrIndex].turretCenterX, usd.turretsData[turrIndex].turretCenterY
+		if dsplX != 0 || dsplY != 0 {
+			// rotate according to units face
+			chassisShownDegree := geometry.SnapDegreeToFixedDirections(u.chassisDegree, 8)
+			dsplX, dsplY = geometry.RotateFloat64Vector(dsplX, dsplY, chassisShownDegree)
 		}
-	}
-	// draw sprites
-	for _, s := range sprites {
+		turrOsX, turrOsY := r.physicalToOnScreenCoords(x+dsplX, y+dsplY)
+		sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turrets[turrIndex].rotationDegree, 0)
 		rl.DrawTexture(
-			s,
-			osx,
-			osy,
+			sprite,
+			turrOsX-sprite.Width/2,
+			turrOsY-sprite.Height/2,
 			DEFAULT_TINT,
 		)
 	}
+
 	if u.currentHitpoints < u.getStaticData().maxHitpoints {
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getStaticData().maxHitpoints,
 			&factionColors[u.getFaction().colorNumber])

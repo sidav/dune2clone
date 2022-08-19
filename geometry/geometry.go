@@ -46,6 +46,21 @@ func CirclesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
 	return false
 }
 
+func RotateFloat64Vector(vx, vy float64, degrees int) (float64, float64) {
+	// 6.283185307179586 is 2*pi
+	radians := float64(degrees) * 6.283185307179586 / degreesInCircleFloat
+	t := vx
+	vx = vx*math.Cos(radians) - vy*math.Sin(radians)
+	vy = t*math.Sin(radians) - vy*math.Cos(radians)
+	return vx, vy
+}
+
+func SnapDegreeToFixedDirections(degree, totalDirectionsInCircle int) int {
+	sectorSize := degreesInCircleInt / totalDirectionsInCircle
+	index := (degree + sectorSize/2) / sectorSize
+	return NormalizeDegree(index * sectorSize)
+}
+
 func DegreeToRotationFrameNumber(degree, sectorsInCircle int) int {
 	sectorWidth := degreesInCircleInt / sectorsInCircle
 	degree += sectorWidth / 2
@@ -197,16 +212,16 @@ func VectorToUnitVectorFloat64(vx, vy float64) (float64, float64) {
 func Float64VectorToIntDirectionVector(vx, vy float64) (int, int) {
 	intVx, intVy := 0, 0
 	if vx < 0 {
-		intVx = int(vx-0.5)
+		intVx = int(vx - 0.5)
 	}
 	if vx > 0 {
-		intVx = int(vx+0.5)
+		intVx = int(vx + 0.5)
 	}
 	if vy < 0 {
-		intVy = int(vy-0.5)
+		intVy = int(vy - 0.5)
 	}
 	if vy > 0 {
-		intVy = int(vy+0.5)
+		intVy = int(vy + 0.5)
 	}
 	return intVx, intVy
 }

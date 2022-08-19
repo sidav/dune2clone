@@ -8,7 +8,7 @@ type unit struct {
 	code             int
 	centerX, centerY float64
 	faction          *faction
-	turret           *turret // maybe turrets array?..
+	turrets          []*turret // maybe turrets array?..
 	currentAction    action
 	currentOrder     order
 	currentHitpoints int
@@ -23,19 +23,20 @@ type unit struct {
 
 func createUnit(code, tx, ty int, fact *faction) *unit {
 	cx, cy := geometry.TileCoordsToPhysicalCoords(tx, ty)
-	var turr *turret
-	if sTableUnits[code].turretCode != TRT_NONE {
-		turr = &turret{code: sTableUnits[code].turretCode, rotationDegree: 270}
-	}
 	u := &unit{
 		code:             code,
 		centerX:          cx,
 		centerY:          cy,
 		currentHitpoints: sTableUnits[code].maxHitpoints,
 		faction:          fact,
-		turret:           turr,
 		chassisDegree:    270,
 	}
+	if sTableUnits[code].turretsData != nil {
+		for i := range sTableUnits[code].turretsData {
+			u.turrets = append(u.turrets, &turret{code: sTableUnits[code].turretsData[i].turretCode, rotationDegree: 270})
+		}
+	}
+
 	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
 	u.currentOrder.targetTileX = -1
 	u.currentOrder.targetTileY = -1
@@ -79,8 +80,8 @@ func (u *unit) getFaction() *faction {
 
 func (u *unit) normalizeDegrees() {
 	u.chassisDegree = geometry.NormalizeDegree(u.chassisDegree)
-	if u.turret != nil {
-		u.turret.normalizeDegrees()
+	for i := range u.turrets {
+		u.turrets[i].normalizeDegrees()
 	}
 }
 
@@ -95,8 +96,8 @@ func (u *unit) rotateChassisTowardsDegree(deg int) {
 	}
 	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, deg, u.getStaticData().chassisRotationSpeed)
 	u.chassisDegree += rotateSpeed
-	if u.turret != nil {
-		u.turret.rotationDegree += rotateSpeed
+	for i := range u.turrets {
+		u.turrets[i].rotationDegree += rotateSpeed
 	}
 	u.normalizeDegrees()
 	if u.carriedUnit != nil {

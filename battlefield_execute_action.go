@@ -79,8 +79,8 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 		}
 	} else {
 		// rotate the unit to target if unit's turret can't rotate itself
-		if u.turret != nil && !u.turret.canRotate() && u.turret.targetActor != nil {
-			x, y := u.turret.targetActor.getPhysicalCenterCoords()
+		if u.turrets != nil && !u.turrets[0].canRotate() && u.turrets[0].targetActor != nil {
+			x, y := u.turrets[0].targetActor.getPhysicalCenterCoords()
 			x -= u.centerX
 			y -= u.centerY
 			u.rotateChassisTowardsVector(x, y)
@@ -138,11 +138,11 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 }
 
 func (b *battlefield) executeRotateActionForUnit(u *unit) {
-	if u.turret != nil && u.turret.canRotate() {
-		if u.turret.rotationDegree == u.currentAction.targetRotation {
+	if u.turrets != nil && !u.turrets[0].canRotate() {
+		if u.turrets[0].rotationDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
-		} else if u.turret.targetActor == nil {
-			u.turret.rotationDegree += geometry.GetDiffForRotationStep(u.turret.rotationDegree, u.currentAction.targetRotation, u.turret.getStaticData().rotateSpeed)
+		} else if u.turrets[0].targetActor == nil {
+			u.turrets[0].rotationDegree += geometry.GetDiffForRotationStep(u.turrets[0].rotationDegree, u.currentAction.targetRotation, u.turrets[0].getStaticData().rotateSpeed)
 			u.normalizeDegrees()
 		}
 	} else {

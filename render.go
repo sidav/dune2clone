@@ -144,7 +144,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 }
 
 func (r *renderer) renderEffect(e *effect) {
-	debugWritef("Percent is %d", e.getExpirationPercent(r.btl.currentTick))
+	// debugWritef("Percent is %d", e.getExpirationPercent(r.btl.currentTick))
 	if e.creationTick <= r.btl.currentTick && e.getExpirationPercent(r.btl.currentTick) <= 100 {
 		x, y := e.centerX, e.centerY
 		osx, osy := r.physicalToOnScreenCoords(x, y)

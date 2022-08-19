@@ -15,7 +15,7 @@ type unitStatic struct {
 	displayedName     string
 	chassisSpriteCode string
 
-	turretCode int
+	turretsData []unitStaticTurretsData
 
 	maxHitpoints int
 
@@ -34,35 +34,54 @@ type unitStatic struct {
 	hotkeyToBuild string
 }
 
+type unitStaticTurretsData struct {
+	turretCode                   int
+	turretCenterX, turretCenterY float64
+}
+
 var sTableUnits = map[int]*unitStatic{
 	UNT_QUAD: {
-		displayedName:        "Quad",
-		chassisSpriteCode:    "quad",
-		maxHitpoints:         75,
-		movementSpeed:        0.25,
-		turretCode:           TRT_QUAD,
+		displayedName:     "Quad",
+		chassisSpriteCode: "quad",
+		maxHitpoints:      75,
+		movementSpeed:     0.25,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode: TRT_QUAD,
+			},
+		},
 		chassisRotationSpeed: 7,
 		cost:                 350,
 		buildTime:            3,
 		hotkeyToBuild:        "Q",
 	},
 	UNT_TANK: {
-		displayedName:        "Super duper tank",
-		chassisSpriteCode:    "tank",
-		movementSpeed:        0.1,
-		maxHitpoints:         120,
-		turretCode:           TRT_TANK,
+		displayedName:     "Super duper tank",
+		chassisSpriteCode: "tank",
+		movementSpeed:     0.1,
+		maxHitpoints:      120,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode: TRT_TANK,
+			},
+		},
 		chassisRotationSpeed: 5,
 		cost:                 450,
 		buildTime:            7,
 		hotkeyToBuild:        "T",
 	},
 	UNT_MSLTANK: {
-		displayedName:        "Missile tank",
-		chassisSpriteCode:    "quad",
-		movementSpeed:        0.05,
-		maxHitpoints:         50,
-		turretCode:           TRT_MSLTANK,
+		displayedName:     "Missile tank",
+		chassisSpriteCode: "quad",
+		movementSpeed:     0.05,
+		maxHitpoints:      50,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode:    TRT_MSLTANK,
+				turretCenterX: 0,
+				turretCenterY: 0,
+			},
+		},
 		chassisRotationSpeed: 8,
 		cost:                 1150,
 		buildTime:            12,
@@ -75,7 +94,7 @@ var sTableUnits = map[int]*unitStatic{
 		maxCargoAmount:         700,
 		movementSpeed:          0.07,
 		maxHitpoints:           250,
-		turretCode:             TRT_NONE,
+		turretsData:            []unitStaticTurretsData{},
 		chassisRotationSpeed:   4,
 		cost:                   1600,
 		buildTime:              12,
@@ -87,7 +106,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode:    "air_transport",
 		maxHitpoints:         100,
 		movementSpeed:        0.2,
-		turretCode:           TRT_NONE,
+		turretsData:          []unitStaticTurretsData{},
 		chassisRotationSpeed: 5,
 		cost:                 500,
 		buildTime:            20,
@@ -96,11 +115,15 @@ var sTableUnits = map[int]*unitStatic{
 		isTransport:          true,
 	},
 	AIR_GUNSHIP: {
-		displayedName:        "Gunship",
-		chassisSpriteCode:    "air_gunship",
-		maxHitpoints:         50,
-		movementSpeed:        0.25,
-		turretCode:           TRT_AIR_GUNSHIP,
+		displayedName:     "Gunship",
+		chassisSpriteCode: "air_gunship",
+		maxHitpoints:      50,
+		movementSpeed:     0.25,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode: TRT_AIR_GUNSHIP,
+			},
+		},
 		chassisRotationSpeed: 3,
 		cost:                 500,
 		buildTime:            15,

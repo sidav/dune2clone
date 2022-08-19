@@ -8,7 +8,9 @@ import (
 func (b *battlefield) actorForActorsTurret(a actor) {
 	if a.getCurrentAction().code != ACTION_ROTATE {
 		if u, ok := a.(*unit); ok {
-			b.actTurret(a, u.turret)
+			for i := range u.turrets {
+				b.actTurret(a, u.turrets[i])
+			}
 		}
 		if bld, ok := a.(*building); ok {
 			// buildings' turrets won't shoot without energy
