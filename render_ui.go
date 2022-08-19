@@ -42,18 +42,18 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
 	// draw outline
 	r.drawOutlinedRect(x, y, 2*int32(WINDOW_W)/5, WINDOW_H/4, 2, rl.Green, rl.Black)
-	if pc.selection == nil {
+	if len(pc.selection) == 0 {
 		return
 	}
-	if u, ok := pc.selection.(*unit); ok {
+	if u, ok := pc.getFirstSelection().(*unit); ok {
 		rl.DrawText(fmt.Sprintf("%s (%s-%s)", u.getName(), u.currentOrder.getTextDescription(), u.getCurrentAction().getTextDescription()),
 			x+15, y+1, UI_FONT_SIZE, rl.Green)
 	} else {
-		rl.DrawText(fmt.Sprintf("%s (%s)", pc.selection.getName(), pc.selection.getCurrentAction().getTextDescription()),
+		rl.DrawText(fmt.Sprintf("%s (%s)", pc.getFirstSelection().getName(), pc.getFirstSelection().getCurrentAction().getTextDescription()),
 			x+15, y+1, UI_FONT_SIZE, rl.Green)
 	}
 
-	if u, ok := pc.selection.(*unit); ok {
+	if u, ok := pc.getFirstSelection().(*unit); ok {
 		if u.getStaticData().maxCargoAmount > 0 {
 			rl.DrawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
 				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
@@ -62,17 +62,17 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 			x+15, y+(UI_FONT_SIZE*2), UI_FONT_SIZE, rl.Green)
 	}
 
-	if bld, ok := pc.selection.(*building); ok {
+	if bld, ok := pc.getFirstSelection().(*building); ok {
 		r.renderSelectedBuildingUI(bld, x, y)
 	}
 
 }
 
 func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
-	if pc.selection.(*building).currentAction.targetActor == nil {
+	if pc.getFirstSelection().(*building).currentAction.targetActor == nil {
 		return
 	}
-	targetBuilding := pc.selection.(*building).currentAction.targetActor.(*building)
+	targetBuilding := pc.getFirstSelection().(*building).currentAction.targetActor.(*building)
 	tx, ty := pc.mouseCoordsToTileCoords()
 	_, _, w, h := targetBuilding.getDimensionsForConstructon()
 	color := rl.Red

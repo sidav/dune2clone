@@ -8,7 +8,7 @@ import (
 type playerController struct {
 	camTopLeftX, camTopLeftY int // real coords, in pixels
 	controlledFaction        *faction
-	selection                actor
+	selection                []actor
 	mode                     int
 	cursorW, cursorH         int
 	scrollCooldown           int
@@ -18,12 +18,12 @@ type playerController struct {
 	mouseDownCoordX, mouseDownCoordY float32
 }
 
-//func (pc *playerController) getFirstSelection() actor {
-//	if len(pc.selection) > 0 {
-//		return pc.selection[0]
-//	}
-//	return nil
-//}
+func (pc *playerController) getFirstSelection() actor {
+	if len(pc.selection) > 0 {
+		return pc.selection[0]
+	}
+	return nil
+}
 
 func (pc *playerController) playerControl(b *battlefield) {
 	// pc.mode = PCMODE_NONE
@@ -36,23 +36,25 @@ func (pc *playerController) playerControl(b *battlefield) {
 		if !b.areTileCoordsValid(tx, ty) {
 			return
 		}
-		if u, ok := pc.selection.(*unit); ok {
-			u.currentOrder.resetOrder()
-			u.currentOrder.targetTileX = tx
-			u.currentOrder.targetTileY = ty
-			u.currentOrder.code = ORDER_MOVE
-			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
-				u.currentOrder.code = ORDER_HARVEST
+		for i := range pc.selection {
+			if u, ok := pc.selection[i].(*unit); ok {
+				u.currentOrder.resetOrder()
+				u.currentOrder.targetTileX = tx
+				u.currentOrder.targetTileY = ty
+				u.currentOrder.code = ORDER_MOVE
+				if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
+					u.currentOrder.code = ORDER_HARVEST
+				}
 			}
 		}
-		if bld, ok := pc.selection.(*building); ok {
+		if bld, ok := pc.getFirstSelection().(*building); ok {
 			// set rally
 			if bld.getStaticData().produces != nil {
 				bld.rallyTileX, bld.rallytileY = tx, ty
 			}
 		}
 	}
-	if bld, ok := pc.selection.(*building); ok {
+	if bld, ok := pc.getFirstSelection().(*building); ok {
 		built := pc.GiveOrderToBuilding(b, bld)
 		if built {
 			return
@@ -63,15 +65,11 @@ func (pc *playerController) playerControl(b *battlefield) {
 	if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
 		pc.mouseDownForTicks = 0
 		actr := b.getActorAtTileCoordinates(tx, ty)
-		if pc.selection != nil {
-			// reset selection
-			pc.selection.markSelected(false)
-			pc.selection = nil
-		}
+		pc.deselect()
 		if actr != nil {
 			// set selection
 			actr.markSelected(true)
-			pc.selection = actr
+			pc.selection = []actor{actr}
 		}
 	}
 	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
@@ -183,6 +181,7 @@ func (pc *playerController) centerCameraAtTile(b *battlefield, tx, ty int) {
 }
 
 func (pc *playerController) elasticFrameSelect(b *battlefield) {
+	pc.deselect()
 	v := rl.GetMousePosition()
 	x, y := (pc.camTopLeftX+int(pc.mouseDownCoordX))/TILE_SIZE_IN_PIXELS, (pc.camTopLeftY+int(pc.mouseDownCoordY))/TILE_SIZE_IN_PIXELS
 	w, h := int(v.X-pc.mouseDownCoordX)/TILE_SIZE_IN_PIXELS, int(v.Y-pc.mouseDownCoordY)/TILE_SIZE_IN_PIXELS
@@ -197,11 +196,20 @@ func (pc *playerController) elasticFrameSelect(b *battlefield) {
 	}
 
 	actrs := b.getListOfActorsInTilesRect(x, y, w, h)
-	if actrs.Front() != nil {
-		actrs.Front().Value.(actor).markSelected(false)
-		pc.selection = actrs.Front().Value.(actor)
-		pc.selection.markSelected(true)
+	for i := actrs.Front(); i != nil; i = i.Next() {
+		i.Value.(actor).markSelected(true)
+		pc.selection = append(pc.selection, i.Value.(actor))
 	}
+}
+
+func (pc *playerController) deselect() {
+	if pc.selection == nil {
+		return
+	}
+	for i := range pc.selection {
+		pc.selection[i].markSelected(false)
+	}
+	pc.selection = []actor{}
 }
 
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
