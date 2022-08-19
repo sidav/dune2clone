@@ -128,7 +128,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 
 	// draw chassis sprite
 	rl.DrawTexture(
-		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].atlas[geometry.DegreeToRotationFrameNumber(u.chassisDegree, 8)][0],
+		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
 		osx,
 		osy,
 		DEFAULT_TINT,

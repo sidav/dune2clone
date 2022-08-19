@@ -134,7 +134,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 		return
 	}
 	sprite := projectilesAtlaces[proj.getStaticData().spriteCode][0].
-		atlas[geometry.DegreeToRotationFrameNumber(proj.rotationDegree, 8)][0]
+		getSpriteByDegreeAndFrameNumber(proj.rotationDegree, 0)
 	rl.DrawTexture(
 		sprite,
 		osx-sprite.Width/2,

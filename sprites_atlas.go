@@ -34,7 +34,9 @@ func (sa *spriteAtlas) getSpriteByDirectionAndFrameNumber(dx, dy, num int) rl.Te
 }
 
 func (sa *spriteAtlas) getSpriteByDegreeAndFrameNumber(degree, num int) rl.Texture2D {
-	rotFrame := geometry.DegreeToRotationFrameNumber(degree, len(sa.atlas))
+	rotFrame := geometry.DegreeToSectorNumber(degree, len(sa.atlas))
+	// +2 is because zero degree looks right, but first sprite in atlas looks up. +2 = +90degs.
+	rotFrame = (2+rotFrame) % len(sa.atlas)
 	num = num % len(sa.atlas[rotFrame])
 	return sa.atlas[rotFrame][num]
 }

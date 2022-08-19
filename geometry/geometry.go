@@ -61,17 +61,9 @@ func SnapDegreeToFixedDirections(degree, totalDirectionsInCircle int) int {
 	return NormalizeDegree(index * sectorSize)
 }
 
-func DegreeToRotationFrameNumber(degree, sectorsInCircle int) int {
-	sectorWidth := degreesInCircleInt / sectorsInCircle
-	degree += sectorWidth / 2
-	degree = NormalizeDegree(degree)
-	num := 0
-	for degree >= sectorWidth {
-		degree -= sectorWidth
-		num++
-	}
-	// +1 is because initial images look up (last frame number)
-	return (num + (degreesInCircleInt/4)/sectorWidth) % (degreesInCircleInt / sectorWidth)
+func DegreeToSectorNumber(degree, sectorsInCircle int) int {
+	sectorSize := degreesInCircleInt / sectorsInCircle
+	return (degree + sectorSize/2) / sectorSize
 }
 
 func GetDiffForRotationStep(currDegree, targetDegree, rotateSpeed int) int {
