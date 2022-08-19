@@ -97,7 +97,7 @@ func (r *renderer) renderElasticSelection(b *battlefield, pc *playerController) 
 	v := rl.GetMousePosition()
 	x, y := int32(pc.mouseDownCoordX), int32(pc.mouseDownCoordY)
 	w, h := int32(v.X- pc.mouseDownCoordX), int32(v.Y - pc.mouseDownCoordY)
-	debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
+	// debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
 	if w < 0 {
 		w = -w
 		x -= w
@@ -106,7 +106,7 @@ func (r *renderer) renderElasticSelection(b *battlefield, pc *playerController) 
 		h = -h
 		y -= h
 	}
-	debugWritef("Drawing %d, %d, %d, %d\n", x, y, w, h)
+	// debugWritef("Drawing %d, %d, %d, %d\n", x, y, w, h)
 	rl.DrawRectangleLines(x, y, w, h, rl.Gray)
 	rl.DrawRectangleLines(x+1, y+1, w-2, h-2, rl.White)
 	// rl.DrawLine(x+w-3, y+2, x+w-3, y+h-4, rl.Gray)

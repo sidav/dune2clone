@@ -10,7 +10,6 @@ type playerController struct {
 	controlledFaction        *faction
 	selection                []actor
 	mode                     int
-	cursorW, cursorH         int
 	scrollCooldown           int
 
 	// elastic frame related
@@ -73,10 +72,11 @@ func (pc *playerController) playerControl(b *battlefield) {
 		}
 	}
 	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+		// need to enable elastic selection?
 		if pc.mouseDownForTicks > 0 {
-			debugWritef("Mouse down for %d", pc.mouseDownForTicks)
+			// debugWritef("Mouse down for %d", pc.mouseDownForTicks)
 			if pc.isMouseMovedFromDownCoordinates() {
-				pc.mode = PCMODE_ELASTIC_SELECTION
+				pc.changeMode(PCMODE_ELASTIC_SELECTION)
 				return
 			}
 		} else {
@@ -87,8 +87,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 	if rl.IsMouseButtonReleased(rl.MouseLeftButton) {
 		if pc.mode == PCMODE_ELASTIC_SELECTION {
 			pc.elasticFrameSelect(b)
-			pc.mode = PCMODE_NONE
-			pc.mouseDownForTicks = 0
+			pc.changeMode(PCMODE_NONE)
 		}
 	}
 }
@@ -118,19 +117,17 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 			if _, ok := bld.currentAction.targetActor.(*building); !ok {
 				return false
 			}
-			pc.mode = PCMODE_PLACE_BUILDING
-			pc.cursorW = bld.currentAction.targetActor.(*building).getStaticData().w
-			pc.cursorH = bld.currentAction.targetActor.(*building).getStaticData().h
+			pc.changeMode(PCMODE_PLACE_BUILDING)
 			tx, ty := pc.mouseCoordsToTileCoords()
 			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentAction.targetActor.(*building), tx, ty, 0, false) {
 				bld.currentOrder.targetTileX = tx
 				bld.currentOrder.targetTileY = ty
-				pc.mode = PCMODE_NONE
+				pc.changeMode(PCMODE_NONE)
 			}
 			return true
 		}
 	} else {
-		pc.mode = PCMODE_NONE
+		pc.changeMode(PCMODE_NONE)
 	}
 	return false
 }
@@ -185,7 +182,7 @@ func (pc *playerController) elasticFrameSelect(b *battlefield) {
 	v := rl.GetMousePosition()
 	x, y := (pc.camTopLeftX+int(pc.mouseDownCoordX))/TILE_SIZE_IN_PIXELS, (pc.camTopLeftY+int(pc.mouseDownCoordY))/TILE_SIZE_IN_PIXELS
 	w, h := int(v.X-pc.mouseDownCoordX)/TILE_SIZE_IN_PIXELS, int(v.Y-pc.mouseDownCoordY)/TILE_SIZE_IN_PIXELS
-	debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
+	// debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
 	if w < 0 {
 		w = -w
 		x -= w
@@ -197,8 +194,13 @@ func (pc *playerController) elasticFrameSelect(b *battlefield) {
 
 	actrs := b.getListOfActorsInTilesRect(x, y, w, h)
 	for i := actrs.Front(); i != nil; i = i.Next() {
-		i.Value.(actor).markSelected(true)
-		pc.selection = append(pc.selection, i.Value.(actor))
+		actr := i.Value.(actor)
+		if actr.getFaction() == pc.controlledFaction {
+			if _, ok := actr.(*unit); ok {
+				i.Value.(actor).markSelected(true)
+				pc.selection = append(pc.selection, i.Value.(actor))
+			}
+		}
 	}
 }
 
@@ -227,6 +229,16 @@ func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString stri
 func (pc *playerController) isMouseMovedFromDownCoordinates() bool {
 	v := rl.GetMousePosition()
 	return math.Abs(float64(pc.mouseDownCoordX-v.X)) > 0.01 && math.Abs(float64(pc.mouseDownCoordY-v.Y)) > 0.01
+}
+
+func (pc *playerController) changeMode(newMode int) {
+	switch newMode {
+	case PCMODE_NONE:
+		pc.mouseDownForTicks = 0
+	case PCMODE_PLACE_BUILDING:
+		pc.mouseDownForTicks = 0
+	}
+	pc.mode = newMode
 }
 
 const (

@@ -64,16 +64,16 @@ func (b *battlefield) executeAirApproachTargetActorActionForUnit(u *unit) {
 
 func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
 	const rangeToLockOn = 2
-	debugWrite("PICKING UP")
+	// debugWrite("PICKING UP")
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
 	ttx, tty := geometry.TrueCoordsToTileCoords(u.currentAction.targetActor.(*unit).getPhysicalCenterCoords())
 	if geometry.GetApproxDistFromTo(atx, aty, ttx, tty) > rangeToLockOn {
-		debugWrite("FLYING TO")
+		// debugWrite("FLYING TO")
 		u.currentAction.targetTileX, u.currentAction.targetTileY = ttx, tty
 		b.executeAirApproachTargetActorActionForUnit(u)
 		return
 	}
-	debugWrite("MOVING TO LOCATION")
+	// debugWrite("MOVING TO LOCATION")
 	targetTrueX, targetTrueY := u.currentAction.targetActor.getPhysicalCenterCoords()
 	if u.isPresentAt(ttx, tty) {
 		u.centerX, u.centerY = targetTrueX, targetTrueY
