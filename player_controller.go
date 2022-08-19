@@ -1,6 +1,9 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+	"math"
+)
 
 type playerController struct {
 	camTopLeftX, camTopLeftY int // real coords, in pixels
@@ -9,10 +12,21 @@ type playerController struct {
 	mode                     int
 	cursorW, cursorH         int
 	scrollCooldown           int
+
+	// elastic frame related
+	mouseDownForTicks                int
+	mouseDownCoordX, mouseDownCoordY float32
 }
 
+//func (pc *playerController) getFirstSelection() actor {
+//	if len(pc.selection) > 0 {
+//		return pc.selection[0]
+//	}
+//	return nil
+//}
+
 func (pc *playerController) playerControl(b *battlefield) {
-	pc.mode = PCMODE_NONE
+	// pc.mode = PCMODE_NONE
 
 	pc.scrollCooldown--
 	pc.scroll(b)
@@ -57,6 +71,24 @@ func (pc *playerController) playerControl(b *battlefield) {
 			// set selection
 			actr.markSelected(true)
 			pc.selection = actr
+		}
+	}
+	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+		if pc.mouseDownForTicks > 0 {
+			debugWritef("Mouse down for %d", pc.mouseDownForTicks)
+			if pc.isMouseMovedFromDownCoordinates() {
+				pc.mode = PCMODE_ELASTIC_SELECTION
+				return
+			}
+		} else {
+			pc.mouseDownCoordX, pc.mouseDownCoordY = rl.GetMousePosition().X, rl.GetMousePosition().Y
+		}
+		pc.mouseDownForTicks++
+	}
+	if rl.IsMouseButtonReleased(rl.MouseLeftButton) {
+		if pc.mode == PCMODE_ELASTIC_SELECTION {
+			pc.mode = PCMODE_NONE
+			pc.mouseDownForTicks = 0
 		}
 	}
 }
@@ -104,7 +136,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 }
 
 func (pc *playerController) scroll(b *battlefield) {
-	if pc.scrollCooldown > 0 || !rl.IsWindowFocused() || !rl.IsCursorOnScreen() {
+	if pc.scrollCooldown > 0 || pc.mode == PCMODE_ELASTIC_SELECTION || !rl.IsWindowFocused() || !rl.IsCursorOnScreen() {
 		return
 	}
 
@@ -160,7 +192,18 @@ func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString stri
 	return int32(keyString[0])-keyCode == 0
 }
 
+func (pc *playerController) elasticFrameSelect(b *battlefield) {
+	// rl.ismou
+	// b.getListOfActorsInRangeFrom()
+}
+
+func (pc *playerController) isMouseMovedFromDownCoordinates() bool {
+	v := rl.GetMousePosition()
+	return math.Abs(float64(pc.mouseDownCoordX-v.X)) > 0.01 && math.Abs(float64(pc.mouseDownCoordY-v.Y)) > 0.01
+}
+
 const (
 	PCMODE_NONE = iota
 	PCMODE_PLACE_BUILDING
+	PCMODE_ELASTIC_SELECTION
 )

@@ -236,6 +236,26 @@ func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
 	return &lst
 }
 
+func (b *battlefield) getListOfActorsInTilesRect(x, y, w, h int) *list.List {
+	lst := list.List{}
+	for i := b.units.Front(); i != nil; i = i.Next() {
+		u := i.Value.(*unit)
+		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+		if geometry.AreCoordsInTileRect(tx, ty, x, y, w, h) {
+			lst.PushBack(u)
+		}
+	}
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
+		if geometry.AreTwoCellRectsOverlapping(x, y, w, h,
+			bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h) {
+
+			lst.PushBack(bld)
+		}
+	}
+	return &lst
+}
+
 func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeFinish bool) *astar.Cell {
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	b.pathfinder.ForceIncludeFinish = forceIncludeFinish
