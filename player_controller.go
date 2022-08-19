@@ -61,6 +61,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 
 	// selection
 	if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
+		pc.mouseDownForTicks = 0
 		actr := b.getActorAtTileCoordinates(tx, ty)
 		if pc.selection != nil {
 			// reset selection
@@ -87,6 +88,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 	}
 	if rl.IsMouseButtonReleased(rl.MouseLeftButton) {
 		if pc.mode == PCMODE_ELASTIC_SELECTION {
+			pc.elasticFrameSelect(b)
 			pc.mode = PCMODE_NONE
 			pc.mouseDownForTicks = 0
 		}
@@ -180,6 +182,28 @@ func (pc *playerController) centerCameraAtTile(b *battlefield, tx, ty int) {
 	pc.scroll(b)
 }
 
+func (pc *playerController) elasticFrameSelect(b *battlefield) {
+	v := rl.GetMousePosition()
+	x, y := (pc.camTopLeftX+int(pc.mouseDownCoordX))/TILE_SIZE_IN_PIXELS, (pc.camTopLeftY+int(pc.mouseDownCoordY))/TILE_SIZE_IN_PIXELS
+	w, h := int(v.X-pc.mouseDownCoordX)/TILE_SIZE_IN_PIXELS, int(v.Y-pc.mouseDownCoordY)/TILE_SIZE_IN_PIXELS
+	debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
+	if w < 0 {
+		w = -w
+		x -= w
+	}
+	if h < 0 {
+		h = -h
+		y -= h
+	}
+
+	actrs := b.getListOfActorsInTilesRect(x, y, w, h)
+	if actrs.Front() != nil {
+		actrs.Front().Value.(actor).markSelected(false)
+		pc.selection = actrs.Front().Value.(actor)
+		pc.selection.markSelected(true)
+	}
+}
+
 func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
 	v := rl.GetMousePosition()
 	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS
@@ -190,11 +214,6 @@ func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString stri
 	//	debugWritef("CALLED: %d - %d, diff %d\n", keyCode, int32(keyString[0]), int32(keyString[0])-keyCode)
 	//}
 	return int32(keyString[0])-keyCode == 0
-}
-
-func (pc *playerController) elasticFrameSelect(b *battlefield) {
-	// rl.ismou
-	// b.getListOfActorsInRangeFrom()
 }
 
 func (pc *playerController) isMouseMovedFromDownCoordinates() bool {
