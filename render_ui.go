@@ -162,3 +162,15 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 			x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE, UI_FONT_SIZE, rl.Orange)
 	}
 }
+
+func (r *renderer) renderBlinkingIconCenteredAt(iconSpriteCode string, x, y int32, blinkOrder int) {
+	if (r.btl.currentTick/30)%2 == blinkOrder {
+		icon := uiAtlaces[iconSpriteCode][0].atlas[0][0]
+		rl.DrawTexture(
+			icon,
+			x-icon.Width/2,
+			y-icon.Height/2,
+			DEFAULT_TINT,
+		)
+	}
+}

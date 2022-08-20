@@ -20,12 +20,12 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 
 	// draw sprite
-	if bld.currentAction.code == ACTION_BEING_BUILT && (b.currentTick/10) % 2 != 0 {
+	if bld.currentAction.code == ACTION_BEING_BUILT && (b.currentTick/10)%2 != 0 {
 		// under construction
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
-				frameNumber := (x+y+b.currentTick/250)%underConstructionAtlas.totalFrames()
+				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas.totalFrames()
 				rl.DrawTexture(
 					underConstructionAtlas.atlas[0][frameNumber],
 					osx+int32(x)*TILE_SIZE_IN_PIXELS,
@@ -98,15 +98,18 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	// render energy if not enough
 	if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
-		if (b.currentTick/30)%2 == 0 {
-			icon := uiAtlaces["energyicon"][0].atlas[0][0]
-			rl.DrawTexture(
-				icon,
-				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2-icon.Width/2,
-				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2-icon.Height/2,
-				DEFAULT_TINT,
-			)
-		}
+		r.renderBlinkingIconCenteredAt("energyicon",
+			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+			0,
+		)
+	}
+	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
+		r.renderBlinkingIconCenteredAt("readyicon",
+			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+			1,
+		)
 	}
 }
 
