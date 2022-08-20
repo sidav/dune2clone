@@ -15,6 +15,9 @@ type playerController struct {
 	// elastic frame related
 	mouseDownForTicks                int
 	mouseDownCoordX, mouseDownCoordY float32
+
+	// for drawing that "order given thing"
+	tickOrderGiven, orderGivenX, orderGivenY int
 }
 
 func (pc *playerController) getFirstSelection() actor {
@@ -35,6 +38,8 @@ func (pc *playerController) playerControl(b *battlefield) {
 		if !b.areTileCoordsValid(tx, ty) {
 			return
 		}
+		pc.orderGivenX, pc.orderGivenY = tx, ty
+		pc.tickOrderGiven = b.currentTick
 		for i := range pc.selection {
 			if u, ok := pc.selection[i].(*unit); ok {
 				u.currentOrder.resetOrder()

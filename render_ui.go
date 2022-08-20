@@ -19,6 +19,35 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	if pc.mode == PCMODE_ELASTIC_SELECTION {
 		r.renderElasticSelection(b, pc)
 	}
+	r.renderOrderGivenAnimation(b, pc)
+}
+
+func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerController) {
+	const ticksForAnimation = 30
+	ticksSince := b.currentTick - pc.tickOrderGiven
+	completionPercent := int32(100 * ticksSince / ticksForAnimation)
+	if ticksSince > ticksForAnimation {
+		return
+	}
+	osx, osy := r.physicalToOnScreenCoords(float64(pc.orderGivenX*TILE_PHYSICAL_SIZE), float64(pc.orderGivenY*TILE_PHYSICAL_SIZE))
+	if completionPercent <= 50 {
+		r.drawBoldRect(
+			osx+TILE_SIZE_IN_PIXELS*completionPercent/100,
+			osy+TILE_SIZE_IN_PIXELS*completionPercent/100,
+			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
+			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
+			3, rl.Green,
+		)
+	} else {
+		completionPercent = 100 - completionPercent
+		r.drawBoldRect(
+			osx+TILE_SIZE_IN_PIXELS*completionPercent/100,
+			osy+TILE_SIZE_IN_PIXELS*completionPercent/100,
+			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
+			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
+			3, rl.Green,
+		)
+	}
 }
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
@@ -96,7 +125,7 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 func (r *renderer) renderElasticSelection(b *battlefield, pc *playerController) {
 	v := rl.GetMousePosition()
 	x, y := int32(pc.mouseDownCoordX), int32(pc.mouseDownCoordY)
-	w, h := int32(v.X- pc.mouseDownCoordX), int32(v.Y - pc.mouseDownCoordY)
+	w, h := int32(v.X-pc.mouseDownCoordX), int32(v.Y-pc.mouseDownCoordY)
 	// debugWritef("Got %d, %d, %d, %d --- ", x, y, w, h)
 	if w < 0 {
 		w = -w

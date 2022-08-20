@@ -48,6 +48,13 @@ func (r *renderer) drawProgressBar(x, y, w int32, curr, max int, color *rl.Color
 	rl.DrawRectangle(x+OUTLINE_THICKNESS/2, y+OUTLINE_THICKNESS/2, calculatedWidth-OUTLINE_THICKNESS, PG_H-OUTLINE_THICKNESS, *color)
 }
 
+// TODO: re-use it (it's needed)
+func (r *renderer) drawBoldRect(x, y, w, h, thickness int32, color rl.Color) {
+	for i := int32(0); i < thickness; i++ {
+		rl.DrawRectangleLines(x+i, y+i, w-2*i, h-2*i, color)
+	}
+}
+
 func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineColor, fillColor rl.Color) {
 	// draw outline
 	for i := int32(0); i < outlineThickness; i++ {
