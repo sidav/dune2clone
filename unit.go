@@ -52,6 +52,14 @@ func (u *unit) getPhysicalCenterCoords() (float64, float64) {
 	return u.centerX, u.centerY
 }
 
+func (u *unit) getVisionRange() int {
+	vr := u.getStaticData().visionRange
+	if vr <= 0 {
+		vr = 1
+	}
+	return vr
+}
+
 func (u *unit) setPhysicalCenterCoords(x, y float64) {
 	u.centerX = x
 	u.centerY = y

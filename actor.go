@@ -6,5 +6,6 @@ type actor interface {
 	getName() string
 	getFaction() *faction
 	getPhysicalCenterCoords() (float64, float64)
+	getVisionRange() int
 	isPresentAt(int, int) bool
 }

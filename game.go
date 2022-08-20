@@ -129,7 +129,7 @@ func (g *game) startGame() {
 				} else {
 					unt := i.Value.(*unit)
 					tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
-					unt.faction.exploreAround(tx, ty, 1, 1, 4) // TODO: change to actual unit vision
+					unt.faction.exploreAround(tx, ty, 1, 1, unt.getVisionRange())
 				}
 			}
 
@@ -152,7 +152,8 @@ func (g *game) startGame() {
 					bld.faction.energyProduction += bld.getStaticData().givesEnergy
 					bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
 					bld.faction.resourceStorage += bld.getStaticData().storageAmount
-					bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 4) // TODO: change to actual building vision
+					bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
+						bld.getVisionRange())
 				}
 			}
 		}

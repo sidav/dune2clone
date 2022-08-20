@@ -18,6 +18,7 @@ type unitStatic struct {
 	turretsData []unitStaticTurretsData
 
 	maxHitpoints int
+	visionRange  int
 
 	movementSpeed        float64
 	chassisRotationSpeed int
@@ -44,7 +45,8 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Quad",
 		chassisSpriteCode: "quad",
 		maxHitpoints:      75,
-		movementSpeed:     0.25,
+		visionRange:       6,
+		movementSpeed:     0.2,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode: TRT_QUAD,
@@ -59,6 +61,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Super duper tank",
 		chassisSpriteCode: "tank",
 		movementSpeed:     0.1,
+		visionRange:       4,
 		maxHitpoints:      120,
 		turretsData: []unitStaticTurretsData{
 			{
@@ -74,6 +77,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Missile tank",
 		chassisSpriteCode: "quad",
 		movementSpeed:     0.05,
+		visionRange:       3,
 		maxHitpoints:      50,
 		turretsData: []unitStaticTurretsData{
 			{
@@ -93,6 +97,7 @@ var sTableUnits = map[int]*unitStatic{
 		defaultOrderOnCreation: ORDER_HARVEST,
 		maxCargoAmount:         700,
 		movementSpeed:          0.07,
+		visionRange:            2,
 		maxHitpoints:           250,
 		turretsData:            []unitStaticTurretsData{},
 		chassisRotationSpeed:   4,
@@ -106,6 +111,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode:    "air_transport",
 		maxHitpoints:         100,
 		movementSpeed:        0.2,
+		visionRange:          1,
 		turretsData:          []unitStaticTurretsData{},
 		chassisRotationSpeed: 5,
 		cost:                 500,
@@ -119,6 +125,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode: "air_gunship",
 		maxHitpoints:      50,
 		movementSpeed:     0.25,
+		visionRange:       7,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode: TRT_AIR_GUNSHIP,

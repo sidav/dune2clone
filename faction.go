@@ -12,6 +12,7 @@ type faction struct {
 	currentResources, resourceStorage   float64
 	money                               float64 // float because of division when spending
 	energyProduction, energyConsumption int
+	lastAvailableEnergy                 int // for when current energy is needed mid-calculation
 
 	team                 int // 0 means "enemy to all"
 	resourcesMultiplier  float64
@@ -134,6 +135,7 @@ func (f *faction) receiveResources(amount float64, asMoney bool) {
 }
 
 func (f *faction) resetCurrents() {
+	f.lastAvailableEnergy = f.getAvailableEnergy()
 	f.resourceStorage = 0
 	f.energyProduction = 0
 	f.energyConsumption = 0

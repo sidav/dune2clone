@@ -38,6 +38,13 @@ func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
 
+func (b *building) getVisionRange() int {
+	if b.faction.lastAvailableEnergy < 0 {
+		return 1
+	}
+	return 4
+}
+
 func (b *building) getDimensionsForConstructon() (int, int, int, int) {
 	h := b.getStaticData().h
 	// prevent closing bottom side for producing buildings
