@@ -223,6 +223,13 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	if act.getCompletionPercent() < 100 && a.getFaction().getMoney() > moneySpent {
 		a.getFaction().spendMoney(moneySpent)
 		act.completionAmount += coeff
+		if bld, ok := a.(*building); ok {
+			if bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
+				if tBld, ok := a.(*building).currentAction.targetActor.(*building); ok {
+					tBld.getCurrentAction().completionAmount = act.completionAmount
+				}
+			}
+		}
 	}
 	// if it was a unit, place it right away
 	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {
@@ -252,8 +259,10 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 }
 
 func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
-	bld.currentAction.completionAmount++
-	if bld.currentAction.completionAmount == BUILDING_ANIMATION_TICKS {
+	if bld.getCurrentAction().builtAs != BTYPE_PLACE_FIRST {
+		bld.currentAction.completionAmount++
+	}
+	if bld.currentAction.getCompletionPercent() == 100 {
 		bld.currentAction.reset()
 	}
 }

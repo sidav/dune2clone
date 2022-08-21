@@ -1,5 +1,7 @@
 package main
 
+type buildTypeCode int
+
 const (
 	BLD_BASE = iota
 	BLD_POWERPLANT
@@ -10,6 +12,9 @@ const (
 	BLD_REFINERY
 	BLD_SILO
 	BLD_FORTRESS
+
+	BTYPE_BUILD_FIRST buildTypeCode = iota // like in Dune/C&C series
+	BTYPE_PLACE_FIRST
 )
 
 type buildingStatic struct {
@@ -18,6 +23,7 @@ type buildingStatic struct {
 	cost          int
 	buildTime     int   // seconds
 	builds        []int // buildings
+	buildType     buildTypeCode
 	produces      []int // units
 	maxHitpoints  int
 
@@ -54,6 +60,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:     30,
 		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
+		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
 		hotkeyToBuild: "B",
 	},

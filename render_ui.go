@@ -98,10 +98,10 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 }
 
 func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
-	if pc.getFirstSelection().(*building).currentAction.targetActor == nil {
+	if pc.getFirstSelection().(*building).currentOrder.targetActor == nil {
 		return
 	}
-	targetBuilding := pc.getFirstSelection().(*building).currentAction.targetActor.(*building)
+	targetBuilding := pc.getFirstSelection().(*building).currentOrder.targetActor.(*building)
 	tx, ty := pc.mouseCoordsToTileCoords()
 	_, _, w, h := targetBuilding.getDimensionsForConstructon()
 	color := rl.Red

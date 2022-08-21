@@ -10,8 +10,9 @@ type action struct {
 	targetActor actor
 
 	// construction-related
-	moneySpentOnAction int
-	completionAmount   float64
+	moneySpentOnAction                    int
+	completionAmount, maxCompletionAmount float64
+	builtAs                               buildTypeCode
 }
 
 func (a *action) getTextDescription() string {
@@ -56,6 +57,10 @@ func (a *action) getCompletionPercent() int {
 	// TODO: add maxCompletionAmount and use it in calculations
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
+			if b.getStaticData().buildType == BTYPE_PLACE_FIRST {
+				return a.targetActor.getCurrentAction().getCompletionPercent()
+				// int(100*a.targetActor.(*building).currentAction.completionAmount) / a.targetActor.(*building).getStaticData().maxHitpoints
+			}
 			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
@@ -63,7 +68,7 @@ func (a *action) getCompletionPercent() int {
 		}
 	}
 	if a.code == ACTION_BEING_BUILT {
-		return int(100*a.completionAmount) / BUILDING_ANIMATION_TICKS
+		return int((100 * a.completionAmount) / a.maxCompletionAmount)
 	}
 	return -1
 	// panic("Something is wrong in %")

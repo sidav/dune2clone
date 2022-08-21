@@ -117,14 +117,14 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 		}
 	}
 	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
-		if bld.currentAction.getCompletionPercent() >= 100 {
+		if bld.currentAction.getCompletionPercent() >= 100 || bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
 			// if NOT building:
-			if _, ok := bld.currentAction.targetActor.(*building); !ok {
+			if _, ok := bld.currentAction.targetActor.(*building); !ok && bld.getStaticData().buildType != BTYPE_PLACE_FIRST {
 				return false
 			}
 			pc.changeMode(PCMODE_PLACE_BUILDING)
 			tx, ty := pc.mouseCoordsToTileCoords()
-			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentAction.targetActor.(*building), tx, ty, 0, false) {
+			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentOrder.targetActor.(*building), tx, ty, 0, false) {
 				bld.currentOrder.targetTileX = tx
 				bld.currentOrder.targetTileY = ty
 				pc.changeMode(PCMODE_NONE)

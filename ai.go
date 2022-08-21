@@ -46,7 +46,8 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 
 func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
-		ai.placeBuilding(b, bld, bld.currentAction.targetActor.(*building))
+		ai.placeBuilding(b, bld, bld.currentOrder.targetActor.(*building))
+		return
 	}
 	if bld.currentAction.code != ACTION_WAIT {
 		return
@@ -55,6 +56,7 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 		bld.currentOrder.code = ORDER_BUILD
 		bld.currentOrder.targetActorCode = ai.selectWhatToBuild(bld)
 		ai.alreadyOrderedBuildThisTick = true
+		return
 	}
 	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units {
 		code := bld.getStaticData().produces[rnd.Rand(len(bld.getStaticData().produces))]

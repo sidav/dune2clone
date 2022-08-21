@@ -96,12 +96,33 @@ func (b *battlefield) addActor(a actor) {
 		if bld.getStaticData().givesFreeUnitOnCreation {
 			x, y := bld.getUnitPlacementCoords()
 			unt := createUnit(bld.getStaticData().codeForFreeUnitOnCreation, x, y, bld.getFaction())
+			unt.chassisDegree = 90 // looking down
 			bld.unitPlacedInside = unt
 		}
 		b.buildings.PushBack(a)
 	default:
 		panic("wat")
 	}
+}
+
+func (b *battlefield) isActorPresentOnBattlefield(a actor) bool {
+	switch a.(type) {
+	case *unit:
+		for i := b.units.Front(); i != nil; i = i.Next() {
+			if i.Value == a {
+				return true
+			}
+		}
+	case *building:
+		for i := b.buildings.Front(); i != nil; i = i.Next() {
+			if i.Value == a {
+				return true
+			}
+		}
+	default:
+		panic("wat")
+	}
+	return false
 }
 
 func (b *battlefield) removeActor(a actor) {
