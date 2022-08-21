@@ -76,14 +76,14 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		//r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
 		//	osy+int32(TILE_SIZE_IN_PIXELS*h/2),
 		//	TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
-		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
+		r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
 	}
 	if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
 			&factionColors[bld.getFaction().colorNumber])
 	}
 	// render unit inside
-	if bld.unitPlacedInside != nil {
+	if bld.unitPlacedInside != nil && bld.currentAction.code != ACTION_BEING_BUILT {
 		r.renderUnit(b, pc, bld.unitPlacedInside)
 	}
 	// render faction flag

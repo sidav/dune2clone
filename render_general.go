@@ -41,11 +41,29 @@ func (r *renderer) drawProgressBar(x, y, w int32, curr, max int, color *rl.Color
 	if color == nil {
 		color = &rl.Green
 	}
-	for i := int32(0); i <= OUTLINE_THICKNESS/2; i++ {
-		rl.DrawRectangleLines(x+i, y+i, w-i*2, PG_H-i*2, *color)
-	}
 	calculatedWidth := int32(curr) * w / int32(max)
 	rl.DrawRectangle(x+OUTLINE_THICKNESS/2, y+OUTLINE_THICKNESS/2, calculatedWidth-OUTLINE_THICKNESS, PG_H-OUTLINE_THICKNESS, *color)
+	r.drawBoldRect(x, y, w, PG_H, OUTLINE_THICKNESS, rl.Black)
+}
+
+func (r *renderer) drawDiscreteProgressBar(x, y, w int32, curr, max int, color *rl.Color) {
+	const PG_H = 8
+	const OUTLINE_THICKNESS = PG_H/2 - 2
+	partWidth := int32(6)
+	for (w - 2*OUTLINE_THICKNESS) % partWidth > 2 {
+		debugWritef("%d, %d %% %d = %d", w, w-2*OUTLINE_THICKNESS, partWidth, (w - 2*OUTLINE_THICKNESS) % partWidth)
+		partWidth++
+	}
+	totalParts := (w - 2*OUTLINE_THICKNESS) / partWidth
+	if color == nil {
+		color = &rl.Green
+	}
+	r.drawBoldRect(x, y, w, PG_H, OUTLINE_THICKNESS, *color)
+	calculatedWidth := int32(curr) * w / int32(max)
+	rl.DrawRectangle(x+OUTLINE_THICKNESS/2, y+OUTLINE_THICKNESS/2, calculatedWidth-OUTLINE_THICKNESS, PG_H-OUTLINE_THICKNESS, *color)
+	for i := int32(1); i <= totalParts; i++ {
+		r.drawBoldRect(x, y, i*partWidth, PG_H, OUTLINE_THICKNESS, rl.Black)
+	}
 }
 
 // TODO: re-use it (it's needed)
