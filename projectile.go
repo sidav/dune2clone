@@ -19,6 +19,7 @@ const (
 	PRJ_SHELL = iota
 	PRJ_BULLETS
 	PRJ_MISSILE
+	PRJ_AA_MISSILE
 )
 
 type projectileStatic struct {
@@ -49,6 +50,14 @@ var sTableProjectiles = map[int]*projectileStatic{
 		size:                      0.3,
 		speed:                     0.2,
 		rotationSpeed:             1,
+		createsEffectOnImpact:     true,
+		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+	},
+	PRJ_AA_MISSILE: {
+		spriteCode:                "aamissile",
+		size:                      0.3,
+		speed:                     0.65,
+		rotationSpeed:             35,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 	},

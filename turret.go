@@ -31,6 +31,8 @@ type turretStatic struct {
 	fireSpreadDegrees         int
 	shotRangeSpread           float64
 
+	attacksLand, attacksAir bool
+
 	firesProjectileOfCode int
 	projectileDamage      int
 }
@@ -39,6 +41,7 @@ const (
 	TRT_NONE = iota
 	TRT_TANK
 	TRT_MSLTANK
+	TRT_AATANK
 	TRT_QUAD
 	TRT_AIR_GUNSHIP
 	TRT_CANNON_BUILDING
@@ -65,6 +68,17 @@ var sTableTurrets = map[int]*turretStatic{
 		fireSpreadDegrees:     35,
 		shotRangeSpread:       0.7,
 		attackCooldown:        150,
+		projectileDamage:      45,
+	},
+	TRT_AATANK: {
+		spriteCode:            "aamsltank",
+		firesProjectileOfCode: PRJ_AA_MISSILE,
+		attacksAir:            true,
+		rotateSpeed:           15,
+		fireRange:             10,
+		fireSpreadDegrees:     35,
+		shotRangeSpread:       0.7,
+		attackCooldown:        75,
 		projectileDamage:      45,
 	},
 	TRT_QUAD: {

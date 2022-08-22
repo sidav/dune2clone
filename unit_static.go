@@ -4,6 +4,7 @@ const (
 	UNT_TANK = iota
 	UNT_QUAD
 	UNT_MSLTANK
+	UNT_AATANK
 	UNT_HARVESTER
 
 	// aircrafts
@@ -90,6 +91,24 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 1150,
 		buildTime:            12,
 		hotkeyToBuild:        "M",
+	},
+	UNT_AATANK: {
+		displayedName:     "AA tank",
+		chassisSpriteCode: "quad",
+		movementSpeed:     0.05,
+		visionRange:       3,
+		maxHitpoints:      40,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode:    TRT_AATANK,
+				turretCenterX: 0,
+				turretCenterY: 0,
+			},
+		},
+		chassisRotationSpeed: 8,
+		cost:                 1150,
+		buildTime:            12,
+		hotkeyToBuild:        "A",
 	},
 	UNT_HARVESTER: {
 		displayedName:          "Harvester",

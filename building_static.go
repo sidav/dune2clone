@@ -87,7 +87,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:      7,
 		builds:         nil,
 		consumesEnergy: 15,
-		produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
+		produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
 		hotkeyToBuild:  "F",
 	},
 	BLD_AIRFACTORY: {
