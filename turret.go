@@ -58,13 +58,13 @@ var sTableTurrets = map[int]*turretStatic{
 		projectileDamage:      30,
 	},
 	TRT_MSLTANK: {
-		spriteCode:            "tank",
+		spriteCode:            "msltank",
 		firesProjectileOfCode: PRJ_MISSILE,
 		rotateSpeed:           15,
 		fireRange:             10,
-		fireSpreadDegrees:     50,
+		fireSpreadDegrees:     35,
 		shotRangeSpread:       0.7,
-		attackCooldown:        75,
+		attackCooldown:        150,
 		projectileDamage:      45,
 	},
 	TRT_QUAD: {

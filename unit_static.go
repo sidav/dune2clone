@@ -75,10 +75,10 @@ var sTableUnits = map[int]*unitStatic{
 	},
 	UNT_MSLTANK: {
 		displayedName:     "Missile tank",
-		chassisSpriteCode: "quad",
+		chassisSpriteCode: "tank",
 		movementSpeed:     0.05,
 		visionRange:       3,
-		maxHitpoints:      50,
+		maxHitpoints:      40,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode:    TRT_MSLTANK,
