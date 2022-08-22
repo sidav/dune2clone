@@ -74,27 +74,27 @@ func (gm *GameMap) Generate(w, h int) {
 				symmV:             symmV,
 				symmH:             symmH,
 			},
-			fromx, fromy, tox, toy,
+			0, 0, w, h,
 		)
-		gm.performNAutomatasLike(10,
+		gm.performNAutomatasLike(20,
 			automat{
 				drawsChar:         MEDIUM_RESOURCES,
 				canDrawOn:         []tileCode{POOR_RESOURCES},
-				desiredTotalDraws: 25,
+				desiredTotalDraws: 15,
 				symmV:             symmV,
 				symmH:             symmH,
 			},
-			fromx, fromy, tox, toy,
+			0, 0, w, h,
 		)
-		gm.performNAutomatasLike(5,
+		gm.performNAutomatasLike(10,
 			automat{
 				drawsChar:         RICH_RESOURCES,
 				canDrawOn:         []tileCode{MEDIUM_RESOURCES},
-				desiredTotalDraws: 25,
+				desiredTotalDraws: 5,
 				symmV:             symmV,
 				symmH:             symmH,
 			},
-			fromx, fromy, tox, toy,
+			0, 0, w, h,
 		)
 		gm.performNAutomatasLike(5,
 			automat{
@@ -104,7 +104,7 @@ func (gm *GameMap) Generate(w, h int) {
 				symmV:             symmV,
 				symmH:             symmH,
 			},
-			fromx, fromy, tox, toy,
+			0, 0, w, h,
 		)
 
 		gm.performNAutomatasLike(10,
@@ -182,16 +182,16 @@ func (gm *GameMap) areCoordsGoodForStartPoint(x, y int) bool {
 
 func (gm *GameMap) areAllStartPointsGood() bool {
 	w, h := len(gm.Tiles), len(gm.Tiles[0])
-	minDistance := w/len(gm.StartPoints)
+	minDistance := w / len(gm.StartPoints)
 	if h < w {
-		minDistance = h/len(gm.StartPoints)
+		minDistance = h / len(gm.StartPoints)
 	}
 	for i := range gm.StartPoints {
 		for j := range gm.StartPoints {
 			if i == j {
 				continue
 			}
-			if geometry.GetApproxDistFromTo(gm.StartPoints[i][0],gm.StartPoints[i][1],gm.StartPoints[j][0],gm.StartPoints[j][1]) < minDistance {
+			if geometry.GetApproxDistFromTo(gm.StartPoints[i][0], gm.StartPoints[i][1], gm.StartPoints[j][0], gm.StartPoints[j][1]) < minDistance {
 				return false
 			}
 		}
