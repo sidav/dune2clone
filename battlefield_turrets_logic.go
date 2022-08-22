@@ -40,7 +40,7 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 	actorsInRange := b.getListOfActorsInRangeFrom(shooterTileX, shooterTileY, t.getStaticData().fireRange)
 	for l := actorsInRange.Front(); l != nil; l = l.Next() {
 		targetCandidate := l.Value.(actor)
-		if targetCandidate.getFaction() != shooter.getFaction() {
+		if targetCandidate.getFaction() != shooter.getFaction() && b.canTurretAttackActor(t, targetCandidate) {
 			t.targetActor = targetCandidate
 			break
 		}
@@ -79,4 +79,11 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		})
 		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 	}
+}
+
+func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {
+	if a.isInAir() {
+		return t.getStaticData().attacksAir
+	}
+	return t.getStaticData().attacksLand
 }

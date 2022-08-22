@@ -82,3 +82,7 @@ func (b *building) isPresentAt(tileX, tileY int) bool {
 func (b *building) getStaticData() *buildingStatic {
 	return sTableBuildings[b.code]
 }
+
+func (b *building) isInAir() bool {
+	return false
+}

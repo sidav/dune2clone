@@ -116,3 +116,7 @@ func (u *unit) rotateChassisTowardsDegree(deg int) {
 func (u *unit) getStaticData() *unitStatic {
 	return sTableUnits[u.code]
 }
+
+func (u *unit) isInAir() bool {
+	return u.getStaticData().isAircraft
+}

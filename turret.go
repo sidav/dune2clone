@@ -53,6 +53,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_TANK: {
 		spriteCode:            "tank",
 		firesProjectileOfCode: PRJ_SHELL,
+		attacksLand:           true,
 		rotateSpeed:           7,
 		fireRange:             5,
 		fireSpreadDegrees:     7,
@@ -63,6 +64,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_MSLTANK: {
 		spriteCode:            "msltank",
 		firesProjectileOfCode: PRJ_MISSILE,
+		attacksLand:           true,
 		rotateSpeed:           15,
 		fireRange:             10,
 		fireSpreadDegrees:     35,
@@ -84,6 +86,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_QUAD: {
 		spriteCode:            "",
 		firesProjectileOfCode: PRJ_BULLETS,
+		attacksLand:           true,
 		rotateSpeed:           0,
 		fireRange:             4,
 		fireSpreadDegrees:     6,
@@ -94,6 +97,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_AIR_GUNSHIP: {
 		spriteCode:            "",
 		firesProjectileOfCode: PRJ_SHELL,
+		attacksLand:           true,
 		rotateSpeed:           180,
 		fireRange:             6,
 		fireSpreadDegrees:     15,
@@ -104,6 +108,8 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_MINIGUN_BUILDING: {
 		spriteCode:            "bld_turret_minigun",
 		firesProjectileOfCode: PRJ_BULLETS,
+		attacksLand:           true,
+		attacksAir:            true,
 		rotateSpeed:           15,
 		fireRange:             6,
 		fireSpreadDegrees:     7,
@@ -114,6 +120,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_CANNON_BUILDING: {
 		spriteCode:            "bld_turret_cannon",
 		firesProjectileOfCode: PRJ_SHELL,
+		attacksLand:           true,
 		rotateSpeed:           5,
 		fireRange:             6,
 		fireSpreadDegrees:     7,
@@ -124,6 +131,7 @@ var sTableTurrets = map[int]*turretStatic{
 	TRT_BUILDING_FORTRESS: {
 		spriteCode:            "bld_fortress_cannon",
 		firesProjectileOfCode: PRJ_SHELL,
+		attacksLand:           true,
 		rotateSpeed:           5,
 		fireRange:             15,
 		fireSpreadDegrees:     5,

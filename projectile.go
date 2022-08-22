@@ -57,7 +57,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 		spriteCode:                "aamissile",
 		size:                      0.3,
 		speed:                     0.65,
-		rotationSpeed:             35,
+		rotationSpeed:             45,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 	},

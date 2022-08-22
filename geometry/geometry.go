@@ -245,6 +245,22 @@ func GetApproxDistFromTo(x1, y1, x2, y2 int) int {
 	}
 }
 
+func GetApproxDistFloat64(x1, y1, x2, y2 float64) float64 {
+	diffX := x1 - x2
+	if diffX < 0 {
+		diffX = -diffX
+	}
+	diffY := y1 - y2
+	if diffY < 0 {
+		diffY = -diffY
+	}
+	if diffX > diffY {
+		return diffX + (diffY / 2)
+	} else {
+		return diffY + (diffX / 2)
+	}
+}
+
 func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius, initialDirection int) (int, int) {
 	currRadius := 1
 	// direction 0
