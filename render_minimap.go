@@ -22,11 +22,13 @@ func drawGeneratedMap(gm *map_generator.GameMap) {
 			case map_generator.SAND:
 				color = rl.Orange
 			case map_generator.RESOURCE_VEIN:
-				color = rl.Black
+				color = rl.DarkGreen
 			case map_generator.POOR_RESOURCES, map_generator.MEDIUM_RESOURCES:
 				color = rl.Purple
 			case map_generator.RICH_RESOURCES:
 				color = rl.DarkPurple
+			case map_generator.ROCKS:
+				color = rl.DarkBrown
 			default:
 				color = rl.Brown
 			}
@@ -68,6 +70,8 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 						if b.tiles[x][y].resourcesAmount > 0 {
 							color = rl.DarkPurple
 						}
+					case TILE_ROCK:
+						color = rl.DarkBrown
 					case TILE_BUILDABLE:
 						color = rl.Brown
 					default:

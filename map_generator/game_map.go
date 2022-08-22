@@ -28,6 +28,10 @@ func (gm *GameMap) init(w, h int) {
 	gm.StartPoints = make([][2]int, 0)
 }
 
+func (gm *GameMap) areCoordsCorrect(x, y int) bool {
+	return x > 0 && y > 0 && x < len(gm.Tiles) && y < len(gm.Tiles[x])
+}
+
 func (gm *GameMap) reset() {
 	for i := range gm.Tiles {
 		for j := range gm.Tiles[i] {
@@ -70,6 +74,7 @@ func (gm *GameMap) Generate(w, h int) {
 			automat{
 				drawsChar:         POOR_RESOURCES,
 				canDrawOn:         []tileCode{SAND},
+				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
 				desiredTotalDraws: 25,
 				symmV:             symmV,
 				symmH:             symmH,
@@ -80,6 +85,7 @@ func (gm *GameMap) Generate(w, h int) {
 			automat{
 				drawsChar:         MEDIUM_RESOURCES,
 				canDrawOn:         []tileCode{POOR_RESOURCES},
+				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
 				desiredTotalDraws: 15,
 				symmV:             symmV,
 				symmH:             symmH,
@@ -90,6 +96,7 @@ func (gm *GameMap) Generate(w, h int) {
 			automat{
 				drawsChar:         RICH_RESOURCES,
 				canDrawOn:         []tileCode{MEDIUM_RESOURCES},
+				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
 				desiredTotalDraws: 5,
 				symmV:             symmV,
 				symmH:             symmH,
@@ -110,8 +117,9 @@ func (gm *GameMap) Generate(w, h int) {
 		gm.performNAutomatasLike(10,
 			automat{
 				drawsChar:         ROCKS,
-				canDrawOn:         []tileCode{BUILDABLE_TERRAIN},
-				desiredTotalDraws: 3,
+				canDrawOn:         []tileCode{BUILDABLE_TERRAIN, SAND},
+				desiredTotalDraws: 10,
+				maxCodeNear:       map[tileCode]int{ROCKS: 5},
 				symmV:             symmV,
 				symmH:             symmH,
 			},
@@ -129,6 +137,12 @@ func (gm *GameMap) performNAutomatasLike(count int, prototype automat, fromx, fr
 		autsArr[i] = prototype
 		autsArr[i].x = rnd.RandInRange(fromx, tox)
 		autsArr[i].y = rnd.RandInRange(fromy, toy)
+		//for _, restrictedCode := range prototype.cantDrawNear {
+		//	for gm.countTilesOfCodeNear(restrictedCode, autsArr[i].x, autsArr[i].y) > 0 {
+		//		autsArr[i].x = rnd.RandInRange(fromx, tox)
+		//		autsArr[i].y = rnd.RandInRange(fromy, toy)
+		//	}
+		//}
 	}
 	finished := false
 	for !finished {
@@ -197,4 +211,16 @@ func (gm *GameMap) areAllStartPointsGood() bool {
 		}
 	}
 	return true
+}
+
+func (gm *GameMap) countTilesOfCodeNear(code tileCode, x, y int) int {
+	count := 0
+	for i := x - 1; i <= x+1; i++ {
+		for j := y - 1; j <= y+1; j++ {
+			if gm.areCoordsCorrect(i, j) && gm.Tiles[i][j] == code {
+				count++
+			}
+		}
+	}
+	return count
 }

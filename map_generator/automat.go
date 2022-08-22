@@ -3,6 +3,7 @@ package map_generator
 type automat struct {
 	drawsChar                                tileCode
 	canDrawOn                                []tileCode
+	maxCodeNear                              map[tileCode]int
 	totalDraws, desiredTotalDraws, drawTries int
 	x, y                                     int
 	symmV, symmH                             bool
@@ -32,7 +33,12 @@ func (a *automat) moveOnMap(gm *GameMap) {
 	for _, c := range a.canDrawOn {
 		if c == gm.Tiles[a.x][a.y] {
 			allowedToDrawHere = true
-			break
+			for code, maxOfCode := range a.maxCodeNear {
+				for gm.countTilesOfCodeNear(code, a.x, a.y) > maxOfCode {
+					allowedToDrawHere = false
+					break
+				}
+			}
 		}
 	}
 	if allowedToDrawHere {

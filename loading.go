@@ -37,6 +37,7 @@ func loadSprites() {
 	tilesAtlaces["sand2"] = CreateAtlasFromFile(currPath+"sand2.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	tilesAtlaces["sand3"] = CreateAtlasFromFile(currPath+"sand3.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	tilesAtlaces["buildable1"] = CreateAtlasFromFile(currPath+"buildable1.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
+	tilesAtlaces["rock1"] = CreateAtlasFromFile(currPath+"rocks.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	tilesAtlaces["buildabledamaged"] = CreateAtlasFromFile(currPath+"buildable_damaged.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	tilesAtlaces["resourcevein"] = CreateAtlasFromFile(currPath+"resource_vein.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	tilesAtlaces["melangerich"] = CreateAtlasFromFile(currPath+"melange_rich.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]

@@ -17,7 +17,7 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GameMap) {
 			case map_generator.BUILDABLE_TERRAIN:
 				currTileCode = TILE_BUILDABLE
 			case map_generator.ROCKS:
-				currTileCode = TILE_SAND
+				currTileCode = TILE_ROCK
 			case map_generator.POOR_RESOURCES:
 				currTileCode = TILE_SAND
 				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_MIN_GENERATED, RESOURCE_IN_TILE_POOR_MAX)

@@ -24,6 +24,7 @@ type tileStaticData struct {
 	canBuildHere     bool
 	canHaveResources bool // for resource growth, for example
 	growsResources   bool
+	canBeWalkedOn    bool
 }
 
 var sTableTiles = map[int]*tileStaticData{
@@ -31,18 +32,26 @@ var sTableTiles = map[int]*tileStaticData{
 		spriteCodes:      []string{"sand1", "sand2", "sand3"},
 		canBuildHere:     false,
 		canHaveResources: true,
+		canBeWalkedOn:    true,
 	},
 	TILE_BUILDABLE: {
-		spriteCodes:  []string{"buildable1"},
-		canBuildHere: true,
+		spriteCodes:   []string{"buildable1"},
+		canBuildHere:  true,
+		canBeWalkedOn: true,
 	},
 	TILE_BUILDABLE_DAMAGED: {
-		spriteCodes:  []string{"buildabledamaged"},
-		canBuildHere: true,
+		spriteCodes:   []string{"buildabledamaged"},
+		canBuildHere:  true,
+		canBeWalkedOn: true,
+	},
+	TILE_ROCK: {
+		spriteCodes:  []string{"rock1"},
+		canBuildHere: false,
 	},
 	TILE_RESOURCE_VEIN: {
 		spriteCodes:    []string{"resourcevein"},
 		canBuildHere:   false,
 		growsResources: true,
+		canBeWalkedOn:  true,
 	},
 }

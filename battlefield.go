@@ -191,6 +191,9 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 	if !b.areTileCoordsValid(x, y) {
 		return false
 	}
+	if !b.tiles[x][y].getStaticData().canBeWalkedOn {
+		return false
+	}
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if bld.isPresentAt(x, y) {
