@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/geometry"
-	"math"
 )
 
 func (b *battlefield) actorForActorsTurret(a actor) {
@@ -73,7 +72,7 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 			centerX:        projX,
 			centerY:        projY,
 			rotationDegree: t.rotationDegree + degreeSpread,
-			fuel:           math.Sqrt(geometry.SquareDistanceFloat64(targetCenterX, targetCenterY, shooterX, shooterY)) + rangeSpread*rangeSpread,
+			fuel:           geometry.GetApproxDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
 			targetActor:    t.targetActor,
 			damage:         t.getStaticData().projectileDamage,
 		})

@@ -120,15 +120,18 @@ func (g *game) startGame() {
 				f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
 			}
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
-				if i.Value.(*unit).currentHitpoints <= 0 {
+				unt := i.Value.(*unit)
+				tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
+				if unt.currentHitpoints <= 0 {
 					setI := i
 					if i.Prev() != nil {
 						i = i.Prev()
 					}
+					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 25,
+						tx, ty, 1, 1, 5,
+					)
 					g.battlefield.units.Remove(setI)
 				} else {
-					unt := i.Value.(*unit)
-					tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
 					unt.faction.exploreAround(tx, ty, 1, 1, unt.getVisionRange())
 				}
 			}

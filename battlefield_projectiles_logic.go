@@ -1,6 +1,9 @@
 package main
 
-import "dune2clone/geometry"
+import (
+	"dune2clone/geometry"
+	"math"
+)
 
 func (b *battlefield) actForProjectile(p *projectile) {
 	if p.setToRemove {
@@ -8,7 +11,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	}
 	// move forward
 	vx, vy := geometry.DegreeToUnitVector(p.rotationDegree)
-	spd := p.getStaticData().speed
+	spd := math.Min(p.getStaticData().speed, p.fuel)
 	p.centerX += spd * vx
 	p.centerY += spd * vy
 	p.fuel -= spd
@@ -34,7 +37,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	if p.fuel <= 0 {
 		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
 		targ := b.getActorAtTileCoordinates(tilex, tiley)
-		if targ != nil {
+		if targ != nil && (p.targetActor == nil || targ.isInAir() == p.targetActor.isInAir()) {
 			b.dealDamageToActor(p.damage, targ)
 		}
 		if p.getStaticData().createsEffectOnImpact {
