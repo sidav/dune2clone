@@ -68,15 +68,15 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	}
 	// player faction settings
 	b.factions[0].resourcesMultiplier = 1
-	b.factions[0].buildSpeedMultiplier = 1
+	b.factions[0].buildSpeedMultiplier = 10
 	// b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
 	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	// b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
 
-	// unt := createUnit(AIR_TRANSPORT, startPoints[0][0], startPoints[0][1], b.factions[0])
-	// unt.currentAction.code = ACTION_AIR_APPROACH_LAND_TILE
+	unt := createUnit(UNT_TANK, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
+	unt.currentHitpoints = 1
 	// unt.currentAction.setTargetTileCoords(10, 10)
-	// b.addActor(unt)
+	b.addActor(unt)
 }

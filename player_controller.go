@@ -49,6 +49,13 @@ func (pc *playerController) playerControl(b *battlefield) {
 				if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
 					u.currentOrder.code = ORDER_HARVEST
 				}
+				aac := b.getActorAtTileCoordinates(tx, ty)
+				if bld, ok := aac.(*building); ok {
+					if bld.getStaticData().repairsUnits {
+						u.currentOrder.targetActor = bld
+						u.currentOrder.code = ORDER_MOVE_TO_REPAIR
+					}
+				}
 			}
 		}
 		if bld, ok := pc.getFirstSelection().(*building); ok {

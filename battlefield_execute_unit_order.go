@@ -1,6 +1,9 @@
 package main
 
-import "dune2clone/geometry"
+import (
+	"dune2clone/geometry"
+	"math"
+)
 
 func (b *battlefield) executeOrderForUnit(u *unit) {
 	if u.currentAction.code != ACTION_WAIT {
@@ -114,6 +117,31 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 }
 
+func (b *battlefield) executeMoveToRepairOrder(u *unit) {
+	// x, y := u.centerX, u.centerY
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	// for this, target tile is tile to return to after repairs.
+	if u.currentOrder.targetActor == nil {
+		// nothing found, doing nothing
+		return
+	}
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+	if !u.currentOrder.dispatchCalled {
+		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
+		u.currentOrder.dispatchCalled = true
+	}
+
+	if orderTileX == utx && orderTileY == uty {
+		u.currentOrder.code = ORDER_MOVE
+		u.currentOrder.dispatchCalled = false
+		u.currentAction.code = ACTION_ENTER_BUILDING
+		u.currentAction.targetActor = u.currentOrder.targetActor
+		return
+	}
+
+	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+}
+
 func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 
@@ -138,4 +166,22 @@ func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
 	u.currentAction.code = ACTION_MOVE
 	u.currentAction.targetTileX = utx + vx
 	u.currentAction.targetTileY = uty + vy
+}
+
+func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y int) actor {
+	var selected actor = nil
+	closestDist := math.MaxInt64
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
+		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
+			continue
+		}
+		bldCX, bldCY := bld.getUnitPlacementCoords()
+		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
+		if selected == nil || distFromBld < closestDist {
+			closestDist = distFromBld
+			selected = bld
+		}
+	}
+	return selected
 }

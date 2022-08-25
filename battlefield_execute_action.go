@@ -110,6 +110,19 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 			bld.unitPlacedInside = nil
 		}
 	}
+	if bld.getStaticData().repairsUnits && bld.unitPlacedInside != nil {
+		if bld.unitPlacedInside.currentHitpoints < bld.unitPlacedInside.getStaticData().maxHitpoints {
+			// Receive resources
+			const REPAIR_PER_TICK = 2
+			bld.unitPlacedInside.currentHitpoints = REPAIR_PER_TICK
+			if bld.unitPlacedInside.currentHitpoints > bld.unitPlacedInside.getStaticData().maxHitpoints {
+				bld.unitPlacedInside.currentHitpoints = bld.unitPlacedInside.getStaticData().maxHitpoints
+			}
+		} else {
+			b.addActor(bld.unitPlacedInside)
+			bld.unitPlacedInside = nil
+		}
+	}
 }
 
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {

@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"dune2clone/astar"
 	"dune2clone/geometry"
-	"math"
 )
 
 type battlefield struct {
@@ -167,24 +166,6 @@ func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
 		}
 	}
 	return nil
-}
-
-func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y int) actor {
-	var selected actor = nil
-	closestDist := math.MaxInt64
-	for i := b.buildings.Front(); i != nil; i = i.Next() {
-		bld := i.Value.(*building)
-		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
-			continue
-		}
-		bldCX, bldCY := bld.getUnitPlacementCoords()
-		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
-		if selected == nil || distFromBld < closestDist {
-			closestDist = distFromBld
-			selected = bld
-		}
-	}
-	return selected
 }
 
 func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool {
