@@ -27,6 +27,12 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 		b.executeHarvestOrder(u)
 	case ORDER_RETURN_TO_REFINERY:
 		b.executeReturnResourcesOrder(u)
+	case ORDER_MOVE_TO_REPAIR:
+		if u.getStaticData().isAircraft {
+			b.executeAirMoveToRepairOrder(u)
+		} else {
+			b.executeGroundMoveToRepairOrder(u)
+		}
 
 	case ORDER_CARRY_UNIT_TO_TARGET_COORDS:
 		b.executeCarryUnitOrderForAircraft(u)
@@ -117,7 +123,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 }
 
-func (b *battlefield) executeMoveToRepairOrder(u *unit) {
+func (b *battlefield) executeGroundMoveToRepairOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	// for this, target tile is tile to return to after repairs.
@@ -133,6 +139,7 @@ func (b *battlefield) executeMoveToRepairOrder(u *unit) {
 
 	if orderTileX == utx && orderTileY == uty {
 		u.currentOrder.code = ORDER_MOVE
+		u.currentOrder.setTargetTileCoords(orderTileX, orderTileY+1)
 		u.currentOrder.dispatchCalled = false
 		u.currentAction.code = ACTION_ENTER_BUILDING
 		u.currentAction.targetActor = u.currentOrder.targetActor

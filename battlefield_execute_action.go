@@ -92,7 +92,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
 			// Receive resources
-			const HARVEST_PER_TICK = 11
+			const HARVEST_PER_TICK = 8
 			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
 			if bld.faction.getStorageRemaining() > 0 {
 				received = min(received, int(bld.faction.getStorageRemaining()))
@@ -102,19 +102,14 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 			bld.getFaction().receiveResources(float64(received), false)
 			bld.unitPlacedInside.currentCargoAmount -= received
 		} else {
-			//unitToPlace := bld.unitPlacedInside
-			//x, y := bld.topLeftX, bld.topLeftY
-			//x += bld.getStaticData().unitPlacementX
-			//y += bld.getStaticData().unitPlacementY
 			b.addActor(bld.unitPlacedInside)
 			bld.unitPlacedInside = nil
 		}
 	}
 	if bld.getStaticData().repairsUnits && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentHitpoints < bld.unitPlacedInside.getStaticData().maxHitpoints {
-			// Receive resources
 			const REPAIR_PER_TICK = 2
-			bld.unitPlacedInside.currentHitpoints = REPAIR_PER_TICK
+			bld.unitPlacedInside.currentHitpoints += REPAIR_PER_TICK
 			if bld.unitPlacedInside.currentHitpoints > bld.unitPlacedInside.getStaticData().maxHitpoints {
 				bld.unitPlacedInside.currentHitpoints = bld.unitPlacedInside.getStaticData().maxHitpoints
 			}
@@ -128,6 +123,8 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 	if u.currentAction.targetActor.(*building).unitPlacedInside == nil {
 		u.currentAction.code = ACTION_WAIT
+		ptx, pty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetActor.(*building).getUnitPlacementCoords())
+		u.setPhysicalCenterCoords(ptx, pty)
 		u.chassisDegree = 90
 		b.removeActor(u)
 		u.currentAction.targetActor.(*building).unitPlacedInside = u

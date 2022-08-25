@@ -19,6 +19,29 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 	}
 }
 
+func (b *battlefield) executeAirMoveToRepairOrder(u *unit) {
+	// x, y := u.centerX, u.centerY
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	// for this, target tile is tile to return to after repairs.
+	if u.currentOrder.targetActor == nil {
+		// nothing found, doing nothing
+		return
+	}
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+
+	if orderTileX == utx && orderTileY == uty {
+		u.currentOrder.code = ORDER_MOVE
+		u.currentOrder.setTargetTileCoords(orderTileX, orderTileY+1)
+		u.currentOrder.dispatchCalled = false
+		u.currentAction.code = ACTION_ENTER_BUILDING
+		u.currentAction.targetActor = u.currentOrder.targetActor
+		return
+	} else {
+		u.currentAction.code = ACTION_AIR_APPROACH_LAND_TILE
+		u.currentAction.setTargetTileCoords(orderTileX, orderTileY)
+	}
+}
+
 func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 	// carrierTx, carrierTy := geometry.TrueCoordsToTileCoords(carrier.centerX, carrier.centerY)
 	// Order: pick targetActor up, then move it to target coords, then drop it down
