@@ -6,6 +6,7 @@ const (
 	BLD_BASE = iota
 	BLD_POWERPLANT
 	BLD_FACTORY
+	BLD_REPAIR_DEPOT
 	BLD_AIRFACTORY
 	BLD_TURRET_MINIGUN
 	BLD_TURRET_CANNON
@@ -29,8 +30,8 @@ type buildingStatic struct {
 
 	turretCode int
 
-	receivesResources bool // is refinery
-	// CanUnitBePlacedHere            bool // Removed, implemented in method
+	receivesResources              bool // is refinery
+	repairsUnits                   bool
 	unitPlacementX, unitPlacementY int // tile coords for placed unit draw
 
 	givesFreeUnitOnCreation   bool
@@ -46,7 +47,7 @@ type buildingStatic struct {
 }
 
 func (bs *buildingStatic) canUnitBePlacedIn() bool {
-	return bs.receivesResources // TODO: update when needed
+	return bs.receivesResources || bs.repairsUnits // TODO: update when needed
 }
 
 var sTableBuildings = map[int]*buildingStatic{
@@ -58,7 +59,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_AIRFACTORY,
+		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -89,6 +90,20 @@ var sTableBuildings = map[int]*buildingStatic{
 		consumesEnergy: 15,
 		produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
 		hotkeyToBuild:  "F",
+	},
+	BLD_REPAIR_DEPOT: {
+		spriteCode:     "depot",
+		maxHitpoints:   750,
+		w:              3,
+		h:              2,
+		displayedName:  "Repair depot",
+		cost:           750,
+		buildTime:      7,
+		builds:         nil,
+		repairsUnits:   true,
+		unitPlacementX: 1, unitPlacementY: 1,
+		consumesEnergy: 10,
+		hotkeyToBuild:  "D",
 	},
 	BLD_AIRFACTORY: {
 		spriteCode:     "airfactory",
