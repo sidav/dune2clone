@@ -14,6 +14,8 @@ type unit struct {
 	currentHitpoints int
 	chassisDegree    int
 
+	squadSize int // > 0 if unit is a squad
+
 	currentCargoAmount int // for harvesters. TODO: separate struct?
 
 	carriedUnit *unit // for transports
@@ -28,6 +30,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 		centerX:          cx,
 		centerY:          cy,
 		currentHitpoints: sTableUnits[code].maxHitpoints,
+		squadSize:        sTableUnits[code].maxSquadSize,
 		faction:          fact,
 		chassisDegree:    270,
 	}

@@ -1,7 +1,8 @@
 package main
 
 const (
-	UNT_TANK = iota
+	UNT_INFANTRY = iota
+	UNT_TANK
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_AATANK
@@ -23,6 +24,7 @@ type unitStatic struct {
 
 	movementSpeed        float64
 	chassisRotationSpeed int
+	maxSquadSize         int
 
 	maxCargoAmount int // for harvesters
 
@@ -42,6 +44,23 @@ type unitStaticTurretsData struct {
 }
 
 var sTableUnits = map[int]*unitStatic{
+	UNT_INFANTRY: {
+		displayedName:     "Infantry squad",
+		chassisSpriteCode: "infantry",
+		maxHitpoints:      50,
+		visionRange:       4,
+		movementSpeed:     0.1,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode: TRT_INFANTRY,
+			},
+		},
+		maxSquadSize:         5,
+		chassisRotationSpeed: 360,
+		cost:                 150,
+		buildTime:            3,
+		hotkeyToBuild:        "I",
+	},
 	UNT_QUAD: {
 		displayedName:     "Quad",
 		chassisSpriteCode: "quad",

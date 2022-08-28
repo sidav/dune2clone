@@ -5,6 +5,7 @@ type buildTypeCode int
 const (
 	BLD_BASE = iota
 	BLD_POWERPLANT
+	BLD_BARRACKS
 	BLD_FACTORY
 	BLD_REPAIR_DEPOT
 	BLD_AIRFACTORY
@@ -59,11 +60,11 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []int{BLD_BASE, BLD_POWERPLANT, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
-		hotkeyToBuild: "B",
+		hotkeyToBuild: "Y",
 	},
 	BLD_POWERPLANT: {
 		spriteCode:    "powerplant",
@@ -77,6 +78,19 @@ var sTableBuildings = map[int]*buildingStatic{
 		produces:      nil,
 		givesEnergy:   20,
 		hotkeyToBuild: "P",
+	},
+	BLD_BARRACKS: {
+		spriteCode:    "barracks",
+		maxHitpoints:  500,
+		w:             2,
+		h:             2,
+		displayedName: "Barracks",
+		cost:          500,
+		buildTime:     5,
+		builds:        nil,
+		produces:       []int{UNT_INFANTRY},
+		givesEnergy:   20,
+		hotkeyToBuild: "B",
 	},
 	BLD_FACTORY: {
 		spriteCode:     "factory",
