@@ -13,9 +13,9 @@ func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, bgColor, t
 	r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, bgColor)
 
 	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2
-	rl.DrawText(title, titlePosition-1, y+1, textSize, textColor)
+	r.drawText(title, titlePosition-1, y+1, textSize, textColor)
 	infoPosition := x + titleBoxW + int32(len(info))*textCharW/3
-	rl.DrawText(info, infoPosition-textCharW/5, y+1, textSize, textColor)
+	r.drawText(info, infoPosition-textCharW/5, y+1, textSize, textColor)
 }
 
 func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.Color) {
@@ -50,8 +50,8 @@ func (r *renderer) drawDiscreteProgressBar(x, y, w int32, curr, max int, color *
 	const PG_H = 8
 	const OUTLINE_THICKNESS = PG_H/2 - 2
 	partWidth := int32(6)
-	for (w - 2*OUTLINE_THICKNESS) % partWidth > 2 {
-		debugWritef("%d, %d %% %d = %d", w, w-2*OUTLINE_THICKNESS, partWidth, (w - 2*OUTLINE_THICKNESS) % partWidth)
+	for (w-2*OUTLINE_THICKNESS)%partWidth > 2 {
+		debugWritef("%d, %d %% %d = %d", w, w-2*OUTLINE_THICKNESS, partWidth, (w-2*OUTLINE_THICKNESS)%partWidth)
 		partWidth++
 	}
 	totalParts := (w - 2*OUTLINE_THICKNESS) / partWidth
@@ -81,8 +81,12 @@ func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineC
 	rl.DrawRectangle(x+outlineThickness, y+outlineThickness, w-outlineThickness*2, h-outlineThickness*2, fillColor)
 }
 
+func (r *renderer) drawText(text string, x, y, size int32, color rl.Color) {
+	rl.DrawTextEx(defaultFont, text, rl.Vector2{float32(x), float32(y)}, float32(size), 0, color)
+}
+
 func (r *renderer) drawDitheredRect(x, y, w, h int32, color rl.Color) {
-	pixelSize := int32(TILE_SIZE_IN_PIXELS/16)
+	pixelSize := int32(TILE_SIZE_IN_PIXELS / 16)
 	for i := int32(0); i < w/pixelSize; i++ {
 		for j := int32(0); j < h/pixelSize; j++ {
 			if i%2 == j%2 {

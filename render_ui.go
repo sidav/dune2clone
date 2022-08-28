@@ -4,10 +4,14 @@ import (
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"math"
+	"strconv"
+	"strings"
 )
 
 const UI_FONT_SIZE = 28
 const BUILD_LIST_FONT_SIZE = 24
+const BUILD_PANEL_WIDTH = 400
+const BUILD_PANEL_HEIGHT = 500
 
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
@@ -51,7 +55,7 @@ func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerControlle
 }
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
-	rl.DrawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
+	r.drawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 	// draw money
 	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.getMoney()))
 	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, rl.Black, rl.White)
@@ -75,24 +79,24 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		return
 	}
 	if u, ok := pc.getFirstSelection().(*unit); ok {
-		rl.DrawText(fmt.Sprintf("%s (%s-%s)", u.getName(), u.currentOrder.getTextDescription(), u.getCurrentAction().getTextDescription()),
+		r.drawText(fmt.Sprintf("%s (%s-%s)", u.getName(), u.currentOrder.getTextDescription(), u.getCurrentAction().getTextDescription()),
 			x+15, y+1, UI_FONT_SIZE, rl.Green)
 	} else {
-		rl.DrawText(fmt.Sprintf("%s (%s)", pc.getFirstSelection().getName(), pc.getFirstSelection().getCurrentAction().getTextDescription()),
+		r.drawText(fmt.Sprintf("%s (%s)", pc.getFirstSelection().getName(), pc.getFirstSelection().getCurrentAction().getTextDescription()),
 			x+15, y+1, UI_FONT_SIZE, rl.Green)
 	}
 
 	if u, ok := pc.getFirstSelection().(*unit); ok {
 		if u.getStaticData().maxCargoAmount > 0 {
-			rl.DrawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
+			r.drawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
 				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
 		}
-		rl.DrawText(fmt.Sprintf("(%.1f, %.1f); Rotation: %d", u.centerX, u.centerY, u.chassisDegree),
+		r.drawText(fmt.Sprintf("(%.1f, %.1f); Rotation: %d", u.centerX, u.centerY, u.chassisDegree),
 			x+15, y+(UI_FONT_SIZE*2), UI_FONT_SIZE, rl.Green)
 	}
 
 	if bld, ok := pc.getFirstSelection().(*building); ok {
-		r.renderSelectedBuildingUI(bld, x, y)
+		r.renderSelectedBuildingUI(bld, WINDOW_W-BUILD_PANEL_WIDTH, 100)
 	}
 
 }
@@ -143,24 +147,33 @@ func (r *renderer) renderElasticSelection(b *battlefield, pc *playerController) 
 
 func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 	var line int32
+	r.drawOutlinedRect(x, y, BUILD_PANEL_WIDTH, BUILD_PANEL_HEIGHT, 2, rl.Green, rl.Black)
 	if bld.currentAction.code == ACTION_WAIT {
 		for _, code := range bld.getStaticData().builds {
-			rl.DrawText(fmt.Sprintf("%s - Build %s ($%d)", sTableBuildings[code].hotkeyToBuild,
+			r.drawText(r.collectLineForBuildMenu(sTableBuildings[code].hotkeyToBuild,
 				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-				x+4, y+1+UI_FONT_SIZE+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
+				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
 			line++
 		}
 		for _, code := range bld.getStaticData().produces {
-			rl.DrawText(fmt.Sprintf("%s - Make %s ($%d)", sTableUnits[code].hotkeyToBuild,
+			r.drawText(r.collectLineForBuildMenu(sTableUnits[code].hotkeyToBuild,
 				sTableUnits[code].displayedName, sTableUnits[code].cost),
-				x+4, y+1+UI_FONT_SIZE+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
+				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
 			line++
 		}
 	}
 	if bld.currentAction.code == ACTION_BUILD {
-		rl.DrawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
-			x+4, y+1+UI_FONT_SIZE+UI_FONT_SIZE, UI_FONT_SIZE, rl.Orange)
+		r.drawText(fmt.Sprintf("Builds %s (%d%%)", bld.currentAction.targetActor.getName(), bld.currentAction.getCompletionPercent()),
+			x+4, y+1+UI_FONT_SIZE, UI_FONT_SIZE, rl.Orange)
 	}
+}
+
+func (r *renderer) collectLineForBuildMenu(hotkey, name string, cost int) string {
+	costStr := strconv.Itoa(cost)
+	if len(costStr) < 5 {
+		costStr += strings.Repeat(" ", 5-len(costStr))
+	}
+	return fmt.Sprintf("$%s - %s %s", costStr, hotkey, name)
 }
 
 func (r *renderer) renderBlinkingIconCenteredAt(iconSpriteCode string, x, y int32, blinkOrder int) {

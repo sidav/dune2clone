@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	defaultFont rl.Font
 	// index of array is faction color.
 	tilesAtlaces       = map[string]*spriteAtlas{}
 	buildingsAtlaces   = map[string]*spriteAtlas{}
@@ -21,6 +22,10 @@ var (
 )
 
 func loadResources() {
+	// a := int32(255)
+	// defaultFont = rl.LoadFontEx("", 96, &a, 255)
+	defaultFont = rl.LoadFont("resources/flexi.ttf")
+	// rl.GenTextureMipmaps(&defaultFont.Texture)
 	loadSprites()
 }
 
