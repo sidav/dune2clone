@@ -8,7 +8,12 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 	if a.getCurrentAction().code != ACTION_ROTATE {
 		if u, ok := a.(*unit); ok {
 			for i := range u.turrets {
-				b.actTurret(a, u.turrets[i])
+				if u.turrets[i].nextTickToAct > b.currentTick {
+					continue
+				}
+				for j := 0; j < u.squadSize; j++ {
+					b.actTurret(a, u.turrets[i])
+				}
 			}
 		}
 		if bld, ok := a.(*building); ok {
@@ -21,9 +26,6 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 }
 
 func (b *battlefield) actTurret(shooter actor, t *turret) {
-	if t == nil || t.nextTickToAct > b.currentTick {
-		return
-	}
 	shooterTileX, shooterTileY := 0, 0
 	shooterX, shooterY := 0.0, 0.0
 	if u, ok := shooter.(*unit); ok {
