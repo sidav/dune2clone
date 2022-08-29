@@ -130,33 +130,37 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	}
 
 	// draw chassis sprite
-	rl.DrawTexture(
-		unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
-		osx,
-		osy,
-		DEFAULT_TINT,
-	)
-	// draw turrets
-	for turrIndex := range u.turrets {
-		if u.turrets[turrIndex].getStaticData().spriteCode == "" {
-			continue
-		}
-		usd := u.getStaticData()
-		// calculate turret displacement
-		dsplX, dsplY := usd.turretsData[turrIndex].turretCenterX, usd.turretsData[turrIndex].turretCenterY
-		if dsplX != 0 || dsplY != 0 {
-			// rotate according to units face
-			chassisShownDegree := geometry.SnapDegreeToFixedDirections(u.chassisDegree, 8)
-			dsplX, dsplY = geometry.RotateFloat64Vector(dsplX, dsplY, chassisShownDegree)
-		}
-		turrOsX, turrOsY := r.physicalToOnScreenCoords(x+dsplX, y+dsplY)
-		sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turrets[turrIndex].rotationDegree, 0)
+	relativeSquadCoords := r.getListOfRelativeCoordsForDrawingSquad(u.squadSize)
+	for _, relSquadCoord := range relativeSquadCoords {
+		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-0.5, y+relSquadCoord[1]-0.5)
 		rl.DrawTexture(
-			sprite,
-			turrOsX-sprite.Width/2,
-			turrOsY-sprite.Height/2,
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
+			osx,
+			osy,
 			DEFAULT_TINT,
 		)
+		// draw turrets
+		for turrIndex := range u.turrets {
+			if u.turrets[turrIndex].getStaticData().spriteCode == "" {
+				continue
+			}
+			usd := u.getStaticData()
+			// calculate turret displacement
+			dsplX, dsplY := usd.turretsData[turrIndex].turretCenterX, usd.turretsData[turrIndex].turretCenterY
+			if dsplX != 0 || dsplY != 0 {
+				// rotate according to units face
+				chassisShownDegree := geometry.SnapDegreeToFixedDirections(u.chassisDegree, 8)
+				dsplX, dsplY = geometry.RotateFloat64Vector(dsplX, dsplY, chassisShownDegree)
+			}
+			turrOsX, turrOsY := r.physicalToOnScreenCoords(x+dsplX, y+dsplY)
+			sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turrets[turrIndex].rotationDegree, 0)
+			rl.DrawTexture(
+				sprite,
+				turrOsX-sprite.Width/2,
+				turrOsY-sprite.Height/2,
+				DEFAULT_TINT,
+			)
+		}
 	}
 
 	if u.currentHitpoints < u.getStaticData().maxHitpoints {
@@ -176,4 +180,21 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
 		//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
 	}
+}
+
+func (r *renderer) getListOfRelativeCoordsForDrawingSquad(squadSize int) [][2]float64 {
+	// returns list of coords, relative to center, for drawing a squad of units
+	switch squadSize {
+	case 0, 1:
+		return [][2]float64{{0, 0}}
+	case 2:
+		return [][2]float64{{0.3, -0.3}, {-0.3, 0.3}}
+	case 3:
+		return [][2]float64{{0.3, -0.3}, {0, 0}, {-0.3, 0.3}}
+	case 4:
+		return [][2]float64{{-0.32, -0.32}, {0.32, -0.32}, {0.32, 0.32}, {-0.32, 0.32}}
+	case 5:
+		return [][2]float64{{-0.32, -0.32}, {0.32, -0.32}, {0.32, 0.32}, {-0.32, 0.32}, {0, 0}}
+	}
+	panic("No such squad size, wtf")
 }
