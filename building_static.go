@@ -122,8 +122,8 @@ var sTableBuildings = map[int]*buildingStatic{
 	BLD_AIRFACTORY: {
 		spriteCode:     "airfactory",
 		maxHitpoints:   750,
-		w:              3,
-		h:              2,
+		w:              2,
+		h:              3,
 		displayedName:  "Aircraft Factory",
 		cost:           1000,
 		buildTime:      10,

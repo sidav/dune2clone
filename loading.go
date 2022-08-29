@@ -53,12 +53,12 @@ func loadSprites() {
 	// WARNING: IT HAS FRAMES
 	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 4, false, false)[0]
 
-	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
-	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
+	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 64, 64, 32, 32, 1, false, false)[0]
+	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 64, 64, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
+	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 64, 96, 32, 48, 1, false, false)[0]
+	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 96, 64, 48, 32, 1, false, false)[0]
 	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
 	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, false)[0]
 	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
