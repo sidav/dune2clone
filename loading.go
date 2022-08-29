@@ -56,11 +56,11 @@ func loadSprites() {
 	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
 	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
-	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
+	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, false)[0]
 	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
 	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
 	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 16, 32, 16, 32, 1, false, false)[0]
+	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, false)[0]
 	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
 	turretsAtlaces["bld_turret_cannon"] = CreateDirectionalAtlasFromFile(currPath+"cannon_turret.png", 16, 16, 1, 2, true)
 	turretsAtlaces["bld_turret_minigun"] = CreateDirectionalAtlasFromFile(currPath+"minigun_turret.png", 16, 16, 1, 2, true)
@@ -87,7 +87,7 @@ func loadSprites() {
 	projectilesAtlaces["aamissile"] = CreateDirectionalAtlasFromFile(currPath+"aamissile.png", 16, 8, 1, 2, false)
 
 	currPath = "resources/sprites/ui/"
-	uiAtlaces["factionflag"] = CreateDirectionalAtlasFromFile(currPath+"building_faction_flag.png", 8, 8, 1, 2, true)
+	uiAtlaces["factionflag"] = CreateAtlasFromFile(currPath+"building_faction_flag.png", 0, 0, 4, 4, 4, 4, 4, false, true)
 	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["readyicon"] = CreateDirectionalAtlasFromFile(currPath+"ready_icon.png", 16, 8, 1, 1, false)
 
@@ -98,12 +98,23 @@ func loadSprites() {
 func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Image {
 	minx, miny := img.Bounds().Min.X, img.Bounds().Min.Y
 	//maxx, maxy := img.Bounds().Min.X, img.Bounds().Max.Y
-	subImg := img.(*image.NRGBA).SubImage(
-		image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
-	)
-	// reset img bounds, because RayLib goes nuts about it otherwise
-	subImg.(*image.NRGBA).Rect = image.Rect(0, 0, w, h)
-	return subImg
+	switch img.(type) {
+	case *image.RGBA:
+		subImg := img.(*image.RGBA).SubImage(
+			image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
+		)
+		// reset img bounds, because RayLib goes nuts about it otherwise
+		subImg.(*image.RGBA).Rect = image.Rect(0, 0, w, h)
+		return subImg
+	case *image.NRGBA:
+		subImg := img.(*image.NRGBA).SubImage(
+			image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
+		)
+		// reset img bounds, because RayLib goes nuts about it otherwise
+		subImg.(*image.NRGBA).Rect = image.Rect(0, 0, w, h)
+		return subImg
+	}
+	panic("Unknown image type")
 }
 
 func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteW, originalSpriteH,
@@ -190,9 +201,11 @@ func CreateDirectionalAtlasFromFile(filename string, originalSpriteSize, desired
 
 func replaceImageColorsToFactionImages(img *rl.Image, factionColorNumber int) {
 	rl.ImageColorReplace(img, color.RGBA{192, 192, 192, 255}, factionColors[factionColorNumber])
+	rl.ImageColorReplace(img, color.RGBA{255, 0, 255, 255}, factionColors[factionColorNumber])
 	darkerFactionTint := factionColors[factionColorNumber]
 	darkerFactionTint.R /= 2
 	darkerFactionTint.G /= 2
 	darkerFactionTint.B /= 2
 	rl.ImageColorReplace(img, color.RGBA{128, 128, 128, 255}, darkerFactionTint)
+	rl.ImageColorReplace(img, color.RGBA{128, 0, 128, 255}, darkerFactionTint)
 }

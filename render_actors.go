@@ -88,10 +88,10 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
-		degree := (b.currentTick * 6) % 360
+		frame := (6 * b.currentTick / DESIRED_FPS) % len(uiAtlaces["factionflag"][bld.getFaction().colorNumber].atlas[0])
 		rl.DrawTexture(
-			uiAtlaces["factionflag"][bld.getFaction().colorNumber].getSpriteByDegreeAndFrameNumber(degree, 0),
-			osx+2,
+			uiAtlaces["factionflag"][bld.getFaction().colorNumber].atlas[0][frame],
+			osx+4,
 			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"][bld.faction.colorNumber].atlas[0][0].Height-2,
 			DEFAULT_TINT,
 		)
