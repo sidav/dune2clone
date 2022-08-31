@@ -120,6 +120,13 @@ func (u *unit) getStaticData() *unitStatic {
 	return sTableUnits[u.code]
 }
 
+func (u *unit) getMainTurretRange() int {
+	if len(u.turrets) == 0 {
+		return 0
+	}
+	return u.turrets[0].getStaticData().fireRange
+}
+
 func (u *unit) isInAir() bool {
 	return u.getStaticData().isAircraft
 }

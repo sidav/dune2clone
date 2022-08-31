@@ -23,6 +23,8 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 	switch u.currentOrder.code {
 	case ORDER_MOVE:
 		b.executeMoveOrder(u)
+	case ORDER_ATTACK:
+		b.executeAttackOrder(u)
 	case ORDER_HARVEST:
 		b.executeHarvestOrder(u)
 	case ORDER_RETURN_TO_REFINERY:
@@ -52,6 +54,22 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 		u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
 	} else {
 		b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+	}
+}
+
+func (b *battlefield) executeAttackOrder(u *unit) {
+	// x, y := u.centerX, u.centerY
+	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+	orderTileX, orderTileY := geometry.TrueCoordsToTileCoords(u.currentOrder.targetActor.getPhysicalCenterCoords())
+	if geometry.GetApproxDistFromTo(utx, uty, orderTileX, orderTileY) <= u.getMainTurretRange() {
+		return
+	} else {
+		if u.getStaticData().isAircraft {
+			u.currentAction.code = ACTION_MOVE
+			u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
+		} else {
+			b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+		}
 	}
 }
 

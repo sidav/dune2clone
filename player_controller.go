@@ -35,35 +35,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 
 	tx, ty := pc.mouseCoordsToTileCoords()
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
-		if !b.areTileCoordsValid(tx, ty) {
-			return
-		}
-		pc.orderGivenX, pc.orderGivenY = tx, ty
-		pc.tickOrderGiven = b.currentTick
-		for i := range pc.selection {
-			if u, ok := pc.selection[i].(*unit); ok {
-				u.currentOrder.resetOrder()
-				u.currentOrder.targetTileX = tx
-				u.currentOrder.targetTileY = ty
-				u.currentOrder.code = ORDER_MOVE
-				if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
-					u.currentOrder.code = ORDER_HARVEST
-				}
-				aac := b.getActorAtTileCoordinates(tx, ty)
-				if bld, ok := aac.(*building); ok {
-					if bld.getStaticData().repairsUnits {
-						u.currentOrder.targetActor = bld
-						u.currentOrder.code = ORDER_MOVE_TO_REPAIR
-					}
-				}
-			}
-		}
-		if bld, ok := pc.getFirstSelection().(*building); ok {
-			// set rally
-			if bld.getStaticData().produces != nil {
-				bld.rallyTileX, bld.rallytileY = tx, ty
-			}
-		}
+		pc.rightClickWithActorSelected(b, tx, ty)
 	}
 	if bld, ok := pc.getFirstSelection().(*building); ok {
 		built := pc.GiveOrderToBuilding(b, bld)
@@ -181,6 +153,47 @@ func (pc *playerController) scroll(b *battlefield) {
 	}
 
 	pc.scrollCooldown = SCROLL_CD
+}
+
+func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty int) {
+	if !b.areTileCoordsValid(tx, ty) {
+		return
+	}
+	pc.orderGivenX, pc.orderGivenY = tx, ty
+	pc.tickOrderGiven = b.currentTick
+	aac := b.getActorAtTileCoordinates(tx, ty)
+	for i := range pc.selection {
+		if u, ok := pc.selection[i].(*unit); ok {
+			u.currentOrder.resetOrder()
+			u.currentOrder.targetTileX = tx
+			u.currentOrder.targetTileY = ty
+			u.currentOrder.code = ORDER_MOVE
+			if aac != nil && aac.getFaction() != u.getFaction() {
+				u.currentOrder.code = ORDER_ATTACK
+				u.currentOrder.targetActor = aac
+				return
+			}
+			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
+				u.currentOrder.code = ORDER_HARVEST
+			}
+			if bld, ok := aac.(*building); ok {
+				if bld.getStaticData().repairsUnits {
+					u.currentOrder.targetActor = bld
+					u.currentOrder.code = ORDER_MOVE_TO_REPAIR
+				}
+				if bld.getStaticData().receivesResources && u.getStaticData().maxCargoAmount > 0 {
+					u.currentOrder.targetActor = bld
+					u.currentOrder.code = ORDER_RETURN_TO_REFINERY
+				}
+			}
+		}
+	}
+	if bld, ok := pc.getFirstSelection().(*building); ok {
+		// set rally
+		if bld.getStaticData().produces != nil {
+			bld.rallyTileX, bld.rallytileY = tx, ty
+		}
+	}
 }
 
 func (pc *playerController) centerCameraAtTile(b *battlefield, tx, ty int) {
