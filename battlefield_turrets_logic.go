@@ -11,7 +11,11 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 				if u.turrets[i].nextTickToAct > b.currentTick {
 					continue
 				}
-				for j := 0; j < u.squadSize; j++ {
+				shots := u.squadSize
+				if u.squadSize == 0 {
+					u.squadSize = 1
+				}
+				for j := 0; j < shots; j++ {
 					b.actTurret(a, u.turrets[i])
 				}
 			}
