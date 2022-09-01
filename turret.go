@@ -133,7 +133,7 @@ var sTableTurrets = map[int]*turretStatic{
 		spriteCode:            "bld_turret_cannon",
 		firesProjectileOfCode: PRJ_SHELL,
 		attacksLand:           true,
-		rotateSpeed:           5,
+		rotateSpeed:           15,
 		fireRange:             6,
 		fireSpreadDegrees:     7,
 		shotRangeSpread:       0.7,

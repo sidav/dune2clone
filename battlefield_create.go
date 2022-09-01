@@ -68,14 +68,15 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	}
 	// player faction settings
 	b.factions[0].resourcesMultiplier = 1
-	b.factions[0].buildSpeedMultiplier = 10
-	// b.factions[0].visibilityCheat = true
+	b.factions[0].buildSpeedMultiplier = 1
+	b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
 	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 
 	b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
-	b.ais[0].controlsFaction.resourcesMultiplier = 1.5
+	b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
+	b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
 	unt := createUnit(UNT_TANK, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
 	unt.currentHitpoints = 1
