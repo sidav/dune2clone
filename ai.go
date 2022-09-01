@@ -37,10 +37,16 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		return
 	}
 	u.currentOrder.resetOrder()
-	u.currentOrder.code = ORDER_MOVE
-	for !b.isTileClearToBeMovedInto(u.currentOrder.targetTileX, u.currentOrder.targetTileY, u) {
-		u.currentOrder.targetTileX = rnd.Rand(len(b.tiles))
-		u.currentOrder.targetTileY = rnd.Rand(len(b.tiles[0]))
+	if len(u.turrets) > 0 {
+		for i := b.units.Front(); i != nil; i = i.Next() {
+			var selectedTarget actor = nil
+			if i.Value.(actor).getFaction() != ai.controlsFaction {
+				if selectedTarget == nil || rnd.OneChanceFrom(4) {
+					u.currentOrder.code = ORDER_ATTACK
+					u.currentOrder.targetActor = i.Value.(actor)
+				}
+			}
+		}
 	}
 }
 

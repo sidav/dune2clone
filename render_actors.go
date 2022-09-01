@@ -2,6 +2,7 @@ package main
 
 import (
 	"dune2clone/geometry"
+	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -196,5 +197,6 @@ func (r *renderer) getListOfRelativeCoordsForDrawingSquad(squadSize int) [][2]fl
 	case 5:
 		return [][2]float64{{-0.32, -0.32}, {0.32, -0.32}, {0.32, 0.32}, {-0.32, 0.32}, {0, 0}}
 	}
-	panic("No such squad size, wtf")
+	return [][2]float64{}
+	panic(fmt.Sprintf("No such squad size %d, renderer failed", squadSize))
 }
