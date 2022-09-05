@@ -12,7 +12,7 @@ var (
 	defaultFont rl.Font
 	// index of array is faction color.
 	tilesAtlaces       = map[string]*spriteAtlas{}
-	buildingsAtlaces   = map[string]*spriteAtlas{}
+	buildingsAtlaces   = map[string][]*spriteAtlas{}
 	unitChassisAtlaces = map[string][]*spriteAtlas{}
 	turretsAtlaces     = map[string][]*spriteAtlas{}
 	projectilesAtlaces = map[string][]*spriteAtlas{}
@@ -31,7 +31,7 @@ func loadResources() {
 
 func loadSprites() {
 	tilesAtlaces = make(map[string]*spriteAtlas)
-	buildingsAtlaces = make(map[string]*spriteAtlas)
+	buildingsAtlaces = make(map[string][]*spriteAtlas)
 	unitChassisAtlaces = make(map[string][]*spriteAtlas)
 	turretsAtlaces = make(map[string][]*spriteAtlas)
 	projectilesAtlaces = make(map[string][]*spriteAtlas)
@@ -51,20 +51,20 @@ func loadSprites() {
 
 	currPath = "resources/sprites/buildings/"
 	// WARNING: IT HAS FRAMES
-	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 4, false, false)[0]
+	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 4, false, false)
 
-	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 64, 64, 32, 32, 1, false, false)[0]
-	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 64, 64, 32, 32, 1, false, false)[0]
-	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
-	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 64, 96, 32, 48, 1, false, false)[0]
-	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 96, 64, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, false)[0]
-	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, false)[0]
-	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false, false)[0]
+	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 64, 64, 32, 32, 1, false, true)
+	buildingsAtlaces["powerplant"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 64, 64, 32, 32, 1, false, true)
+	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 32, 32, 32, 32, 1, false, true)
+	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, true)
+	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 64, 96, 32, 48, 1, false, true)
+	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 96, 64, 48, 32, 1, false, true)
+	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, true)
+	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, true)
+	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false, true)
 	turretsAtlaces["bld_turret_cannon"] = CreateDirectionalAtlasFromFile(currPath+"cannon_turret.png", 16, 16, 1, 2, true)
 	turretsAtlaces["bld_turret_minigun"] = CreateDirectionalAtlasFromFile(currPath+"minigun_turret.png", 16, 16, 1, 2, true)
-	buildingsAtlaces["fortress"] = CreateAtlasFromFile(currPath+"fortress.png", 0, 0, 32, 32, 32, 32, 1, false, false)[0]
+	buildingsAtlaces["fortress"] = CreateAtlasFromFile(currPath+"fortress.png", 0, 0, 32, 32, 32, 32, 1, false, true)
 	turretsAtlaces["bld_fortress_cannon"] = CreateDirectionalAtlasFromFile(currPath+"fortress_turret.png", 32, 32, 1, 2, true)
 
 	currPath = "resources/sprites/units/"
@@ -208,4 +208,10 @@ func replaceImageColorsToFactionImages(img *rl.Image, factionColorNumber int) {
 	darkerFactionTint.B /= 2
 	rl.ImageColorReplace(img, color.RGBA{128, 128, 128, 255}, darkerFactionTint)
 	rl.ImageColorReplace(img, color.RGBA{128, 0, 128, 255}, darkerFactionTint)
+	darkestFactionTint := factionColors[factionColorNumber]
+	darkestFactionTint.R /= 3
+	darkestFactionTint.G /= 3
+	darkestFactionTint.B /= 3
+	rl.ImageColorReplace(img, color.RGBA{64, 64, 64, 255}, darkestFactionTint)
+	rl.ImageColorReplace(img, color.RGBA{64, 0, 64, 255}, darkestFactionTint)
 }

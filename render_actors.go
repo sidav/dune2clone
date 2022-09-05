@@ -26,9 +26,9 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
-				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas.totalFrames()
+				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas[0].totalFrames()
 				rl.DrawTexture(
-					underConstructionAtlas.atlas[0][frameNumber],
+					underConstructionAtlas[0].atlas[0][frameNumber],
 					osx+int32(x)*TILE_SIZE_IN_PIXELS,
 					osy+int32(y)*TILE_SIZE_IN_PIXELS,
 					DEFAULT_TINT,
@@ -39,13 +39,13 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		var sprites []rl.Texture2D
 		if bld.turret != nil {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
+				buildingsAtlaces[bld.getStaticData().spriteCode][bld.getFaction().colorNumber].atlas[0][0],
 				turretsAtlaces[bld.turret.getStaticData().spriteCode][bld.faction.colorNumber].
 					getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
 			}
 		} else {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].atlas[0][0],
+				buildingsAtlaces[bld.getStaticData().spriteCode][bld.getFaction().colorNumber].atlas[0][0],
 			}
 		}
 		for _, s := range sprites {
