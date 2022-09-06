@@ -43,8 +43,12 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
 	u.currentOrder.targetTileX = -1
 	u.currentOrder.targetTileY = -1
-	u.currentAction.reset()
+	u.currentAction.resetAction()
 	return u
+}
+
+func (u *unit) isAlive() bool {
+	return u.currentHitpoints > 0
 }
 
 func (u *unit) markSelected(b bool) {

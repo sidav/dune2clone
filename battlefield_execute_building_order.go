@@ -35,7 +35,7 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 			return
 		} else if bld.currentAction.getCompletionPercent() >= 100 {
 			bld.currentOrder.resetOrder()
-			bld.currentAction.reset()
+			bld.currentAction.resetAction()
 			return
 		}
 	}
@@ -51,7 +51,7 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 			whatIsBuilt.currentAction.builtAs = BTYPE_BUILD_FIRST
 			whatIsBuilt.currentAction.maxCompletionAmount = BUILDING_ANIMATION_TICKS
 			b.addActor(whatIsBuilt)
-			bld.currentAction.reset()
+			bld.currentAction.resetAction()
 			bld.currentOrder.resetOrder()
 		}
 	case BTYPE_PLACE_FIRST:
@@ -60,7 +60,7 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 			whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = bld.currentOrder.targetTileX, bld.currentOrder.targetTileY
 			whatIsBuilt.currentAction.code = ACTION_BEING_BUILT
 			whatIsBuilt.currentAction.builtAs = BTYPE_PLACE_FIRST
-			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().buildTime*(DESIRED_FPS/BUILDINGS_ACTIONS_TICK_EACH))
+			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 			b.addActor(whatIsBuilt)
 			bld.currentAction.code = ACTION_BUILD
 			bld.currentAction.targetActor = bld.currentOrder.targetActor

@@ -172,7 +172,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	if areFloatsRoughlyEqual(x, targetX) && areFloatsRoughlyEqual(y, targetY) {
 		u.centerX = targetX
 		u.centerY = targetY
-		u.currentAction.reset()
+		u.currentAction.resetAction()
 		return
 		// debugWritef("Tick %d: action finished\n", b.currentTick)
 	}
@@ -206,7 +206,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 		if !b.isTileClearToBeMovedInto(currTx+intVx, currTy+intVy, u) {
 			// If so, stand by.
 			u.centerX, u.centerY = currTcx, currTcy
-			u.currentAction.reset()
+			u.currentAction.resetAction()
 			return
 		}
 	}
@@ -257,7 +257,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 						}
 					}
 					b.addActor(unt)
-					bld.currentAction.reset()
+					bld.currentAction.resetAction()
 					return
 				}
 				// }
@@ -273,6 +273,6 @@ func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
 		bld.currentAction.completionAmount++
 	}
 	if bld.currentAction.getCompletionPercent() == 100 {
-		bld.currentAction.reset()
+		bld.currentAction.resetAction()
 	}
 }

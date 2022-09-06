@@ -7,7 +7,7 @@ import (
 func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
 	apx, apy := u.getPhysicalCenterCoords()
 	if areFloatsAlmostEqual(x, apx) && areFloatsAlmostEqual(y, apy) {
-		u.currentAction.reset()
+		u.currentAction.resetAction()
 		return
 	}
 	vx, vy := geometry.VectorToUnitVectorFloat64(x-u.centerX, y-u.centerY)
@@ -30,7 +30,7 @@ func (b *battlefield) executeAirMoveActionForUnit(u *unit) {
 	}
 	tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
 	if tx == u.currentAction.targetTileX && ty == u.currentAction.targetTileY {
-		u.currentAction.reset()
+		u.currentAction.resetAction()
 	}
 }
 
@@ -77,10 +77,10 @@ func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
 	targetTrueX, targetTrueY := u.currentAction.targetActor.getPhysicalCenterCoords()
 	if u.isPresentAt(ttx, tty) {
 		u.centerX, u.centerY = targetTrueX, targetTrueY
-		u.currentAction.targetActor.getCurrentAction().reset()
+		u.currentAction.targetActor.getCurrentAction().resetAction()
 		u.carriedUnit = u.currentAction.targetActor.(*unit)
 		b.removeActor(u.currentAction.targetActor)
-		u.currentAction.reset()
+		u.currentAction.resetAction()
 	} else {
 		newSpeed := u.getStaticData().movementSpeed / 2
 		vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
@@ -96,5 +96,5 @@ func (b *battlefield) executeAirDropActionForUnit(u *unit) {
 	u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToPhysicalCoords(atx, aty))
 	b.addActor(u.carriedUnit)
 	u.carriedUnit = nil
-	u.currentAction.reset()
+	u.currentAction.resetAction()
 }

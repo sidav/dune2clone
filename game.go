@@ -122,7 +122,7 @@ func (g *game) startGame() {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				unt := i.Value.(*unit)
 				tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
-				if unt.currentHitpoints <= 0 {
+				if !unt.isAlive() {
 					setI := i
 					if i.Prev() != nil {
 						i = i.Prev()
@@ -138,7 +138,7 @@ func (g *game) startGame() {
 
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				bld := i.Value.(*building)
-				if bld.currentHitpoints <= 0 {
+				if !bld.isAlive() {
 					// deleting while iterating
 					setI := i
 					if i.Prev() != nil {

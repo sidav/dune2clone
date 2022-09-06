@@ -17,6 +17,10 @@ type building struct {
 	rallyTileX, rallytileY int
 }
 
+func (b *building) isAlive() bool {
+	return b.currentHitpoints > 0
+}
+
 func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
 	var turr *turret
 	if sTableBuildings[code].turretCode != TRT_NONE {

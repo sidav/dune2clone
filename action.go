@@ -45,7 +45,7 @@ func (a *action) setTargetTileCoords(x, y int) {
 	a.targetTileX, a.targetTileY = x, y
 }
 
-func (a *action) reset() {
+func (a *action) resetAction() {
 	a.targetTileX = -1
 	a.targetTileY = -1
 	a.targetActor = nil
