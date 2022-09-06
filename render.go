@@ -81,7 +81,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	}
 	if pc.controlledFaction.seesTileAtCoords(x, y) {
 		rl.DrawTexture(
-			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
+			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].getSpriteByFrame(0),
 			osx,
 			osy,
 			DEFAULT_TINT,
@@ -94,7 +94,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 				resourceTileAtlasName = "melangemedium"
 			}
 			rl.DrawTexture(
-				tilesAtlaces[resourceTileAtlasName].atlas[0][0],
+				tilesAtlaces[resourceTileAtlasName].getSpriteByFrame(0),
 				osx,
 				osy,
 				DEFAULT_TINT,
@@ -103,7 +103,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	} else {
 		// r.drawDitheredRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		rl.DrawTexture(
-			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].atlas[0][0],
+			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].getSpriteByFrame(0),
 			osx,
 			osy,
 			FOG_OF_WAR_TINT,
@@ -116,7 +116,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 				resourceTileAtlasName = "melangemedium"
 			}
 			rl.DrawTexture(
-				tilesAtlaces[resourceTileAtlasName].atlas[0][0],
+				tilesAtlaces[resourceTileAtlasName].getSpriteByFrame(0),
 				osx,
 				osy,
 				FOG_OF_WAR_TINT,
@@ -133,8 +133,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	sprite := projectilesAtlaces[proj.getStaticData().spriteCode][0].
-		getSpriteByDegreeAndFrameNumber(proj.rotationDegree, 0)
+	sprite := projectilesAtlaces[proj.getStaticData().spriteCode].getSpriteByFrame(0)
 	rl.DrawTexture(
 		sprite,
 		osx-sprite.Width/2,
@@ -152,13 +151,12 @@ func (r *renderer) renderEffect(e *effect) {
 		if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 			return
 		}
-		spriteArr := effectsAtlaces[e.getStaticData().spriteCode].
-			atlas[0]
-		currentFrame := (len(spriteArr) - 1) * e.getExpirationPercent(r.btl.currentTick) / 100
+		neededAtlas := effectsAtlaces[e.getStaticData().spriteCode]
+		currentFrame := (neededAtlas.totalFrames() - 1) * e.getExpirationPercent(r.btl.currentTick) / 100
 		rl.DrawTexture(
-			spriteArr[currentFrame],
-			osx-spriteArr[currentFrame].Width/2,
-			osy-spriteArr[currentFrame].Height/2,
+			neededAtlas.getSpriteByFrame(currentFrame),
+			osx-neededAtlas.getSpriteByFrame(currentFrame).Width/2,
+			osy-neededAtlas.getSpriteByFrame(currentFrame).Height/2,
 			DEFAULT_TINT, // proj.faction.factionColor,
 		)
 	}

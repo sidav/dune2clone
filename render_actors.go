@@ -26,9 +26,9 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
-				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas[0].totalFrames()
+				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas.totalFrames()
 				rl.DrawTexture(
-					underConstructionAtlas[0].atlas[0][frameNumber],
+					underConstructionAtlas.getSpriteByFrame(frameNumber),
 					osx+int32(x)*TILE_SIZE_IN_PIXELS,
 					osy+int32(y)*TILE_SIZE_IN_PIXELS,
 					DEFAULT_TINT,
@@ -39,13 +39,12 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		var sprites []rl.Texture2D
 		if bld.turret != nil {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode][bld.getFaction().colorNumber].atlas[0][0],
-				turretsAtlaces[bld.turret.getStaticData().spriteCode][bld.faction.colorNumber].
-					getSpriteByDegreeAndFrameNumber(bld.turret.rotationDegree, 0),
+				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, 0),
+				turretsAtlaces[bld.turret.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
 			}
 		} else {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode][bld.getFaction().colorNumber].atlas[0][0],
+				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, 0),
 			}
 		}
 		for _, s := range sprites {
@@ -89,11 +88,11 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
-		frame := (6 * b.currentTick / DESIRED_FPS) % len(uiAtlaces["factionflag"][bld.getFaction().colorNumber].atlas[0])
+		frame := (6 * b.currentTick / DESIRED_FPS) % uiAtlaces["factionflag"].totalFrames()
 		rl.DrawTexture(
-			uiAtlaces["factionflag"][bld.getFaction().colorNumber].atlas[0][frame],
+			uiAtlaces["factionflag"].getSpriteByColorAndFrame(bld.faction.colorNumber, frame),
 			osx+4,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"][bld.faction.colorNumber].atlas[0][0].Height-2,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"].getSpriteByColorAndFrame(bld.faction.colorNumber, frame).Height-2,
 			DEFAULT_TINT,
 		)
 	}
@@ -135,7 +134,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	for _, relSquadCoord := range relativeSquadCoords {
 		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-0.5, y+relSquadCoord[1]-0.5)
 		rl.DrawTexture(
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.chassisDegree, 0),
+			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0),
 			osx,
 			osy,
 			DEFAULT_TINT,
@@ -154,7 +153,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 				dsplX, dsplY = geometry.RotateFloat64Vector(dsplX, dsplY, chassisShownDegree)
 			}
 			turrOsX, turrOsY := r.physicalToOnScreenCoords(x+dsplX, y+dsplY)
-			sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode][u.faction.colorNumber].getSpriteByDegreeAndFrameNumber(u.turrets[turrIndex].rotationDegree, 0)
+			sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.turrets[turrIndex].rotationDegree, 0)
 			rl.DrawTexture(
 				sprite,
 				turrOsX-sprite.Width/2,
