@@ -261,63 +261,10 @@ func GetApproxDistFloat64(x1, y1, x2, y2 float64) float64 {
 	}
 }
 
-func SpiralSearchForConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius, initialDirection int) (int, int) {
-	currRadius := 1
-	// direction 0
-	var vx, vy, x, y int
-	switch initialDirection % 4 {
-	case 0:
-		vx, vy = 1, 0
-		x, y = startX, startY-currRadius
-	case 1:
-		vx, vy = 0, 1
-		x, y = startX+currRadius, startY
-	case 2:
-		vx, vy = -1, 0
-		x, y = startX, startY+currRadius
-	case 3:
-		vx, vy = 0, -1
-		x, y = startX-currRadius, startY
+func GetPartitionIndex(currValue, minValue, maxValue, totalParts int) int {
+	partIndex := currValue * totalParts / (maxValue - minValue)
+	if partIndex == totalParts {
+		partIndex--
 	}
-	currStartX, currStartY := x, y
-	for {
-		if condition(x, y) {
-			return x, y
-		}
-		x += vx
-		y += vy
-		// rotate if we are at corner of current square
-		if x == startX+currRadius && y == startY-currRadius || // right top
-			x == startX+currRadius && y == startY+currRadius || // right bottom
-			x == startX-currRadius && y == startY+currRadius || // left bottom
-			x == startX-currRadius && y == startY-currRadius {
-
-			t := vx
-			vx = -vy
-			vy = t
-		}
-		// increasing radius
-		if x == currStartX && y == currStartY {
-			currRadius++
-			if currRadius > maxSearchRadius {
-				return -1, -1
-			}
-			switch initialDirection % 4 {
-			case 0:
-				vx, vy = 1, 0
-				x, y = startX, startY-currRadius
-			case 1:
-				vx, vy = 0, 1
-				x, y = startX+currRadius, startY
-			case 2:
-				vx, vy = -1, 0
-				x, y = startX, startY+currRadius
-			case 3:
-				vx, vy = 0, -1
-				x, y = startX-currRadius, startY
-			}
-			currStartX, currStartY = x, y
-		}
-	}
-	// return -1, -1
+	return partIndex
 }

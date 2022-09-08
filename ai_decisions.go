@@ -96,13 +96,17 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 
 func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building) {
 	startX, startY := geometry.TrueCoordsToTileCoords(builder.getPhysicalCenterCoords())
-	sx, sy := geometry.SpiralSearchForConditionFrom(
+	placementSearchFunc := geometry.SpiralSearchForClosestConditionFrom
+	if whatIsBuilt.turret != nil {
+		placementSearchFunc = geometry.SpiralSearchForFarthestConditionFrom
+	}
+	sx, sy := placementSearchFunc(
 		func(x, y int) bool {
 			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1, false)
 		},
 		startX, startY, 16, 0)
 	if sx == -1 || sy == -1 {
-		sx, sy = geometry.SpiralSearchForConditionFrom(
+		sx, sy = placementSearchFunc(
 			func(x, y int) bool {
 				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0, false)
 			},

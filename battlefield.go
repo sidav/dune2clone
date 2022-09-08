@@ -38,7 +38,7 @@ func (b *battlefield) performResourceGrowth() {
 				// select resource tile to grow
 				growX, growY := tx, ty
 				if b.tiles[tx][ty].resourcesAmount >= RESOURCES_GROWTH_MAX {
-					growX, growY = geometry.SpiralSearchForConditionFrom(
+					growX, growY = geometry.SpiralSearchForClosestConditionFrom(
 						func(x, y int) bool {
 							return b.areTileCoordsValid(x, y) && b.tiles[x][y].getStaticData().canHaveResources &&
 								b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX &&
@@ -320,7 +320,7 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 
 func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (int, int) {
 	// TODO: optimize this shit
-	return geometry.SpiralSearchForConditionFrom(
+	return geometry.SpiralSearchForClosestConditionFrom(
 		func(x, y int) bool {
 			return b.areTileCoordsValid(x, y) &&
 				b.tiles[x][y].resourcesAmount > 0 &&

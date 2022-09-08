@@ -133,7 +133,7 @@ func (r *renderer) renderProjectile(proj *projectile) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	sprite := projectilesAtlaces[proj.getStaticData().spriteCode].getSpriteByFrame(0)
+	sprite := projectilesAtlaces[proj.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(0, proj.rotationDegree, 0)
 	rl.DrawTexture(
 		sprite,
 		osx-sprite.Width/2,
@@ -152,7 +152,7 @@ func (r *renderer) renderEffect(e *effect) {
 			return
 		}
 		neededAtlas := effectsAtlaces[e.getStaticData().spriteCode]
-		currentFrame := (neededAtlas.totalFrames() - 1) * e.getExpirationPercent(r.btl.currentTick) / 100
+		currentFrame := geometry.GetPartitionIndex(e.getExpirationPercent(r.btl.currentTick), 0, 100, neededAtlas.totalFrames())
 		rl.DrawTexture(
 			neededAtlas.getSpriteByFrame(currentFrame),
 			osx-neededAtlas.getSpriteByFrame(currentFrame).Width/2,

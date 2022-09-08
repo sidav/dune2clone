@@ -65,7 +65,7 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 				carrier.currentAction.setTargetTileCoords(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
 				carrier.currentOrder.resetOrder()
 			} else {
-				closestX, closestY := geometry.SpiralSearchForConditionFrom(
+				closestX, closestY := geometry.SpiralSearchForClosestConditionFrom(
 					func(x, y int) bool { return b.isTileClearToBeMovedInto(x, y, carrier.carriedUnit) },
 					carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY, 5, b.tickToNonImportantRandom(4),
 				)
