@@ -28,7 +28,8 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GameMap) {
 				currTileCode = TILE_SAND
 				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_MEDIUM_MAX, RESOURCE_IN_TILE_RICH_MAX)
 			case map_generator.RESOURCE_VEIN:
-				currTileCode = TILE_RESOURCE_VEIN
+				currTileCode = TILE_SAND
+				b.tiles[i][j].hasResourceVein = true
 			default:
 				panic("Unknown tile type!")
 				currTileCode = TILE_SAND

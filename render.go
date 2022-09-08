@@ -79,51 +79,38 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 		// rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		return
 	}
+	tintToUse := FOG_OF_WAR_TINT
 	if pc.controlledFaction.seesTileAtCoords(x, y) {
-		rl.DrawTexture(
-			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].getSpriteByFrame(0),
-			osx,
-			osy,
-			DEFAULT_TINT,
-		)
-		if t.resourcesAmount > 0 {
-			resourceTileAtlasName := "melangerich"
-			if t.resourcesAmount <= RESOURCE_IN_TILE_POOR_MAX {
-				resourceTileAtlasName = "melangepoor"
-			} else if t.resourcesAmount <= RESOURCE_IN_TILE_MEDIUM_MAX {
-				resourceTileAtlasName = "melangemedium"
-			}
-			rl.DrawTexture(
-				tilesAtlaces[resourceTileAtlasName].getSpriteByFrame(0),
-				osx,
-				osy,
-				DEFAULT_TINT,
-			)
-		}
-	} else {
-		// r.drawDitheredRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
-		rl.DrawTexture(
-			tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].getSpriteByFrame(0),
-			osx,
-			osy,
-			FOG_OF_WAR_TINT,
-		)
-		if t.resourcesAmount > 0 {
-			resourceTileAtlasName := "melangerich"
-			if t.resourcesAmount <= RESOURCE_IN_TILE_POOR_MAX {
-				resourceTileAtlasName = "melangepoor"
-			} else if t.resourcesAmount <= RESOURCE_IN_TILE_MEDIUM_MAX {
-				resourceTileAtlasName = "melangemedium"
-			}
-			rl.DrawTexture(
-				tilesAtlaces[resourceTileAtlasName].getSpriteByFrame(0),
-				osx,
-				osy,
-				FOG_OF_WAR_TINT,
-			)
-		}
+		tintToUse = DEFAULT_TINT
 	}
-
+	rl.DrawTexture(
+		tilesAtlaces[sTableTiles[t.code].spriteCodes[t.spriteVariantIndex]].getSpriteByFrame(0),
+		osx,
+		osy,
+		tintToUse,
+	)
+	if t.hasResourceVein {
+		rl.DrawTexture(
+			tilesAtlaces["resourcevein"].getSpriteByFrame(0),
+			osx,
+			osy,
+			tintToUse,
+		)
+	}
+	if t.resourcesAmount > 0 {
+		resourceTileAtlasName := "melangerich"
+		if t.resourcesAmount <= RESOURCE_IN_TILE_POOR_MAX {
+			resourceTileAtlasName = "melangepoor"
+		} else if t.resourcesAmount <= RESOURCE_IN_TILE_MEDIUM_MAX {
+			resourceTileAtlasName = "melangemedium"
+		}
+		rl.DrawTexture(
+			tilesAtlaces[resourceTileAtlasName].getSpriteByFrame(0),
+			osx,
+			osy,
+			tintToUse,
+		)
+	}
 }
 
 func (r *renderer) renderProjectile(proj *projectile) {

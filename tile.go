@@ -4,10 +4,15 @@ type tile struct {
 	code               int
 	spriteVariantIndex int
 	resourcesAmount    int
+	hasResourceVein    bool
 }
 
 func (t *tile) getStaticData() *tileStaticData {
 	return sTableTiles[t.code]
+}
+
+func (t *tile) canHaveResources() bool {
+	return t.getStaticData().canHaveResources && (!t.hasResourceVein)
 }
 
 const (
@@ -16,14 +21,12 @@ const (
 	TILE_BUILDABLE_DAMAGED
 	TILE_ROCK
 	TILE_CONCRETE
-	TILE_RESOURCE_VEIN
 )
 
 type tileStaticData struct {
 	spriteCodes      []string
 	canBuildHere     bool
 	canHaveResources bool // for resource growth, for example
-	growsResources   bool
 	canBeWalkedOn    bool
 }
 
@@ -47,11 +50,5 @@ var sTableTiles = map[int]*tileStaticData{
 	TILE_ROCK: {
 		spriteCodes:  []string{"rock1"},
 		canBuildHere: false,
-	},
-	TILE_RESOURCE_VEIN: {
-		spriteCodes:    []string{"resourcevein"},
-		canBuildHere:   false,
-		growsResources: true,
-		canBeWalkedOn:  true,
 	},
 }

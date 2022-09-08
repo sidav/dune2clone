@@ -77,6 +77,9 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 					default:
 						color = rl.Magenta
 					}
+					if b.tiles[x][y].hasResourceVein {
+						color = rl.Magenta
+					}
 					if !pc.controlledFaction.seesTileAtCoords(x, y) {
 						color.R /= 3
 						color.G /= 3
