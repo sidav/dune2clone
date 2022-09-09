@@ -13,6 +13,15 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	w, h := bld.getStaticData().w, bld.getStaticData().h
 	// fmt.Printf("%d, %d \n", osx, osy)
+	// render rally point. Called BEFORE viewport check.
+	if bld.rallyTileX != -1 {
+		centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
+		rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToPhysicalCoords(bld.rallyTileX, bld.rallytileY))
+		rl.DrawLine(centerX, centerY, rallyX, rallyY, rl.White)
+		rl.DrawRectangleLines(rallyX-TILE_SIZE_IN_PIXELS/4, rallyY-TILE_SIZE_IN_PIXELS/4,
+			2*TILE_SIZE_IN_PIXELS/4, 2*TILE_SIZE_IN_PIXELS/4, rl.White)
+		r.renderFactionFlagAt(bld.faction, rallyX, rallyY)
+	}
 	if !r.isRectInViewport(osx, osy, int32(w*TILE_SIZE_IN_PIXELS), int32(h*TILE_SIZE_IN_PIXELS)) {
 		return
 	}
@@ -62,14 +71,6 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS*int32(w), TILE_SIZE_IN_PIXELS*int32(h), col)
 		rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
 		rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
-		// render rally point
-		if bld.rallyTileX != -1 {
-			centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
-			rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToPhysicalCoords(bld.rallyTileX, bld.rallytileY))
-			rl.DrawLine(centerX, centerY, rallyX, rallyY, rl.White)
-			rl.DrawRectangleLines(rallyX-TILE_SIZE_IN_PIXELS/4, rallyY-TILE_SIZE_IN_PIXELS/4,
-				2*TILE_SIZE_IN_PIXELS/4, 2*TILE_SIZE_IN_PIXELS/4, rl.White)
-		}
 	}
 	// render completion bar
 	if bld.currentAction.getCompletionPercent() >= 0 {
@@ -88,12 +89,10 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
-		frame := (6 * b.currentTick / DESIRED_FPS) % uiAtlaces["factionflag"].totalFrames()
-		rl.DrawTexture(
-			uiAtlaces["factionflag"].getSpriteByColorAndFrame(bld.faction.colorNumber, frame),
+		r.renderFactionFlagAt(
+			bld.faction,
 			osx+4,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)-uiAtlaces["factionflag"].getSpriteByColorAndFrame(bld.faction.colorNumber, frame).Height-2,
-			DEFAULT_TINT,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS),
 		)
 	}
 	// render energy if not enough

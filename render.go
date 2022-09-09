@@ -149,6 +149,17 @@ func (r *renderer) renderEffect(e *effect) {
 	}
 }
 
+func (r *renderer) renderFactionFlagAt(f *faction, leftX, bottomY int32) {
+	frame := (6 * r.btl.currentTick / DESIRED_FPS) % uiAtlaces["factionflag"].totalFrames()
+	spr := uiAtlaces["factionflag"].getSpriteByColorAndFrame(f.colorNumber, frame)
+	rl.DrawTexture(
+		spr,
+		leftX,
+		bottomY-spr.Height,
+		DEFAULT_TINT,
+	)
+}
+
 func (r *renderer) physicalToOnScreenCoords(physX, physY float64) (int32, int32) {
 	pixx, pixy := r.physicalToPixelCoords(physX, physY)
 	pixx -= r.camTopLeftX
