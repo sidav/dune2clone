@@ -14,6 +14,13 @@ func SetDegreesInCircleAmount(degs int) {
 	degreesInCircleFloat = float64(degs)
 }
 
+func intAbs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
 func TrueCoordsToTileCoords(tx, ty float64) (int, int) {
 	return int(tx), int(ty)
 }
@@ -142,6 +149,11 @@ func AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
 		return y1-y2b <= r
 	}
 	return true // intersect detected
+}
+
+// counts each diagonal dist as 1, not 1.4
+func AreRectsInDiagonalRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
+	return AreTwoCellRectsOverlapping(x1-r, y1-r, w1+2*r, h1+2*r, x2, y2, w2, h2)
 }
 
 func AreCoordsInRangeFromRect(fx, fy, tx, ty, w, h, r int) bool { // considering ANY of the tiles in the rect.

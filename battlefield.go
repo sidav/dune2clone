@@ -310,7 +310,7 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 				continue
 			}
 			bx, by, bw, bh := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
-			if geometry.AreRectsInRange(bx, by, bw, bh, topLeftX, topLeftY, placingBld.getStaticData().w, placingBld.getStaticData().h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
+			if geometry.AreRectsInDiagonalRange(bx, by, bw, bh, topLeftX, topLeftY, placingBld.getStaticData().w, placingBld.getStaticData().h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
 				return true
 			}
 		}
