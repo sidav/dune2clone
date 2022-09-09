@@ -247,7 +247,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 			for x := bld.topLeftX; x < bld.topLeftX+bld.getStaticData().w; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
-				if b.costMapForMovement(x, y) != -1 {
+				if unt.getStaticData().isAircraft || b.costMapForMovement(x, y) != -1 {
 					unt.centerX, unt.centerY = geometry.TileCoordsToPhysicalCoords(x, y)
 					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {
 						unt.currentOrder.code = ORDER_MOVE
