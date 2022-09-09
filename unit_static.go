@@ -20,6 +20,7 @@ type unitStatic struct {
 	turretsData []unitStaticTurretsData
 
 	maxHitpoints int
+	armorType    armorCode
 	visionRange  int
 
 	movementSpeed        float64
@@ -48,6 +49,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Infantry squad",
 		chassisSpriteCode: "infantry",
 		maxHitpoints:      50,
+		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       4,
 		movementSpeed:     0.1,
 		turretsData: []unitStaticTurretsData{
@@ -65,6 +67,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Quad",
 		chassisSpriteCode: "quad",
 		maxHitpoints:      75,
+		armorType:         ARMORTYPE_HEAVY,
 		visionRange:       6,
 		movementSpeed:     0.2,
 		turretsData: []unitStaticTurretsData{
@@ -83,6 +86,7 @@ var sTableUnits = map[int]*unitStatic{
 		movementSpeed:     0.1,
 		visionRange:       4,
 		maxHitpoints:      120,
+		armorType:         ARMORTYPE_HEAVY,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode: TRT_TANK,
@@ -99,6 +103,7 @@ var sTableUnits = map[int]*unitStatic{
 		movementSpeed:     0.05,
 		visionRange:       3,
 		maxHitpoints:      40,
+		armorType:         ARMORTYPE_HEAVY,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode:    TRT_MSLTANK,
@@ -117,6 +122,7 @@ var sTableUnits = map[int]*unitStatic{
 		movementSpeed:     0.05,
 		visionRange:       3,
 		maxHitpoints:      40,
+		armorType:         ARMORTYPE_HEAVY,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode:    TRT_AATANK,
@@ -137,6 +143,7 @@ var sTableUnits = map[int]*unitStatic{
 		movementSpeed:          0.07,
 		visionRange:            2,
 		maxHitpoints:           250,
+		armorType:              ARMORTYPE_HEAVY,
 		turretsData:            []unitStaticTurretsData{},
 		chassisRotationSpeed:   4,
 		cost:                   1600,
@@ -148,6 +155,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:        "Carrier aircraft",
 		chassisSpriteCode:    "air_transport",
 		maxHitpoints:         100,
+		armorType:            ARMORTYPE_HEAVY,
 		movementSpeed:        0.2,
 		visionRange:          1,
 		turretsData:          []unitStaticTurretsData{},
@@ -162,6 +170,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Gunship",
 		chassisSpriteCode: "air_gunship",
 		maxHitpoints:      50,
+		armorType:         ARMORTYPE_HEAVY,
 		movementSpeed:     0.25,
 		visionRange:       7,
 		turretsData: []unitStaticTurretsData{

@@ -5,9 +5,10 @@ type projectile struct {
 	code             int
 	centerX, centerY float64
 	rotationDegree   int
-	fuel             float64 // how many 'speeds' it spends until it is destroyed
-	targetActor      actor   // for homing projectiles
-	damage           int     // set by turret, not proj static data
+	fuel             float64    // how many 'speeds' it spends until it is destroyed
+	targetActor      actor      // for homing projectiles
+	damage           int        // set by turret, not proj static data
+	damageType       damageCode // this too
 	setToRemove      bool
 }
 

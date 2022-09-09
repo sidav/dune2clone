@@ -35,6 +35,7 @@ type turretStatic struct {
 
 	firesProjectileOfCode int
 	projectileDamage      int
+	projectileDamageType  damageCode
 }
 
 const (
@@ -61,6 +62,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        45,
 		projectileDamage:      30,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 	TRT_INFANTRY: {
 		spriteCode:            "",
@@ -72,6 +74,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.5,
 		attackCooldown:        45,
 		projectileDamage:      1,
+		projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 	},
 	TRT_MSLTANK: {
 		spriteCode:            "msltank",
@@ -83,6 +86,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        150,
 		projectileDamage:      45,
+		projectileDamageType:  DAMAGETYPE_ANTI_BUILDING,
 	},
 	TRT_AATANK: {
 		spriteCode:            "aamsltank",
@@ -94,6 +98,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        75,
 		projectileDamage:      45,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 	TRT_QUAD: {
 		spriteCode:            "",
@@ -105,6 +110,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.3,
 		attackCooldown:        5,
 		projectileDamage:      1,
+		projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 	},
 	TRT_AIR_GUNSHIP: {
 		spriteCode:            "",
@@ -116,6 +122,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       2.0,
 		attackCooldown:        15,
 		projectileDamage:      10,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 	TRT_MINIGUN_BUILDING: {
 		spriteCode:            "bld_turret_minigun",
@@ -128,6 +135,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        5,
 		projectileDamage:      2,
+		projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 	},
 	TRT_CANNON_BUILDING: {
 		spriteCode:            "bld_turret_cannon",
@@ -139,6 +147,7 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        50,
 		projectileDamage:      15,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 	TRT_BUILDING_FORTRESS: {
 		spriteCode:            "bld_fortress_cannon",
@@ -150,5 +159,6 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.3,
 		attackCooldown:        50,
 		projectileDamage:      25,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 }

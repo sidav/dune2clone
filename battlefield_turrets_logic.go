@@ -81,6 +81,7 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 			fuel:           geometry.GetApproxDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
 			targetActor:    t.targetActor,
 			damage:         t.getStaticData().projectileDamage,
+			damageType:     t.getStaticData().projectileDamageType,
 		})
 		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 	}

@@ -21,7 +21,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().rotationSpeed)
 		p.rotationDegree = geometry.NormalizeDegree(p.rotationDegree)
 		if geometry.GetApproxDistFloat64(targX, targY, p.centerX, p.centerY) < 1 {
-			b.dealDamageToActor(p.damage, p.targetActor)
+			b.dealDamageToActor(p.damage, p.damageType, p.targetActor)
 			p.setToRemove = true
 			if p.getStaticData().createsEffectOnImpact {
 				b.addEffect(&effect{
@@ -38,7 +38,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
 		targ := b.getActorAtTileCoordinates(tilex, tiley)
 		if targ != nil && (p.targetActor == nil || targ.isInAir() == p.targetActor.isInAir()) {
-			b.dealDamageToActor(p.damage, targ)
+			b.dealDamageToActor(p.damage, p.damageType, targ)
 		}
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{
