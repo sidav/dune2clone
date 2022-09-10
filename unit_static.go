@@ -3,6 +3,7 @@ package main
 const (
 	UNT_INFANTRY = iota
 	UNT_TANK
+	UNT_TANK2
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_AATANK
@@ -90,6 +91,24 @@ var sTableUnits = map[int]*unitStatic{
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode: TRT_TANK,
+			},
+		},
+		chassisRotationSpeed: 5,
+		cost:                 450,
+		buildTime:            7,
+		hotkeyToBuild:        "T",
+	},
+	UNT_TANK2: {
+		displayedName:     "Anjaopterix tank",
+		chassisSpriteCode: "tank2",
+		movementSpeed:     0.1,
+		visionRange:       4,
+		maxHitpoints:      120,
+		armorType:         ARMORTYPE_HEAVY,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode:    TRT_TANK2,
+				turretCenterX: -0.14,
 			},
 		},
 		chassisRotationSpeed: 5,
