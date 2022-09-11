@@ -4,6 +4,7 @@ const (
 	UNT_INFANTRY = iota
 	UNT_TANK
 	UNT_TANK2
+	UNT_MCV
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_AATANK
@@ -32,8 +33,10 @@ type unitStatic struct {
 
 	defaultOrderOnCreation orderCode
 
-	isAircraft  bool
-	isTransport bool
+	canBeDeployed bool
+	deploysInto   int // building code
+	isAircraft    bool
+	isTransport   bool
 
 	cost          int
 	buildTime     int // seconds
@@ -115,6 +118,20 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 450,
 		buildTime:            7,
 		hotkeyToBuild:        "T",
+	},
+	UNT_MCV: {
+		displayedName:        "MCV",
+		chassisSpriteCode:    "placeholder",
+		movementSpeed:        0.025,
+		visionRange:          4,
+		maxHitpoints:         300,
+		armorType:            ARMORTYPE_HEAVY,
+		canBeDeployed:        true,
+		deploysInto:          BLD_BASE,
+		chassisRotationSpeed: 2,
+		cost:                 750,
+		buildTime:            15,
+		hotkeyToBuild:        "V",
 	},
 	UNT_MSLTANK: {
 		displayedName:     "Missile tank",

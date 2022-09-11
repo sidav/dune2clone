@@ -28,7 +28,9 @@ func (a *action) getTextDescription() string {
 	case ACTION_HARVEST:
 		return "Harvesting"
 	case ACTION_ENTER_BUILDING:
-		return "Harvesting"
+		return "Entering"
+	case ACTION_DEPLOY:
+		return "Deploying"
 
 	case ACTION_AIR_APPROACH_LAND_TILE:
 		return "Slowly flying to"
@@ -49,6 +51,7 @@ func (a *action) resetAction() {
 	a.targetTileX = -1
 	a.targetTileY = -1
 	a.targetActor = nil
+	a.maxCompletionAmount = 0
 	a.code = ACTION_WAIT
 	a.completionAmount = 0
 }
@@ -67,7 +70,7 @@ func (a *action) getCompletionPercent() int {
 			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
-	if a.code == ACTION_BEING_BUILT {
+	if a.maxCompletionAmount > 0 {
 		return int((100 * a.completionAmount) / a.maxCompletionAmount)
 	}
 	return -1
@@ -86,6 +89,7 @@ const (
 	ACTION_HARVEST
 
 	ACTION_ENTER_BUILDING
+	ACTION_DEPLOY
 
 	ACTION_AIR_APPROACH_LAND_TILE
 	ACTION_AIR_APPROACH_ACTOR

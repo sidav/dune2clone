@@ -35,9 +35,13 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 		} else {
 			b.executeGroundMoveToRepairOrder(u)
 		}
+	case ORDER_DEPLOY:
+		b.executeDeployOrderForUnit(u)
 
 	case ORDER_CARRY_UNIT_TO_TARGET_COORDS:
 		b.executeCarryUnitOrderForAircraft(u)
+	default:
+		panic("No order execution func!")
 	}
 }
 
@@ -168,6 +172,14 @@ func (b *battlefield) executeGroundMoveToRepairOrder(u *unit) {
 	}
 
 	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+}
+
+func (b *battlefield) executeDeployOrderForUnit(u *unit) {
+	if u.getStaticData().canBeDeployed {
+		u.currentAction.code = ACTION_DEPLOY
+		u.currentAction.targetActor = createBuilding(u.getStaticData().deploysInto, 0, 0, u.getFaction())
+		u.currentAction.maxCompletionAmount = 5 * (DESIRED_FPS / UNIT_ACTIONS_TICK_EACH)
+	}
 }
 
 func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {

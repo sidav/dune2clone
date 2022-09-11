@@ -173,6 +173,9 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 				u.currentOrder.targetActor = aac
 				return
 			}
+			if len(pc.selection) == 1 && aac == pc.selection[0] && u.getStaticData().canBeDeployed {
+				u.currentOrder.code = ORDER_DEPLOY
+			}
 			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
 				u.currentOrder.code = ORDER_HARVEST
 			}

@@ -50,6 +50,8 @@ func (o *order) getTextDescription() string {
 		return "Moving for repairs"
 	case ORDER_CARRY_UNIT_TO_TARGET_COORDS:
 		return "Transporting"
+	case ORDER_DEPLOY:
+		return "DEPLOYING"
 	case ORDER_CANCEL_BUILD:
 		return ""
 	}
@@ -67,6 +69,7 @@ const (
 	ORDER_PRODUCE
 	ORDER_WAIT_FOR_BUILDING_PLACEMENT
 	ORDER_CANCEL_BUILD
+	ORDER_DEPLOY
 	// aircraft orders
 	ORDER_CARRY_UNIT_TO_TARGET_COORDS
 )

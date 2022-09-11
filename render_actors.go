@@ -166,6 +166,10 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getStaticData().maxHitpoints,
 			&factionColors[u.getFaction().colorNumber])
 	}
+	// render completion bar
+	if u.currentAction.getCompletionPercent() >= 0 {
+		r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS), u.currentAction.getCompletionPercent(), 100, &rl.Blue)
+	}
 	if u.isSelected {
 		col := rl.DarkGreen
 		circleX := osx + TILE_SIZE_IN_PIXELS/2

@@ -55,6 +55,10 @@ func (b *battlefield) executeActionForActor(a actor) {
 		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
 			b.executeAirDropActionForUnit(u)
 		}
+	case ACTION_DEPLOY:
+		if u, ok := a.(*unit); ok {
+			b.executeBeingDeployedActionForUnit(u)
+		}
 
 	default:
 		panic("No action execution func!")
@@ -275,4 +279,25 @@ func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
 	if bld.currentAction.getCompletionPercent() == 100 {
 		bld.currentAction.resetAction()
 	}
+}
+
+func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
+	if u.currentAction.completionAmount == u.currentAction.maxCompletionAmount {
+		tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
+		b.removeActor(u)
+		if b.canBuildingBePlacedAt(u.currentAction.targetActor.(*building), tx, ty, 0, true) {
+			targetBld := u.currentAction.targetActor.(*building)
+			targetBld.topLeftX = tx
+			targetBld.topLeftY = ty
+			targetBld.currentAction.code = ACTION_BEING_BUILT
+			targetBld.currentAction.builtAs = BTYPE_BUILD_FIRST
+			targetBld.currentAction.maxCompletionAmount = BUILDING_ANIMATION_TICKS
+			b.addActor(targetBld)
+		} else {
+			b.addActor(u)
+		}
+		u.currentAction.resetAction()
+		return
+	}
+	u.currentAction.completionAmount++
 }

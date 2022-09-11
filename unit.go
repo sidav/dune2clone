@@ -59,6 +59,10 @@ func (u *unit) getPhysicalCenterCoords() (float64, float64) {
 	return u.centerX, u.centerY
 }
 
+func (u *unit) getTileCoords() (int, int) {
+	return geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+}
+
 func (u *unit) getVisionRange() int {
 	vr := u.getStaticData().visionRange
 	if vr <= 0 {
