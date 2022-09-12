@@ -37,6 +37,9 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		return
 	}
 	u.currentOrder.resetOrder()
+	if u.getStaticData().canBeDeployed {
+		ai.deployDeployableUnitSomewhere(b, u)
+	}
 	if len(u.turrets) > 0 {
 		for i := b.units.Front(); i != nil; i = i.Next() {
 			var selectedTarget actor = nil

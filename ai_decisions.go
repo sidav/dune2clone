@@ -28,10 +28,10 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	if ai.controlsFaction.getStorageRemaining() < 500 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 10})
 	}
-	// builders
-	if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
-	}
+	//// builders
+	//if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
+	//	decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
+	//}
 	// defenses
 	if ai.current.defenses < ai.desired.defenses && ai.current.defenses < ai.max.defenses {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 2})
@@ -68,12 +68,12 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 				candidates = append(candidates, code)
 			}
 		}
-	case "builder":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].builds != nil {
-				candidates = append(candidates, code)
-			}
-		}
+	//case "builder":
+	//	for _, code := range availableCodes {
+	//		if sTableBuildings[code].builds != nil {
+	//			candidates = append(candidates, code)
+	//		}
+	//	}
 	case "production":
 		for _, code := range availableCodes {
 			if sTableBuildings[code].produces != nil {
@@ -115,5 +115,22 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 	if sx != -1 && sy != -1 {
 		builder.currentOrder.targetTileX = sx
 		builder.currentOrder.targetTileY = sy
+	}
+}
+
+func (ai *aiStruct) deployDeployableUnitSomewhere(b *battlefield, u *unit) {
+	bld := createBuilding(u.getStaticData().deploysInto, 0, 0, u.faction)
+	tx, ty := u.getTileCoords()
+	if !b.canUnitBeDeployedAt(u, tx, ty) {
+		depX, depY := geometry.SpiralSearchForFarthestConditionFrom(
+			func(x, y int) bool {
+				return b.canBuildingBePlacedAt(bld, x, y, 0, true) && rnd.OneChanceFrom(32)
+			},
+			tx, ty, 16, rnd.Rand(4),
+		)
+		u.currentOrder.code = ORDER_MOVE
+		u.currentOrder.setTargetTileCoords(depX, depY)
+	} else {
+		u.currentOrder.code = ORDER_DEPLOY
 	}
 }

@@ -272,6 +272,15 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeF
 	)
 }
 
+func (b *battlefield) canUnitBeDeployedAt(u *unit, x, y int) bool {
+	// tx, ty := u.getTileCoords()
+	bld := createBuilding(u.getStaticData().deploysInto, 0, 0, u.faction)
+	b.removeActor(u)
+	can := b.canBuildingBePlacedAt(bld, x, y, 0, true)
+	b.addActor(u)
+	return can
+}
+
 func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topLeftY, additionalDistance int, ignoreDistanceFromBase bool) bool {
 	const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	_, _, w, h := placingBld.getDimensionsForConstructon()

@@ -284,8 +284,7 @@ func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
 func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
 	if u.currentAction.completionAmount == u.currentAction.maxCompletionAmount {
 		tx, ty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-		b.removeActor(u)
-		if b.canBuildingBePlacedAt(u.currentAction.targetActor.(*building), tx, ty, 0, true) {
+		if b.canUnitBeDeployedAt(u, tx, ty) {
 			targetBld := u.currentAction.targetActor.(*building)
 			targetBld.topLeftX = tx
 			targetBld.topLeftY = ty
@@ -293,8 +292,7 @@ func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
 			targetBld.currentAction.builtAs = BTYPE_BUILD_FIRST
 			targetBld.currentAction.maxCompletionAmount = BUILDING_ANIMATION_TICKS
 			b.addActor(targetBld)
-		} else {
-			b.addActor(u)
+			b.removeActor(u)
 		}
 		u.currentAction.resetAction()
 		return
