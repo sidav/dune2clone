@@ -53,14 +53,14 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 			carrier.currentOrder.resetOrder()
 			return
 		}
-		debugWrite("PICK ORDER SET")
+		// debugWrite("PICK ORDER SET")
 		carrier.currentAction.code = ACTION_AIR_PICK_UNIT_UP
 		carrier.currentAction.targetActor = targetUnit
 	} else { // already picked up
 		if carrier.isPresentAt(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) {
 			if b.isTileClearToBeMovedInto(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY, carrier.carriedUnit) {
 
-				debugWrite("DROP ACTION SET")
+				// debugWrite("DROP ACTION SET")
 				carrier.currentAction.code = ACTION_AIR_DROP_UNIT
 				carrier.currentAction.setTargetTileCoords(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
 				carrier.currentOrder.resetOrder()
@@ -72,7 +72,7 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 				carrier.currentOrder.setTargetTileCoords(closestX, closestY)
 			}
 		} else {
-			debugWrite("APPROACH ACTION SET")
+			// debugWrite("APPROACH ACTION SET")
 			carrier.currentAction.code = ACTION_AIR_APPROACH_LAND_TILE
 			carrier.currentAction.setTargetTileCoords(carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
 		}

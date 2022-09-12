@@ -3,11 +3,21 @@ package main
 type aiStruct struct {
 	name            string
 	controlsFaction *faction
+	moneyPoorMax    float64
+	moneyRichMin    float64
 	current         aiAnalytics
 	desired         aiAnalytics
 	max             aiAnalytics
 
 	alreadyOrderedBuildThisTick bool
+}
+
+func (ai *aiStruct) isPoor() bool {
+	return ai.controlsFaction.getMoney() <= ai.moneyPoorMax
+}
+
+func (ai *aiStruct) isRich() bool {
+	return ai.controlsFaction.getMoney() > ai.moneyRichMin
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {
@@ -67,7 +77,7 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 		ai.alreadyOrderedBuildThisTick = true
 		return
 	}
-	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units {
+	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units && (!ai.isPoor() || rnd.OneChanceFrom(100)) {
 		code := bld.getStaticData().produces[rnd.Rand(len(bld.getStaticData().produces))]
 		bld.currentOrder.code = ORDER_PRODUCE
 		bld.currentOrder.targetActorCode = code

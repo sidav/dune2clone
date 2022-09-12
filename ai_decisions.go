@@ -13,38 +13,46 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
 	// create weights according to the needs
 	// eco
-	if ai.current.eco == 0 && ai.controlsFaction.getMoney() < 7500 {
+	if ai.current.eco == 0 && ai.isPoor() {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 200})
+	} else if ai.isPoor() && ai.current.eco < ai.desired.eco {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 15})
 	} else if ai.current.eco < ai.desired.eco {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 3})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"eco", 5})
 	}
 	// energy
 	if ai.controlsFaction.getAvailableEnergy() <= 0 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
 	} else if ai.controlsFaction.getAvailableEnergy() <= 5 {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 3})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 5})
 	}
 	// silos
 	if ai.controlsFaction.getStorageRemaining() < 500 {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 10})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 50})
 	}
-	//// builders
-	//if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
-	//	decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
-	//}
+	// builders
+	if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"builder", 1})
+	}
 	// defenses
 	if ai.current.defenses < ai.desired.defenses && ai.current.defenses < ai.max.defenses {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 2})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 4})
 	}
 	// production
 	if ai.current.production == 0 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 10})
 	} else if ai.current.production < ai.desired.production {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 3})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 5})
 	}
 
-	decidedIndex := rnd.SelectRandomIndexFromWeighted(len(decisionWeights), func(i int) int { return decisionWeights[i].weight })
-	return ai.selectRandomBuildableCodeByFunction(availableCodes, decisionWeights[decidedIndex].weightCode)
+	code := -1
+	decidedIndex := -1
+	for code == -1 {
+		decidedIndex = rnd.SelectRandomIndexFromWeighted(len(decisionWeights), func(i int) int { return decisionWeights[i].weight })
+		code = ai.selectRandomBuildableCodeByFunction(availableCodes, decisionWeights[decidedIndex].weightCode)
+	}
+	debugWritef("AI %s decided to build %s from weights %v\n", ai.name, decisionWeights[decidedIndex].weightCode, decisionWeights)
+	return code
 }
 
 func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, function string) int {
@@ -64,16 +72,16 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 		}
 	case "silo":
 		for _, code := range availableCodes {
-			if sTableBuildings[code].givesEnergy > 0 {
+			if sTableBuildings[code].storageAmount > 0 && sTableBuildings[code].receivesResources == false {
 				candidates = append(candidates, code)
 			}
 		}
-	//case "builder":
-	//	for _, code := range availableCodes {
-	//		if sTableBuildings[code].builds != nil {
-	//			candidates = append(candidates, code)
-	//		}
-	//	}
+	case "builder":
+		for _, code := range availableCodes {
+			if sTableBuildings[code].builds != nil {
+				candidates = append(candidates, code)
+			}
+		}
 	case "production":
 		for _, code := range availableCodes {
 			if sTableBuildings[code].produces != nil {
@@ -90,6 +98,9 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 		return availableCodes[rnd.Rand(len(availableCodes))]
 	default:
 		panic("No such function: " + function)
+	}
+	if len(candidates) == 0 {
+		return -1
 	}
 	return candidates[rnd.Rand(len(candidates))]
 }

@@ -63,8 +63,8 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		maxSquadSize:         5,
 		chassisRotationSpeed: 360,
-		cost:                 150,
-		buildTime:            3,
+		cost:                 250,
+		buildTime:            7,
 		hotkeyToBuild:        "I",
 	},
 	UNT_QUAD: {
@@ -81,7 +81,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 7,
 		cost:                 350,
-		buildTime:            3,
+		buildTime:            7,
 		hotkeyToBuild:        "Q",
 	},
 	UNT_TANK: {
@@ -98,7 +98,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 5,
 		cost:                 450,
-		buildTime:            7,
+		buildTime:            12,
 		hotkeyToBuild:        "T",
 	},
 	UNT_TANK2: {
@@ -116,7 +116,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 5,
 		cost:                 450,
-		buildTime:            7,
+		buildTime:            12,
 		hotkeyToBuild:        "T",
 	},
 	UNT_MCV: {
@@ -149,7 +149,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 8,
 		cost:                 1150,
-		buildTime:            12,
+		buildTime:            25,
 		hotkeyToBuild:        "M",
 	},
 	UNT_AATANK: {
@@ -168,7 +168,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 8,
 		cost:                 1150,
-		buildTime:            12,
+		buildTime:            17,
 		hotkeyToBuild:        "A",
 	},
 	UNT_HARVESTER: {
@@ -216,7 +216,7 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		chassisRotationSpeed: 3,
 		cost:                 500,
-		buildTime:            15,
+		buildTime:            25,
 		hotkeyToBuild:        "G",
 		isAircraft:           true,
 	},

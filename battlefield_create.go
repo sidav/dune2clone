@@ -61,26 +61,25 @@ func (b *battlefield) finalizeTileVariants() {
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for spNumber := range startPoints {
-		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 1, 1))
+		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 1))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		b.addActor(createBuilding(BLD_BASE, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
 	// player faction settings
-	b.factions[0].resourcesMultiplier = 1
-	b.factions[0].buildSpeedMultiplier = 1
+	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
+	//b.factions[0].resourcesMultiplier = 1
+	//b.factions[0].buildSpeedMultiplier = 10
 	b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
-	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
-
 	b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
-	b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
-	b.ais[len(b.ais)-1].controlsFaction.money = 5000
+	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
+	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
-	unt := createUnit(UNT_TANK, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
-	unt.currentHitpoints = 1
+	// unt := createUnit(UNT_MCV, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
+	// unt.currentHitpoints = 1
 	// unt.currentAction.setTargetTileCoords(10, 10)
-	b.addActor(unt)
+	// b.addActor(unt)
 }
