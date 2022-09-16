@@ -27,8 +27,14 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 5})
 	}
 	// silos
-	if ai.controlsFaction.getStorageRemaining() < 500 {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 50})
+	if ai.controlsFaction.getStorageRemaining() < 500 && ai.controlsFaction.resourceStorage > 0 {
+		if ai.isPoor() {
+			decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 50})
+		} else if ai.isRich() {
+			decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 10})
+		} else {
+			decisionWeights = append(decisionWeights, aiDecisionWeight{"silo", 25})
+		}
 	}
 	// builders
 	if ai.current.builders < ai.desired.builders && ai.current.builders < ai.max.builders {
@@ -72,7 +78,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 		}
 	case "silo":
 		for _, code := range availableCodes {
-			if sTableBuildings[code].storageAmount > 0 && sTableBuildings[code].receivesResources == false {
+			if sTableBuildings[code].storageAmount > 0 { // && sTableBuildings[code].receivesResources == false {
 				candidates = append(candidates, code)
 			}
 		}
@@ -95,14 +101,27 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 			}
 		}
 	case "any":
-		return availableCodes[rnd.Rand(len(availableCodes))]
+		candidates = availableCodes
 	default:
 		panic("No such function: " + function)
 	}
 	if len(candidates) == 0 {
 		return -1
 	}
-	return candidates[rnd.Rand(len(candidates))]
+
+	// assign weight for random selection according to AI current money
+	index := rnd.SelectRandomIndexFromWeighted(len(candidates),
+		func(x int) int {
+			consideredCode := candidates[x]
+			if int(ai.controlsFaction.getMoney()) > sTableBuildings[consideredCode].cost {
+				return 5
+			} else if !ai.isPoor() {
+				return 3
+			}
+			return 1
+		},
+	)
+	return candidates[index]
 }
 
 func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building) {
