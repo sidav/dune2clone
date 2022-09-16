@@ -46,14 +46,15 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		}
 	} else {
 		var sprites []rl.Texture2D
+		frameNumber := b.currentTick/(DESIRED_FPS/4)
 		if bld.turret != nil {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, 0),
+				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
 				turretsAtlaces[bld.turret.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
 			}
 		} else {
 			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, 0),
+				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
 			}
 		}
 		for _, s := range sprites {

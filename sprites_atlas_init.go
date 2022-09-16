@@ -132,6 +132,14 @@ func extractSubimageFromImage(img image.Image, fromx, fromy, w, h int) image.Ima
 		// reset img bounds, because RayLib goes nuts about it otherwise
 		subImg.(*image.NRGBA).Rect = image.Rect(0, 0, w, h)
 		return subImg
+	case *image.Paletted:
+		subImg := img.(*image.Paletted).SubImage(
+			image.Rect(minx+fromx, miny+fromy, minx+fromx+w, miny+fromy+h),
+		)
+		// reset img bounds, because RayLib goes nuts about it otherwise
+		subImg.(*image.Paletted).Rect = image.Rect(0, 0, w, h)
+		return subImg
+	default:
 	}
-	panic("Unknown image type")
+	panic(fmt.Sprintf("\nUnknown image type %T", img))
 }

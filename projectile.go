@@ -38,13 +38,14 @@ var sTableProjectiles = map[int]*projectileStatic{
 		size:                      0.3,
 		speed:                     0.7,
 		createsEffectOnImpact:     true,
-		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
 	},
 	PRJ_BULLETS: {
-		spriteCode:            "bullets",
-		size:                  0.2,
-		speed:                 0.7,
-		createsEffectOnImpact: false,
+		spriteCode:                "bullets",
+		size:                      0.2,
+		speed:                     0.7,
+		createsEffectOnImpact:     true,
+		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 	},
 	PRJ_MISSILE: {
 		spriteCode:                "missile",
@@ -52,7 +53,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 		speed:                     0.2,
 		rotationSpeed:             1,
 		createsEffectOnImpact:     true,
-		effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
 	},
 	PRJ_AA_MISSILE: {
 		spriteCode:                "aamissile",

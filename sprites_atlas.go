@@ -23,6 +23,9 @@ func (sa *spriteAtlas) getSpriteByFrame(frameNum int) rl.Texture2D {
 }
 
 func (sa *spriteAtlas) getSpriteByColorAndFrame(color, frameNum int) rl.Texture2D {
+	if frameNum >= sa.totalFrames() {
+		frameNum = frameNum % sa.totalFrames()
+	}
 	return sa.atlas[color][0][frameNum]
 }
 

@@ -144,6 +144,9 @@ func (g *game) startGame() {
 					if i.Prev() != nil {
 						i = i.Prev()
 					}
+					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_REGULAR_EXPLOSION, 50,
+						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 25,
+					)
 					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 50,
 						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 25,
 					)

@@ -19,6 +19,7 @@ type effectCode int
 const (
 	EFFECT_NONE = iota
 	EFFECT_SMALL_EXPLOSION
+	EFFECT_REGULAR_EXPLOSION
 )
 
 type effectStatic struct {
@@ -29,6 +30,10 @@ type effectStatic struct {
 var sTableEffects = map[effectCode]*effectStatic{
 	EFFECT_SMALL_EXPLOSION: {
 		spriteCode:      "smallexplosion",
+		defaultLifeTime: 16,
+	},
+	EFFECT_REGULAR_EXPLOSION: {
+		spriteCode:      "regularexplosion",
 		defaultLifeTime: 15,
 	},
 }
