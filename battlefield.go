@@ -223,22 +223,71 @@ func (b *battlefield) costMapForMovement(x, y int) int {
 	return 10
 }
 
-func (b *battlefield) getListOfActorsInRangeFrom(x, y, r int) *list.List {
+//func (b *battlefield) getListOfActorsInRangeFromActor(x, y, r int) *list.List {
+//	lst := list.List{}
+//	for i := b.units.Front(); i != nil; i = i.Next() {
+//		u := i.Value.(*unit)
+//		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
+//		if geometry.GetApproxDistFromTo(tx, ty, x, y) <= r {
+//			lst.PushBack(u)
+//		}
+//	}
+//	for i := b.buildings.Front(); i != nil; i = i.Next() {
+//		bld := i.Value.(*building)
+//		if geometry.AreCoordsInRangeFromRect(x, y, bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, r) {
+//			lst.PushBack(bld)
+//		}
+//	}
+//	return &lst
+//}
+
+func (b *battlefield) getListOfActorsInRangeFromActor(a actor, r int) *list.List {
 	lst := list.List{}
 	for i := b.units.Front(); i != nil; i = i.Next() {
 		u := i.Value.(*unit)
-		tx, ty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
-		if geometry.GetApproxDistFromTo(tx, ty, x, y) <= r {
+		if b.areActorsInRangeFromEachOther(a, u, r) {
 			lst.PushBack(u)
 		}
 	}
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
-		if geometry.AreCoordsInRangeFromRect(x, y, bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, r) {
+		if b.areActorsInRangeFromEachOther(a, bld, r) {
 			lst.PushBack(bld)
 		}
 	}
 	return &lst
+}
+
+func (b *battlefield) areActorsInRangeFromEachOther(a1, a2 actor, r int) bool {
+	switch a1.(type) {
+	case *unit:
+		switch a2.(type) {
+		case *unit:
+			x1, y1 := a1.getPhysicalCenterCoords()
+			x2, y2 := a2.getPhysicalCenterCoords()
+			return int(geometry.GetApproxDistFloat64(x1, y1, x2, y2)) <= r
+		case *building:
+			x1, y1 := a1.(*unit).getTileCoords()
+			bld := a2.(*building)
+			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+			return geometry.AreRectsInRange(x1, y1, 1, 1, x2, y2, w, h, r)
+		}
+	case *building:
+		switch a2.(type) {
+		case *unit:
+			unitX, unitY := a2.(*unit).getTileCoords()
+			bld := a1.(*building)
+			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+			return geometry.AreRectsInRange(unitX, unitY, 1, 1, x2, y2, w, h, r)
+		case *building:
+			bld1 := a1.(*building)
+			x1, y1, w1, h1 := bld1.topLeftX, bld1.topLeftY, bld1.getStaticData().w, bld1.getStaticData().h
+			bld2 := a2.(*building)
+			x2, y2, w2, h2 := bld2.topLeftX, bld2.topLeftY, bld2.getStaticData().w, bld2.getStaticData().h
+			return geometry.AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r)
+		}
+	}
+	panic("How is it possible?")
 }
 
 func (b *battlefield) getListOfActorsInTilesRect(x, y, w, h int) *list.List {

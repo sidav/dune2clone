@@ -66,6 +66,9 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 		u.currentOrder.resetOrder()
 		return
 	}
+	if len(u.turrets) != 0 {
+		u.turrets[0].targetActor = u.currentOrder.targetActor
+	}
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := geometry.TrueCoordsToTileCoords(u.currentOrder.targetActor.getPhysicalCenterCoords())
 	if geometry.GetApproxDistFromTo(utx, uty, orderTileX, orderTileY) <= u.getMainTurretRange() {
