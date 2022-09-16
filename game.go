@@ -153,6 +153,10 @@ func (g *game) startGame() {
 					g.battlefield.changeTilesCodesInRectTo(
 						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
 					)
+					if bld.unitPlacedInside != nil {
+						g.battlefield.addActor(bld.unitPlacedInside)
+						bld.unitPlacedInside = nil
+					}
 					g.battlefield.buildings.Remove(setI)
 				} else {
 					bld.faction.energyProduction += bld.getStaticData().givesEnergy

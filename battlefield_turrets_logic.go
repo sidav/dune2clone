@@ -40,10 +40,10 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		// shooterTileX, shooterTileY = bld.topLeftX, bld.topLeftY
 		shooterX, shooterY = bld.getPhysicalCenterCoords()
 	}
-	if t.targetActor != nil && !t.targetActor.isAlive() {
+	if t.targetActor != nil && (!t.targetActor.isAlive() || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, t.getStaticData().fireRange)) {
 		t.targetActor = nil
 	}
-	if t.targetActor == nil || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, t.getStaticData().fireRange) {
+	if t.targetActor == nil {
 		// if targetActor not set...
 		actorsInRange := b.getListOfActorsInRangeFromActor(shooter, t.getStaticData().fireRange)
 		for l := actorsInRange.Front(); l != nil; l = l.Next() {
