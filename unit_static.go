@@ -178,13 +178,19 @@ var sTableUnits = map[int]*unitStatic{
 		maxCargoAmount:         700,
 		movementSpeed:          0.07,
 		visionRange:            2,
-		maxHitpoints:           250,
+		maxHitpoints:           200,
 		armorType:              ARMORTYPE_HEAVY,
-		turretsData:            []unitStaticTurretsData{},
-		chassisRotationSpeed:   4,
-		cost:                   1600,
-		buildTime:              12,
-		hotkeyToBuild:          "H",
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode:    TRT_HARVESTER,
+				turretCenterX: 0,
+				turretCenterY: 0,
+			},
+		},
+		chassisRotationSpeed: 4,
+		cost:                 1600,
+		buildTime:            12,
+		hotkeyToBuild:        "H",
 	},
 	// aircrafts
 	AIR_TRANSPORT: {

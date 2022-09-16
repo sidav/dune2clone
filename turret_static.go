@@ -21,6 +21,7 @@ const (
 	TRT_TANK2
 	TRT_INFANTRY
 	TRT_MSLTANK
+	TRT_HARVESTER
 	TRT_AATANK
 	TRT_QUAD
 	TRT_AIR_GUNSHIP
@@ -89,6 +90,18 @@ var sTableTurrets = map[int]*turretStatic{
 		attackCooldown:        75,
 		projectileDamage:      45,
 		projectileDamageType:  DAMAGETYPE_HEAVY,
+	},
+	TRT_HARVESTER: {
+		spriteCode:            "",
+		firesProjectileOfCode: PRJ_BULLETS,
+		attacksLand:           true,
+		rotateSpeed:           90,
+		fireRange:             4,
+		fireSpreadDegrees:     11,
+		shotRangeSpread:       0.4,
+		attackCooldown:        16,
+		projectileDamage:      3,
+		projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 	},
 	TRT_QUAD: {
 		spriteCode:            "",
