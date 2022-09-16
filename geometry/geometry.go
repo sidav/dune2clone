@@ -152,7 +152,7 @@ func AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
 }
 
 // counts each diagonal dist as 1, not 1.4
-func AreRectsInDiagonalRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
+func AreRectsInTaxicabRange(x1, y1, w1, h1, x2, y2, w2, h2, r int) bool {
 	return AreTwoCellRectsOverlapping(x1-r, y1-r, w1+2*r, h1+2*r, x2, y2, w2, h2)
 }
 
@@ -271,6 +271,10 @@ func GetApproxDistFloat64(x1, y1, x2, y2 float64) float64 {
 	} else {
 		return diffY + (diffX / 2)
 	}
+}
+
+func GetPreciseDistFloat64(x1, y1, x2, y2 float64) float64 {
+	return math.Sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
 }
 
 func GetPartitionIndex(currValue, minValue, maxValue, totalParts int) int {

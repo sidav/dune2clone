@@ -68,23 +68,28 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 	}
 
 	if abs(t.rotationDegree-rotateTo) <= t.getStaticData().fireSpreadDegrees/2 {
-		// debugWritef("tick %d: PEWPEW\n", b.currentTick) // TODO
-		projX, projY := shooterX, shooterY
-		degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
-		rangeSpread := t.getStaticData().shotRangeSpread * (float64(rnd.RandInRange(-100, 100)) / 100)
-		b.addProjectile(&projectile{
-			faction:        shooter.getFaction(),
-			code:           t.getStaticData().firesProjectileOfCode,
-			centerX:        projX,
-			centerY:        projY,
-			rotationDegree: t.rotationDegree + degreeSpread,
-			fuel:           geometry.GetApproxDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
-			targetActor:    t.targetActor,
-			damage:         t.getStaticData().projectileDamage,
-			damageType:     t.getStaticData().projectileDamageType,
-		})
-		t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
+		b.shootAsTurretAtTarget(shooter, t)
 	}
+}
+
+func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
+	shooterX, shooterY := shooter.getPhysicalCenterCoords()
+	targetCenterX, targetCenterY := t.targetActor.getPhysicalCenterCoords()
+	projX, projY := shooterX, shooterY // TODO: turret displacement
+	degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
+	rangeSpread := t.getStaticData().shotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
+	b.addProjectile(&projectile{
+		faction:        shooter.getFaction(),
+		code:           t.getStaticData().firesProjectileOfCode,
+		centerX:        projX,
+		centerY:        projY,
+		rotationDegree: t.rotationDegree + degreeSpread,
+		fuel:           geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
+		targetActor:    t.targetActor,
+		damage:         t.getStaticData().projectileDamage,
+		damageType:     t.getStaticData().projectileDamageType,
+	})
+	t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 }
 
 func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {

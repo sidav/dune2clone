@@ -24,6 +24,8 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 		r.renderElasticSelection(b, pc)
 	}
 	r.renderOrderGivenAnimation(b, pc)
+	// technical
+	r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
 }
 
 func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerController) {
@@ -55,7 +57,6 @@ func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerControlle
 }
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
-	r.drawText(fmt.Sprintf("TICK %d", b.currentTick), 0, 0, 24, rl.White)
 	// draw money
 	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.getMoney()))
 	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, rl.Black, rl.White)

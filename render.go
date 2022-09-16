@@ -3,6 +3,7 @@ package main
 import (
 	"dune2clone/geometry"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"time"
 )
 
 var DEFAULT_TINT = rl.RayWhite
@@ -18,10 +19,12 @@ type renderer struct {
 	viewportW, viewportH     int32
 	minimapRenderTextureMask rl.Texture2D
 	btl                      *battlefield
+	lastFrameRenderingTime   time.Duration
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	r.btl = b
+	timeFrameRenderStarted := time.Now()
 	if rl.IsWindowResized() || rl.IsWindowMaximized() {
 		WINDOW_W = int32(rl.GetScreenWidth())
 		WINDOW_H = int32(rl.GetScreenHeight())
@@ -64,8 +67,9 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 		r.renderEffect(i.Value.(*effect))
 	}
 
-	r.renderUI(b, pc)
+	r.lastFrameRenderingTime = time.Since(timeFrameRenderStarted) / time.Millisecond
 
+	r.renderUI(b, pc)
 	rl.EndDrawing()
 }
 
