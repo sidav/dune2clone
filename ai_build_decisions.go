@@ -63,49 +63,20 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 
 func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, function string) int {
 	candidates := make([]int, 0)
-	switch function {
-	case "eco":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].receivesResources {
-				candidates = append(candidates, code)
-			}
-		}
-	case "energy":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].givesEnergy > 0 && sTableBuildings[code].builds == nil {
-				candidates = append(candidates, code)
-			}
-		}
-	case "silo":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].storageAmount > 0 { // && sTableBuildings[code].receivesResources == false {
-				candidates = append(candidates, code)
-			}
-		}
-	case "builder":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].builds != nil {
-				candidates = append(candidates, code)
-			}
-		}
-	case "production":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].produces != nil {
-				candidates = append(candidates, code)
-			}
-		}
-	case "defense":
-		for _, code := range availableCodes {
-			if sTableBuildings[code].turretCode != TRT_NONE {
-				candidates = append(candidates, code)
-			}
-		}
-	case "any":
+	if function == "any" {
 		candidates = availableCodes
-	default:
-		panic("No such function: " + function)
+	} else {
+		for i := range availableCodes {
+			fncts := ai.deduceBuildingFunctions(availableCodes[i])
+			for j := range fncts {
+				if fncts[j] == function {
+					candidates = append(candidates, availableCodes[i])
+				}
+			}
+		}
 	}
 	if len(candidates) == 0 {
+		//panic("No such function: " + function)
 		return -1
 	}
 
@@ -127,11 +98,37 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 	return candidates[index]
 }
 
+func (ai *aiStruct) deduceBuildingFunctions(bldCode int) []string {
+	codes := make([]string, 0)
+	if sTableBuildings[bldCode].receivesResources {
+		codes = append(codes, "eco")
+	}
+	if sTableBuildings[bldCode].givesEnergy > 0 {
+		codes = append(codes, "energy")
+	}
+	if sTableBuildings[bldCode].storageAmount > 0 {
+		codes = append(codes, "silo")
+	}
+	if len(sTableBuildings[bldCode].builds) > 0 {
+		codes = append(codes, "builder")
+	}
+	if len(sTableBuildings[bldCode].produces) > 0 {
+		codes = append(codes, "production")
+	}
+	if sTableBuildings[bldCode].turretCode != TRT_NONE {
+		codes = append(codes, "defense")
+	}
+	return codes
+}
+
 func (ai *aiStruct) canUseBuilding(bldCode int) bool {
 	switch bldCode {
-	case BLD_REPAIR_DEPOT: return false
-	case BLD_FUSION: return false
-	default: return true
+	case BLD_REPAIR_DEPOT:
+		return false
+	case BLD_FUSION:
+		return false
+	default:
+		return true
 	}
 }
 
