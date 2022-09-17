@@ -8,11 +8,14 @@ func createAi(f *faction, n string) *aiStruct {
 		moneyPoorMax:    5500,
 		moneyRichMin:    15000,
 		desired: aiAnalytics{
-			builders:   2,
-			eco:        2,
-			production: 3,
-			defenses:   5,
-			units:      25,
+			defenses:            5,
+			builders:            2,
+			eco:                 2,
+			production:          3,
+			combatUnits:         20,
+			nonCombatUnits:      5,
+			harvesters:          5,
+			transports:          3,
 		},
 		max: aiAnalytics{
 			nonDefenseBuildings: 30,
@@ -20,7 +23,10 @@ func createAi(f *faction, n string) *aiStruct {
 			eco:                 5,
 			production:          5,
 			defenses:            10,
-			units:               50,
+			combatUnits:         25,
+			nonCombatUnits:      15,
+			harvesters:          10,
+			transports:          5,
 		},
 	}
 	return &ai

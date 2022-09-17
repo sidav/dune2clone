@@ -95,9 +95,9 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 		ai.alreadyOrderedBuildThisTick = true
 		return
 	}
-	if bld.getStaticData().produces != nil && ai.current.units < ai.max.units && (!ai.isPoor() || rnd.OneChanceFrom(100)) {
-		code := bld.getStaticData().produces[rnd.Rand(len(bld.getStaticData().produces))]
+	if bld.getStaticData().produces != nil && (!ai.isPoor() || rnd.OneChanceFrom(50)) {
 		bld.currentOrder.code = ORDER_PRODUCE
-		bld.currentOrder.targetActorCode = code
+		bld.currentOrder.targetActorCode = ai.selectWhatToProduce(bld)
+		return
 	}
 }

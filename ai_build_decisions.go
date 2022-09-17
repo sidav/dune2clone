@@ -42,7 +42,7 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	}
 	// defenses
 	if ai.current.defenses < ai.desired.defenses && ai.current.defenses < ai.max.defenses {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 4})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"defense", 3})
 	}
 	// production
 	if ai.current.production == 0 {
@@ -100,22 +100,23 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 
 func (ai *aiStruct) deduceBuildingFunctions(bldCode int) []string {
 	codes := make([]string, 0)
-	if sTableBuildings[bldCode].receivesResources {
+	bsd := sTableBuildings[bldCode]
+	if bsd.receivesResources {
 		codes = append(codes, "eco")
 	}
-	if sTableBuildings[bldCode].givesEnergy > 0 {
+	if bsd.givesEnergy > 0 {
 		codes = append(codes, "energy")
 	}
-	if sTableBuildings[bldCode].storageAmount > 0 {
+	if bsd.storageAmount > 0 {
 		codes = append(codes, "silo")
 	}
-	if len(sTableBuildings[bldCode].builds) > 0 {
+	if len(bsd.builds) > 0 {
 		codes = append(codes, "builder")
 	}
-	if len(sTableBuildings[bldCode].produces) > 0 {
+	if len(bsd.produces) > 0 {
 		codes = append(codes, "production")
 	}
-	if sTableBuildings[bldCode].turretCode != TRT_NONE {
+	if bsd.turretCode != TRT_NONE {
 		codes = append(codes, "defense")
 	}
 	return codes
