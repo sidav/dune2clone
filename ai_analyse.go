@@ -1,11 +1,11 @@
 package main
 
 type aiAnalytics struct {
-	buildings  int
-	builders   int
-	eco        int
-	production int
-	defenses   int
+	nonDefenseBuildings int
+	builders            int
+	eco                 int
+	production          int
+	defenses            int
 
 	units int
 }
@@ -15,7 +15,6 @@ func (aa *aiAnalytics) reset() {
 }
 
 func (aa *aiAnalytics) increaseCountersForBuilding(bld *building) {
-	aa.buildings++
 	if bld.getStaticData().receivesResources {
 		aa.eco++
 	}
@@ -27,6 +26,8 @@ func (aa *aiAnalytics) increaseCountersForBuilding(bld *building) {
 	}
 	if bld.turret != nil {
 		aa.defenses++
+	} else {
+		aa.nonDefenseBuildings++
 	}
 	if bld.currentAction.code == ACTION_BUILD {
 		// count not yet built structures too

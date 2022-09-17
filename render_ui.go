@@ -26,6 +26,7 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderOrderGivenAnimation(b, pc)
 	// technical
 	r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
+	r.drawText(r.timeDebugString, 0, 28, 24, rl.White)
 }
 
 func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerController) {

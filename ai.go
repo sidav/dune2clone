@@ -49,16 +49,34 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 	u.currentOrder.resetOrder()
 	if u.getStaticData().canBeDeployed {
 		ai.deployDeployableUnitSomewhere(b, u)
+		return
 	}
 	if len(u.turrets) > 0 {
-		for i := b.units.Front(); i != nil; i = i.Next() {
-			var selectedTarget actor = nil
-			if i.Value.(actor).getFaction() != ai.controlsFaction {
-				if selectedTarget == nil || rnd.OneChanceFrom(4) {
-					u.currentOrder.code = ORDER_ATTACK
-					u.currentOrder.targetActor = i.Value.(actor)
+		// temporary solution. TODO: task-force based decisions
+		var selectedTarget actor = nil
+		attackBuildings := rnd.OneChanceFrom(3)
+		if attackBuildings {
+			for i := b.buildings.Front(); i != nil; i = i.Next() {
+				currActor := i.Value.(actor)
+				if currActor.getFaction() != ai.controlsFaction {
+					if selectedTarget == nil || rnd.OneChanceFrom(4) {
+						selectedTarget = currActor
+					}
 				}
 			}
+		} else {
+			for i := b.units.Front(); i != nil; i = i.Next() {
+				currActor := i.Value.(actor)
+				if currActor.getFaction() != ai.controlsFaction {
+					if selectedTarget == nil || rnd.OneChanceFrom(4) {
+						selectedTarget = currActor
+					}
+				}
+			}
+		}
+		if selectedTarget != nil && b.canActorAttackActor(u, selectedTarget) {
+			u.currentOrder.code = ORDER_ATTACK
+			u.currentOrder.targetActor = selectedTarget
 		}
 	}
 }
@@ -71,7 +89,7 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
-	if bld.getStaticData().builds != nil && ai.current.buildings < ai.max.buildings && !ai.alreadyOrderedBuildThisTick {
+	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings && !ai.alreadyOrderedBuildThisTick {
 		bld.currentOrder.code = ORDER_BUILD
 		bld.currentOrder.targetActorCode = ai.selectWhatToBuild(bld)
 		ai.alreadyOrderedBuildThisTick = true

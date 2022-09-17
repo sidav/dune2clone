@@ -19,7 +19,10 @@ type renderer struct {
 	viewportW, viewportH     int32
 	minimapRenderTextureMask rl.Texture2D
 	btl                      *battlefield
+
+	// for technical/debug output
 	lastFrameRenderingTime   time.Duration
+	timeDebugString          string
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {

@@ -110,18 +110,29 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 	}
 
 	// assign weight for random selection according to AI current money
-	index := rnd.SelectRandomIndexFromWeighted(len(candidates),
-		func(x int) int {
-			consideredCode := candidates[x]
-			if int(ai.controlsFaction.getMoney()) > sTableBuildings[consideredCode].cost {
-				return 5
-			} else if !ai.isPoor() {
-				return 3
-			}
-			return 1
-		},
-	)
+	index := -1
+	for index == -1 || !ai.canUseBuilding(candidates[index]) {
+		index = rnd.SelectRandomIndexFromWeighted(len(candidates),
+			func(x int) int {
+				consideredCode := candidates[x]
+				if int(ai.controlsFaction.getMoney()) > sTableBuildings[consideredCode].cost {
+					return 5
+				} else if !ai.isPoor() {
+					return 3
+				}
+				return 1
+			},
+		)
+	}
 	return candidates[index]
+}
+
+func (ai *aiStruct) canUseBuilding(bldCode int) bool {
+	switch bldCode {
+	case BLD_REPAIR_DEPOT: return false
+	case BLD_FUSION: return false
+	default: return true
+	}
 }
 
 func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building) {
