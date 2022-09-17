@@ -32,8 +32,6 @@ func (g *game) startGame() {
 	timeLogicStarted := time.Now()
 
 	for !rl.WindowShouldClose() {
-		g.render.renderBattlefield(&g.battlefield, pc)
-
 		timeReportString := fmt.Sprintf("Tick %d. ", g.battlefield.currentTick)
 		timeLoopStarted = time.Now()
 		timeCurrentActionStarted = time.Now()
@@ -197,6 +195,9 @@ func (g *game) startGame() {
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
 		timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
+		timeCurrentActionStarted = time.Now()
+		g.render.renderBattlefield(&g.battlefield, pc)
+		timeReportString += fmt.Sprintf("Render/sleep %dms\n", time.Since(timeCurrentActionStarted) / time.Millisecond)
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
 		}
