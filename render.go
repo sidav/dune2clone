@@ -21,8 +21,8 @@ type renderer struct {
 	btl                      *battlefield
 
 	// for technical/debug output
-	lastFrameRenderingTime   time.Duration
-	timeDebugString          string
+	lastFrameRenderingTime time.Duration
+	timeDebugInfosToRender []debugTimeInfo
 }
 
 func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {

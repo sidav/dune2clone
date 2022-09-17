@@ -1,11 +1,13 @@
 package main
 
 import (
+	"dune2clone/geometry"
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"math"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const UI_FONT_SIZE = 28
@@ -26,7 +28,18 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderOrderGivenAnimation(b, pc)
 	// technical
 	r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
-	r.drawText(r.timeDebugString, 0, 28, 24, rl.White)
+	for i := range r.timeDebugInfosToRender {
+		color := rl.White
+		ind := geometry.GetPartitionIndex(int(r.timeDebugInfosToRender[i].duration * time.Microsecond), 0, int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), 4)
+		// debugWritef("%d from %d is %d\n", int(r.timeDebugInfosToRender[i].duration * time.Microsecond), int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), ind)
+		if ind == 2 {
+			color = rl.Yellow
+		}
+		if ind == 3 {
+			color = rl.Red
+		}
+		r.drawText(fmt.Sprintf("%s: %d", r.timeDebugInfosToRender[i].logicName, r.timeDebugInfosToRender[i].duration), 0, int32(28 + 28 * i), 24, color)
+	}
 }
 
 func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerController) {

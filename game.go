@@ -10,6 +10,7 @@ import (
 
 type game struct {
 	battlefield battlefield
+	render      renderer
 }
 
 func (g *game) startGame() {
@@ -26,21 +27,21 @@ func (g *game) startGame() {
 		}
 	}
 
-	r := renderer{}
-
 	timeLoopStarted := time.Now()
 	timeCurrentActionStarted := time.Now()
 	timeLogicStarted := time.Now()
 
 	for !rl.WindowShouldClose() {
+		g.render.renderBattlefield(&g.battlefield, pc)
+
 		timeReportString := fmt.Sprintf("Tick %d. ", g.battlefield.currentTick)
 		timeLoopStarted = time.Now()
 		timeCurrentActionStarted = time.Now()
-		r.renderBattlefield(&g.battlefield, pc)
-		timeReportString += fmt.Sprintf("render: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+		// timeReportString += fmt.Sprintf("render: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 
 		pc.playerControl(&g.battlefield)
 
+		timeCurrentActionStarted = time.Now()
 		if g.battlefield.currentTick%AI_ANALYZES_EACH == 0 {
 			for i := range g.battlefield.ais {
 				g.battlefield.ais[i].aiAnalyze(&g.battlefield)
@@ -51,6 +52,7 @@ func (g *game) startGame() {
 				g.battlefield.ais[i].aiControl(&g.battlefield)
 			}
 		}
+		timeReportString += g.createTimeReportString("AI", timeCurrentActionStarted, 1)
 
 		if g.battlefield.currentTick%RESOURCES_GROW_EACH_TICK == 0 {
 			g.battlefield.performResourceGrowth()
@@ -64,7 +66,7 @@ func (g *game) startGame() {
 				g.battlefield.executeActionForActor(i.Value.(*unit))
 				g.battlefield.actorForActorsTurret(i.Value.(*unit))
 			}
-			timeReportString += fmt.Sprintf("units: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			timeReportString += g.createTimeReportString("units", timeCurrentActionStarted, 2)
 		}
 		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
@@ -74,7 +76,7 @@ func (g *game) startGame() {
 					g.battlefield.actorForActorsTurret(i.Value.(*building))
 				}
 			}
-			timeReportString += fmt.Sprintf("buildings: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			timeReportString += g.createTimeReportString("buildings", timeCurrentActionStarted, 2)
 		}
 		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
@@ -92,7 +94,7 @@ func (g *game) startGame() {
 					g.battlefield.projectiles.Remove(setI)
 				}
 			}
-			timeReportString += fmt.Sprintf("projs: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			timeReportString += g.createTimeReportString("projectiles", timeCurrentActionStarted, 2)
 		}
 		// effects
 		timeCurrentActionStarted = time.Now()
@@ -109,8 +111,8 @@ func (g *game) startGame() {
 				g.battlefield.effects.Remove(setI)
 			}
 		}
-		timeReportString += fmt.Sprintf("effects: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
-		timeReportString += fmt.Sprintf("all actions: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
+		timeReportString += g.createTimeReportString("effects", timeCurrentActionStarted, 2)
+		timeReportString += g.createTimeReportString("all actions", timeLogicStarted, 2)
 
 		// cleanup and faction calculations
 		if g.battlefield.currentTick%TRAVERSE_ALL_ACTORS_TICK_EACH == 0 {
@@ -174,7 +176,7 @@ func (g *game) startGame() {
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForUnit(i.Value.(*unit))
 			}
-			timeReportString += fmt.Sprintf("orders: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			timeReportString += g.createTimeReportString("unit orders", timeCurrentActionStarted, 2)
 			//if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
 			//	debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			//}
@@ -184,7 +186,7 @@ func (g *game) startGame() {
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForBuilding(i.Value.(*building))
 			}
-			timeReportString += fmt.Sprintf("bld orders: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
+			timeReportString += g.createTimeReportString("blds orders", timeCurrentActionStarted, 2)
 			//if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
 			//	debugWritef("Tick %d, bld orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			//}
@@ -192,14 +194,44 @@ func (g *game) startGame() {
 
 		g.battlefield.currentTick++
 
-		timeReportString += fmt.Sprintf("Whole logic: %dms, ", time.Since(timeLogicStarted)/time.Millisecond)
+		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
-		timeReportString += fmt.Sprintf("whole tick took %dms", time.Since(timeLoopStarted)/time.Millisecond)
-		r.timeDebugString = fmt.Sprintf("whole tick took %dms", time.Since(timeLoopStarted)/time.Millisecond)
+		timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
 		}
 	}
+}
+
+// returns string, also writes the string to renderer debug lines
+func (g *game) createTimeReportString(actionName string, timeSince time.Time, criticalValueMs int) string {
+	if len(g.render.timeDebugInfosToRender) == 0 {
+		g.render.timeDebugInfosToRender = make([]debugTimeInfo, 0)
+	}
+	mcs := time.Since(timeSince) / time.Microsecond
+	criticalMcs := time.Duration(criticalValueMs) * time.Microsecond
+	if mcs > criticalMcs {
+		// time.Sleep(1000 * time.Millisecond)
+		debugWritef("WARNING: %s took %d mcs!\n", actionName, mcs)
+	}
+
+	neededFound := false
+	for i := range g.render.timeDebugInfosToRender {
+		if g.render.timeDebugInfosToRender[i].logicName == actionName {
+			g.render.timeDebugInfosToRender[i].duration = mcs
+			neededFound = true
+			break
+		}
+	}
+	if !neededFound {
+		g.render.timeDebugInfosToRender = append(g.render.timeDebugInfosToRender, debugTimeInfo{
+			logicName:        actionName,
+			duration:         mcs,
+			criticalDuration: criticalMcs,
+		})
+	}
+
+	return fmt.Sprintf("%s: %dmcs", actionName, mcs) + ", "
 }
 
 func (g *game) selectMapToGenerateBattlefield() {

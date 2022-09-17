@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -57,18 +56,6 @@ func areFloatsAlmostEqual(f, g float64) bool {
 
 func areFloatsRoughlyEqual(f, g float64) bool {
 	return math.Abs(f-g) < 0.01
-}
-
-func debugWrite(msg string) {
-	if DEBUG_OUTPUT {
-		fmt.Println(msg)
-	}
-}
-
-func debugWritef(msg string, args ...interface{}) {
-	if DEBUG_OUTPUT {
-		fmt.Printf(msg, args...)
-	}
 }
 
 func sign(x int) int {
