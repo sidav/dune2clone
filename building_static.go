@@ -3,8 +3,10 @@ package main
 type buildTypeCode int
 
 const (
-	BLD_BASE = iota
-	BLD_POWERPLANT
+	BLD_CONYARD1 = iota
+	BLD_CONYARD2
+	BLD_POWERPLANT1
+	BLD_POWERPLANT2
 	BLD_FUSION
 	BLD_BARRACKS
 	BLD_FACTORY
@@ -54,26 +56,53 @@ func (bs *buildingStatic) canUnitBePlacedIn() bool {
 }
 
 var sTableBuildings = map[int]*buildingStatic{
-	BLD_BASE: {
+	BLD_CONYARD1: {
 		spriteCode:    "base",
 		maxHitpoints:  1000,
 		w:             2,
 		h:             2,
-		displayedName: "Construction Yard",
+		displayedName: "Construction Yard Beta",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_POWERPLANT, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []int{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
 		hotkeyToBuild: "Y",
 	},
-	BLD_POWERPLANT: {
-		spriteCode:    "powerplant",
+	BLD_CONYARD2: {
+		spriteCode:    "base",
+		maxHitpoints:  1000,
+		w:             2,
+		h:             2,
+		displayedName: "Commonwealth Construction Yard",
+		cost:          2500,
+		buildTime:     30,
+		builds: []int{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
+		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
+		givesEnergy:   10,
+		hotkeyToBuild: "Y",
+	},
+	BLD_POWERPLANT1: {
+		spriteCode:    "powerplant1",
 		maxHitpoints:  500,
 		w:             2,
 		h:             2,
-		displayedName: "Power Plant",
+		displayedName: "Plasma Reactor",
+		cost:          600,
+		buildTime:     6,
+		builds:        nil,
+		produces:      nil,
+		givesEnergy:   25,
+		hotkeyToBuild: "P",
+	},
+	BLD_POWERPLANT2: {
+		spriteCode:    "powerplant2",
+		maxHitpoints:  500,
+		w:             2,
+		h:             2,
+		displayedName: "RITEG power plant",
 		cost:          500,
 		buildTime:     5,
 		builds:        nil,

@@ -64,7 +64,12 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 1))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
-		b.addActor(createBuilding(BLD_BASE, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		// TODO: faction selection
+		if spNumber % 2 == 0 {
+			b.addActor(createBuilding(BLD_CONYARD1, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		} else {
+			b.addActor(createBuilding(BLD_CONYARD2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		}
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
 	// player faction settings

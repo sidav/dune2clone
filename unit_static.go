@@ -127,7 +127,7 @@ var sTableUnits = map[int]*unitStatic{
 		maxHitpoints:         300,
 		armorType:            ARMORTYPE_HEAVY,
 		canBeDeployed:        true,
-		deploysInto:          BLD_BASE,
+		deploysInto:          BLD_CONYARD1,
 		chassisRotationSpeed: 4,
 		cost:                 750,
 		buildTime:            15,
