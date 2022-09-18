@@ -9,8 +9,8 @@ import (
 )
 
 type game struct {
-	battlefield battlefield
-	render      renderer
+	battlefield    battlefield
+	render         renderer
 }
 
 func (g *game) startGame() {
@@ -35,7 +35,6 @@ func (g *game) startGame() {
 		timeReportString := fmt.Sprintf("Tick %d. ", g.battlefield.currentTick)
 		timeLoopStarted = time.Now()
 		timeCurrentActionStarted = time.Now()
-		// timeReportString += fmt.Sprintf("render: %dms, ", time.Since(timeCurrentActionStarted)/time.Millisecond)
 
 		pc.playerControl(&g.battlefield)
 
@@ -195,13 +194,27 @@ func (g *game) startGame() {
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
 		timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
+
 		timeCurrentActionStarted = time.Now()
-		g.render.renderBattlefield(&g.battlefield, pc)
-		timeReportString += fmt.Sprintf("Render/sleep %dms\n", time.Since(timeCurrentActionStarted) / time.Millisecond)
+		if g.shouldTickBeRendered(g.battlefield.currentTick, RENDERER_DESIRED_FPS, DESIRED_TPS) {
+			g.render.renderBattlefield(&g.battlefield, pc)
+		}
+		timeReportString += fmt.Sprintf("Render/sleep %dms\n", time.Since(timeCurrentActionStarted)/time.Millisecond)
+
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
 		}
 	}
+}
+
+func (g *game) shouldTickBeRendered(tick, fps, tps int) bool {
+	//g.renderedFrames += RENDERER_DESIRED_FPS
+	//if g.renderedFrames > DESIRED_TPS {
+	//	g.renderedFrames = g.renderedFrames % DESIRED_TPS
+	//	return true
+	//}
+	//return false
+	return fps*tick / tps != fps*(tick+1) / tps
 }
 
 // returns string, also writes the string to renderer debug lines

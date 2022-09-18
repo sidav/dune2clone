@@ -60,7 +60,7 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 			whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = bld.currentOrder.targetTileX, bld.currentOrder.targetTileY
 			whatIsBuilt.currentAction.code = ACTION_BEING_BUILT
 			whatIsBuilt.currentAction.builtAs = BTYPE_PLACE_FIRST
-			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().buildTime * (DESIRED_FPS / BUILDINGS_ACTIONS_TICK_EACH))
+			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().buildTime * (DESIRED_TPS / BUILDINGS_ACTIONS_TICK_EACH))
 			b.addActor(whatIsBuilt)
 			bld.currentAction.code = ACTION_BUILD
 			bld.currentAction.targetActor = bld.currentOrder.targetActor

@@ -7,7 +7,8 @@ import (
 const (
 	DEBUG_OUTPUT = true
 
-	DESIRED_FPS                   = 60
+	DESIRED_TPS                   = 60 // logical ticks per second
+	RENDERER_DESIRED_FPS          = 60
 	UNIT_ACTIONS_TICK_EACH        = 2
 	PROJECTILES_ACTIONS_TICK_EACH = 2
 	BUILDINGS_ACTIONS_TICK_EACH   = 5

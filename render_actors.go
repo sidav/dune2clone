@@ -46,7 +46,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		}
 	} else {
 		var sprites []rl.Texture2D
-		frameNumber := b.currentTick/(DESIRED_FPS/4)
+		frameNumber := b.currentTick/(DESIRED_TPS /4)
 		if bld.turret != nil {
 			sprites = []rl.Texture2D{
 				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),

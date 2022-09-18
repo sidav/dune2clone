@@ -181,7 +181,7 @@ func (b *battlefield) executeDeployOrderForUnit(u *unit) {
 	if u.getStaticData().canBeDeployed {
 		u.currentAction.code = ACTION_DEPLOY
 		u.currentAction.targetActor = createBuilding(u.getStaticData().deploysInto, 0, 0, u.getFaction())
-		u.currentAction.maxCompletionAmount = 5 * (DESIRED_FPS / UNIT_ACTIONS_TICK_EACH)
+		u.currentAction.maxCompletionAmount = 5 * (DESIRED_TPS / UNIT_ACTIONS_TICK_EACH)
 	}
 }
 

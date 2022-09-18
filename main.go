@@ -10,7 +10,7 @@ var rnd fibrandom.FibRandom
 func main() {
 	// geometry.SetDegreesInCircleAmount(100)
 	rl.InitWindow(int32(WINDOW_W), int32(WINDOW_H), "DAS IST KEIN DUNE 2!")
-	rl.SetTargetFPS(DESIRED_FPS)
+	rl.SetTargetFPS(RENDERER_DESIRED_FPS)
 	rl.SetWindowState(rl.FlagWindowResizable)
 	rl.SetExitKey(rl.KeyEscape)
 

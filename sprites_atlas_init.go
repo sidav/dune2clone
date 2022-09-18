@@ -53,7 +53,7 @@ func CreateAtlasFromFile(filename string, topleftx, toplefty, originalSpriteW, o
 			}
 		}
 	}
-	debugWritef("LOADING %s: created atlas {%s}", filename, newAtlas.getDebugDataLine())
+	debugWritef("LOADING %s: created atlas {%s}\n", filename, newAtlas.getDebugDataLine())
 	return &newAtlas
 }
 
