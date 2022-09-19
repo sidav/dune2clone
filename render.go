@@ -118,6 +118,11 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 			tintToUse,
 		)
 	}
+	// Debug draw collisions
+	//if t.isOccupiedByActor != nil {
+	//	rl.DrawText("1", osx, osy, 25, rl.White)
+	//	rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.White)
+	//}
 }
 
 func (r *renderer) renderProjectile(proj *projectile) {

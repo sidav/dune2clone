@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"dune2clone/astar"
 	"dune2clone/geometry"
+	"fmt"
 )
 
 type battlefield struct {
@@ -90,6 +91,10 @@ func (b *battlefield) addActor(a actor) {
 	switch a.(type) {
 	case *unit:
 		b.units.PushBack(a)
+		x, y := a.(*unit).getTileCoords()
+		if !a.isInAir() {
+			b.setTilesOccupiedByActor(x, y, 1, 1, a)
+		}
 	case *building:
 		bld := a.(*building)
 		if bld.getStaticData().givesFreeUnitOnCreation {
@@ -98,6 +103,7 @@ func (b *battlefield) addActor(a actor) {
 			unt.chassisDegree = 90 // looking down
 			bld.unitPlacedInside = unt
 		}
+		b.setTilesOccupiedByActor(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, a)
 		b.buildings.PushBack(a)
 	default:
 		panic("wat")
@@ -129,12 +135,19 @@ func (b *battlefield) removeActor(a actor) {
 	case *unit:
 		for i := b.units.Front(); i != nil; i = i.Next() {
 			if i.Value == a {
+				unt := a.(*unit)
+				if !unt.isInAir() {
+					x, y := unt.getTileCoords()
+					b.clearTilesOccupationInRect(x, y, 1, 1)
+				}
 				b.units.Remove(i)
 			}
 		}
 	case *building:
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			if i.Value == a {
+				bld := a.(*building)
+				b.clearTilesOccupationInRect(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h)
 				b.buildings.Remove(i)
 			}
 		}
@@ -151,7 +164,26 @@ func (b *battlefield) addEffect(e *effect) {
 	b.effects.PushFront(e)
 }
 
+func (b *battlefield) setTilesOccupiedByActor(x, y, w, h int, a actor) {
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
+			b.tiles[i][j].isOccupiedByActor = a
+		}
+	}
+}
+
+func (b *battlefield) clearTilesOccupationInRect(x, y, w, h int) {
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
+			b.tiles[i][j].isOccupiedByActor = nil
+		}
+	}
+}
+
 func (b *battlefield) getActorAtTileCoordinates(x, y int) actor {
+	if b.areTileCoordsValid(x, y) && b.tiles[x][y].isOccupiedByActor != nil {
+		return b.tiles[x][y].isOccupiedByActor
+	}
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if i.Value.(*building).isPresentAt(x, y) {
 			// debugWrite("got")
@@ -175,42 +207,8 @@ func (b *battlefield) isTileClearToBeMovedInto(x, y int, movingUnit *unit) bool 
 	if !b.tiles[x][y].getStaticData().canBeWalkedOn {
 		return false
 	}
-	for i := b.buildings.Front(); i != nil; i = i.Next() {
-		bld := i.Value.(*building)
-		if bld.isPresentAt(x, y) {
-			if bld.unitPlacedInside == nil && bld.getStaticData().canUnitBePlacedIn() {
-				px, py := bld.getUnitPlacementCoords()
-				if px == x && py == y {
-					continue
-				}
-			}
-			//debugWritef("   DENIED: building with coords %d,%d and w,h %d,%d has %v in present at %d, %d!\n",
-			//	bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, bld.isPresentAt(x, y), x, y,
-			//	)
-			return false
-		}
-		//debugWritef("    APPROVED: building with coords %d,%d and w,h %d,%d has %v in present at %d, %d!\n",
-		//	bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, bld.isPresentAt(x, y), x, y,
-		//)
-	}
-	for i := b.units.Front(); i != nil; i = i.Next() {
-		// debugWritef("req: %d,%d; act: %f, %f -> %d, %d \n", x, y, b.units[i].centerX, b.units[i].centerY, tx, ty)
-		if movingUnit != nil && i.Value == movingUnit {
-			continue
-		}
-		unt := i.Value.(*unit)
-		if unt.getStaticData().isAircraft {
-			continue
-		}
-		if unt.isPresentAt(x, y) {
-			return false
-		}
-		if unt.currentAction.code == ACTION_MOVE {
-			ux, uy := geometry.TrueCoordsToTileCoords(unt.centerX, unt.centerY)
-			if ux+sign(unt.currentAction.targetTileX-ux) == x && uy+sign(unt.currentAction.targetTileY-uy) == y {
-				return false
-			}
-		}
+	if b.tiles[x][y].isOccupiedByActor != nil && b.tiles[x][y].isOccupiedByActor != movingUnit {
+		return false
 	}
 	return true
 }
@@ -402,4 +400,20 @@ func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (in
 				b.isTileClearToBeMovedInto(x, y, nil)
 		},
 		tx, ty, len(b.tiles)/2, rnd.Rand(4))
+}
+
+// not intended to be optimized, so don't call it frequently.
+func (b *battlefield) collectStatisticsForDebug() string {
+	str := ""
+	counter := 0
+	for i := b.units.Front(); i != nil; i = i.Next() {
+		counter++
+	}
+	str += fmt.Sprintf("Total units: %d ", counter)
+	counter = 0
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		counter++
+	}
+	str += fmt.Sprintf("buildings: %d", counter)
+	return str
 }

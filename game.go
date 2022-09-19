@@ -199,10 +199,11 @@ func (g *game) startGame() {
 		if g.shouldTickBeRendered(g.battlefield.currentTick, RENDERER_DESIRED_FPS, DESIRED_TPS) {
 			g.render.renderBattlefield(&g.battlefield, pc)
 		}
-		timeReportString += fmt.Sprintf("Render/sleep %dms\n", time.Since(timeCurrentActionStarted)/time.Millisecond)
+		timeReportString += fmt.Sprintf("Render/sleep %dms", time.Since(timeCurrentActionStarted)/time.Millisecond)
 
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
+			debugWrite(g.battlefield.collectStatisticsForDebug())
 		}
 	}
 }

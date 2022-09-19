@@ -203,15 +203,21 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 		// ...or we're starting from this center...
 		areFloatsRoughlyEqual(x, currTcx) && areFloatsRoughlyEqual(y, currTcy) {
 
-		intVx, intVy := geometry.Float64VectorToIntDirectionVector(vx, vy)
+		intVx, intVy := geometry.Float64VectorToIntUnitVector(vx, vy)
 		//debugWritef("Checking: %d, %d ", currTx+intVx, currTy+intVy)
 		//debugWritef("Having %v,%v from cooords %v,%v \n", intVx, intVy, currTx, currTy)
 		// ...then check if there is something on "next" tile.
-		if !b.isTileClearToBeMovedInto(currTx+intVx, currTy+intVy, u) {
+		nextTx, nextTy := currTx+intVx, currTy+intVy
+		if !b.isTileClearToBeMovedInto(nextTx, nextTy, u) {
 			// If so, stand by.
 			u.centerX, u.centerY = currTcx, currTcy
 			u.currentAction.resetAction()
 			return
+
+		// additional check, so that the next tile won't be occupied if no further inter-tile movement is needed
+		} else if currTx != u.currentAction.targetTileX || currTy != u.currentAction.targetTileY {
+			b.tiles[currTx][currTy].isOccupiedByActor = nil
+			b.setTilesOccupiedByActor(nextTx, nextTy, 1, 1, u)
 		}
 	}
 

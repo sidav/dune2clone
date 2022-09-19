@@ -4,7 +4,11 @@ type tile struct {
 	code               int
 	spriteVariantIndex int
 	resourcesAmount    int
-	hasResourceVein    bool
+
+	// for faster collision detection
+	isOccupiedByActor actor
+
+	hasResourceVein bool
 }
 
 func (t *tile) getStaticData() *tileStaticData {
