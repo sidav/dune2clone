@@ -53,14 +53,14 @@ func loadSprites() {
 	buildingsAtlaces["powerplant1"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 64, 64, 32, 32, 1, false, true)
 	buildingsAtlaces["powerplant2"] = CreateAtlasFromFile(currPath+"anjaopterix/powerplant.png", 0, 0, 64, 64, 32, 32, 4, false, true)
 	buildingsAtlaces["fusionreactor"] = CreateAtlasFromFile(currPath+"super_reactor.png", 0, 0, 64, 64, 48, 48, 23, false, true)
-	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 32, 32, 32, 32, 1, false, true)
+	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 64, 64, 32, 32, 1, false, true)
 	buildingsAtlaces["factory"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 64, 96, 32, 48, 1, false, true)
 	buildingsAtlaces["refinery"] = CreateAtlasFromFile(currPath+"refinery.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, true)
 	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, true)
-	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 16, 16, 16, 16, 1, false, true)
-	turretsAtlaces["bld_turret_cannon"] = CreateDirectionalAtlasFromFile(currPath+"cannon_turret.png", 16, 16, 1, 2, true)
+	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 32, 32, 16, 16, 1, false, true)
+	turretsAtlaces["bld_turret_cannon"] = CreateDirectionalAtlasFromFile(currPath+"cannon_turret.png", 32, 16, 1, 2, true)
 	turretsAtlaces["bld_turret_minigun"] = CreateDirectionalAtlasFromFile(currPath+"minigun_turret.png", 16, 16, 1, 2, true)
 	buildingsAtlaces["fortress"] = CreateAtlasFromFile(currPath+"fortress.png", 0, 0, 32, 32, 32, 32, 1, false, true)
 	turretsAtlaces["bld_fortress_cannon"] = CreateDirectionalAtlasFromFile(currPath+"fortress_turret.png", 32, 32, 1, 2, true)
@@ -96,4 +96,5 @@ func loadSprites() {
 	currPath = "resources/sprites/effects/"
 	effectsAtlaces["smallexplosion"] = CreateAtlasFromFile(currPath+"explosion_small.png", 0, 0, 4, 4, 4, 4, 16, false, false)
 	effectsAtlaces["regularexplosion"] = CreateAtlasFromFile(currPath+"explosion.png", 0, 0, 16, 16, 16, 16, 3, false, false)
+	effectsAtlaces["biggerexplosion"] = CreateAtlasFromFile(currPath+"explosion_bigger.png", 0, 0, 40, 40, 20, 20, 3, false, false)
 }

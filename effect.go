@@ -20,6 +20,7 @@ const (
 	EFFECT_NONE = iota
 	EFFECT_SMALL_EXPLOSION
 	EFFECT_REGULAR_EXPLOSION
+	EFFECT_BIGGER_EXPLOSION
 )
 
 type effectStatic struct {
@@ -35,5 +36,9 @@ var sTableEffects = map[effectCode]*effectStatic{
 	EFFECT_REGULAR_EXPLOSION: {
 		spriteCode:      "regularexplosion",
 		defaultLifeTime: 15,
+	},
+	EFFECT_BIGGER_EXPLOSION: {
+		spriteCode:      "biggerexplosion",
+		defaultLifeTime: 36,
 	},
 }

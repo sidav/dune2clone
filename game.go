@@ -144,10 +144,10 @@ func (g *game) startGame() {
 						i = i.Prev()
 					}
 					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_REGULAR_EXPLOSION, 50,
-						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 25,
+						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
 					)
-					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 50,
-						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 25,
+					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_BIGGER_EXPLOSION, 50,
+						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
 					)
 					g.battlefield.changeTilesCodesInRectTo(
 						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
