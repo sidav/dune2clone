@@ -9,8 +9,8 @@ import (
 )
 
 type game struct {
-	battlefield    battlefield
-	render         renderer
+	battlefield battlefield
+	render      renderer
 }
 
 func (g *game) startGame() {
@@ -203,7 +203,7 @@ func (g *game) startGame() {
 
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
-			debugWrite(g.battlefield.collectStatisticsForDebug())
+			// debugWrite(g.battlefield.collectStatisticsForDebug())
 		}
 	}
 }
@@ -215,7 +215,7 @@ func (g *game) shouldTickBeRendered(tick, fps, tps int) bool {
 	//	return true
 	//}
 	//return false
-	return fps*tick / tps != fps*(tick+1) / tps
+	return fps*tick/tps != fps*(tick+1)/tps
 }
 
 // returns string, also writes the string to renderer debug lines
@@ -233,16 +233,17 @@ func (g *game) createTimeReportString(actionName string, timeSince time.Time, cr
 	neededFound := false
 	for i := range g.render.timeDebugInfosToRender {
 		if g.render.timeDebugInfosToRender[i].logicName == actionName {
-			g.render.timeDebugInfosToRender[i].duration = mcs
+			g.render.timeDebugInfosToRender[i].setNewValue(mcs)
 			neededFound = true
 			break
 		}
 	}
 	if !neededFound {
 		g.render.timeDebugInfosToRender = append(g.render.timeDebugInfosToRender, debugTimeInfo{
-			logicName:        actionName,
-			duration:         mcs,
-			criticalDuration: criticalMcs,
+			logicName:           actionName,
+			duration:            mcs,
+			maxRecordedDuration: mcs,
+			criticalDuration:    criticalMcs,
 		})
 	}
 

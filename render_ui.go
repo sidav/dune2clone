@@ -27,10 +27,17 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	}
 	r.renderOrderGivenAnimation(b, pc)
 	// technical
+	rl.DrawRectangle(0, 0, 34*WINDOW_W/100, 35*WINDOW_H/100, rl.Color{
+		R: 32,
+		G: 32,
+		B: 32,
+		A: 128,
+	})
 	r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
+	r.drawText(b.collectStatisticsForDebug(), 0, 28, 24, rl.White)
 	for i := range r.timeDebugInfosToRender {
 		color := rl.White
-		ind := geometry.GetPartitionIndex(int(r.timeDebugInfosToRender[i].duration * time.Microsecond), 0, int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), 4)
+		ind := geometry.GetPartitionIndex(int(r.timeDebugInfosToRender[i].duration*time.Microsecond), 0, int(r.timeDebugInfosToRender[i].criticalDuration*time.Microsecond), 4)
 		// debugWritef("%d from %d is %d\n", int(r.timeDebugInfosToRender[i].duration * time.Microsecond), int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), ind)
 		if ind == 2 {
 			color = rl.Yellow
@@ -38,7 +45,13 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 		if ind == 3 {
 			color = rl.Red
 		}
-		r.drawText(fmt.Sprintf("%s: %d", r.timeDebugInfosToRender[i].logicName, r.timeDebugInfosToRender[i].duration), 0, int32(28 + 28 * i), 24, color)
+		logicNameString := fmt.Sprintf("%-18s", r.timeDebugInfosToRender[i].logicName+":")
+		durationString := fmt.Sprintf("%5d (max %5d, mean %4d)",
+			r.timeDebugInfosToRender[i].duration,
+			r.timeDebugInfosToRender[i].maxRecordedDuration,
+			r.timeDebugInfosToRender[i].calculatedMeanDuration,
+		)
+		r.drawText(fmt.Sprintf("%s %s", logicNameString, durationString), 0, int32(56+28*i), 20, color)
 	}
 }
 
