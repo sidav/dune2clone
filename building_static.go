@@ -61,7 +61,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		maxHitpoints:  1000,
 		w:             2,
 		h:             2,
-		displayedName: "Construction Yard Beta",
+		displayedName: "BetaCorp Construction Yard",
 		cost:          2500,
 		buildTime:     30,
 		builds: []int{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
@@ -147,7 +147,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		buildTime:                          12,
 		builds:                             nil,
 		consumesEnergy:                     15,
-		produces:                           []int{UNT_TANK2, UNT_MCV, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
+		produces:                           []int{UNT_TANK2, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
 		hotkeyToBuild:                      "F",
 	},
 	BLD_REPAIR_DEPOT: {

@@ -4,7 +4,8 @@ const (
 	UNT_INFANTRY = iota
 	UNT_TANK
 	UNT_TANK2
-	UNT_MCV
+	UNT_MCV1
+	UNT_MCV2
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_AATANK
@@ -119,8 +120,8 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            12,
 		hotkeyToBuild:        "T",
 	},
-	UNT_MCV: {
-		displayedName:        "MCV",
+	UNT_MCV1: {
+		displayedName:        "BetaCorp MCV",
 		chassisSpriteCode:    "placeholder",
 		movementSpeed:        0.035,
 		visionRange:          4,
@@ -128,6 +129,20 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:            ARMORTYPE_HEAVY,
 		canBeDeployed:        true,
 		deploysInto:          BLD_CONYARD1,
+		chassisRotationSpeed: 4,
+		cost:                 750,
+		buildTime:            15,
+		hotkeyToBuild:        "V",
+	},
+	UNT_MCV2: {
+		displayedName:        "Commonwealth MCV",
+		chassisSpriteCode:    "placeholder",
+		movementSpeed:        0.035,
+		visionRange:          4,
+		maxHitpoints:         300,
+		armorType:            ARMORTYPE_HEAVY,
+		canBeDeployed:        true,
+		deploysInto:          BLD_CONYARD2,
 		chassisRotationSpeed: 4,
 		cost:                 750,
 		buildTime:            15,

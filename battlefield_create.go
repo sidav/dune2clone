@@ -66,10 +66,10 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		// TODO: faction selection
-		if spNumber % 2 == 0 {
-			b.addActor(createBuilding(BLD_CONYARD1, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		if spNumber%2 == 0 {
+			b.addActor(createUnit(UNT_MCV1, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		} else {
-			b.addActor(createBuilding(BLD_CONYARD2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+			b.addActor(createUnit(UNT_MCV2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		}
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
@@ -86,7 +86,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
 	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
-	// unt := createUnit(UNT_MCV, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
+	// unt := createUnit(UNT_MCV1, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
 	// unt.currentHitpoints = 1
 	// unt.currentAction.setTargetTileCoords(10, 10)
 	// b.addActor(unt)
