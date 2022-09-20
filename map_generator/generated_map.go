@@ -4,6 +4,7 @@ import (
 	"dune2clone/fibrandom"
 	"dune2clone/geometry"
 	"fmt"
+	"math"
 )
 
 var rnd fibrandom.FibRandom
@@ -12,12 +13,12 @@ func SetRandom(r *fibrandom.FibRandom) {
 	rnd = *r
 }
 
-type GameMap struct {
+type GeneratedMap struct {
 	Tiles       [][]tileCode
 	StartPoints [][2]int
 }
 
-func (gm *GameMap) init(w, h int) {
+func (gm *GeneratedMap) init(w, h int) {
 	gm.Tiles = make([][]tileCode, w)
 	for i := range gm.Tiles {
 		gm.Tiles[i] = make([]tileCode, h)
@@ -28,11 +29,11 @@ func (gm *GameMap) init(w, h int) {
 	gm.StartPoints = make([][2]int, 0)
 }
 
-func (gm *GameMap) areCoordsCorrect(x, y int) bool {
+func (gm *GeneratedMap) areCoordsCorrect(x, y int) bool {
 	return x > 0 && y > 0 && x < len(gm.Tiles) && y < len(gm.Tiles[x])
 }
 
-func (gm *GameMap) reset() {
+func (gm *GeneratedMap) reset() {
 	for i := range gm.Tiles {
 		for j := range gm.Tiles[i] {
 			gm.Tiles[i][j] = SAND
@@ -41,97 +42,17 @@ func (gm *GameMap) reset() {
 	gm.StartPoints = make([][2]int, 0)
 }
 
-func (gm *GameMap) Generate(w, h int) {
+func (gm *GeneratedMap) Generate(w, h int) {
 	gm.init(w, h)
 	tries := 0
 	for len(gm.StartPoints) == 0 || !gm.areAllStartPointsGood() {
 		tries++
-		gm.reset()
-		symmV := rnd.OneChanceFrom(2)
-		symmH := true // rnd.OneChanceFrom(2) || !symmV
-		fromx, fromy, tox, toy := 0, 0, w-1, h-1
-		tox = 90 * tox / 100
-		toy = 90 * toy / 100
-		if symmH {
-			tox /= 2
-		}
-		if symmV {
-			toy /= 2
-		}
-
-		gm.performNAutomatasLike(3,
-			automat{
-				drawsChar:         BUILDABLE_TERRAIN,
-				canDrawOn:         []tileCode{SAND},
-				desiredTotalDraws: 250,
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			fromx, fromy, tox, toy,
-		)
-
-		gm.performNAutomatasLike(20,
-			automat{
-				drawsChar:         POOR_RESOURCES,
-				canDrawOn:         []tileCode{SAND},
-				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-				desiredTotalDraws: 25,
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			0, 0, w, h,
-		)
-		gm.performNAutomatasLike(20,
-			automat{
-				drawsChar:         MEDIUM_RESOURCES,
-				canDrawOn:         []tileCode{POOR_RESOURCES},
-				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-				desiredTotalDraws: 15,
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			0, 0, w, h,
-		)
-		gm.performNAutomatasLike(10,
-			automat{
-				drawsChar:         RICH_RESOURCES,
-				canDrawOn:         []tileCode{MEDIUM_RESOURCES},
-				maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-				desiredTotalDraws: 5,
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			0, 0, w, h,
-		)
-		gm.performNAutomatasLike(5,
-			automat{
-				drawsChar:         RESOURCE_VEIN,
-				canDrawOn:         []tileCode{RICH_RESOURCES},
-				desiredTotalDraws: 1,
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			0, 0, w, h,
-		)
-
-		gm.performNAutomatasLike(10,
-			automat{
-				drawsChar:         ROCKS,
-				canDrawOn:         []tileCode{BUILDABLE_TERRAIN, SAND},
-				desiredTotalDraws: 10,
-				maxCodeNear:       map[tileCode]int{ROCKS: 5},
-				symmV:             symmV,
-				symmH:             symmH,
-			},
-			fromx, fromy, tox, toy,
-		)
-
-		gm.searchAndSetStartPoints(symmH, symmV, 2)
+		gm.generateByTwoPlayersPattern()
 	}
 	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
 }
 
-func (gm *GameMap) performNAutomatasLike(count int, prototype automat, fromx, fromy, tox, toy int) {
+func (gm *GeneratedMap) performNAutomatasLike(count int, prototype automat, fromx, fromy, tox, toy int) {
 	autsArr := make([]automat, count)
 	for i := range autsArr {
 		autsArr[i] = prototype
@@ -157,7 +78,7 @@ func (gm *GameMap) performNAutomatasLike(count int, prototype automat, fromx, fr
 	}
 }
 
-func (gm *GameMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
+func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
 	candidates := make([][2]int, 0)
 	for cx := range gm.Tiles {
 		for cy := range gm.Tiles[cx] {
@@ -182,7 +103,7 @@ func (gm *GameMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
 	}
 }
 
-func (gm *GameMap) areCoordsGoodForStartPoint(x, y int) bool {
+func (gm *GeneratedMap) areCoordsGoodForStartPoint(x, y int) bool {
 	const sRange = 5
 	for sx := x - sRange; sx <= x+sRange; sx++ {
 		for sy := y - sRange; sy <= y+sRange; sy++ {
@@ -194,7 +115,7 @@ func (gm *GameMap) areCoordsGoodForStartPoint(x, y int) bool {
 	return true
 }
 
-func (gm *GameMap) areAllStartPointsGood() bool {
+func (gm *GeneratedMap) areAllStartPointsGood() bool {
 	w, h := len(gm.Tiles), len(gm.Tiles[0])
 	minDistance := w / len(gm.StartPoints)
 	if h < w {
@@ -213,7 +134,7 @@ func (gm *GameMap) areAllStartPointsGood() bool {
 	return true
 }
 
-func (gm *GameMap) countTilesOfCodeNear(code tileCode, x, y int) int {
+func (gm *GeneratedMap) countTilesOfCodeNear(code tileCode, x, y int) int {
 	count := 0
 	for i := x - 1; i <= x+1; i++ {
 		for j := y - 1; j <= y+1; j++ {
@@ -223,4 +144,25 @@ func (gm *GameMap) countTilesOfCodeNear(code tileCode, x, y int) int {
 		}
 	}
 	return count
+}
+
+func getListOfCoordsWithCentralSymmetryTo(count, x, y, mapW, mapH int) [][2]int {
+	if count < 2 {
+		panic("Bad count")
+	}
+	degreesBetweenCoords := 2*math.Pi / float64(count)
+	centerFloatX, centerFloatY := float64(mapW-1)/2, float64(mapH-1)/2
+	coords := make([][2]int, count)
+	vectorX, vectorY := float64(x)-centerFloatX, float64(y)-centerFloatY
+	for i := 0; i < count; i++ {
+		currTileX := int(math.Round(vectorX+centerFloatX))
+		currTileY := int(math.Round(vectorY+centerFloatY))
+		coords[i][0] = currTileX
+		coords[i][1] = currTileY
+		// rotate vector
+		t := vectorX
+		vectorX = vectorX * math.Cos(degreesBetweenCoords) - vectorY * math.Sin(degreesBetweenCoords)
+		vectorY = t * math.Sin(degreesBetweenCoords) + vectorY * math.Cos(degreesBetweenCoords)
+	}
+	return coords
 }

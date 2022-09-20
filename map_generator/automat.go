@@ -10,12 +10,12 @@ type automat struct {
 }
 
 // true if finished
-func (a *automat) perform(gm *GameMap) bool {
+func (a *automat) perform(gm *GeneratedMap) bool {
 	a.moveOnMap(gm)
 	return a.totalDraws == a.desiredTotalDraws || a.drawTries == a.desiredTotalDraws*100
 }
 
-func (a *automat) moveOnMap(gm *GameMap) {
+func (a *automat) moveOnMap(gm *GeneratedMap) {
 	if a.totalDraws == a.desiredTotalDraws {
 		return
 	}

@@ -252,7 +252,7 @@ func (g *game) createTimeReportString(actionName string, timeSince time.Time, cr
 
 func (g *game) selectMapToGenerateBattlefield() {
 	map_generator.SetRandom(&rnd)
-	generatedMap := &map_generator.GameMap{}
+	generatedMap := &map_generator.GeneratedMap{}
 	w := 64
 	h := 64
 	generatedMap.Generate(w, h)

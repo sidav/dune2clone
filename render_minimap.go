@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func drawGeneratedMap(gm *map_generator.GameMap) {
+func drawGeneratedMap(gm *map_generator.GeneratedMap) {
 	rl.BeginDrawing()
 	rl.DrawText("Select map. SPACE to generate new, ENTER to select current.", 0, 0, 28, rl.White)
 	rl.DrawText(fmt.Sprintf("<- and -> to change size (current: %dx%d)", len(gm.Tiles), len(gm.Tiles[0])), 0, 30, 28, rl.White)

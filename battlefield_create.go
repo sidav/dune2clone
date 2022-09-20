@@ -5,7 +5,7 @@ import (
 	"dune2clone/map_generator"
 )
 
-func (b *battlefield) initFromRandomMap(rm *map_generator.GameMap) {
+func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap) {
 	b.tiles = make([][]tile, len(rm.Tiles))
 	for i := range b.tiles {
 		b.tiles[i] = make([]tile, len(rm.Tiles[i]))
