@@ -7,6 +7,7 @@ type automat struct {
 	totalDraws, desiredTotalDraws, drawTries int
 	x, y                                     int
 	symmV, symmH                             bool
+	radialSymmetryCount                      int
 }
 
 // true if finished
@@ -49,6 +50,11 @@ func (a *automat) moveOnMap(gm *GeneratedMap) {
 			gm.Tiles[a.x][h-1-a.y] = a.drawsChar
 		} else if a.symmH {
 			gm.Tiles[w-1-a.x][a.y] = a.drawsChar
+		} else if a.radialSymmetryCount > 1 {
+			allPoints := GetListOfCoordsRadialSymmetricTo(a.radialSymmetryCount, a.x, a.y, w, h)
+			for _, coord := range allPoints {
+				gm.Tiles[coord[0]][coord[1]] = a.drawsChar
+			}
 		}
 		a.totalDraws++
 	}

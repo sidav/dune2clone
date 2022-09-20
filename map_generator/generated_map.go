@@ -2,7 +2,6 @@ package map_generator
 
 import (
 	"dune2clone/fibrandom"
-	"dune2clone/geometry"
 	"fmt"
 	"math"
 )
@@ -47,7 +46,8 @@ func (gm *GeneratedMap) Generate(w, h int) {
 	tries := 0
 	for len(gm.StartPoints) == 0 || !gm.areAllStartPointsGood() {
 		tries++
-		gm.generateByTwoPlayersPattern()
+		// gm.generateByTwoPlayersPattern()
+		gm.generateByThreePlayersPattern()
 	}
 	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
 }
@@ -78,60 +78,18 @@ func (gm *GeneratedMap) performNAutomatasLike(count int, prototype automat, from
 	}
 }
 
-func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
-	candidates := make([][2]int, 0)
-	for cx := range gm.Tiles {
-		for cy := range gm.Tiles[cx] {
-			// search quadrant
-			if gm.areCoordsGoodForStartPoint(cx, cy) {
-				candidates = append(candidates, [2]int{cx, cy})
+func (gm *GeneratedMap) cleanupBadRadialSymmetry(times int) { // this is a workaround
+	for i := 0; i < times; i++ {
+		for x := range gm.Tiles {
+			for y := range gm.Tiles[x] {
+				if gm.Tiles[x][y] == SAND {
+					if gm.countTilesOfCodeNear(BUILDABLE_TERRAIN, x, y) >= 7 {
+						gm.Tiles[x][y] = BUILDABLE_TERRAIN
+					}
+				}
 			}
 		}
 	}
-	if len(candidates) > 0 {
-		selectedCandidate := candidates[rnd.Rand(len(candidates))]
-		cx, cy := selectedCandidate[0], selectedCandidate[1]
-		gm.StartPoints = append(gm.StartPoints, [2]int{cx, cy})
-		if symmV && symmH {
-			gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, len(gm.Tiles[0]) - 1 - cy})
-		} else if symmV {
-			gm.StartPoints = append(gm.StartPoints, [2]int{cx, len(gm.Tiles[0]) - 1 - cy})
-		} else if symmH {
-			gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, cy})
-		}
-		return
-	}
-}
-
-func (gm *GeneratedMap) areCoordsGoodForStartPoint(x, y int) bool {
-	const sRange = 5
-	for sx := x - sRange; sx <= x+sRange; sx++ {
-		for sy := y - sRange; sy <= y+sRange; sy++ {
-			if !(sx >= 0 && sy >= 0 && sx < len(gm.Tiles) && sy < len(gm.Tiles[0])) || gm.Tiles[sx][sy] != BUILDABLE_TERRAIN {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func (gm *GeneratedMap) areAllStartPointsGood() bool {
-	w, h := len(gm.Tiles), len(gm.Tiles[0])
-	minDistance := w / len(gm.StartPoints)
-	if h < w {
-		minDistance = h / len(gm.StartPoints)
-	}
-	for i := range gm.StartPoints {
-		for j := range gm.StartPoints {
-			if i == j {
-				continue
-			}
-			if geometry.GetApproxDistFromTo(gm.StartPoints[i][0], gm.StartPoints[i][1], gm.StartPoints[j][0], gm.StartPoints[j][1]) < minDistance {
-				return false
-			}
-		}
-	}
-	return true
 }
 
 func (gm *GeneratedMap) countTilesOfCodeNear(code tileCode, x, y int) int {
@@ -146,23 +104,42 @@ func (gm *GeneratedMap) countTilesOfCodeNear(code tileCode, x, y int) int {
 	return count
 }
 
-func getListOfCoordsWithCentralSymmetryTo(count, x, y, mapW, mapH int) [][2]int {
+func GetListOfCoordsRadialSymmetricTo(count, x, y, mapW, mapH int) [][2]int {
 	if count < 2 {
 		panic("Bad count")
 	}
 	degreesBetweenCoords := 2*math.Pi / float64(count)
-	centerFloatX, centerFloatY := float64(mapW-1)/2, float64(mapH-1)/2
+	centerFloatX, centerFloatY := float64(mapW)/2, float64(mapH)/2
 	coords := make([][2]int, count)
 	vectorX, vectorY := float64(x)-centerFloatX, float64(y)-centerFloatY
 	for i := 0; i < count; i++ {
 		currTileX := int(math.Round(vectorX+centerFloatX))
 		currTileY := int(math.Round(vectorY+centerFloatY))
+
+		if currTileX < 0 {
+			currTileX = 0
+		}
+		if currTileX >= mapW {
+			currTileX = mapW-1
+		}
+		if currTileY < 0 {
+			currTileY = 0
+		}
+		if currTileY >= mapH {
+			currTileY = mapH-1
+		}
 		coords[i][0] = currTileX
 		coords[i][1] = currTileY
 		// rotate vector
 		t := vectorX
 		vectorX = vectorX * math.Cos(degreesBetweenCoords) - vectorY * math.Sin(degreesBetweenCoords)
 		vectorY = t * math.Sin(degreesBetweenCoords) + vectorY * math.Cos(degreesBetweenCoords)
+	}
+	for _, c := range coords {
+		if c[0] < 0 || c[0] >= mapW || c[1] < 0 || c[1] >= mapH {
+			fmt.Printf("%v crashed\n", coords)
+			break
+		}
 	}
 	return coords
 }

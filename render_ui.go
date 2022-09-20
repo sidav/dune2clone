@@ -27,7 +27,7 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	}
 	r.renderOrderGivenAnimation(b, pc)
 	// technical
-	rl.DrawRectangle(0, 0, 34*WINDOW_W/100, 35*WINDOW_H/100, rl.Color{
+	rl.DrawRectangle(0, 0, 32*WINDOW_W/100, 30*WINDOW_H/100, rl.Color{
 		R: 32,
 		G: 32,
 		B: 32,
@@ -51,7 +51,7 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 			r.timeDebugInfosToRender[i].maxRecordedDuration,
 			r.timeDebugInfosToRender[i].calculatedMeanDuration,
 		)
-		r.drawText(fmt.Sprintf("%s %s", logicNameString, durationString), 0, int32(56+28*i), 20, color)
+		r.drawText(fmt.Sprintf("%s %s", logicNameString, durationString), 0, int32(56+23*i), 18, color)
 	}
 }
 

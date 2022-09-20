@@ -3,6 +3,7 @@ package main
 import (
 	"dune2clone/astar"
 	"dune2clone/map_generator"
+	"fmt"
 )
 
 func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap) {
@@ -79,7 +80,9 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
-	b.ais = append(b.ais, createAi(b.factions[1], "Enemy"))
+	for i := 1; i < len(b.factions); i++ {
+		b.ais = append(b.ais, createAi(b.factions[i], fmt.Sprintf("Enemy %d", i)))
+	}
 	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
 	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
