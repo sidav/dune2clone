@@ -12,6 +12,9 @@ func (b *battlefield) executeOrderForBuilding(bld *building) {
 }
 
 func (b *battlefield) executeBuildOrder(bld *building) {
+	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) {
+		panic("Tech requirements are ignored somewhere")
+	}
 	switch bld.getStaticData().buildType {
 	case BTYPE_BUILD_FIRST:
 		if bld.currentAction.code != ACTION_BUILD {

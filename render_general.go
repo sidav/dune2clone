@@ -6,16 +6,20 @@ import (
 
 func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, bgColor, textColor rl.Color) {
 	var textSize int32 = 32
-	var textCharW int32 = 22
-	r.drawOutlinedRect(x, y, w, textSize+2, 2, rl.Green, bgColor)
+	var textCharW int32 = 20
 	titleBoxW := int32((len(title)+1)*int(textCharW) + 2)
-	r.drawOutlinedRect(x, y, titleBoxW, textSize+2, 2, rl.Green, bgColor)
-	r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, bgColor)
+	infoW := int32(len(info)) * textCharW
+	infoBoxW := w - titleBoxW
 
-	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2
-	r.drawText(title, titlePosition-1, y+1, textSize, textColor)
-	infoPosition := x + titleBoxW + int32(len(info))*textCharW/3
-	r.drawText(info, infoPosition-textCharW/5, y+1, textSize, textColor)
+	r.drawOutlinedRect(x, y, w, textSize+2, 4, rl.DarkGreen, bgColor)
+	rl.DrawLine(x+titleBoxW, y, x+titleBoxW, y+textSize+2, rl.DarkGreen)
+	// r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, bgColor)
+
+	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2 + 4
+	infoPosition := x + titleBoxW + infoBoxW/2 - infoW/2
+
+	r.drawText(title, titlePosition, y+2, textSize, textColor)
+	r.drawText(info, infoPosition, y+2, textSize, textColor)
 }
 
 func (r *renderer) drawProgressCircle(x, y, radius int32, percent int, color rl.Color) {
@@ -74,11 +78,11 @@ func (r *renderer) drawBoldRect(x, y, w, h, thickness int32, color rl.Color) {
 }
 
 func (r *renderer) drawOutlinedRect(x, y, w, h, outlineThickness int32, outlineColor, fillColor rl.Color) {
+	rl.DrawRectangle(x, y, w, h, fillColor)
 	// draw outline
 	for i := int32(0); i < outlineThickness; i++ {
-		rl.DrawRectangleLines(x+i, y+i, w-i*outlineThickness, h-i*outlineThickness, outlineColor)
+		rl.DrawRectangleLines(x+i, y+i, w-2*i, h-2*i, outlineColor)
 	}
-	rl.DrawRectangle(x+outlineThickness, y+outlineThickness, w-outlineThickness*2, h-outlineThickness*2, fillColor)
 }
 
 func (r *renderer) drawText(text string, x, y, size int32, color rl.Color) {

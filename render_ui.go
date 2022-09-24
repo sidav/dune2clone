@@ -89,6 +89,9 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, rl.Black, rl.White)
 	// draw storage
 	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()), rl.Black, rl.White)
+	// draw tech level
+	techLevel := pc.controlledFaction.currTechLevel
+	r.drawLineInfoBox(WINDOW_W-500, 32, 150, "TECH", fmt.Sprintf("%d", techLevel), rl.Black, rl.White)
 	// draw energy
 	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.energyConsumption, pc.controlledFaction.energyProduction)
 	energyBgColor := rl.Black

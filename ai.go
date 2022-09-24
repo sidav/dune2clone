@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type aiStruct struct {
 	name            string
 	controlsFaction *faction
@@ -18,6 +20,10 @@ func (ai *aiStruct) isPoor() bool {
 
 func (ai *aiStruct) isRich() bool {
 	return ai.controlsFaction.getMoney() > ai.moneyRichMin
+}
+
+func (ai *aiStruct) debugWritef(msg string, args ...interface{}) {
+	debugWritef("%s: %s", ai.name, fmt.Sprintf(msg, args...))
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {

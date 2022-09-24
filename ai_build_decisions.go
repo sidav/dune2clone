@@ -57,21 +57,17 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) buildingCode {
 		decidedIndex = rnd.SelectRandomIndexFromWeighted(len(decisionWeights), func(i int) int { return decisionWeights[i].weight })
 		code = ai.selectRandomBuildableCodeByFunction(availableCodes, decisionWeights[decidedIndex].weightCode)
 	}
-	debugWritef("AI %s decided to build %s from weights %v\n", ai.name, decisionWeights[decidedIndex].weightCode, decisionWeights)
+	ai.debugWritef("decided to build %s from weights %v\n", decisionWeights[decidedIndex].weightCode, decisionWeights)
 	return code
 }
 
 func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildingCode, function string) buildingCode {
 	candidates := make([]buildingCode, 0)
-	if function == "any" {
-		candidates = availableCodes
-	} else {
-		for i := range availableCodes {
-			fncts := ai.deduceBuildingFunctions(availableCodes[i])
-			for j := range fncts {
-				if fncts[j] == function {
-					candidates = append(candidates, availableCodes[i])
-				}
+	for i := range availableCodes {
+		fncts := ai.deduceBuildingFunctions(availableCodes[i])
+		for j := range fncts {
+			if (function == "any" || fncts[j] == function) && ai.canUseBuilding(availableCodes[i]) {
+				candidates = append(candidates, availableCodes[i])
 			}
 		}
 	}
@@ -82,7 +78,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildin
 
 	// assign weight for random selection according to AI current money
 	index := -1
-	for index == -1 || !ai.canUseBuilding(candidates[index]) {
+	for index == -1 {
 		index = rnd.SelectRandomIndexFromWeighted(len(candidates),
 			func(x int) int {
 				consideredCode := candidates[x]
@@ -126,10 +122,8 @@ func (ai *aiStruct) canUseBuilding(bldCode buildingCode) bool {
 	switch bldCode {
 	case BLD_REPAIR_DEPOT:
 		return false
-	case BLD_FUSION:
-		return false
 	default:
-		return true
+		return ai.controlsFaction.isTechAvailableForBuildingOfCode(bldCode)
 	}
 }
 
