@@ -35,7 +35,7 @@ type unitStatic struct {
 	defaultOrderOnCreation orderCode
 
 	canBeDeployed bool
-	deploysInto   int // building code
+	deploysInto   buildingCode // building code
 	isAircraft    bool
 	isTransport   bool
 

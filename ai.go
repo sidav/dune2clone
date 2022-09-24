@@ -91,7 +91,7 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	}
 	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings && !ai.alreadyOrderedBuildThisTick {
 		bld.currentOrder.code = ORDER_BUILD
-		bld.currentOrder.targetActorCode = ai.selectWhatToBuild(bld)
+		bld.currentOrder.targetActorCode = int(ai.selectWhatToBuild(bld))
 		ai.alreadyOrderedBuildThisTick = true
 		return
 	}

@@ -1,9 +1,10 @@
 package main
 
 type buildTypeCode int
+type buildingCode int
 
 const (
-	BLD_CONYARD1 = iota
+	BLD_CONYARD1 buildingCode = iota
 	BLD_CONYARD2
 	BLD_POWERPLANT1
 	BLD_POWERPLANT2
@@ -27,7 +28,7 @@ type buildingStatic struct {
 	displayedName string
 	cost          int
 	buildTime     int   // seconds
-	builds        []int // buildings
+	builds        []buildingCode // buildings
 	buildType     buildTypeCode
 	produces      []int // units
 	maxHitpoints  int
@@ -55,7 +56,7 @@ func (bs *buildingStatic) canUnitBePlacedIn() bool {
 	return bs.receivesResources || bs.repairsUnits // TODO: update when needed
 }
 
-var sTableBuildings = map[int]*buildingStatic{
+var sTableBuildings = map[buildingCode]*buildingStatic{
 	BLD_CONYARD1: {
 		spriteCode:    "base",
 		maxHitpoints:  1000,
@@ -64,7 +65,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "BetaCorp Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -78,7 +79,7 @@ var sTableBuildings = map[int]*buildingStatic{
 		displayedName: "Commonwealth Construction Yard",
 		cost:          2500,
 		buildTime:     30,
-		builds: []int{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,

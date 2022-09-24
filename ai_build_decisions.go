@@ -7,7 +7,7 @@ type aiDecisionWeight struct {
 	weight     int
 }
 
-func (ai *aiStruct) selectWhatToBuild(builder *building) int {
+func (ai *aiStruct) selectWhatToBuild(builder *building) buildingCode {
 	availableCodes := builder.getStaticData().builds
 	// make the list of weights
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
@@ -51,7 +51,7 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"production", 5})
 	}
 
-	code := -1
+	var code buildingCode = -1
 	decidedIndex := -1
 	for code == -1 {
 		decidedIndex = rnd.SelectRandomIndexFromWeighted(len(decisionWeights), func(i int) int { return decisionWeights[i].weight })
@@ -61,8 +61,8 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) int {
 	return code
 }
 
-func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, function string) int {
-	candidates := make([]int, 0)
+func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildingCode, function string) buildingCode {
+	candidates := make([]buildingCode, 0)
 	if function == "any" {
 		candidates = availableCodes
 	} else {
@@ -98,7 +98,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []int, fu
 	return candidates[index]
 }
 
-func (ai *aiStruct) deduceBuildingFunctions(bldCode int) []string {
+func (ai *aiStruct) deduceBuildingFunctions(bldCode buildingCode) []string {
 	codes := make([]string, 0)
 	bsd := sTableBuildings[bldCode]
 	if bsd.receivesResources {
@@ -122,7 +122,7 @@ func (ai *aiStruct) deduceBuildingFunctions(bldCode int) []string {
 	return codes
 }
 
-func (ai *aiStruct) canUseBuilding(bldCode int) bool {
+func (ai *aiStruct) canUseBuilding(bldCode buildingCode) bool {
 	switch bldCode {
 	case BLD_REPAIR_DEPOT:
 		return false

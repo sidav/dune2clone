@@ -16,7 +16,7 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 	case BTYPE_BUILD_FIRST:
 		if bld.currentAction.code != ACTION_BUILD {
 			bld.currentAction.code = ACTION_BUILD
-			tBld := createBuilding(bld.currentOrder.targetActorCode, 0, 0, bld.faction)
+			tBld := createBuilding(buildingCode(bld.currentOrder.targetActorCode), 0, 0, bld.faction)
 			bld.currentAction.targetActor = tBld
 			bld.currentOrder.targetActor = tBld
 		} else {
@@ -30,7 +30,7 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 	case BTYPE_PLACE_FIRST:
 		if bld.currentOrder.targetActor == nil {
 			bld.currentOrder.resetOrder()
-			bld.currentOrder.targetActor = createBuilding(bld.currentOrder.targetActorCode, 0, 0, bld.faction)
+			bld.currentOrder.targetActor = createBuilding(buildingCode(bld.currentOrder.targetActorCode), 0, 0, bld.faction)
 			bld.currentOrder.code = ORDER_WAIT_FOR_BUILDING_PLACEMENT
 			return
 		} else if bld.currentAction.getCompletionPercent() >= 100 {

@@ -9,7 +9,7 @@ type building struct {
 	currentOrder           order
 	currentHitpoints       int
 	topLeftX, topLeftY     int // tile coords
-	code                   int
+	code                   buildingCode
 	faction                *faction
 	isSelected             bool
 	turret                 *turret
@@ -21,7 +21,7 @@ func (b *building) isAlive() bool {
 	return b.currentHitpoints > 0
 }
 
-func createBuilding(code, topLeftX, topLeftY int, fact *faction) *building {
+func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *building {
 	var turr *turret
 	if sTableBuildings[code].turretCode != TRT_NONE {
 		turr = &turret{code: sTableBuildings[code].turretCode, rotationDegree: 270}
