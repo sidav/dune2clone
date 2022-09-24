@@ -361,15 +361,17 @@ func (b *battlefield) canActorAttackActor(attacker, target actor) bool {
 	panic("wat")
 }
 
-func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topLeftY, additionalDistance int, ignoreDistanceFromBase bool) bool {
+func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topLeftY,
+	forcedDistanceFromOtherBuildings int, ignoreDistanceFromBase bool) bool {
+
 	const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	_, _, w, h := placingBld.getDimensionsForConstructon()
-	if additionalDistance > 0 {
+	if forcedDistanceFromOtherBuildings > 0 {
 		w = placingBld.getStaticData().w
 		h = placingBld.getStaticData().h
 	}
-	for x := topLeftX - additionalDistance; x < topLeftX+w+additionalDistance; x++ {
-		for y := topLeftY - additionalDistance; y < topLeftY+h+additionalDistance; y++ {
+	for x := topLeftX - forcedDistanceFromOtherBuildings; x < topLeftX+w+forcedDistanceFromOtherBuildings; x++ {
+		for y := topLeftY - forcedDistanceFromOtherBuildings; y < topLeftY+h+forcedDistanceFromOtherBuildings; y++ {
 			if !b.areTileCoordsValid(x, y) {
 				return false
 			}

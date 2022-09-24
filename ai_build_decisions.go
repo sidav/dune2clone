@@ -126,22 +126,39 @@ func (ai *aiStruct) canUseBuilding(bldCode buildingCode) bool {
 }
 
 func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building) {
+	distToSearchFromBuilder := 3 + (2 * ai.current.nonDefenseBuildings / 3)
 	startX, startY := geometry.TrueCoordsToTileCoords(builder.getPhysicalCenterCoords())
-	placementSearchFunc := geometry.SpiralSearchForClosestConditionFrom
+	sx, sy := -1, -1
+	// defenses placement logic
 	if whatIsBuilt.turret != nil {
-		placementSearchFunc = geometry.SpiralSearchForFarthestConditionFrom
-	}
-	sx, sy := placementSearchFunc(
-		func(x, y int) bool {
-			return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1, false)
-		},
-		startX, startY, 16, 0)
-	if sx == -1 || sy == -1 {
-		sx, sy = placementSearchFunc(
-			func(x, y int) bool {
-				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0, false)
+		w, h := b.getSize()
+		sx, sy = geometry.SpiralSearchForLowestScoreFrom(
+			func(x, y int) int {
+				return geometry.GetApproxDistFromTo(x, y, w/2, h/2)/10 -
+					geometry.GetApproxDistFromTo(startX, startY, x, y) +
+					+ rnd.Rand(distToSearchFromBuilder)
 			},
-			startX, startY, 16, 0)
+			func(x, y int) bool {
+				return geometry.GetSqDistFromCoordsToRectangleBorder(x, y, 0, 0, w, h) > 10 &&
+					b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1, false)
+			},
+			startX, startY, distToSearchFromBuilder, rnd.Rand(4),
+		)
+
+	// non-defenses placement logic
+	} else {
+		sx, sy = geometry.SpiralSearchForClosestConditionFrom(
+			func(x, y int) bool {
+				return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 1, false)
+			},
+			startX, startY, distToSearchFromBuilder, rnd.Rand(4))
+		if sx == -1 || sy == -1 {
+			sx, sy = geometry.SpiralSearchForClosestConditionFrom(
+				func(x, y int) bool {
+					return b.canBuildingBePlacedAt(whatIsBuilt, x, y, 0, false)
+				},
+				startX, startY, distToSearchFromBuilder, rnd.Rand(4))
+		}
 	}
 	if sx != -1 && sy != -1 {
 		builder.currentOrder.targetTileX = sx

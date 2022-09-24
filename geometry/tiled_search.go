@@ -127,7 +127,9 @@ func SpiralSearchForFarthestConditionFrom(condition func(int, int) bool, startX,
 	// return -1, -1
 }
 
-func SpiralSearchForHighestScoreFrom(score func(int, int) int, startX, startY, maxSearchRadius, initialDirection int) (int, int) {
+func SpiralSearchForHighestScoreFrom(score func(int, int) int, tileUsability func(int, int) bool,
+	startX, startY, maxSearchRadius, initialDirection int) (int, int) {
+
 	currRadius := 1
 	// direction 0
 	var vx, vy, x, y int
@@ -150,7 +152,7 @@ func SpiralSearchForHighestScoreFrom(score func(int, int) int, startX, startY, m
 	currFoundX, currFoundY, currMaxScore := -1, -1, 0
 	for {
 		currScore := score(x, y)
-		if currScore != -1 && (!somethingFound || currMaxScore < currScore) {
+		if tileUsability(x, y) && (!somethingFound || currMaxScore < currScore) {
 			somethingFound = true
 			currFoundX, currFoundY = x, y
 			currMaxScore = currScore
@@ -191,4 +193,15 @@ func SpiralSearchForHighestScoreFrom(score func(int, int) int, startX, startY, m
 		}
 	}
 	// return -1, -1
+}
+
+func SpiralSearchForLowestScoreFrom(score func(int, int) int, tileUsability func(int, int) bool,
+	startX, startY, maxSearchRadius, initialDirection int) (int, int) {
+
+	return SpiralSearchForHighestScoreFrom(
+		func(x, y int) int {
+			return -score(x, y)
+		},
+		tileUsability, startX, startY, maxSearchRadius, initialDirection,
+	)
 }
