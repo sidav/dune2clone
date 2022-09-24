@@ -15,6 +15,7 @@ const (
 	BLD_AIRFACTORY
 	BLD_TURRET_MINIGUN
 	BLD_TURRET_CANNON
+	BLD_TURRET_AA
 	BLD_REFINERY
 	BLD_SILO
 	BLD_FORTRESS
@@ -61,34 +62,7 @@ func (bs *buildingStatic) canUnitBePlacedIn() bool {
 }
 
 var sTableBuildings = map[buildingCode]*buildingStatic{
-	BLD_CONYARD1: {
-		spriteCode:    "base",
-		maxHitpoints:  1000,
-		w:             2,
-		h:             2,
-		displayedName: "BetaCorp Construction Yard",
-		cost:          2500,
-		buildTime:     30,
-		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
-			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
-		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
-		givesEnergy:   10,
-		hotkeyToBuild: "Y",
-	},
-	BLD_POWERPLANT1: {
-		spriteCode:     "powerplant1",
-		maxHitpoints:   500,
-		w:              2,
-		h:              2,
-		displayedName:  "Plasma Reactor",
-		cost:           600,
-		buildTime:      6,
-		givesTechLevel: 2,
-		builds:         nil,
-		produces:       nil,
-		givesEnergy:    25,
-		hotkeyToBuild:  "P",
-	},
+	// general
 	BLD_FUSION: {
 		spriteCode:        "fusionreactor",
 		maxHitpoints:      1000,
@@ -212,6 +186,21 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		turretCode:        TRT_CANNON_BUILDING,
 		hotkeyToBuild:     "T",
 	},
+	BLD_TURRET_AA: {
+		spriteCode:        "bld_aaturret",
+		maxHitpoints:      500,
+		w:                 1,
+		h:                 1,
+		displayedName:     "AA SAM site",
+		cost:              750,
+		buildTime:         15,
+		requiresTechLevel: 2,
+		builds:            nil,
+		produces:          nil,
+		consumesEnergy:    15,
+		hotkeyToBuild:     "M",
+		turretCode:        TRT_BUILDING_AA,
+	},
 	BLD_SILO: {
 		spriteCode:        "silo",
 		maxHitpoints:      500,
@@ -240,6 +229,37 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		hotkeyToBuild:     "O",
 		turretCode:        TRT_BUILDING_FORTRESS,
 	},
+
+	// faction 1
+	BLD_CONYARD1: {
+		spriteCode:    "base",
+		maxHitpoints:  1000,
+		w:             2,
+		h:             2,
+		displayedName: "BetaCorp Construction Yard",
+		cost:          2500,
+		buildTime:     30,
+		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
+		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
+		givesEnergy:   10,
+		hotkeyToBuild: "Y",
+	},
+	BLD_POWERPLANT1: {
+		spriteCode:     "powerplant1",
+		maxHitpoints:   500,
+		w:              2,
+		h:              2,
+		displayedName:  "Plasma Reactor",
+		cost:           600,
+		buildTime:      6,
+		givesTechLevel: 2,
+		builds:         nil,
+		produces:       nil,
+		givesEnergy:    25,
+		hotkeyToBuild:  "P",
+	},
+
 	// FACTION 2
 	BLD_CONYARD2: {
 		spriteCode:    "base",
@@ -250,7 +270,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:          2500,
 		buildTime:     30,
 		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY, BLD_FACTORY, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
-			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS},
+			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
 		hotkeyToBuild: "Y",

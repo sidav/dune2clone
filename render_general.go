@@ -13,6 +13,7 @@ func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, bgColor, t
 
 	r.drawOutlinedRect(x, y, w, textSize+2, 4, rl.DarkGreen, bgColor)
 	rl.DrawLine(x+titleBoxW, y, x+titleBoxW, y+textSize+2, rl.DarkGreen)
+	rl.DrawLine(x+titleBoxW+1, y, x+titleBoxW+1, y+textSize+2, rl.DarkGreen)
 	// r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, bgColor)
 
 	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2 + 4

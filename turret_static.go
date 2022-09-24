@@ -28,6 +28,7 @@ const (
 	TRT_CANNON_BUILDING
 	TRT_MINIGUN_BUILDING
 	TRT_BUILDING_FORTRESS
+	TRT_BUILDING_AA
 )
 
 var sTableTurrets = map[int]*turretStatic{
@@ -161,6 +162,19 @@ var sTableTurrets = map[int]*turretStatic{
 		fireSpreadDegrees:     5,
 		shotRangeSpread:       0.3,
 		attackCooldown:        80,
+		projectileDamage:      25,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
+	},
+	TRT_BUILDING_AA: {
+		spriteCode:            "",
+		firesProjectileOfCode: PRJ_AA_MISSILE,
+		attacksLand:           false,
+		attacksAir:            true,
+		rotateSpeed:           180,
+		fireRange:             8,
+		fireSpreadDegrees:     30,
+		shotRangeSpread:       0.3,
+		attackCooldown:        100,
 		projectileDamage:      25,
 		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
