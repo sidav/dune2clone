@@ -1,14 +1,18 @@
 package main
 
 func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
-	if u.currentAction.code != ACTION_WAIT || u.getStaticData().maxCargoAmount > 0 {
+	if u.getStaticData().maxCargoAmount > 0 {
 		if ai.shouldUnitBeSentForRepairs(u) {
 			ai.sendUnitForRepairs(u)
+			return
 		}
-		return
+	} else {
+		if ai.shouldUnitBeSentForRepairs(u) && rnd.OneChanceFrom(3) {
+			ai.sendUnitForRepairs(u)
+		}
 	}
-	if ai.shouldUnitBeSentForRepairs(u) && rnd.OneChanceFrom(3) {
-		ai.sendUnitForRepairs(u)
+	if u.currentAction.code == ACTION_WAIT {
+		return
 	}
 	if u.currentOrder.code != ORDER_NONE {
 		return
@@ -16,6 +20,10 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 	u.currentOrder.resetOrder()
 	if u.getStaticData().canBeDeployed {
 		ai.deployDeployableUnitSomewhere(b, u)
+		return
+	}
+	if u.getStaticData().maxCargoAmount > 0 {
+		u.currentOrder.code = ORDER_HARVEST
 		return
 	}
 	if len(u.turrets) > 0 {
