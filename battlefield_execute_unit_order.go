@@ -155,9 +155,13 @@ func (b *battlefield) executeGroundMoveToRepairOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	// for this, target tile is tile to return to after repairs.
-	if u.currentOrder.targetActor == nil {
-		// nothing found, doing nothing
-		return
+	if u.currentOrder.targetActor == nil || !u.currentOrder.targetActor.isAlive() {
+		depot := b.getClosestEmptyFactionRepairDepotFromCoords(u.faction, utx, uty)
+		if depot == nil {
+			u.currentOrder.resetOrder()
+			return
+		}
+		u.currentOrder.targetActor = depot
 	}
 	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
 	if !u.currentOrder.dispatchCalled {
@@ -217,6 +221,24 @@ func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y 
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
+			continue
+		}
+		bldCX, bldCY := bld.getUnitPlacementCoords()
+		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
+		if selected == nil || distFromBld < closestDist {
+			closestDist = distFromBld
+			selected = bld
+		}
+	}
+	return selected
+}
+
+func (b *battlefield) getClosestEmptyFactionRepairDepotFromCoords(f *faction, x, y int) actor {
+	var selected actor = nil
+	closestDist := math.MaxInt64
+	for i := b.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
+		if bld.faction != f || !bld.getStaticData().repairsUnits || bld.unitPlacedInside != nil {
 			continue
 		}
 		bldCX, bldCY := bld.getUnitPlacementCoords()

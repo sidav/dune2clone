@@ -5,9 +5,10 @@ type aiAnalytics struct {
 	nonDefenseBuildings int
 	defenses            int
 
-	builders   int
-	eco        int
-	production int
+	builders     int
+	eco          int
+	production   int
+	repairDepots int
 
 	// units
 	combatUnits    int
@@ -30,6 +31,9 @@ func (aa *aiAnalytics) increaseCountersForBuilding(bld *building) {
 	}
 	if bld.getStaticData().builds != nil {
 		aa.builders++
+	}
+	if bld.getStaticData().repairsUnits {
+		aa.repairDepots++
 	}
 	if bld.turret != nil {
 		aa.defenses++

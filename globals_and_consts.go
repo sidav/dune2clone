@@ -55,6 +55,10 @@ func areFloatsAlmostEqual(f, g float64) bool {
 	return math.Abs(f-g) < 0.0001
 }
 
+func getPercentInt(curr, max int) int {
+	return 100 * curr / max
+}
+
 func areFloatsRoughlyEqual(f, g float64) bool {
 	return math.Abs(f-g) < 0.01
 }
