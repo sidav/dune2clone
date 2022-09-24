@@ -11,7 +11,7 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 			ai.sendUnitForRepairs(u)
 		}
 	}
-	if u.currentAction.code == ACTION_WAIT {
+	if u.currentAction.code != ACTION_WAIT {
 		return
 	}
 	if u.currentOrder.code != ORDER_NONE {

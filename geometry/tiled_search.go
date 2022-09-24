@@ -62,9 +62,8 @@ func SpiralSearchForClosestConditionFrom(condition func(int, int) bool, startX, 
 }
 
 func SpiralSearchForFarthestConditionFrom(condition func(int, int) bool, startX, startY, maxSearchRadius, initialDirection int) (int, int) {
-	currRadius := 1
+	currRadius := maxSearchRadius
 	currFoundX, currFoundY := -1, -1
-	currMaxRadius := 0
 	// direction 0
 	var vx, vy, x, y int
 	switch initialDirection % 4 {
@@ -83,9 +82,12 @@ func SpiralSearchForFarthestConditionFrom(condition func(int, int) bool, startX,
 	}
 	currStartX, currStartY := x, y
 	for {
-		if condition(x, y) && currMaxRadius < currRadius {
-			currFoundX, currFoundY = x, y
-			currMaxRadius = currRadius
+		if condition(x, y) {
+			if (currFoundX == -1 && currFoundY == -1) ||
+				GetApproxDistFromTo(startX, startY, x, y) > GetApproxDistFromTo(startX, startY, currFoundX, currFoundY) {
+
+				currFoundX, currFoundY = x, y
+			}
 		}
 		x += vx
 		y += vy
@@ -99,10 +101,10 @@ func SpiralSearchForFarthestConditionFrom(condition func(int, int) bool, startX,
 			vx = -vy
 			vy = t
 		}
-		// increasing radius
+		// decreasing radius
 		if x == currStartX && y == currStartY {
-			currRadius++
-			if currRadius > maxSearchRadius {
+			currRadius--
+			if currFoundX != -1 && currFoundY != -1 || currRadius == 0 {
 				return currFoundX, currFoundY
 			}
 			switch initialDirection % 4 {
