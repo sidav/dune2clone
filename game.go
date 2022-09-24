@@ -167,6 +167,7 @@ func (g *game) traverseAllActors() {
 		unt := i.Value.(*unit)
 		tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
 		if !unt.isAlive() {
+			// for deletion while iterating
 			setI := i
 			if i.Prev() != nil {
 				i = i.Prev()
@@ -174,7 +175,7 @@ func (g *game) traverseAllActors() {
 			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 25,
 				tx, ty, 1, 1, 5,
 			)
-			g.battlefield.units.Remove(setI)
+			g.battlefield.removeActor(setI.Value.(*unit))
 		} else {
 			unt.faction.exploreAround(tx, ty, 1, 1, unt.getVisionRange())
 		}
@@ -183,8 +184,7 @@ func (g *game) traverseAllActors() {
 	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if !bld.isAlive() {
-			// deleting while iterating
-			setI := i
+			// for deletion while iterating
 			if i.Prev() != nil {
 				i = i.Prev()
 			}
@@ -201,7 +201,7 @@ func (g *game) traverseAllActors() {
 				g.battlefield.addActor(bld.unitPlacedInside)
 				bld.unitPlacedInside = nil
 			}
-			g.battlefield.buildings.Remove(setI)
+			g.battlefield.removeActor(bld)
 		} else {
 			bld.faction.hasBuildings[bld.code] = true
 			if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
