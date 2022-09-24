@@ -24,14 +24,18 @@ const (
 )
 
 type buildingStatic struct {
-	w, h          int
-	displayedName string
-	cost          int
-	buildTime     int   // seconds
-	builds        []buildingCode // buildings
-	buildType     buildTypeCode
-	produces      []int // units
-	maxHitpoints  int
+	w, h              int
+	displayedName     string
+	cost              int
+	buildTime         int // seconds
+	requiresToBeBuilt []buildingCode
+	requiresTechLevel int
+	givesTechLevel    int
+
+	builds       []buildingCode // buildings
+	buildType    buildTypeCode
+	produces     []int // units
+	maxHitpoints int
 
 	turretCode int
 
@@ -112,10 +116,12 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		hotkeyToBuild: "P",
 	},
 	BLD_FUSION: {
-		spriteCode:    "fusionreactor",
-		maxHitpoints:  1000,
-		w:             3,
-		h:             3,
+		spriteCode:        "fusionreactor",
+		maxHitpoints:      1000,
+		w:                 3,
+		h:                 3,
+		requiresTechLevel: 5,
+		// requiresToBeBuilt: []buildingCode{BLD_POWERPLANT1},
 		displayedName: "Fusion Reactor",
 		cost:          3000,
 		buildTime:     45,
@@ -133,6 +139,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		needsEmptyRowBelowWhenConstructing: true,
 		cost:                               500,
 		buildTime:                          10,
+		requiresTechLevel:                  2,
 		builds:                             nil,
 		produces:                           []int{UNT_INFANTRY},
 		hotkeyToBuild:                      "B",
@@ -143,6 +150,8 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		w:                                  3,
 		h:                                  2,
 		displayedName:                      "Factory",
+		requiresTechLevel:                  2,
+		requiresToBeBuilt:                  []buildingCode{BLD_REFINERY},
 		needsEmptyRowBelowWhenConstructing: true,
 		cost:                               1000,
 		buildTime:                          12,

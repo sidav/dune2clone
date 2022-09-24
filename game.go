@@ -135,6 +135,12 @@ func (g *game) startGame() {
 				}
 			}
 
+			// reset faction tech
+			for _, f := range g.battlefield.factions {
+				f.currTechLevel = 0
+				f.hasBuildings = map[buildingCode]bool{}
+			}
+
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				bld := i.Value.(*building)
 				if !bld.isAlive() {
@@ -158,6 +164,10 @@ func (g *game) startGame() {
 					}
 					g.battlefield.buildings.Remove(setI)
 				} else {
+					bld.faction.hasBuildings[bld.code] = true
+					if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
+						bld.faction.currTechLevel = bld.getStaticData().givesTechLevel
+					}
 					bld.faction.energyProduction += bld.getStaticData().givesEnergy
 					bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
 					bld.faction.resourceStorage += bld.getStaticData().storageAmount

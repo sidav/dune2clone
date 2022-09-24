@@ -21,6 +21,9 @@ type faction struct {
 	exploredTilesMap, visibleTilesMap [][]bool
 	explorationCheat, visibilityCheat bool
 
+	hasBuildings  map[buildingCode]bool
+	currTechLevel int
+
 	dispatchRequests list.List
 }
 
@@ -34,6 +37,18 @@ func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier, bui
 		buildSpeedMultiplier: buildSpeedMultiplier,
 	}
 	return f
+}
+
+func (f *faction) isTechAvailableForBuildingOfCode(bldCode buildingCode) bool {
+	if f.currTechLevel < sTableBuildings[bldCode].requiresTechLevel {
+		return false
+	}
+	for _, req := range sTableBuildings[bldCode].requiresToBeBuilt {
+		if _, ok := f.hasBuildings[req]; !ok {
+			return false
+		}
+	}
+	return true
 }
 
 func (f *faction) resetVisibilityMaps(mapW, mapH int) {

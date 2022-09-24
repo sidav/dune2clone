@@ -178,9 +178,13 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 	r.drawOutlinedRect(x, y, BUILD_PANEL_WIDTH, BUILD_PANEL_HEIGHT, 2, rl.Green, rl.Black)
 	if bld.currentAction.code == ACTION_WAIT {
 		for _, code := range bld.getStaticData().builds {
+			color := rl.Orange
+			if !bld.faction.isTechAvailableForBuildingOfCode(code) {
+				color = rl.DarkGray
+			}
 			r.drawText(r.collectLineForBuildMenu(sTableBuildings[code].hotkeyToBuild,
 				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
-				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
+				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, color)
 			line++
 		}
 		for _, code := range bld.getStaticData().produces {
