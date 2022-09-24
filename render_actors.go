@@ -30,7 +30,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 
 	// draw sprite
-	if bld.currentAction.code == ACTION_BEING_BUILT && (b.currentTick/10)%2 != 0 {
+	if bld.isUnderConstruction() && (b.currentTick/10)%2 != 0 {
 		// under construction
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		for x := 0; x < w; x++ {

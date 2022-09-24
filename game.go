@@ -207,9 +207,11 @@ func (g *game) traverseAllActors() {
 			if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
 				bld.faction.currTechLevel = bld.getStaticData().givesTechLevel
 			}
-			bld.faction.energyProduction += bld.getStaticData().givesEnergy
-			bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
-			bld.faction.resourceStorage += bld.getStaticData().storageAmount
+			if !bld.isUnderConstruction() {
+				bld.faction.energyProduction += bld.getStaticData().givesEnergy
+				bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
+				bld.faction.resourceStorage += bld.getStaticData().storageAmount
+			}
 			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
 				bld.getVisionRange())
 		}
@@ -237,12 +239,6 @@ func (g *game) centerPlayerCameraAtStartPosition(pc *playerController) {
 }
 
 func (g *game) shouldTickBeRendered(tick, fps, tps int) bool {
-	//g.renderedFrames += RENDERER_DESIRED_FPS
-	//if g.renderedFrames > DESIRED_TPS {
-	//	g.renderedFrames = g.renderedFrames % DESIRED_TPS
-	//	return true
-	//}
-	//return false
 	return fps*tick/tps != fps*(tick+1)/tps
 }
 

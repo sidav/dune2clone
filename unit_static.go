@@ -193,7 +193,7 @@ var sTableUnits = map[int]*unitStatic{
 		maxCargoAmount:         700,
 		movementSpeed:          0.07,
 		visionRange:            2,
-		maxHitpoints:           200,
+		maxHitpoints:           275,
 		armorType:              ARMORTYPE_HEAVY,
 		turretsData: []unitStaticTurretsData{
 			{

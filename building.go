@@ -42,8 +42,12 @@ func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
 
+func (b *building) isUnderConstruction() bool {
+	return b.currentAction.code == ACTION_BEING_BUILT
+}
+
 func (b *building) getVisionRange() int {
-	if b.faction.lastAvailableEnergy < 0 {
+	if b.faction.lastAvailableEnergy < 0 || b.isUnderConstruction() {
 		return 1
 	}
 	return 4
