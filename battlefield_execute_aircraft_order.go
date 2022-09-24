@@ -48,7 +48,8 @@ func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
 	targetUnit := carrier.currentOrder.targetActor.(*unit)
 	targetX, targetY := geometry.TrueCoordsToTileCoords(targetUnit.centerX, targetUnit.centerY)
 	if carrier.carriedUnit == nil { // need to pick up
-		if geometry.GetApproxDistFromTo(targetX, targetY, carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY) < 5 {
+		distOfPickableToItsTarget := geometry.GetApproxDistFromTo(targetX, targetY, carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
+		if distOfPickableToItsTarget <= 5 && carrier.carriedUnit == nil {
 			// target is too close already, no need for transport
 			carrier.currentOrder.resetOrder()
 			return

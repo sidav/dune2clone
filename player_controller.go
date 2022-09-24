@@ -82,7 +82,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	if bld.currentAction.code == ACTION_WAIT {
 		// maybe build?
 		for _, code := range bld.getStaticData().builds {
-			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) && pc.controlledFaction.isTechAvailableForBuildingOfCode(code) {
+			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) && bld.faction.isTechAvailableForBuildingOfCode(code) {
 				bld.currentOrder.code = ORDER_BUILD
 				bld.currentOrder.targetActorCode = int(code)
 			}

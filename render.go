@@ -90,8 +90,7 @@ func (r *renderer) renderCollisionMap(b *battlefield, pc *playerController) {
 			}
 			// Debug draw collisions
 			if b.tiles[x][y].isOccupiedByActor != nil {
-				rl.DrawText("1", osx, osy, 25, rl.White)
-				r.drawBoldRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, 5, rl.Magenta)
+				r.drawBoldRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, 3, rl.Magenta)
 				r.drawText(b.tiles[x][y].isOccupiedByActor.getName(), osx, osy, 18, rl.Magenta)
 			}
 		}

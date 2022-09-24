@@ -130,7 +130,9 @@ func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 		ptx, pty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetActor.(*building).getUnitPlacementCoords())
 		u.setPhysicalCenterCoords(ptx, pty)
 		u.chassisDegree = 90
+		ux, uy := u.getTileCoords()
 		b.removeActor(u)
+		b.setTilesOccupiedByActor(ux, uy, 1, 1, u) // WORKAROUND so that the entry space will be occupied
 		u.currentAction.targetActor.(*building).unitPlacedInside = u
 	}
 }
@@ -214,7 +216,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 			u.currentAction.resetAction()
 			return
 
-		// additional check, so that the next tile won't be occupied if no further inter-tile movement is needed
+			// additional check, so that the next tile won't be occupied if no further inter-tile movement is needed
 		} else if currTx != u.currentAction.targetTileX || currTy != u.currentAction.targetTileY {
 			b.tiles[currTx][currTy].isOccupiedByActor = nil
 			b.setTilesOccupiedByActor(nextTx, nextTy, 1, 1, u)
@@ -297,8 +299,9 @@ func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
 			targetBld.currentAction.code = ACTION_BEING_BUILT
 			targetBld.currentAction.builtAs = BTYPE_BUILD_FIRST
 			targetBld.currentAction.maxCompletionAmount = BUILDING_ANIMATION_TICKS
-			b.addActor(targetBld)
 			b.removeActor(u)
+			b.addActor(targetBld)
+			return
 		}
 		u.currentAction.resetAction()
 		return

@@ -127,7 +127,9 @@ func (g *game) startGame() {
 
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
-		timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
+		if g.battlefield.currentTick > DESIRED_TPS{
+			timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
+		}
 
 		timeCurrentActionStarted = time.Now()
 		if g.shouldTickBeRendered(g.battlefield.currentTick, RENDERER_DESIRED_FPS, DESIRED_TPS) {

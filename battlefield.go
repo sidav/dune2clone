@@ -139,6 +139,16 @@ func (b *battlefield) removeActor(a actor) {
 				if !unt.isInAir() {
 					x, y := unt.getTileCoords()
 					b.clearTilesOccupationInRect(x, y, 1, 1)
+					// just to be sure, maybe clear a tile at which the unit moves
+					// The logic ON PURPOSE doesn't look at unit's action
+					// check unit displacement
+					tileCx, tileCy := geometry.TileCoordsToPhysicalCoords(x, y)
+					ux, uy := unt.getPhysicalCenterCoords()
+					dispX, dispY := geometry.Float64VectorToIntUnitVector(ux-tileCx, uy-tileCy)
+					// clear the tile if it is set occupied by this unit
+					if b.tiles[x+dispX][y+dispY].isOccupiedByActor == unt {
+						b.clearTilesOccupationInRect(x+dispX, y+dispY, 1, 1)
+					}
 				}
 				b.units.Remove(i)
 			}
@@ -168,6 +178,12 @@ func (b *battlefield) setTilesOccupiedByActor(x, y, w, h int, a actor) {
 	for i := x; i < x+w; i++ {
 		for j := y; j < y+h; j++ {
 			b.tiles[i][j].isOccupiedByActor = a
+		}
+	}
+	if bld, ok := a.(*building); ok {
+		if bld.getStaticData().canUnitBePlacedIn() && bld.unitPlacedInside == nil {
+			freeX, freeY := bld.getStaticData().unitPlacementX, bld.getStaticData().unitPlacementY
+			b.tiles[x+freeX][y+freeY].isOccupiedByActor = nil
 		}
 	}
 }
