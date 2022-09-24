@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/geometry"
-	"dune2clone/map_generator"
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"time"
@@ -20,12 +19,7 @@ func (g *game) startGame() {
 		controlledFaction: g.battlefield.factions[0],
 		selection:         nil,
 	}
-	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
-		if i.Value.(actor).getFaction() == pc.controlledFaction {
-			tx, ty := geometry.TrueCoordsToTileCoords(i.Value.(actor).getPhysicalCenterCoords())
-			pc.centerCameraAtTile(&g.battlefield, tx, ty)
-		}
-	}
+	g.centerPlayerCameraAtStartPosition(pc)
 
 	timeLoopStarted := time.Now()
 	timeCurrentActionStarted := time.Now()
@@ -39,16 +33,7 @@ func (g *game) startGame() {
 		pc.playerControl(&g.battlefield)
 
 		timeCurrentActionStarted = time.Now()
-		if g.battlefield.currentTick%AI_ANALYZES_EACH == 0 {
-			for i := range g.battlefield.ais {
-				g.battlefield.ais[i].aiAnalyze(&g.battlefield)
-			}
-		}
-		if g.battlefield.currentTick%AI_ACTS_EACH == 0 {
-			for i := range g.battlefield.ais {
-				g.battlefield.ais[i].aiControl(&g.battlefield)
-			}
-		}
+		g.performAiActions()
 		timeReportString += g.createTimeReportString("AI", timeCurrentActionStarted, 1)
 
 		if g.battlefield.currentTick%RESOURCES_GROW_EACH_TICK == 0 {
@@ -113,68 +98,7 @@ func (g *game) startGame() {
 
 		// cleanup and faction calculations
 		if g.battlefield.currentTick%TRAVERSE_ALL_ACTORS_TICK_EACH == 0 {
-			for _, f := range g.battlefield.factions {
-				f.resetCurrents()
-				f.cleanExpiredFactionDispatchRequests(g.battlefield.currentTick)
-				f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
-			}
-			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
-				unt := i.Value.(*unit)
-				tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
-				if !unt.isAlive() {
-					setI := i
-					if i.Prev() != nil {
-						i = i.Prev()
-					}
-					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 25,
-						tx, ty, 1, 1, 5,
-					)
-					g.battlefield.units.Remove(setI)
-				} else {
-					unt.faction.exploreAround(tx, ty, 1, 1, unt.getVisionRange())
-				}
-			}
-
-			// reset faction tech
-			for _, f := range g.battlefield.factions {
-				f.currTechLevel = 0
-				f.hasBuildings = map[buildingCode]bool{}
-			}
-
-			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
-				bld := i.Value.(*building)
-				if !bld.isAlive() {
-					// deleting while iterating
-					setI := i
-					if i.Prev() != nil {
-						i = i.Prev()
-					}
-					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_REGULAR_EXPLOSION, 50,
-						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
-					)
-					g.battlefield.RandomlyAddEffectInTileRect(EFFECT_BIGGER_EXPLOSION, 50,
-						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
-					)
-					g.battlefield.changeTilesCodesInRectTo(
-						bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
-					)
-					if bld.unitPlacedInside != nil {
-						g.battlefield.addActor(bld.unitPlacedInside)
-						bld.unitPlacedInside = nil
-					}
-					g.battlefield.buildings.Remove(setI)
-				} else {
-					bld.faction.hasBuildings[bld.code] = true
-					if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
-						bld.faction.currTechLevel = bld.getStaticData().givesTechLevel
-					}
-					bld.faction.energyProduction += bld.getStaticData().givesEnergy
-					bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
-					bld.faction.resourceStorage += bld.getStaticData().storageAmount
-					bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
-						bld.getVisionRange())
-				}
-			}
+			g.traverseAllActors()
 		}
 
 		// execute orders
@@ -214,6 +138,100 @@ func (g *game) startGame() {
 		if (g.battlefield.currentTick-1)%10 == 0 {
 			debugWrite(timeReportString)
 			// debugWrite(g.battlefield.collectStatisticsForDebug())
+		}
+	}
+}
+
+func (g *game) performAiActions() {
+	if g.battlefield.currentTick%AI_ANALYZES_EACH == 0 {
+		for i := range g.battlefield.ais {
+			g.battlefield.ais[i].aiAnalyze(&g.battlefield)
+		}
+	}
+	if g.battlefield.currentTick%AI_ACTS_EACH == 0 {
+		for i := range g.battlefield.ais {
+			g.battlefield.ais[i].aiControl(&g.battlefield)
+		}
+	}
+}
+
+func (g *game) traverseAllActors() {
+	for _, f := range g.battlefield.factions {
+		f.resetCurrents()
+		f.cleanExpiredFactionDispatchRequests(g.battlefield.currentTick)
+		f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
+		f.currTechLevel = 0
+		f.hasBuildings = map[buildingCode]bool{}
+	}
+	for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+		unt := i.Value.(*unit)
+		tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
+		if !unt.isAlive() {
+			setI := i
+			if i.Prev() != nil {
+				i = i.Prev()
+			}
+			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_SMALL_EXPLOSION, 25,
+				tx, ty, 1, 1, 5,
+			)
+			g.battlefield.units.Remove(setI)
+		} else {
+			unt.faction.exploreAround(tx, ty, 1, 1, unt.getVisionRange())
+		}
+	}
+
+	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+		bld := i.Value.(*building)
+		if !bld.isAlive() {
+			// deleting while iterating
+			setI := i
+			if i.Prev() != nil {
+				i = i.Prev()
+			}
+			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_REGULAR_EXPLOSION, 50,
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
+			)
+			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_BIGGER_EXPLOSION, 50,
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
+			)
+			g.battlefield.changeTilesCodesInRectTo(
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
+			)
+			if bld.unitPlacedInside != nil {
+				g.battlefield.addActor(bld.unitPlacedInside)
+				bld.unitPlacedInside = nil
+			}
+			g.battlefield.buildings.Remove(setI)
+		} else {
+			bld.faction.hasBuildings[bld.code] = true
+			if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
+				bld.faction.currTechLevel = bld.getStaticData().givesTechLevel
+			}
+			bld.faction.energyProduction += bld.getStaticData().givesEnergy
+			bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
+			bld.faction.resourceStorage += bld.getStaticData().storageAmount
+			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
+				bld.getVisionRange())
+		}
+	}
+}
+
+func (g *game) centerPlayerCameraAtStartPosition(pc *playerController) {
+	cameraSet := false
+	for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+		if i.Value.(actor).getFaction() == pc.controlledFaction {
+			tx, ty := i.Value.(*unit).getTileCoords()
+			pc.centerCameraAtTile(&g.battlefield, tx, ty)
+			cameraSet = true
+		}
+	}
+	if !cameraSet {
+		for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+			if i.Value.(actor).getFaction() == pc.controlledFaction {
+				tx, ty := geometry.TrueCoordsToTileCoords(i.Value.(actor).getPhysicalCenterCoords())
+				pc.centerCameraAtTile(&g.battlefield, tx, ty)
+				cameraSet = true
+			}
 		}
 	}
 }
@@ -258,38 +276,4 @@ func (g *game) createTimeReportString(actionName string, timeSince time.Time, cr
 	}
 
 	return fmt.Sprintf("%s: %dmcs", actionName, mcs) + ", "
-}
-
-func (g *game) selectMapToGenerateBattlefield() {
-	map_generator.SetRandom(&rnd)
-	generatedMap := &map_generator.GeneratedMap{}
-	w := 64
-	h := 64
-	generatedMap.Generate(w, h)
-	for {
-		rl.BeginDrawing()
-		drawGeneratedMap(generatedMap)
-		rl.EndDrawing()
-		time.Sleep(100 * time.Millisecond)
-		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
-			break
-		} else if rl.IsKeyDown(rl.KeySpace) {
-			generatedMap.Generate(w, h)
-		} else if rl.IsKeyDown(rl.KeyRight) {
-			w += 16
-			h += 16
-			generatedMap.Generate(w, h)
-		} else if rl.IsKeyDown(rl.KeyLeft) {
-			w -= 16
-			h -= 16
-			if w < 32 {
-				w = 32
-			}
-			if h < 32 {
-				h = 32
-			}
-			generatedMap.Generate(w, h)
-		}
-	}
-	g.battlefield.initFromRandomMap(generatedMap)
 }
