@@ -69,11 +69,33 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	for i := b.effects.Front(); i != nil; i = i.Next() {
 		r.renderEffect(i.Value.(*effect))
 	}
+	// r.renderCollisionMap(b, pc)
 
 	r.lastFrameRenderingTime = time.Since(timeFrameRenderStarted) / time.Millisecond
 
 	r.renderUI(b, pc)
 	rl.EndDrawing()
+}
+
+func (r *renderer) renderCollisionMap(b *battlefield, pc *playerController) {
+	w, h := b.getSize()
+	for x := 0; x < w; x++ {
+		for y := 0; y < h; y++ {
+			osx, osy := r.physicalToOnScreenCoords(float64(x*TILE_PHYSICAL_SIZE), float64(y*TILE_PHYSICAL_SIZE))
+			if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
+				continue
+			}
+			if !pc.controlledFaction.isTileAtCoordsExplored(x, y) {
+				return
+			}
+			// Debug draw collisions
+			if b.tiles[x][y].isOccupiedByActor != nil {
+				rl.DrawText("1", osx, osy, 25, rl.White)
+				r.drawBoldRect(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, 5, rl.Magenta)
+				r.drawText(b.tiles[x][y].isOccupiedByActor.getName(), osx, osy, 18, rl.Magenta)
+			}
+		}
+	}
 }
 
 func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
@@ -118,11 +140,6 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 			tintToUse,
 		)
 	}
-	// Debug draw collisions
-	//if t.isOccupiedByActor != nil {
-	//	rl.DrawText("1", osx, osy, 25, rl.White)
-	//	rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.White)
-	//}
 }
 
 func (r *renderer) renderProjectile(proj *projectile) {
