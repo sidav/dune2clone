@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -71,6 +72,25 @@ func sign(x int) int {
 		return 1
 	}
 	return 0
+}
+
+func getListOfRelativeCoordsForSquadMembers(squadSize int) [][2]float64 {
+	// returns list of coords, relative to center, (for example, for drawing a squad of units)
+	// consider that the coords won't rotate with squad
+	switch squadSize {
+	case 0, 1:
+		return [][2]float64{{0, 0}}
+	case 2:
+		return [][2]float64{{0.3, -0.3}, {-0.3, 0.3}}
+	case 3:
+		return [][2]float64{{0.25, 0.25}, {0, -0.20}, {-0.25, 0.25}}
+	case 4:
+		return [][2]float64{{0, -0.32}, {0.32, 0}, {0, 0.32}, {-0.32, 0}}
+	case 5:
+		return [][2]float64{{0, -0.32}, {0.32, 0}, {0, 0.32}, {-0.32, 0}, {0, 0}}
+	}
+	return [][2]float64{}
+	panic(fmt.Sprintf("No such squad size %d, renderer failed", squadSize))
 }
 
 func abs(x int) int {

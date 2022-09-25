@@ -284,7 +284,7 @@ func (b *battlefield) executeBeingBuiltActionForBuilding(bld *building) {
 	if bld.getCurrentAction().builtAs != BTYPE_PLACE_FIRST {
 		bld.currentAction.completionAmount++
 	}
-	if bld.currentAction.getCompletionPercent() == 100 {
+	if bld.currentAction.getCompletionPercent() >= 100 {
 		bld.currentAction.resetAction()
 	}
 }

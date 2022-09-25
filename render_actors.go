@@ -2,7 +2,6 @@ package main
 
 import (
 	"dune2clone/geometry"
-	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -130,7 +129,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	}
 
 	// draw chassis sprite
-	relativeSquadCoords := r.getListOfRelativeCoordsForDrawingSquad(u.squadSize)
+	relativeSquadCoords := getListOfRelativeCoordsForSquadMembers(u.squadSize)
 	for _, relSquadCoord := range relativeSquadCoords {
 		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-0.5, y+relSquadCoord[1]-0.5)
 		rl.DrawTexture(
@@ -184,22 +183,4 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
 		//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)
 	}
-}
-
-func (r *renderer) getListOfRelativeCoordsForDrawingSquad(squadSize int) [][2]float64 {
-	// returns list of coords, relative to center, for drawing a squad of units
-	switch squadSize {
-	case 0, 1:
-		return [][2]float64{{0, 0}}
-	case 2:
-		return [][2]float64{{0.3, -0.3}, {-0.3, 0.3}}
-	case 3:
-		return [][2]float64{{0.3, -0.3}, {0, 0}, {-0.3, 0.3}}
-	case 4:
-		return [][2]float64{{-0.32, -0.32}, {0.32, -0.32}, {0.32, 0.32}, {-0.32, 0.32}}
-	case 5:
-		return [][2]float64{{-0.32, -0.32}, {0.32, -0.32}, {0.32, 0.32}, {-0.32, 0.32}, {0, 0}}
-	}
-	return [][2]float64{}
-	panic(fmt.Sprintf("No such squad size %d, renderer failed", squadSize))
 }
