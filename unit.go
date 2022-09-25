@@ -51,6 +51,18 @@ func (u *unit) isAlive() bool {
 	return u.currentHitpoints > 0
 }
 
+func (u *unit) getHitpoints() int {
+	return u.currentHitpoints
+}
+
+func (u *unit) getMaxHitpoints() int {
+	return u.getStaticData().maxHitpoints
+}
+
+func (u *unit) getHitpointsPercentage() int {
+	return getPercentInt(u.currentHitpoints, u.getStaticData().maxHitpoints)
+}
+
 func (u *unit) markSelected(b bool) {
 	u.isSelected = b
 }
@@ -91,6 +103,10 @@ func (u *unit) getName() string {
 
 func (u *unit) getCurrentAction() *action {
 	return &u.currentAction
+}
+
+func (u *unit) getCurrentOrder() *order {
+	return &u.currentOrder
 }
 
 func (u *unit) getFaction() *faction {

@@ -22,6 +22,18 @@ func (b *building) isAlive() bool {
 	return b.currentHitpoints > 0
 }
 
+func (b *building) getHitpoints() int {
+	return b.currentHitpoints
+}
+
+func (b *building) getMaxHitpoints() int {
+	return b.getStaticData().maxHitpoints
+}
+
+func (b *building) getHitpointsPercentage() int {
+	return getPercentInt(b.currentHitpoints, b.getStaticData().maxHitpoints)
+}
+
 func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *building {
 	var turr *turret
 	if sTableBuildings[code].turretCode != TRT_NONE {
@@ -73,6 +85,10 @@ func (b *building) getName() string {
 
 func (b *building) getCurrentAction() *action {
 	return &b.currentAction
+}
+
+func (b *building) getCurrentOrder() *order {
+	return &b.currentOrder
 }
 
 func (b *building) getFaction() *faction {

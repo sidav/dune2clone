@@ -65,6 +65,16 @@ func (b *battlefield) executeActionForActor(a actor) {
 	}
 }
 
+func (b *battlefield) executeBuildingSelfRepair(bld *building) {
+	cost := float64(bld.getStaticData().cost/2) / float64(bld.getStaticData().maxHitpoints)
+	if bld.currentHitpoints >= bld.getStaticData().maxHitpoints || bld.faction.getMoney() < cost {
+		bld.isRepairingSelf = false
+		return
+	}
+	bld.currentHitpoints++
+	bld.faction.spendMoney(cost)
+}
+
 func (b *battlefield) executeWaitActionForUnit(u *unit) {
 	if u.getStaticData().isAircraft {
 		if u.currentAction.targetTileX == -1 {
@@ -111,7 +121,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 		}
 	}
 	if bld.getStaticData().repairsUnits && bld.unitPlacedInside != nil {
-		if bld.unitPlacedInside.currentHitpoints < bld.unitPlacedInside.getStaticData().maxHitpoints {
+		if bld.unitPlacedInside.getHitpointsPercentage() < 100 {
 			const REPAIR_PER_TICK = 2
 			bld.unitPlacedInside.currentHitpoints += REPAIR_PER_TICK
 			if bld.unitPlacedInside.currentHitpoints > bld.unitPlacedInside.getStaticData().maxHitpoints {

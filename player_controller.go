@@ -79,7 +79,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 // returns true if order was given (for not auto-clicking, for example)
 func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) bool {
 	kk := rl.GetKeyPressed()
-	if pc.IsKeyCodeEqualToString(kk, "R", true) && bld.currentHitpoints < bld.getStaticData().maxHitpoints {
+	if pc.IsKeyCodeEqualToString(kk, "R", true) && bld.getHitpointsPercentage() < 100 {
 		bld.isRepairingSelf = true
 	}
 	if bld.currentAction.code == ACTION_WAIT {

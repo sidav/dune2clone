@@ -104,30 +104,38 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
-	// draw outline
-	r.drawOutlinedRect(x, y, 2*int32(WINDOW_W)/5, WINDOW_H/4, 2, rl.Green, rl.Black)
 	if len(pc.selection) == 0 {
 		return
 	}
-	if u, ok := pc.getFirstSelection().(*unit); ok {
-		r.drawText(fmt.Sprintf("%s (%s-%s)", u.getName(), u.currentOrder.getTextDescription(), u.getCurrentAction().getTextDescription()),
-			x+15, y+1, UI_FONT_SIZE, rl.Green)
-	} else {
-		r.drawText(fmt.Sprintf("%s (%s)", pc.getFirstSelection().getName(), pc.getFirstSelection().getCurrentAction().getTextDescription()),
-			x+15, y+1, UI_FONT_SIZE, rl.Green)
-	}
+	// draw outline
+	r.drawOutlinedRect(x, y, 2*WINDOW_W/5, WINDOW_H/4, 2, rl.Green, rl.Black)
+	var lineNum int32
+	r.drawText(fmt.Sprintf("%s (%d/%d)", pc.getFirstSelection().getName(),
+		pc.getFirstSelection().getHitpoints(),
+		pc.getFirstSelection().getMaxHitpoints()),
+		x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+	lineNum++
+	r.drawText(fmt.Sprintf("%s - %s)",
+		pc.getFirstSelection().getCurrentOrder().getTextDescription(),
+		pc.getFirstSelection().getCurrentAction().getTextDescription()),
+		x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+	lineNum++
 
 	if u, ok := pc.getFirstSelection().(*unit); ok {
 		if u.getStaticData().maxCargoAmount > 0 {
 			r.drawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
-				x+15, y+UI_FONT_SIZE+1, UI_FONT_SIZE, rl.Green)
+				x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+			lineNum++
 		}
 		r.drawText(fmt.Sprintf("(%.1f, %.1f); Rotation: %d", u.centerX, u.centerY, u.chassisDegree),
-			x+15, y+(UI_FONT_SIZE*2), UI_FONT_SIZE, rl.Green)
+			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+		lineNum++
 	}
 
 	if bld, ok := pc.getFirstSelection().(*building); ok {
-		r.renderSelectedBuildingUI(bld, WINDOW_W-BUILD_PANEL_WIDTH, 100)
+		if len(bld.getStaticData().builds) != 0 || len(bld.getStaticData().produces) != 0 {
+			r.renderSelectedBuildingUI(bld, WINDOW_W-BUILD_PANEL_WIDTH, 100)
+		}
 	}
 
 }

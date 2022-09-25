@@ -35,5 +35,5 @@ func (ai *aiStruct) sendUnitForRepairs(u *unit) {
 }
 
 func (ai *aiStruct) shouldUnitBeSentForRepairs(u *unit) bool {
-	return ai.current.repairDepots > 0 && getPercentInt(u.currentHitpoints, u.getStaticData().maxHitpoints) < 33
+	return ai.current.repairDepots > 0 && u.getHitpointsPercentage() < 33
 }

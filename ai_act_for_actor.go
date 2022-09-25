@@ -64,7 +64,7 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
-	if getPercentInt(bld.currentHitpoints, bld.getStaticData().maxHitpoints) < 50 {
+	if bld.getHitpointsPercentage() < 50 {
 		bld.isRepairingSelf = true
 	}
 	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings &&

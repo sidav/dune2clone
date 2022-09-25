@@ -410,7 +410,6 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 }
 
 func (b *battlefield) getCoordsOfClosestEmptyTileWithResourcesTo(tx, ty int) (int, int) {
-	// TODO: optimize this shit
 	return geometry.SpiralSearchForClosestConditionFrom(
 		func(x, y int) bool {
 			return b.areTileCoordsValid(x, y) &&

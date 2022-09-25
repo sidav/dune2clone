@@ -57,7 +57,6 @@ func (a *action) resetAction() {
 }
 
 func (a *action) getCompletionPercent() int {
-	// TODO: add maxCompletionAmount and use it in calculations
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
 			if b.getStaticData().buildType == BTYPE_PLACE_FIRST {
