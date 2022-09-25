@@ -17,6 +17,7 @@ type faction struct {
 	team                 int // 0 means "enemy to all"
 	resourcesMultiplier  float64
 	buildSpeedMultiplier float64
+	storagesMultiplier   float64
 
 	exploredTilesMap, visibleTilesMap [][]bool
 	explorationCheat, visibilityCheat bool
@@ -35,6 +36,7 @@ func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier, bui
 		team:                 team,
 		resourcesMultiplier:  resourcesMultiplier,
 		buildSpeedMultiplier: buildSpeedMultiplier,
+		storagesMultiplier:   1,
 	}
 	return f
 }
@@ -138,6 +140,7 @@ func (f *faction) spendMoney(spent float64) {
 		f.money -= spent
 	}
 }
+
 func (f *faction) receiveResources(amount float64, asMoney bool) {
 	if asMoney {
 		f.money += amount * f.resourcesMultiplier
@@ -149,7 +152,13 @@ func (f *faction) receiveResources(amount float64, asMoney bool) {
 	}
 }
 
+func (f *faction) increaseResourcesStorage(amount float64) {
+	f.resourceStorage += amount * f.storagesMultiplier
+}
+
 func (f *faction) resetCurrents() {
+	f.currTechLevel = 0
+	f.hasBuildings = map[buildingCode]bool{}
 	f.lastAvailableEnergy = f.getAvailableEnergy()
 	f.resourceStorage = 0
 	f.energyProduction = 0

@@ -110,6 +110,13 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			1,
 		)
 	}
+	if bld.isRepairingSelf {
+		r.renderBlinkingIconCenteredAt("repairicon",
+			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+			2,
+		)
+	}
 }
 
 func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {

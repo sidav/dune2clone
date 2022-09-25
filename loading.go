@@ -95,6 +95,7 @@ func loadSprites() {
 	currPath = "resources/sprites/ui/"
 	uiAtlaces["factionflag"] = CreateAtlasFromFile(currPath+"building_faction_flag.png", 0, 0, 4, 4, 4, 4, 4, false, true)
 	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
+	uiAtlaces["repairicon"] = CreateDirectionalAtlasFromFile(currPath+"repair_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["readyicon"] = CreateDirectionalAtlasFromFile(currPath+"ready_icon.png", 16, 8, 1, 1, false)
 
 	currPath = "resources/sprites/effects/"

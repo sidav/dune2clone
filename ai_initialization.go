@@ -5,8 +5,8 @@ func createAi(f *faction, n string) *aiStruct {
 		name:            n,
 		controlsFaction: f,
 		current:         aiAnalytics{},
-		moneyPoorMax:    5500,
-		moneyRichMin:    15000,
+		moneyPoorMax:    3000,
+		moneyRichMin:    10000,
 		desired: aiAnalytics{
 			defenses:            5,
 			builders:            2,

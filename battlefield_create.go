@@ -83,6 +83,10 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for i := 1; i < len(b.factions); i++ {
 		b.ais = append(b.ais, createAi(b.factions[i], fmt.Sprintf("Enemy %d", i)))
 	}
+	for i := range b.ais {
+		b.ais[i].controlsFaction.resourcesMultiplier = 4
+		b.ais[i].controlsFaction.storagesMultiplier = 2
+	}
 	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
 	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 

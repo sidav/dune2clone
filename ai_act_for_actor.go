@@ -64,13 +64,18 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
-	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings && !ai.alreadyOrderedBuildThisTick {
+	if getPercentInt(bld.currentHitpoints, bld.getStaticData().maxHitpoints) < 50 {
+		bld.isRepairingSelf = true
+	}
+	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings &&
+		!ai.alreadyOrderedBuildThisTick && (!ai.isPoor() || rnd.OneChanceFrom(40)) {
+
 		bld.currentOrder.code = ORDER_BUILD
 		bld.currentOrder.targetActorCode = int(ai.selectWhatToBuild(bld))
 		ai.alreadyOrderedBuildThisTick = true
 		return
 	}
-	if bld.getStaticData().produces != nil && (!ai.isPoor() || rnd.OneChanceFrom(50)) {
+	if bld.getStaticData().produces != nil && (!ai.isPoor() || rnd.OneChanceFrom(40)) {
 		bld.currentOrder.code = ORDER_PRODUCE
 		bld.currentOrder.targetActorCode = ai.selectWhatToProduce(bld)
 		return

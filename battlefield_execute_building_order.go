@@ -1,6 +1,9 @@
 package main
 
 func (b *battlefield) executeOrderForBuilding(bld *building) {
+	if bld.isRepairingSelf {
+		b.executeBuildingSelfRepair(bld)
+	}
 	switch bld.currentOrder.code {
 	case ORDER_BUILD:
 		b.executeBuildOrder(bld)
@@ -9,6 +12,16 @@ func (b *battlefield) executeOrderForBuilding(bld *building) {
 	case ORDER_PRODUCE:
 		b.executeProduceOrder(bld)
 	}
+}
+
+func (b *battlefield) executeBuildingSelfRepair(bld *building) {
+	cost := float64(bld.getStaticData().cost/2) / float64(bld.getStaticData().maxHitpoints)
+	if bld.currentHitpoints >= bld.getStaticData().maxHitpoints || bld.faction.getMoney() < cost {
+		bld.isRepairingSelf = false
+		return
+	}
+	bld.currentHitpoints++
+	bld.faction.spendMoney(cost)
 }
 
 func (b *battlefield) executeBuildOrder(bld *building) {

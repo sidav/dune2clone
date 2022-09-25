@@ -15,6 +15,7 @@ type building struct {
 	turret                 *turret
 	unitPlacedInside       *unit
 	rallyTileX, rallytileY int
+	isRepairingSelf        bool
 }
 
 func (b *building) isAlive() bool {

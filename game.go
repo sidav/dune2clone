@@ -162,8 +162,6 @@ func (g *game) traverseAllActors() {
 		f.resetCurrents()
 		f.cleanExpiredFactionDispatchRequests(g.battlefield.currentTick)
 		f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
-		f.currTechLevel = 0
-		f.hasBuildings = map[buildingCode]bool{}
 	}
 	for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 		unt := i.Value.(*unit)
@@ -212,7 +210,7 @@ func (g *game) traverseAllActors() {
 			if !bld.isUnderConstruction() {
 				bld.faction.energyProduction += bld.getStaticData().givesEnergy
 				bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
-				bld.faction.resourceStorage += bld.getStaticData().storageAmount
+				bld.faction.increaseResourcesStorage(bld.getStaticData().storageAmount)
 			}
 			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
 				bld.getVisionRange())

@@ -212,7 +212,7 @@ func (r *renderer) collectLineForBuildMenu(hotkey, name string, cost int) string
 }
 
 func (r *renderer) renderBlinkingIconCenteredAt(iconSpriteCode string, x, y int32, blinkOrder int) {
-	if (r.btl.currentTick/30)%2 == blinkOrder {
+	if (r.btl.currentTick/30)%3 == blinkOrder {
 		icon := uiAtlaces[iconSpriteCode].getSpriteByFrame(0)
 		rl.DrawTexture(
 			icon,

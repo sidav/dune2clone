@@ -79,17 +79,20 @@ func (pc *playerController) playerControl(b *battlefield) {
 // returns true if order was given (for not auto-clicking, for example)
 func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) bool {
 	kk := rl.GetKeyPressed()
+	if pc.IsKeyCodeEqualToString(kk, "R", true) && bld.currentHitpoints < bld.getStaticData().maxHitpoints {
+		bld.isRepairingSelf = true
+	}
 	if bld.currentAction.code == ACTION_WAIT {
 		// maybe build?
 		for _, code := range bld.getStaticData().builds {
-			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild) && bld.faction.isTechAvailableForBuildingOfCode(code) {
+			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForBuildingOfCode(code) {
 				bld.currentOrder.code = ORDER_BUILD
 				bld.currentOrder.targetActorCode = int(code)
 			}
 		}
 		// maybe product?
 		for _, code := range bld.getStaticData().produces {
-			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild) {
+			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) {
 				bld.currentOrder.code = ORDER_PRODUCE
 				bld.currentOrder.targetActorCode = code
 			}
@@ -247,11 +250,12 @@ func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
 	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS
 }
 
-func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString string) bool {
+func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString string, withShift bool) bool {
 	//if keyCode != 0 {
 	//	debugWritef("CALLED: %d - %d, diff %d\n", keyCode, int32(keyString[0]), int32(keyString[0])-keyCode)
 	//}
-	return int32(keyString[0])-keyCode == 0
+	shiftPressed := rl.IsKeyDown(rl.KeyLeftShift) || rl.IsKeyDown(rl.KeyRightShift)
+	return int32(keyString[0])-keyCode == 0 && withShift == shiftPressed
 }
 
 func (pc *playerController) isMouseMovedFromDownCoordinates() bool {
