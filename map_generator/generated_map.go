@@ -41,13 +41,12 @@ func (gm *GeneratedMap) reset() {
 	gm.StartPoints = make([][2]int, 0)
 }
 
-func (gm *GeneratedMap) Generate(w, h int) {
+func (gm *GeneratedMap) Generate(w, h, patternIndex int) {
 	gm.init(w, h)
 	tries := 0
 	for len(gm.StartPoints) == 0 || !gm.areAllStartPointsGood() {
 		tries++
-		// gm.generateByTwoPlayersPattern()
-		gm.generateByThreePlayersPattern()
+		GetPatternByIndex(patternIndex).generationFunc(gm)
 	}
 	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
 }

@@ -1,6 +1,6 @@
 package map_generator
 
-func (gm *GeneratedMap) generateByTwoPlayersPattern() {
+func generateByTwoPlayersPattern(gm *GeneratedMap) {
 	w, h := len(gm.Tiles), len(gm.Tiles[0])
 	gm.reset()
 	symmV := rnd.OneChanceFrom(2)

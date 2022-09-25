@@ -25,7 +25,7 @@ func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
 		} else if symmH {
 			gm.StartPoints = append(gm.StartPoints, [2]int{cx, cy})
 			gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, cy})
-		} else if count % 2 != 0 {
+		} else if count > 2 {
 			allPoints := GetListOfCoordsRadialSymmetricTo(count, cx, cy, len(gm.Tiles), len(gm.Tiles[0]))
 			for _, coord := range allPoints {
 				gm.StartPoints = append(gm.StartPoints, coord)

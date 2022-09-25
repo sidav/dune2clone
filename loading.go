@@ -33,6 +33,7 @@ func loadSprites() {
 	projectilesAtlaces = make(map[string]*spriteAtlas)
 	uiAtlaces = make(map[string]*spriteAtlas)
 
+	drawLoadingScreen("LOADING: TERRAIN")
 	currPath := "resources/sprites/terrain/"
 	tilesAtlaces["sand1"] = CreateAtlasFromFile(currPath+"sand1.png", 0, 0, 16, 16, 16, 16, 1, false, false)
 	tilesAtlaces["sand2"] = CreateAtlasFromFile(currPath+"sand2.png", 0, 0, 16, 16, 16, 16, 1, false, false)
@@ -45,6 +46,7 @@ func loadSprites() {
 	tilesAtlaces["melangemedium"] = CreateAtlasFromFile(currPath+"melange_medium.png", 0, 0, 16, 16, 16, 16, 1, false, false)
 	tilesAtlaces["melangepoor"] = CreateAtlasFromFile(currPath+"melange_poor.png", 0, 0, 16, 16, 16, 16, 1, false, false)
 
+	drawLoadingScreen("LOADING: BUILDINGS")
 	currPath = "resources/sprites/buildings/"
 	// WARNING: IT HAS FRAMES
 	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 7, false, false)
@@ -66,6 +68,7 @@ func loadSprites() {
 	buildingsAtlaces["fortress"] = CreateAtlasFromFile(currPath+"fortress.png", 0, 0, 32, 32, 32, 32, 1, false, true)
 	turretsAtlaces["bld_fortress_cannon"] = CreateDirectionalAtlasFromFile(currPath+"fortress_turret.png", 32, 32, 1, 2, true)
 
+	drawLoadingScreen("LOADING: UNITS")
 	currPath = "resources/sprites/units/"
 	unitChassisAtlaces["placeholder"] = CreateDirectionalAtlasFromFile(currPath+"placeholder.png", 32, 16, 1, 2, true)
 	turretsAtlaces["placeholder"] = CreateDirectionalAtlasFromFile(currPath+"placeholder_turret.png", 32, 16, 1, 2, true)
@@ -85,6 +88,7 @@ func loadSprites() {
 	unitChassisAtlaces["air_gunship"] = CreateDirectionalAtlasFromFile(currPath+"combat_plane.png", 16, 16, 1, 2, true)
 	unitChassisAtlaces["air_transport"] = CreateDirectionalAtlasFromFile(currPath+"transport_plane.png", 16, 16, 1, 2, true)
 
+	drawLoadingScreen("LOADING: PROJECTILES")
 	currPath = "resources/sprites/projectiles/"
 	projectilesAtlaces["shell"] = CreateDirectionalAtlasFromFile(currPath+"shell.png", 32, 16, 1, 2, false)
 	projectilesAtlaces["bullets"] = CreateDirectionalAtlasFromFile(currPath+"bullets.png", 32, 8, 1, 2, false)
@@ -92,12 +96,14 @@ func loadSprites() {
 	projectilesAtlaces["aamissile"] = CreateDirectionalAtlasFromFile(currPath+"aamissile.png", 32, 16, 1, 2, false)
 	projectilesAtlaces["omni"] = CreateDirectionalAtlasFromFile(currPath+"omni.png", 32, 16, 1, 2, false)
 
+	drawLoadingScreen("LOADING: UI")
 	currPath = "resources/sprites/ui/"
 	uiAtlaces["factionflag"] = CreateAtlasFromFile(currPath+"building_faction_flag.png", 0, 0, 4, 4, 4, 4, 4, false, true)
 	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["repairicon"] = CreateDirectionalAtlasFromFile(currPath+"repair_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["readyicon"] = CreateDirectionalAtlasFromFile(currPath+"ready_icon.png", 16, 8, 1, 1, false)
 
+	drawLoadingScreen("LOADING: EFFECTS")
 	currPath = "resources/sprites/effects/"
 	effectsAtlaces["smallexplosion"] = CreateAtlasFromFile(currPath+"explosion_small.png", 0, 0, 4, 4, 4, 4, 16, false, false)
 	effectsAtlaces["regularexplosion"] = CreateAtlasFromFile(currPath+"explosion.png", 0, 0, 16, 16, 16, 16, 3, false, false)
