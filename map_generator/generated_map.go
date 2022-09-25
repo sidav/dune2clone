@@ -51,10 +51,29 @@ func (gm *GeneratedMap) Generate(w, h, patternIndex int) {
 	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
 }
 
-func (gm *GeneratedMap) performNAutomatasLike(count int, prototype automat, fromx, fromy, tox, toy int) {
+
+func (gm *GeneratedMap) getNumberOfTilesPercent(perc int) int {
+	total := len(gm.Tiles) * len(gm.Tiles[0])
+	fmt.Printf("w, h %d,%d total %d; %d percentage, got %d\n",len(gm.Tiles), len(gm.Tiles[0]), total, perc, perc*total/100)
+	return perc * total / 100
+}
+
+func (gm *GeneratedMap) performNAutomatasLike(count int, coveragePercent int, prototype automat, fromx, fromy, tox, toy int) {
 	autsArr := make([]automat, count)
+	totalDrawsEach := gm.getNumberOfTilesPercent(coveragePercent)
+	totalDrawsEach /= count
+	if prototype.symmV {
+		totalDrawsEach /= 2
+	}
+	if prototype.symmH {
+		totalDrawsEach /= 2
+	}
+	if prototype.radialSymmetryCount > 0 {
+		totalDrawsEach /= prototype.radialSymmetryCount
+	}
 	for i := range autsArr {
 		autsArr[i] = prototype
+		autsArr[i].desiredTotalDraws = totalDrawsEach
 		autsArr[i].x = rnd.RandInRange(fromx, tox)
 		autsArr[i].y = rnd.RandInRange(fromy, toy)
 		//for _, restrictedCode := range prototype.cantDrawNear {

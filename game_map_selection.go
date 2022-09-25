@@ -12,7 +12,6 @@ func (g *game) selectMapToGenerateBattlefield() {
 	currSelectedPatternIndex := 0
 	w := map_generator.GetPatternByIndex(currSelectedPatternIndex).MinWidth
 	h := map_generator.GetPatternByIndex(currSelectedPatternIndex).MinHeight
-	generatedMap.Generate(w, h, currSelectedPatternIndex)
 	reGenerate := true
 	for {
 		if reGenerate {

@@ -8,60 +8,60 @@ func generateByThreePlayersPattern(gm *GeneratedMap) {
 	toy = 90 * toy / 100
 
 	gm.performNAutomatasLike(3,
+		rnd.RandInRange(20, 60),
 		automat{
-			drawsChar:           BUILDABLE_TERRAIN,
-			canDrawOn:           []tileCode{SAND},
-			desiredTotalDraws:   rnd.RandInRange(175, 250),
+			drawsChar: BUILDABLE_TERRAIN,
+			canDrawOn: []tileCode{SAND},
 			radialSymmetryCount: 3,
 		},
 		fromx, fromy, tox, toy,
 	)
 
 	gm.performNAutomatasLike(20,
+		rnd.RandInRange(10, 25),
 		automat{
-			drawsChar:           POOR_RESOURCES,
-			canDrawOn:           []tileCode{SAND},
-			maxCodeNear:         map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			desiredTotalDraws:   rnd.RandInRange(8, 15),
+			drawsChar:   POOR_RESOURCES,
+			canDrawOn:   []tileCode{SAND},
+			maxCodeNear: map[tileCode]int{BUILDABLE_TERRAIN: 0},
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
 	)
 	gm.performNAutomatasLike(20,
+		rnd.RandInRange(10, 15),
 		automat{
-			drawsChar:           MEDIUM_RESOURCES,
-			canDrawOn:           []tileCode{POOR_RESOURCES},
-			maxCodeNear:         map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			desiredTotalDraws:   rnd.RandInRange(5, 10),
+			drawsChar:   MEDIUM_RESOURCES,
+			canDrawOn:   []tileCode{POOR_RESOURCES},
+			maxCodeNear: map[tileCode]int{BUILDABLE_TERRAIN: 0},
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
 	)
 	gm.performNAutomatasLike(10,
+		rnd.RandInRange(5, 10),
 		automat{
-			drawsChar:           RICH_RESOURCES,
-			canDrawOn:           []tileCode{MEDIUM_RESOURCES},
-			maxCodeNear:         map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			desiredTotalDraws:   rnd.RandInRange(3, 6),
+			drawsChar:   RICH_RESOURCES,
+			canDrawOn:   []tileCode{MEDIUM_RESOURCES},
+			maxCodeNear: map[tileCode]int{BUILDABLE_TERRAIN: 0},
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
 	)
 	gm.performNAutomatasLike(3,
+		rnd.RandInRange(3, 5),
 		automat{
-			drawsChar:           RESOURCE_VEIN,
-			canDrawOn:           []tileCode{POOR_RESOURCES, MEDIUM_RESOURCES, RICH_RESOURCES},
-			desiredTotalDraws:   rnd.RandInRange(1, 3),
+			drawsChar: RESOURCE_VEIN,
+			canDrawOn: []tileCode{POOR_RESOURCES, MEDIUM_RESOURCES, RICH_RESOURCES},
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
 	)
 
 	gm.performNAutomatasLike(10,
+		rnd.RandInRange(5, 15),
 		automat{
-			drawsChar:           ROCKS,
-			canDrawOn:           []tileCode{BUILDABLE_TERRAIN, SAND},
-			desiredTotalDraws:   rnd.RandInRange(5, 10),
+			drawsChar: ROCKS,
+			canDrawOn: []tileCode{BUILDABLE_TERRAIN, SAND},
 			maxCodeNear:         map[tileCode]int{ROCKS: 5},
 			radialSymmetryCount: 3,
 		},
