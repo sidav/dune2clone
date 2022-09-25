@@ -3,8 +3,6 @@ package map_generator
 func generateByTwoPlayersPattern(gm *GeneratedMap) {
 	w, h := len(gm.Tiles), len(gm.Tiles[0])
 	gm.reset()
-	symmV := false // rnd.OneChanceFrom(2)
-	symmH := false // true // rnd.OneChanceFrom(2) || !symmV
 	fromx, fromy, tox, toy := 0, 0, w-1, h-1
 
 	gm.performNAutomatasLike(3,
@@ -12,8 +10,6 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 		automat{
 			drawsChar:         BUILDABLE_TERRAIN,
 			canDrawOn:         []tileCode{SAND},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		fromx, fromy, tox, toy,
@@ -25,8 +21,6 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 			drawsChar:         POOR_RESOURCES,
 			canDrawOn:         []tileCode{SAND},
 			maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		0, 0, w, h,
@@ -38,8 +32,6 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 			drawsChar:         MEDIUM_RESOURCES,
 			canDrawOn:         []tileCode{POOR_RESOURCES},
 			maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		0, 0, w, h,
@@ -51,8 +43,6 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 			drawsChar:         RICH_RESOURCES,
 			canDrawOn:         []tileCode{MEDIUM_RESOURCES},
 			maxCodeNear:       map[tileCode]int{BUILDABLE_TERRAIN: 0},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		0, 0, w, h,
@@ -63,8 +53,6 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 		automat{
 			drawsChar:         RESOURCE_VEIN,
 			canDrawOn:         []tileCode{RICH_RESOURCES},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		0, 0, w, h,
@@ -76,12 +64,11 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 			drawsChar:         ROCKS,
 			canDrawOn:         []tileCode{BUILDABLE_TERRAIN, SAND},
 			maxCodeNear:       map[tileCode]int{ROCKS: 5},
-			symmV:             symmV,
-			symmH:             symmH,
 			radialSymmetryCount: 2,
 		},
 		fromx, fromy, tox, toy,
 	)
 
-	gm.searchAndSetStartPoints(symmH, symmV, 2)
+	// gm.cleanupBadRadialSymmetry(2)
+	gm.searchAndSetStartPoints(false, false,2)
 }

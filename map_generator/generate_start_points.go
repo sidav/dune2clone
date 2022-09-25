@@ -2,7 +2,7 @@ package map_generator
 
 import "dune2clone/geometry"
 
-func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
+func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, radialSymmetryCount int) {
 	// TODO: rewrite this completely
 	candidates := make([][2]int, 0)
 	for cx := range gm.Tiles {
@@ -25,8 +25,8 @@ func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, count int) {
 		} else if symmH {
 			gm.StartPoints = append(gm.StartPoints, [2]int{cx, cy})
 			gm.StartPoints = append(gm.StartPoints, [2]int{len(gm.Tiles) - 1 - cx, cy})
-		} else if count > 1 {
-			allPoints := GetListOfCoordsRadialSymmetricTo(count, cx, cy, len(gm.Tiles), len(gm.Tiles[0]))
+		} else if radialSymmetryCount > 1 {
+			allPoints := GetListOfCoordsRadialSymmetricTo(radialSymmetryCount, cx, cy, len(gm.Tiles), len(gm.Tiles[0]))
 			for _, coord := range allPoints {
 				gm.StartPoints = append(gm.StartPoints, coord)
 			}

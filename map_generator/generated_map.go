@@ -62,12 +62,6 @@ func (gm *GeneratedMap) performNAutomatasLike(count int, coveragePercent int, pr
 	autsArr := make([]automat, count)
 	totalDrawsEach := gm.getNumberOfTilesPercent(coveragePercent)
 	totalDrawsEach /= count
-	if prototype.symmV {
-		totalDrawsEach /= 2
-	}
-	if prototype.symmH {
-		totalDrawsEach /= 2
-	}
 	if prototype.radialSymmetryCount > 0 {
 		totalDrawsEach /= prototype.radialSymmetryCount
 	}
@@ -127,9 +121,15 @@ func GetListOfCoordsRadialSymmetricTo(count, x, y, mapW, mapH int) [][2]int {
 		panic("Bad count")
 	}
 	degreesBetweenCoords := 2*math.Pi / float64(count)
-	centerFloatX, centerFloatY := float64(mapW)/2, float64(mapH)/2
+	centerFloatX, centerFloatY := float64(mapW-1)/2, float64(mapH-1)/2
 	coords := make([][2]int, count)
 	vectorX, vectorY := float64(x)-centerFloatX, float64(y)-centerFloatY
+	//if count == 2 {
+	//	return [][2]int {
+	//		{x, y},
+	//		{},
+	//	}
+	//}
 	for i := 0; i < count; i++ {
 		currTileX := int(math.Round(vectorX+centerFloatX))
 		currTileY := int(math.Round(vectorY+centerFloatY))

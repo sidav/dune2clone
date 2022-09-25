@@ -70,6 +70,6 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 		fromx, fromy, tox, toy,
 	)
 
-	// gm.cleanupBadRadialSymmetry(2)
+	gm.cleanupBadRadialSymmetry(2)
 	gm.searchAndSetStartPoints(false, false, 4)
 }
