@@ -17,6 +17,7 @@ const (
 	DAMAGETYPE_CRASH_IF_THIS_SET damageCode = iota
 	DAMAGETYPE_ANTI_INFANTRY
 	DAMAGETYPE_ANTI_BUILDING
+	DAMAGETYPE_OMNI
 	DAMAGETYPE_HEAVY
 )
 
@@ -44,6 +45,8 @@ func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int 
 	}
 	percent := 100
 	switch dmgType {
+	case DAMAGETYPE_OMNI:
+		percent = 100
 	case DAMAGETYPE_ANTI_INFANTRY:
 		switch armType {
 		case ARMORTYPE_HEAVY:
