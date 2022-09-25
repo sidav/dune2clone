@@ -27,7 +27,7 @@ func (b *battlefield) executeAirMoveToRepairOrder(u *unit) {
 		// nothing found, doing nothing
 		return
 	}
-	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementAbsoluteCoords()
 
 	if orderTileX == utx && orderTileY == uty {
 		u.currentOrder.code = ORDER_MOVE

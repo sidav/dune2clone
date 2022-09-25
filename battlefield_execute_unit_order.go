@@ -134,7 +134,7 @@ func (b *battlefield) executeReturnResourcesOrder(u *unit) {
 		// nothing found, doing nothing
 		return
 	}
-	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementAbsoluteCoords()
 	if !u.currentOrder.dispatchCalled {
 		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
 		u.currentOrder.dispatchCalled = true
@@ -163,7 +163,7 @@ func (b *battlefield) executeGroundMoveToRepairOrder(u *unit) {
 		}
 		u.currentOrder.targetActor = depot
 	}
-	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementCoords()
+	orderTileX, orderTileY := u.currentOrder.targetActor.(*building).getUnitPlacementAbsoluteCoords()
 	if !u.currentOrder.dispatchCalled {
 		u.faction.addDispatchRequest(u, orderTileX, orderTileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
 		u.currentOrder.dispatchCalled = true
@@ -223,7 +223,7 @@ func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y 
 		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
 			continue
 		}
-		bldCX, bldCY := bld.getUnitPlacementCoords()
+		bldCX, bldCY := bld.getUnitPlacementAbsoluteCoords()
 		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
 		if selected == nil || distFromBld < closestDist {
 			closestDist = distFromBld
@@ -241,7 +241,7 @@ func (b *battlefield) getClosestEmptyFactionRepairDepotFromCoords(f *faction, x,
 		if bld.faction != f || !bld.getStaticData().repairsUnits || bld.unitPlacedInside != nil {
 			continue
 		}
-		bldCX, bldCY := bld.getUnitPlacementCoords()
+		bldCX, bldCY := bld.getUnitPlacementAbsoluteCoords()
 		distFromBld := geometry.GetApproxDistFromTo(x, y, bldCX, bldCY)
 		if selected == nil || distFromBld < closestDist {
 			closestDist = distFromBld

@@ -128,6 +128,9 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 				bld.unitPlacedInside.currentHitpoints = bld.unitPlacedInside.getStaticData().maxHitpoints
 			}
 		} else {
+			// force clear tile so that the entry point will be cleared for airplanes too
+			upx, upy := bld.getUnitPlacementAbsoluteCoords()
+			b.clearTilesOccupationInRect(upx, upy, 1, 1)
 			b.addActor(bld.unitPlacedInside)
 			bld.unitPlacedInside = nil
 		}
@@ -137,7 +140,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 	if u.currentAction.targetActor.(*building).unitPlacedInside == nil {
 		u.currentAction.code = ACTION_WAIT
-		ptx, pty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetActor.(*building).getUnitPlacementCoords())
+		ptx, pty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetActor.(*building).getUnitPlacementAbsoluteCoords())
 		u.setPhysicalCenterCoords(ptx, pty)
 		u.chassisDegree = 90
 		ux, uy := u.getTileCoords()

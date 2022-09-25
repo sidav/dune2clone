@@ -98,7 +98,7 @@ func (b *battlefield) addActor(a actor) {
 	case *building:
 		bld := a.(*building)
 		if bld.getStaticData().givesFreeUnitOnCreation {
-			x, y := bld.getUnitPlacementCoords()
+			x, y := bld.getUnitPlacementAbsoluteCoords()
 			unt := createUnit(bld.getStaticData().codeForFreeUnitOnCreation, x, y, bld.getFaction())
 			unt.chassisDegree = 90 // looking down
 			bld.unitPlacedInside = unt

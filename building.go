@@ -75,7 +75,7 @@ func (b *building) getDimensionsForConstructon() (int, int, int, int) {
 	return b.topLeftX, b.topLeftY, b.getStaticData().w, h
 }
 
-func (b *building) getUnitPlacementCoords() (int, int) {
+func (b *building) getUnitPlacementAbsoluteCoords() (int, int) {
 	return b.topLeftX + b.getStaticData().unitPlacementX, b.topLeftY + b.getStaticData().unitPlacementY
 }
 
