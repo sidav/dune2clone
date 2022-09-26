@@ -11,6 +11,7 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 	automs = 3
 	gm.performNAutomatasLike(automs,
 		rnd.RandInRange(20, 60),
+		0,
 		automat{
 			drawsChar:           BUILDABLE_TERRAIN,
 			canDrawOn:           []tileCode{SAND},
@@ -21,6 +22,7 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 
 	gm.performNAutomatasLike(20,
 		rnd.RandInRange(10, 25),
+		0,
 		automat{
 			drawsChar:           POOR_RESOURCES,
 			canDrawOn:           []tileCode{SAND},
@@ -31,6 +33,7 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 	)
 	gm.performNAutomatasLike(20,
 		rnd.RandInRange(10, 15),
+		0,
 		automat{
 			drawsChar:           MEDIUM_RESOURCES,
 			canDrawOn:           []tileCode{POOR_RESOURCES},
@@ -41,6 +44,7 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 	)
 	gm.performNAutomatasLike(10,
 		rnd.RandInRange(5, 10),
+		0,
 		automat{
 			drawsChar:           RICH_RESOURCES,
 			canDrawOn:           []tileCode{MEDIUM_RESOURCES},
@@ -49,8 +53,9 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 		},
 		0, 0, w, h,
 	)
-	gm.performNAutomatasLike(3,
-		rnd.RandInRange(1, 2),
+	gm.performNAutomatasLike(2*rnd.RandInRange(2, 8),
+		0,
+		1,
 		automat{
 			drawsChar:           RESOURCE_VEIN,
 			canDrawOn:           []tileCode{POOR_RESOURCES, MEDIUM_RESOURCES, RICH_RESOURCES},
@@ -61,6 +66,7 @@ func generateByFourPlayersPattern(gm *GeneratedMap) {
 
 	gm.performNAutomatasLike(10,
 		rnd.RandInRange(5, 20),
+		0,
 		automat{
 			drawsChar:           ROCKS,
 			canDrawOn:           []tileCode{BUILDABLE_TERRAIN, SAND},

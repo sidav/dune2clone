@@ -58,12 +58,18 @@ func (gm *GeneratedMap) getNumberOfTilesPercent(perc int) int {
 	return perc * total / 100
 }
 
-func (gm *GeneratedMap) performNAutomatasLike(count int, coveragePercent int, prototype automat, fromx, fromy, tox, toy int) {
+func (gm *GeneratedMap) performNAutomatasLike(count int, coveragePercent, forceDrawsEach int, prototype automat, fromx, fromy, tox, toy int) {
 	autsArr := make([]automat, count)
-	totalDrawsEach := gm.getNumberOfTilesPercent(coveragePercent)
-	totalDrawsEach /= count
-	if prototype.radialSymmetryCount > 0 {
-		totalDrawsEach /= prototype.radialSymmetryCount
+	totalDrawsEach := 0
+	if coveragePercent > 0 {
+		totalDrawsEach = gm.getNumberOfTilesPercent(coveragePercent)
+		totalDrawsEach /= count
+		if prototype.radialSymmetryCount > 0 {
+			totalDrawsEach /= prototype.radialSymmetryCount
+		}
+	}
+	if forceDrawsEach > 0 {
+		totalDrawsEach = forceDrawsEach
 	}
 	for i := range autsArr {
 		autsArr[i] = prototype
