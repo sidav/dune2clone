@@ -15,10 +15,19 @@ func (ai *aiStruct) isUnitInAnyTaskForce(u *unit) bool {
 	return false
 }
 
+func (ai *aiStruct) areAllTaskForcesFull() bool {
+	for _, tf := range ai.taskForces {
+		if !tf.isFull() {
+			return false
+		}
+	}
+	return true
+}
+
 func (ai *aiStruct) assignUnitToTaskForce(u *unit) {
 	selectedTf := ai.taskForces[0]
 	for _, tf := range ai.taskForces {
-		if tf.getSize() < selectedTf.getSize() && tf.getSize() < tf.desiredSize {
+		if tf.getFullnessPercent() < selectedTf.getFullnessPercent() && !tf.isFull() {
 			selectedTf = tf
 		}
 	}
@@ -41,10 +50,11 @@ func (ai *aiStruct) giveOrdersToAllTaskForces(b *battlefield) {
 }
 
 func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) {
-	full := tf.getSize() >= tf.desiredSize
-	if full || tf.noRetreat {
+	if tf.shouldBeRetreated() {
+		tf.target = nil
+	}
+	if tf.isFull() || tf.target != nil {
 		if tf.target != nil {
-			tf.noRetreat = true
 			for _, u := range tf.units {
 				u.currentOrder.code = ORDER_ATTACK
 				u.currentOrder.targetActor = tf.target
@@ -55,7 +65,7 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 		}
 	}
 	if tf.target == nil {
-		ai.giveRoamOrderToTaskForce(b, tf)
+		ai.giveRoamNearBaseOrderToTaskForce(b, tf)
 	}
 }
 
@@ -71,11 +81,11 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 		tf.target = ai.findTargetNearBase(b, basePatrolRadius)
 	}
 	if tf.target == nil || !ai.isActorInRangeFromBase(tf.target, basePatrolRadius) {
-		ai.giveRoamOrderToTaskForce(b, tf)
+		ai.giveRoamNearBaseOrderToTaskForce(b, tf)
 	}
 }
 
-func (ai *aiStruct) giveRoamOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
+func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
 	const radius = 20
 	if ai.currBaseCenterX > 0 && ai.currBaseCenterY > 0 {
 		for i := 0; i < 100; i++ {

@@ -36,7 +36,7 @@ func createAi(f *faction, n string) *aiStruct {
 			},
 			{
 				designation:          AITF_DESIGNATION_DEFEND,
-				desiredSize:          10,
+				desiredSize:          5,
 				units:                make([]*unit, 0),
 			},
 		},
