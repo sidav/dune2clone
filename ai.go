@@ -3,15 +3,17 @@ package main
 import "fmt"
 
 type aiStruct struct {
-	name            string
-	controlsFaction *faction
-	moneyPoorMax    float64
-	moneyRichMin    float64
-	current         aiAnalytics
-	desired         aiAnalytics
-	max             aiAnalytics
+	name                             string
+	controlsFaction                  *faction
+	moneyPoorMax                     float64
+	moneyRichMin                     float64
+	current                          aiAnalytics
+	desired                          aiAnalytics
+	max                              aiAnalytics
+	currBaseCenterX, currBaseCenterY int
 
 	alreadyOrderedBuildThisTick bool
+	taskForces                  []*aiTaskForce
 }
 
 func (ai *aiStruct) isPoor() bool {

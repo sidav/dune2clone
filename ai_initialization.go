@@ -28,6 +28,20 @@ func createAi(f *faction, n string) *aiStruct {
 			harvesters:          10,
 			transports:          5,
 		},
+		taskForces: []*aiTaskForce{
+			{
+				designation:        AITF_DESIGNATION_ATTACK,
+				lastTickOrderGiven: 0,
+				desiredSize:        10,
+				units:              make([]*unit, 0),
+			},
+			{
+				designation:        AITF_DESIGNATION_DEFEND,
+				lastTickOrderGiven: 0,
+				desiredSize:        10,
+				units:              make([]*unit, 0),
+			},
+		},
 	}
 	return &ai
 }

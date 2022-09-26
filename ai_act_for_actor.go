@@ -27,6 +27,9 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		return
 	}
 	if len(u.turrets) > 0 {
+		if !ai.isUnitInAnyTaskForce(u) {
+			ai.assignUnitToTaskForce(u)
+		}
 		// temporary solution. TODO: task-force based decisions
 		var selectedTarget actor = nil
 		attackBuildings := rnd.OneChanceFrom(3)
