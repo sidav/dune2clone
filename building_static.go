@@ -106,7 +106,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:                          12,
 		builds:                             nil,
 		consumesEnergy:                     15,
-		produces:                           []int{UNT_TANK2, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
+		produces:                           []int{UNT_TANK2, UNT_DEVASTATOR, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_HARVESTER},
 		hotkeyToBuild:                      "F",
 	},
 	BLD_REPAIR_DEPOT: {

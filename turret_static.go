@@ -19,6 +19,7 @@ const (
 	TRT_NONE = iota
 	TRT_TANK
 	TRT_TANK2
+	TRT_DEVASTATOR
 	TRT_INFANTRY
 	TRT_ROCKETINFANTRY
 	TRT_HEAVYINFANTRY
@@ -56,6 +57,18 @@ var sTableTurrets = map[int]*turretStatic{
 		shotRangeSpread:       0.7,
 		attackCooldown:        45,
 		projectileDamage:      30,
+		projectileDamageType:  DAMAGETYPE_HEAVY,
+	},
+	TRT_DEVASTATOR: {
+		spriteCode:            "devastator",
+		firesProjectileOfCode: PRJ_SHELL,
+		attacksLand:           true,
+		rotateSpeed:           0,
+		fireRange:             6,
+		fireSpreadDegrees:     7,
+		shotRangeSpread:       0.5,
+		attackCooldown:        75,
+		projectileDamage:      47,
 		projectileDamageType:  DAMAGETYPE_HEAVY,
 	},
 	TRT_INFANTRY: {

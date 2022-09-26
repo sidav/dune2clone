@@ -6,6 +6,7 @@ const (
 	UNT_HEAVYINFANTRY
 	UNT_TANK
 	UNT_TANK2
+	UNT_DEVASTATOR
 	UNT_MCV1
 	UNT_MCV2
 	UNT_QUAD
@@ -157,6 +158,26 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 450,
 		buildTime:            12,
 		hotkeyToBuild:        "T",
+	},
+	UNT_DEVASTATOR: {
+		displayedName:     "Devastator",
+		chassisSpriteCode: "devastator",
+		movementSpeed:     0.04,
+		visionRange:       5,
+		maxHitpoints:      500,
+		armorType:         ARMORTYPE_HEAVY,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode:    TRT_DEVASTATOR,
+			},
+			{
+				turretCode:    TRT_DEVASTATOR,
+			},
+		},
+		chassisRotationSpeed: 5,
+		cost:                 1500,
+		buildTime:            30,
+		hotkeyToBuild:        "D",
 	},
 	UNT_MCV1: {
 		displayedName:        "BetaCorp MCV",
