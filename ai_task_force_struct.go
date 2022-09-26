@@ -6,10 +6,12 @@ const (
 )
 
 type aiTaskForce struct {
-	designation        int
-	lastTickOrderGiven int
-	desiredSize        int
-	units              []*unit
+	designation          int
+	nextTickToGiveOrders int
+	desiredSize          int
+	noRetreat            bool
+	units                []*unit
+	target               actor
 }
 
 func (atf *aiTaskForce) getSize() int {
@@ -32,10 +34,16 @@ func (atf *aiTaskForce) addUnit(u *unit) {
 	atf.units = append(atf.units, u)
 }
 
-func (atf *aiTaskForce) cleanDead() {
+func (atf *aiTaskForce) cleanup() {
+	if atf.target != nil && !atf.target.isAlive() {
+		atf.target = nil
+	}
 	for i := len(atf.units) - 1; i >= 0; i-- {
 		if !atf.units[i].isAlive() {
-			atf.units = append(atf.units[:i], atf.units[:i+1]...)
+			atf.units = append(atf.units[:i], atf.units[i+1:]...)
 		}
+	}
+	if len(atf.units) == 0 {
+		atf.noRetreat = false // so that task force can replenish
 	}
 }

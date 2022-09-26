@@ -30,32 +30,7 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		if !ai.isUnitInAnyTaskForce(u) {
 			ai.assignUnitToTaskForce(u)
 		}
-		// temporary solution. TODO: task-force based decisions
-		var selectedTarget actor = nil
-		attackBuildings := rnd.OneChanceFrom(3)
-		if attackBuildings {
-			for i := b.buildings.Front(); i != nil; i = i.Next() {
-				currActor := i.Value.(actor)
-				if currActor.getFaction() != ai.controlsFaction {
-					if selectedTarget == nil || rnd.OneChanceFrom(4) {
-						selectedTarget = currActor
-					}
-				}
-			}
-		} else {
-			for i := b.units.Front(); i != nil; i = i.Next() {
-				currActor := i.Value.(actor)
-				if currActor.getFaction() != ai.controlsFaction {
-					if selectedTarget == nil || rnd.OneChanceFrom(4) {
-						selectedTarget = currActor
-					}
-				}
-			}
-		}
-		if selectedTarget != nil && b.canActorAttackActor(u, selectedTarget) {
-			u.currentOrder.code = ORDER_ATTACK
-			u.currentOrder.targetActor = selectedTarget
-		}
+		// other orders are in task-force based decisions
 	}
 }
 

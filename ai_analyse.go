@@ -1,5 +1,7 @@
 package main
 
+import "dune2clone/geometry"
+
 type aiAnalytics struct {
 	// buildings
 	nonDefenseBuildings int
@@ -66,13 +68,23 @@ func (ai *aiStruct) aiAnalyze(b *battlefield) {
 	// debugWritef("AI %s ANALYZE: I have %.f money\n", ai.name, ai.controlsFaction.getMoney())
 
 	ai.current.reset()
-
+	currTrueBaseCenterX, currTrueBaseCenterY := 0.0, 0.0
+	totalBlds := 0
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {
 			if bld.getFaction() == ai.controlsFaction {
 				ai.current.increaseCountersForBuilding(bld)
+				// calculating current base center
+				bcx, bcy := bld.getPhysicalCenterCoords()
+				currTrueBaseCenterX += bcx
+				currTrueBaseCenterY += bcy
+				totalBlds++
 			}
 		}
+	}
+	if totalBlds > 0 {
+		ai.currBaseCenterX, ai.currBaseCenterY =
+			geometry.TrueCoordsToTileCoords(currTrueBaseCenterX/float64(totalBlds), currTrueBaseCenterY/float64(totalBlds))
 	}
 
 	for i := b.units.Front(); i != nil; i = i.Next() {
@@ -81,5 +93,5 @@ func (ai *aiStruct) aiAnalyze(b *battlefield) {
 			ai.current.increaseCountersForUnit(ai, i.Value.(*unit))
 		}
 	}
-	// debugWritef("AI: analyze shows that %+v\n", ai.current)
+	// ai.debugWritef("analyze shows that %+v\n", ai)
 }

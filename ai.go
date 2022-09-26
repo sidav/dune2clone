@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"dune2clone/geometry"
+	"fmt"
+)
 
 type aiStruct struct {
 	name                             string
@@ -28,6 +31,11 @@ func (ai *aiStruct) debugWritef(msg string, args ...interface{}) {
 	debugWritef("%s: %s", ai.name, fmt.Sprintf(msg, args...))
 }
 
+func (ai *aiStruct) isActorInRangeFromBase(a actor, r int) bool {
+	ttx, tty := geometry.TrueCoordsToTileCoords(a.getPhysicalCenterCoords())
+	return geometry.GetApproxDistFromTo(ai.currBaseCenterX, ai.currBaseCenterY, ttx, tty) <= r
+}
+
 func (ai *aiStruct) aiControl(b *battlefield) {
 	// debugWritef("AI ACT: It is tick %d\n", b.currentTick)
 	ai.alreadyOrderedBuildThisTick = false
@@ -45,4 +53,5 @@ func (ai *aiStruct) aiControl(b *battlefield) {
 			}
 		}
 	}
+	ai.giveOrdersToAllTaskForces(b)
 }
