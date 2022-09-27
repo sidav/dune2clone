@@ -18,13 +18,25 @@ func generateByThreePlayersPattern(gm *GeneratedMap) {
 		fromx, fromy, tox, toy,
 	)
 
+	gm.performNAutomatasLike(10,
+		rnd.RandInRange(5, 15),
+		0,
+		automat{
+			drawsChar: ROCKS,
+			canDrawOn: []tileCode{BUILDABLE_TERRAIN, SAND},
+			maxCodeNear:         map[tileCode]int{ROCKS: 5},
+			radialSymmetryCount: 3,
+		},
+		fromx, fromy, tox, toy,
+	)
+
 	gm.performNAutomatasLike(20,
 		rnd.RandInRange(10, 25),
 		0,
 		automat{
 			drawsChar:   POOR_RESOURCES,
 			canDrawOn:   []tileCode{SAND},
-			maxCodeNear: map[tileCode]int{BUILDABLE_TERRAIN: 0},
+			maxCodeNear: map[tileCode]int{BUILDABLE_TERRAIN: 0, ROCKS: 0},
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
@@ -60,18 +72,6 @@ func generateByThreePlayersPattern(gm *GeneratedMap) {
 			radialSymmetryCount: 3,
 		},
 		0, 0, w, h,
-	)
-
-	gm.performNAutomatasLike(10,
-		rnd.RandInRange(5, 15),
-		0,
-		automat{
-			drawsChar: ROCKS,
-			canDrawOn: []tileCode{BUILDABLE_TERRAIN, SAND},
-			maxCodeNear:         map[tileCode]int{ROCKS: 5},
-			radialSymmetryCount: 3,
-		},
-		fromx, fromy, tox, toy,
 	)
 
 	gm.cleanupBadRadialSymmetry(3)
