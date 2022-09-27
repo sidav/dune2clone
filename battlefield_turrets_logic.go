@@ -50,7 +50,9 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		actorsInRange := b.getListOfActorsInRangeFromActor(shooter, t.getStaticData().fireRange)
 		for l := actorsInRange.Front(); l != nil; l = l.Next() {
 			targetCandidate := l.Value.(actor)
-			if targetCandidate.getFaction() != shooter.getFaction() && b.canTurretAttackActor(t, targetCandidate) {
+			if targetCandidate.getFaction() != shooter.getFaction() &&
+				b.canTurretAttackActor(t, targetCandidate) && b.canFactionSeeActor(shooter.getFaction(), targetCandidate) {
+
 				t.targetActor = targetCandidate
 				break
 			}
