@@ -19,6 +19,7 @@ const (
 	// aircrafts
 	AIR_TRANSPORT
 	AIR_GUNSHIP
+	AIR_FIGHTER
 )
 
 type unitStatic struct {
@@ -393,10 +394,10 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:            2,
 		maxHitpoints:           200,
 		armorType:              ARMORTYPE_HEAVY,
-		chassisRotationSpeed: 7,
-		cost:                 1600,
-		buildTime:            12,
-		hotkeyToBuild:        "H",
+		chassisRotationSpeed:   7,
+		cost:                   1600,
+		buildTime:              12,
+		hotkeyToBuild:          "H",
 	},
 	// aircrafts
 	AIR_TRANSPORT: {
@@ -419,9 +420,9 @@ var sTableUnits = map[int]*unitStatic{
 	AIR_GUNSHIP: {
 		displayedName:     "Gunship",
 		chassisSpriteCode: "air_gunship",
-		maxHitpoints:      50,
+		maxHitpoints:      100,
 		armorType:         ARMORTYPE_HEAVY,
-		movementSpeed:     0.25,
+		movementSpeed:     0.20,
 		visionRange:       7,
 		turretsData: []*turretStatic{
 			{
@@ -430,17 +431,45 @@ var sTableUnits = map[int]*unitStatic{
 				attacksLand:           true,
 				rotateSpeed:           180,
 				fireRange:             6,
-				fireSpreadDegrees:     15,
-				shotRangeSpread:       2.0,
+				fireSpreadDegrees:     12,
+				shotRangeSpread:       1.0,
 				attackCooldown:        15,
 				projectileDamage:      12,
 				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
-		chassisRotationSpeed: 3,
-		cost:                 500,
+		chassisRotationSpeed: 2,
+		cost:                 600,
 		buildTime:            25,
 		hotkeyToBuild:        "G",
+		isAircraft:           true,
+	},
+	AIR_FIGHTER: {
+		displayedName:     "Fighter",
+		chassisSpriteCode: "air_fighter",
+		maxHitpoints:      75,
+		armorType:         ARMORTYPE_HEAVY,
+		movementSpeed:     0.25,
+		visionRange:       7,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_AA_MISSILE,
+				attacksLand:           false,
+				attacksAir:            true,
+				rotateSpeed:           0,
+				fireRange:             6,
+				fireSpreadDegrees:     15,
+				shotRangeSpread:       2.0,
+				attackCooldown:        25,
+				projectileDamage:      40,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
+			},
+		},
+		chassisRotationSpeed: 3,
+		cost:                 700,
+		buildTime:            25,
+		hotkeyToBuild:        "F",
 		isAircraft:           true,
 	},
 }
