@@ -82,6 +82,7 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 func (b *battlefield) executeHarvestOrder(u *unit) {
 	if u.currentCargoAmount >= u.getStaticData().maxCargoAmount || u.currentOrder.failedToExecute {
 		u.currentOrder.dispatchCalled = false
+		u.currentOrder.failedToExecute = false
 		u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 	}
 
