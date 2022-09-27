@@ -163,7 +163,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_TURRET_MINIGUN: {
 		spriteCode:        "turret_base",
-		maxHitpoints:      500,
+		maxHitpoints:      150,
 		w:                 1,
 		h:                 1,
 		displayedName:     "Minigun tower",
@@ -176,7 +176,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_TURRET_CANNON: {
 		spriteCode:        "turret_base",
-		maxHitpoints:      500,
+		maxHitpoints:      200,
 		w:                 1,
 		h:                 1,
 		displayedName:     "Heavy tower",
@@ -189,7 +189,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_TURRET_AA: {
 		spriteCode:        "bld_aaturret",
-		maxHitpoints:      500,
+		maxHitpoints:      250,
 		w:                 1,
 		h:                 1,
 		displayedName:     "AA SAM site",
@@ -217,7 +217,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_FORTRESS: {
 		spriteCode:        "fortress",
-		maxHitpoints:      1500,
+		maxHitpoints:      500,
 		w:                 2,
 		h:                 2,
 		displayedName:     "Fortress",

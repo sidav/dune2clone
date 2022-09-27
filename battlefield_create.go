@@ -62,7 +62,7 @@ func (b *battlefield) finalizeTileVariants() {
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for spNumber := range startPoints {
-		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 5))
+		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 1))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		// TODO: faction selection

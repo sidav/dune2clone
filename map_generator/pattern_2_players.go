@@ -16,8 +16,8 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 		fromx, fromy, tox, toy,
 	)
 
-	gm.performNAutomatasLike(10,
-		rnd.RandInRange(5, 25),
+	gm.performNAutomatasLike(20,
+		rnd.RandInRange(5, 20),
 		0,
 		automat{
 			drawsChar:           ROCKS,

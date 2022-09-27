@@ -2,6 +2,7 @@ package main
 
 import (
 	"dune2clone/geometry"
+	"math"
 )
 
 type unit struct {
@@ -103,6 +104,12 @@ func (u *unit) getName() string {
 
 func (u *unit) getCurrentAction() *action {
 	return &u.currentAction
+}
+
+func (u *unit) isInTileCenter() bool {
+	_, fracX := math.Modf(u.centerX)
+	_, fracY := math.Modf(u.centerY)
+	return areFloatsRoughlyEqual(fracX, 0.5) && areFloatsRoughlyEqual(fracY, 0.5)
 }
 
 func (u *unit) getCurrentOrder() *order {

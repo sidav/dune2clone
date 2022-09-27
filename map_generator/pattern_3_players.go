@@ -18,7 +18,7 @@ func generateByThreePlayersPattern(gm *GeneratedMap) {
 		fromx, fromy, tox, toy,
 	)
 
-	gm.performNAutomatasLike(10,
+	gm.performNAutomatasLike(20,
 		rnd.RandInRange(5, 15),
 		0,
 		automat{

@@ -18,9 +18,7 @@ func (ai *aiStruct) selectWhatToProduce(producer *building) int {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"combat", 2})
 	}
 	if ai.current.transports < ai.desired.transports {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"transport", 5})
-	} else {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"transport", 1})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"transport", 2})
 	}
 
 	if ai.current.builders < ai.desired.builders {
