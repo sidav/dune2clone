@@ -1,12 +1,15 @@
 package main
 
+type taskForceMission int
+
 const (
-	AITF_DESIGNATION_ATTACK = iota
-	AITF_DESIGNATION_DEFEND = iota
+	AITF_MISSION_ATTACK taskForceMission = iota
+	AITF_MISSION_DEFEND
+	AITF_MISSION_RECON
 )
 
 type aiTaskForce struct {
-	designation                  int
+	mission                      taskForceMission
 	nextTickToGiveOrders         int
 	desiredSize                  int
 	maxFullnessPercentForRetreat int

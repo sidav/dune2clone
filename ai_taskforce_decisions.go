@@ -1,5 +1,7 @@
 package main
 
+import "dune2clone/geometry"
+
 func (ai *aiStruct) cleanupAiTaskForces() {
 	for _, tf := range ai.taskForces {
 		tf.cleanup()
@@ -40,11 +42,15 @@ func (ai *aiStruct) giveOrdersToAllTaskForces(b *battlefield) {
 			continue
 		}
 		tf.cleanup() // TODO: maybe call it from another place?..
-		switch tf.designation {
-		case AITF_DESIGNATION_ATTACK:
+		switch tf.mission {
+		case AITF_MISSION_ATTACK:
 			ai.giveOrderToAttackTaskForce(b, tf)
-		case AITF_DESIGNATION_DEFEND:
+		case AITF_MISSION_DEFEND:
 			ai.giveOrderToDefendingTaskForce(b, tf)
+		case AITF_MISSION_RECON:
+			ai.giveReconOrderToTaskForce(b, tf)
+		default:
+			panic("No such task force mission!")
 		}
 	}
 }
@@ -58,7 +64,7 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 			for _, u := range tf.units {
 				u.currentOrder.code = ORDER_ATTACK
 				u.currentOrder.targetActor = tf.target
-				tf.nextTickToGiveOrders = b.currentTick+5*DESIRED_TPS
+				tf.nextTickToGiveOrders = b.currentTick + 5*DESIRED_TPS
 			}
 		} else {
 			tf.target = ai.findTargetForAttack(b)
@@ -101,6 +107,33 @@ func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskF
 		}
 		tf.nextTickToGiveOrders = b.currentTick + DESIRED_TPS*10
 	}
+}
+
+func (ai *aiStruct) giveReconOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
+	reconRange, _ := b.getSize()
+	coordX, coordY := -1, -1
+	if rnd.OneChanceFrom(10) {
+		coordX, coordY = geometry.SpiralSearchForClosestConditionFrom(
+			func(x, y int) bool {
+				return b.areTileCoordsValid(x, y) && !ai.controlsFaction.seesTileAtCoords(x, y)
+			},
+			ai.currBaseCenterX, ai.currBaseCenterY, reconRange, rnd.Rand(4),
+		)
+	} else {
+		coordX, coordY = geometry.SpiralSearchForClosestConditionFrom(
+			func(x, y int) bool {
+				return b.areTileCoordsValid(x, y) && !ai.controlsFaction.isTileAtCoordsExplored(x, y)
+			},
+			ai.currBaseCenterX, ai.currBaseCenterY, reconRange, rnd.Rand(4),
+		)
+	}
+	if coordX != -1 && coordY != -1 {
+		for _, u := range tf.units {
+			u.currentOrder.code = ORDER_MOVE
+			u.currentOrder.setTargetTileCoords(coordX, coordY)
+		}
+	}
+	tf.nextTickToGiveOrders = b.currentTick + 5 * DESIRED_TPS
 }
 
 func (ai *aiStruct) findTargetNearBase(b *battlefield, radius int) actor {

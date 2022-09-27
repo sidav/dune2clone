@@ -30,14 +30,25 @@ func createAi(f *faction, n string) *aiStruct {
 		},
 		taskForces: []*aiTaskForce{
 			{
-				designation:          AITF_DESIGNATION_ATTACK,
-				desiredSize:          10,
-				units:                make([]*unit, 0),
+				mission:     AITF_MISSION_RECON,
+				desiredSize: 1,
+				units:       make([]*unit, 0),
 			},
 			{
-				designation:          AITF_DESIGNATION_DEFEND,
-				desiredSize:          5,
-				units:                make([]*unit, 0),
+				mission:     AITF_MISSION_RECON,
+				desiredSize: 1,
+				units:       make([]*unit, 0),
+			},
+			{
+				mission:                      AITF_MISSION_ATTACK,
+				desiredSize:                  10,
+				maxFullnessPercentForRetreat: 10,
+				units:                        make([]*unit, 0),
+			},
+			{
+				mission:     AITF_MISSION_DEFEND,
+				desiredSize: 5,
+				units:       make([]*unit, 0),
 			},
 		},
 	}

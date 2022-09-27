@@ -77,7 +77,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	//b.factions[0].resourcesMultiplier = 1
 	//b.factions[0].buildSpeedMultiplier = 10
-	b.factions[0].visibilityCheat = true
+	// b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
 	for i := 1; i < len(b.factions); i++ {
