@@ -2,6 +2,7 @@ package main
 
 const (
 	UNT_INFANTRY = iota
+	UNT_RECONINFANTRY
 	UNT_ROCKETINFANTRY
 	UNT_HEAVYINFANTRY
 	UNT_TANK
@@ -71,6 +72,24 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            7,
 		hotkeyToBuild:        "I",
 	},
+	UNT_RECONINFANTRY: {
+		displayedName:     "Recon trike",
+		chassisSpriteCode: "infantryrecon",
+		maxHitpoints:      35,
+		armorType:         ARMORTYPE_INFANTRY,
+		visionRange:       6,
+		movementSpeed:     0.16,
+		turretsData: []unitStaticTurretsData{
+			{
+				turretCode: TRT_INFANTRY,
+			},
+		},
+		maxSquadSize:         1,
+		chassisRotationSpeed: 25,
+		cost:                 350,
+		buildTime:            7,
+		hotkeyToBuild:        "C",
+	},
 	UNT_ROCKETINFANTRY: {
 		displayedName:     "Rocketmen squad",
 		chassisSpriteCode: "infantryrocket",
@@ -110,10 +129,10 @@ var sTableUnits = map[int]*unitStatic{
 	UNT_QUAD: {
 		displayedName:     "Quad",
 		chassisSpriteCode: "quad",
-		maxHitpoints:      75,
+		maxHitpoints:      100,
 		armorType:         ARMORTYPE_HEAVY,
-		visionRange:       6,
-		movementSpeed:     0.2,
+		visionRange:       5,
+		movementSpeed:     0.15,
 		turretsData: []unitStaticTurretsData{
 			{
 				turretCode: TRT_QUAD,

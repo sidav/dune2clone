@@ -89,7 +89,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:                          10,
 		requiresTechLevel:                  2,
 		builds:                             nil,
-		produces:                           []int{UNT_INFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
+		produces:                           []int{UNT_INFANTRY, UNT_RECONINFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
 		hotkeyToBuild:                      "B",
 	},
 	BLD_FACTORY: {
