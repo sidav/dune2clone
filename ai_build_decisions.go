@@ -112,7 +112,7 @@ func (ai *aiStruct) deduceBuildingFunctions(bldCode buildingCode) []string {
 	if len(bsd.produces) > 0 {
 		codes = append(codes, "production")
 	}
-	if bsd.turretCode != TRT_NONE {
+	if bsd.turretData != nil {
 		codes = append(codes, "defense")
 	}
 	return codes

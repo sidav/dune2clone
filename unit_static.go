@@ -24,7 +24,7 @@ type unitStatic struct {
 	displayedName     string
 	chassisSpriteCode string
 
-	turretsData []unitStaticTurretsData
+	turretsData []*turretStatic
 
 	maxHitpoints int
 	armorType    armorCode
@@ -48,11 +48,6 @@ type unitStatic struct {
 	hotkeyToBuild string
 }
 
-type unitStaticTurretsData struct {
-	turretCode                   int
-	turretCenterX, turretCenterY float64
-}
-
 var sTableUnits = map[int]*unitStatic{
 	UNT_INFANTRY: {
 		displayedName:     "Infantry squad",
@@ -61,9 +56,18 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       4,
 		movementSpeed:     0.1,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_INFANTRY,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_BULLETS,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             4,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.5,
+				attackCooldown:        45,
+				projectileDamage:      4,
+				projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 			},
 		},
 		maxSquadSize:         5,
@@ -79,9 +83,18 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       6,
 		movementSpeed:     0.16,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_INFANTRY,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_BULLETS,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             4,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.5,
+				attackCooldown:        45,
+				projectileDamage:      4,
+				projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 			},
 		},
 		maxSquadSize:         1,
@@ -97,9 +110,19 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       4,
 		movementSpeed:     0.075,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_ROCKETINFANTRY,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_INFANTRY_MISSILE,
+				attacksLand:           true,
+				attacksAir:            true,
+				rotateSpeed:           0,
+				fireRange:             5,
+				fireSpreadDegrees:     45,
+				shotRangeSpread:       0.5,
+				attackCooldown:        105,
+				projectileDamage:      8,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		maxSquadSize:         4,
@@ -115,9 +138,18 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       4,
 		movementSpeed:     0.06,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_HEAVYINFANTRY,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_OMNI,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             5,
+				fireSpreadDegrees:     8,
+				shotRangeSpread:       0.45,
+				attackCooldown:        40,
+				projectileDamage:      6,
+				projectileDamageType:  DAMAGETYPE_OMNI,
 			},
 		},
 		maxSquadSize:         3,
@@ -133,9 +165,18 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_HEAVY,
 		visionRange:       5,
 		movementSpeed:     0.15,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_QUAD,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_BULLETS,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             4,
+				fireSpreadDegrees:     6,
+				shotRangeSpread:       0.3,
+				attackCooldown:        5,
+				projectileDamage:      4,
+				projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 			},
 		},
 		chassisRotationSpeed: 7,
@@ -150,9 +191,18 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:       4,
 		maxHitpoints:      120,
 		armorType:         ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_TANK,
+				spriteCode:            "tank",
+				firesProjectileOfCode: PRJ_SHELL,
+				attacksLand:           true,
+				rotateSpeed:           7,
+				fireRange:             5,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.7,
+				attackCooldown:        45,
+				projectileDamage:      30,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		chassisRotationSpeed: 5,
@@ -167,10 +217,19 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:       4,
 		maxHitpoints:      120,
 		armorType:         ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode:    TRT_TANK2,
-				turretCenterX: -0.14,
+				spriteCode:            "tank2",
+				firesProjectileOfCode: PRJ_SHELL,
+				turretCenterX:         -0.14,
+				attacksLand:           true,
+				rotateSpeed:           7,
+				fireRange:             5,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.7,
+				attackCooldown:        45,
+				projectileDamage:      30,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		chassisRotationSpeed: 5,
@@ -185,12 +244,30 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:       5,
 		maxHitpoints:      500,
 		armorType:         ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode:    TRT_DEVASTATOR,
+				spriteCode:            "devastator",
+				firesProjectileOfCode: PRJ_SHELL,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             6,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.5,
+				attackCooldown:        75,
+				projectileDamage:      47,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 			{
-				turretCode:    TRT_DEVASTATOR,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_SHELL,
+				attacksLand:           true,
+				rotateSpeed:           0,
+				fireRange:             6,
+				fireSpreadDegrees:     7,
+				shotRangeSpread:       0.5,
+				attackCooldown:        75,
+				projectileDamage:      47,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		chassisRotationSpeed: 5,
@@ -233,11 +310,18 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:       3,
 		maxHitpoints:      40,
 		armorType:         ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode:    TRT_MSLTANK,
-				turretCenterX: 0,
-				turretCenterY: 0,
+				spriteCode:            "msltank",
+				firesProjectileOfCode: PRJ_MISSILE,
+				attacksLand:           true,
+				rotateSpeed:           15,
+				fireRange:             10,
+				fireSpreadDegrees:     35,
+				shotRangeSpread:       0.7,
+				attackCooldown:        150,
+				projectileDamage:      50,
+				projectileDamageType:  DAMAGETYPE_ANTI_BUILDING,
 			},
 		},
 		chassisRotationSpeed: 8,
@@ -252,11 +336,18 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:       3,
 		maxHitpoints:      40,
 		armorType:         ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode:    TRT_AATANK,
-				turretCenterX: 0,
-				turretCenterY: 0,
+				spriteCode:            "aamsltank",
+				firesProjectileOfCode: PRJ_AA_MISSILE,
+				attacksAir:            true,
+				rotateSpeed:           15,
+				fireRange:             10,
+				fireSpreadDegrees:     35,
+				shotRangeSpread:       0.7,
+				attackCooldown:        75,
+				projectileDamage:      45,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		chassisRotationSpeed: 8,
@@ -273,11 +364,18 @@ var sTableUnits = map[int]*unitStatic{
 		visionRange:            2,
 		maxHitpoints:           275,
 		armorType:              ARMORTYPE_HEAVY,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode:    TRT_HARVESTER,
-				turretCenterX: 0,
-				turretCenterY: 0,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_BULLETS,
+				attacksLand:           true,
+				rotateSpeed:           90,
+				fireRange:             5,
+				fireSpreadDegrees:     11,
+				shotRangeSpread:       0.4,
+				attackCooldown:        15,
+				projectileDamage:      3,
+				projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
 			},
 		},
 		chassisRotationSpeed: 4,
@@ -287,13 +385,15 @@ var sTableUnits = map[int]*unitStatic{
 	},
 	// aircrafts
 	AIR_TRANSPORT: {
-		displayedName:        "Carrier aircraft",
-		chassisSpriteCode:    "air_transport",
-		maxHitpoints:         100,
-		armorType:            ARMORTYPE_HEAVY,
-		movementSpeed:        0.2,
-		visionRange:          1,
-		turretsData:          []unitStaticTurretsData{},
+		displayedName:     "Carrier aircraft",
+		chassisSpriteCode: "air_transport",
+		maxHitpoints:      100,
+		armorType:         ARMORTYPE_HEAVY,
+		movementSpeed:     0.2,
+		visionRange:       1,
+		turretsData: []*turretStatic{
+
+		},
 		chassisRotationSpeed: 5,
 		cost:                 500,
 		buildTime:            20,
@@ -308,9 +408,18 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:         ARMORTYPE_HEAVY,
 		movementSpeed:     0.25,
 		visionRange:       7,
-		turretsData: []unitStaticTurretsData{
+		turretsData: []*turretStatic{
 			{
-				turretCode: TRT_AIR_GUNSHIP,
+				spriteCode:            "",
+				firesProjectileOfCode: PRJ_SHELL,
+				attacksLand:           true,
+				rotateSpeed:           180,
+				fireRange:             6,
+				fireSpreadDegrees:     15,
+				shotRangeSpread:       2.0,
+				attackCooldown:        15,
+				projectileDamage:      12,
+				projectileDamageType:  DAMAGETYPE_HEAVY,
 			},
 		},
 		chassisRotationSpeed: 3,

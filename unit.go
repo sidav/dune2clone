@@ -37,7 +37,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	}
 	if sTableUnits[code].turretsData != nil {
 		for i := range sTableUnits[code].turretsData {
-			u.turrets = append(u.turrets, &turret{code: sTableUnits[code].turretsData[i].turretCode, rotationDegree: 270})
+			u.turrets = append(u.turrets, &turret{staticData: sTableUnits[code].turretsData[i], rotationDegree: 270})
 		}
 	}
 

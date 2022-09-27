@@ -38,7 +38,7 @@ type buildingStatic struct {
 	produces     []int // units
 	maxHitpoints int
 
-	turretCode int
+	turretData *turretStatic
 
 	receivesResources                  bool // is refinery
 	repairsUnits                       bool
@@ -171,8 +171,20 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:         10,
 		consumesEnergy:    5,
 		requiresTechLevel: 1,
-		turretCode:        TRT_MINIGUN_BUILDING,
-		hotkeyToBuild:     "M",
+		turretData: &turretStatic {
+			spriteCode:            "bld_turret_minigun",
+			firesProjectileOfCode: PRJ_BULLETS,
+			attacksLand:           true,
+			attacksAir:            true,
+			rotateSpeed:           17,
+			fireRange:             6,
+			fireSpreadDegrees:     7,
+			shotRangeSpread:       0.7,
+			attackCooldown:        5,
+			projectileDamage:      4,
+			projectileDamageType:  DAMAGETYPE_ANTI_INFANTRY,
+		},
+		hotkeyToBuild: "M",
 	},
 	BLD_TURRET_CANNON: {
 		spriteCode:        "turret_base",
@@ -184,7 +196,18 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:         10,
 		consumesEnergy:    8,
 		requiresTechLevel: 2,
-		turretCode:        TRT_CANNON_BUILDING,
+		turretData: &turretStatic {
+			spriteCode:            "bld_turret_cannon",
+			firesProjectileOfCode: PRJ_SHELL,
+			attacksLand:           true,
+			rotateSpeed:           15,
+			fireRange:             6,
+			fireSpreadDegrees:     7,
+			shotRangeSpread:       0.7,
+			attackCooldown:        50,
+			projectileDamage:      15,
+			projectileDamageType:  DAMAGETYPE_HEAVY,
+		},
 		hotkeyToBuild:     "T",
 	},
 	BLD_TURRET_AA: {
@@ -200,7 +223,19 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		produces:          nil,
 		consumesEnergy:    15,
 		hotkeyToBuild:     "M",
-		turretCode:        TRT_BUILDING_AA,
+		turretData: &turretStatic{
+			spriteCode:            "",
+			firesProjectileOfCode: PRJ_AA_MISSILE,
+			attacksLand:           false,
+			attacksAir:            true,
+			rotateSpeed:           180,
+			fireRange:             8,
+			fireSpreadDegrees:     30,
+			shotRangeSpread:       0.3,
+			attackCooldown:        100,
+			projectileDamage:      25,
+			projectileDamageType:  DAMAGETYPE_HEAVY,
+		},
 	},
 	BLD_SILO: {
 		spriteCode:        "silo",
@@ -228,7 +263,18 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		produces:          nil,
 		consumesEnergy:    20,
 		hotkeyToBuild:     "O",
-		turretCode:        TRT_BUILDING_FORTRESS,
+		turretData: &turretStatic{
+			spriteCode:            "bld_fortress_cannon",
+			firesProjectileOfCode: PRJ_SHELL,
+			attacksLand:           true,
+			rotateSpeed:           5,
+			fireRange:             15,
+			fireSpreadDegrees:     5,
+			shotRangeSpread:       0.3,
+			attackCooldown:        80,
+			projectileDamage:      25,
+			projectileDamageType:  DAMAGETYPE_HEAVY,
+		},
 	},
 
 	// faction 1

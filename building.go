@@ -36,8 +36,8 @@ func (b *building) getHitpointsPercentage() int {
 
 func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *building {
 	var turr *turret
-	if sTableBuildings[code].turretCode != TRT_NONE {
-		turr = &turret{code: sTableBuildings[code].turretCode, rotationDegree: 270}
+	if sTableBuildings[code].turretData != nil {
+		turr = &turret{staticData: sTableBuildings[code].turretData, rotationDegree: 270}
 	}
 	return &building{
 		code:             code,
