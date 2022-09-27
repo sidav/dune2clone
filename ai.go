@@ -7,6 +7,7 @@ import (
 
 type aiStruct struct {
 	name                             string
+	personalityName                  string
 	controlsFaction                  *faction
 	moneyPoorMax                     float64
 	moneyRichMin                     float64
@@ -28,7 +29,7 @@ func (ai *aiStruct) isRich() bool {
 }
 
 func (ai *aiStruct) debugWritef(msg string, args ...interface{}) {
-	debugWritef("%s: %s", ai.name, fmt.Sprintf(msg, args...))
+	debugWritef("%s [%s]: %s", ai.name, ai.personalityName, fmt.Sprintf(msg, args...))
 }
 
 func (ai *aiStruct) isActorInRangeFromBase(a actor, r int) bool {
@@ -37,7 +38,7 @@ func (ai *aiStruct) isActorInRangeFromBase(a actor, r int) bool {
 }
 
 func (ai *aiStruct) aiControl(b *battlefield) {
-	// debugWritef("AI ACT: It is tick %d\n", b.currentTick)
+	ai.debugWritef("acts.\n")
 	ai.alreadyOrderedBuildThisTick = false
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		if bld, ok := i.Value.(*building); ok {

@@ -54,7 +54,7 @@ func (gm *GeneratedMap) Generate(w, h, patternIndex int) {
 
 func (gm *GeneratedMap) getNumberOfTilesPercent(perc int) int {
 	total := len(gm.Tiles) * len(gm.Tiles[0])
-	fmt.Printf("w, h %d,%d total %d; %d percentage, got %d\n",len(gm.Tiles), len(gm.Tiles[0]), total, perc, perc*total/100)
+	// fmt.Printf("w, h %d,%d total %d; %d percentage, got %d\n",len(gm.Tiles), len(gm.Tiles[0]), total, perc, perc*total/100)
 	return perc * total / 100
 }
 
