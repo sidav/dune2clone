@@ -66,7 +66,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		// TODO: faction selection
-		if spNumber%2 == 0 {
+		if rnd.OneChanceFrom(2) {
 			b.addActor(createUnit(UNT_MCV1, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		} else {
 			b.addActor(createUnit(UNT_MCV2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))

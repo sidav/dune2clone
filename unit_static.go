@@ -13,7 +13,8 @@ const (
 	UNT_QUAD
 	UNT_MSLTANK
 	UNT_AATANK
-	UNT_HARVESTER
+	UNT_COMBAT_HARVESTER
+	UNT_FAST_HARVESTER
 
 	// aircrafts
 	AIR_TRANSPORT
@@ -317,7 +318,7 @@ var sTableUnits = map[int]*unitStatic{
 				attacksLand:           true,
 				rotateSpeed:           15,
 				fireRange:             10,
-				fireSpreadDegrees:     35,
+				fireSpreadDegrees:     25,
 				shotRangeSpread:       0.7,
 				attackCooldown:        150,
 				projectileDamage:      50,
@@ -355,9 +356,9 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            17,
 		hotkeyToBuild:        "A",
 	},
-	UNT_HARVESTER: {
-		displayedName:          "Harvester",
-		chassisSpriteCode:      "harvester",
+	UNT_COMBAT_HARVESTER: {
+		displayedName:          "Combat Harvester",
+		chassisSpriteCode:      "combatharvester",
 		defaultOrderOnCreation: ORDER_HARVEST,
 		maxCargoAmount:         700,
 		movementSpeed:          0.07,
@@ -379,6 +380,20 @@ var sTableUnits = map[int]*unitStatic{
 			},
 		},
 		chassisRotationSpeed: 4,
+		cost:                 1600,
+		buildTime:            12,
+		hotkeyToBuild:        "H",
+	},
+	UNT_FAST_HARVESTER: {
+		displayedName:          "Patented Harvester",
+		chassisSpriteCode:      "fastharvester",
+		defaultOrderOnCreation: ORDER_HARVEST,
+		maxCargoAmount:         500,
+		movementSpeed:          0.075,
+		visionRange:            2,
+		maxHitpoints:           200,
+		armorType:              ARMORTYPE_HEAVY,
+		chassisRotationSpeed: 7,
 		cost:                 1600,
 		buildTime:            12,
 		hotkeyToBuild:        "H",

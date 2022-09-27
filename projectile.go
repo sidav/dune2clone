@@ -52,7 +52,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 	PRJ_MISSILE: {
 		spriteCode:                "missile",
 		size:                      0.3,
-		speed:                     0.2,
+		speed:                     0.3,
 		rotationSpeed:             1,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
