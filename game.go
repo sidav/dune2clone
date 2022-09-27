@@ -102,7 +102,7 @@ func (g *game) startGame() {
 		}
 
 		// execute orders
-		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 1 {
+		if g.battlefield.currentTick%UNIT_ORDERS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForUnit(i.Value.(*unit))
@@ -112,7 +112,7 @@ func (g *game) startGame() {
 			//	debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			//}
 		}
-		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 1 {
+		if g.battlefield.currentTick%BUILDINGS_ORDERS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForBuilding(i.Value.(*building))
@@ -127,7 +127,7 @@ func (g *game) startGame() {
 
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
-		if g.battlefield.currentTick > DESIRED_TPS{
+		if g.battlefield.currentTick > DESIRED_TPS {
 			timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
 		}
 
@@ -145,13 +145,13 @@ func (g *game) startGame() {
 }
 
 func (g *game) performAiActions() {
-	if g.battlefield.currentTick%AI_ANALYZES_EACH == 0 {
-		for i := range g.battlefield.ais {
+	for i := range g.battlefield.ais {
+		if g.battlefield.currentTick%AI_ANALYZES_EACH == i {
 			g.battlefield.ais[i].aiAnalyze(&g.battlefield)
 		}
 	}
-	if g.battlefield.currentTick%AI_ACTS_EACH == 0 {
-		for i := range g.battlefield.ais {
+	for i := range g.battlefield.ais {
+		if g.battlefield.currentTick%AI_ACTS_EACH == i {
 			g.battlefield.ais[i].aiControl(&g.battlefield)
 		}
 	}
