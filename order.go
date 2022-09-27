@@ -7,6 +7,7 @@ type order struct {
 	targetTile2X, targetTile2Y int // when only single target tile coords are not enough
 	targetActor                actor
 	targetActorCode            int
+	failedToExecute            bool
 
 	dispatchCalled bool
 	// targetX, targetY         float64
@@ -21,6 +22,7 @@ func (o *order) resetOrder() {
 	o.targetTile2X = -1
 	o.targetTile2Y = -1
 	o.targetActor = nil
+	o.failedToExecute = false
 	o.dispatchCalled = false
 }
 

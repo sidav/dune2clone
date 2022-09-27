@@ -74,12 +74,12 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
 	}
 	// player faction settings
-	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	//b.factions[0].resourcesMultiplier = 1
 	//b.factions[0].buildSpeedMultiplier = 10
 	// b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
+	b.ais = append(b.ais, createAi(b.factions[0], "Player-side"))
 	for i := 1; i < len(b.factions); i++ {
 		b.ais = append(b.ais, createAi(b.factions[i], fmt.Sprintf("Enemy %d", i)))
 	}
@@ -90,8 +90,9 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
 	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
-	// unt := createUnit(UNT_MCV1, startPoints[0][0]-1, startPoints[0][1], b.factions[0])
+	//for i := 0; i < 14; i++ {
+	//	b.addActor(createUnit(UNT_INFANTRY, startPoints[0][0]-1, startPoints[0][1], b.factions[0]))
+	//}
 	// unt.currentHitpoints = 1
 	// unt.currentAction.setTargetTileCoords(10, 10)
-	// b.addActor(unt)
 }

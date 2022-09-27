@@ -9,6 +9,9 @@ type action struct {
 	// targetX, targetY         float64
 	targetActor actor
 
+	currentFailuresCount uint8
+	failedContinuously   bool
+
 	// construction-related
 	moneySpentOnAction                    int
 	completionAmount, maxCompletionAmount float64
@@ -47,6 +50,16 @@ func (a *action) setTargetTileCoords(x, y int) {
 	a.targetTileX, a.targetTileY = x, y
 }
 
+func (a *action) fail(resetIfFailedContinuously bool) {
+	a.currentFailuresCount++
+	if a.currentFailuresCount > 25 {
+		a.failedContinuously = true
+		if resetIfFailedContinuously {
+			a.code = ACTION_WAIT
+		}
+	}
+}
+
 func (a *action) resetAction() {
 	a.targetTileX = -1
 	a.targetTileY = -1
@@ -54,6 +67,8 @@ func (a *action) resetAction() {
 	a.maxCompletionAmount = 0
 	a.code = ACTION_WAIT
 	a.completionAmount = 0
+	a.currentFailuresCount = 0
+	a.failedContinuously = false
 }
 
 func (a *action) getCompletionPercent() int {

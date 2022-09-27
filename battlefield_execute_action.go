@@ -224,9 +224,9 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 		// ...then check if there is something on "next" tile.
 		nextTx, nextTy := currTx+intVx, currTy+intVy
 		if !b.isTileClearToBeMovedInto(nextTx, nextTy, u) {
-			// If so, stand by.
+			// If so, stand by, and increase action failure counter
 			u.centerX, u.centerY = currTcx, currTcy
-			u.currentAction.resetAction()
+			u.currentAction.fail(true) // action may be reset if failed continuously
 			return
 
 			// additional check, so that the next tile won't be occupied if no further inter-tile movement is needed
@@ -320,4 +320,19 @@ func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
 		return
 	}
 	u.currentAction.completionAmount++
+}
+
+func (b *battlefield) canUnitsActionBeInterrupted(u *unit) bool {
+	act := u.getCurrentAction()
+	if u.isInAir() {
+		return true
+	}
+	switch act.code {
+	case ACTION_WAIT, ACTION_ROTATE, ACTION_HARVEST:
+		return true
+	case ACTION_MOVE:
+		return act.failedContinuously
+	default:
+		return false
+	}
 }

@@ -6,12 +6,8 @@ import (
 )
 
 func (b *battlefield) executeOrderForUnit(u *unit) {
-	if u.currentAction.code != ACTION_WAIT {
-		if u.getStaticData().isAircraft {
-
-		} else {
-			return // execute the order only after finishing the action
-		}
+	if !b.canUnitsActionBeInterrupted(u) {
+		return
 	}
 	if u.currentOrder.code == ORDER_NONE {
 		if u.getStaticData().isAircraft {
@@ -49,8 +45,8 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 	// x, y := u.centerX, u.centerY
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	orderTileX, orderTileY := u.currentOrder.targetTileX, u.currentOrder.targetTileY
-	if utx == orderTileX && uty == orderTileY {
-		u.currentOrder.code = ORDER_NONE
+	if utx == orderTileX && uty == orderTileY || u.currentOrder.failedToExecute {
+		u.currentOrder.resetOrder()
 		return
 	}
 	if u.getStaticData().isAircraft {
@@ -84,7 +80,7 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 }
 
 func (b *battlefield) executeHarvestOrder(u *unit) {
-	if u.currentCargoAmount >= u.getStaticData().maxCargoAmount {
+	if u.currentCargoAmount >= u.getStaticData().maxCargoAmount || u.currentOrder.failedToExecute {
 		u.currentOrder.dispatchCalled = false
 		u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 	}
@@ -111,7 +107,9 @@ func (b *battlefield) executeHarvestOrder(u *unit) {
 		orderTileX, orderTileY = rx, ry
 	}
 
-	b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+	if orderTileX != utx || orderTileY != uty {
+		b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
+	}
 
 	if utx == orderTileX && uty == orderTileY {
 		u.currentAction.code = ACTION_HARVEST
@@ -192,8 +190,9 @@ func (b *battlefield) executeDeployOrderForUnit(u *unit) {
 func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
 	utx, uty := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 
-	path := b.findPathForUnitTo(u, tx, ty, true)
+	path := b.findPathForUnitTo(u, tx, ty, false)
 	vx, vy := path.GetNextStepVector()
+	nowhereToMove :=  vx == 0 && vy == 0
 
 	// creating BIG move action for several same-vector path cells
 	currPathChild := path.Child
@@ -209,10 +208,18 @@ func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
 	}
 	vx *= multiplier
 	vy *= multiplier
+	ttx, tty := utx+vx, uty+vy
 
+	if nowhereToMove || u.currentAction.targetTileX == ttx && u.currentAction.targetTileY == tty {
+		if nowhereToMove || u.currentAction.failedContinuously {
+			u.currentAction.resetAction()
+			u.currentOrder.failedToExecute = true
+			return
+		}
+	}
 	u.currentAction.code = ACTION_MOVE
-	u.currentAction.targetTileX = utx + vx
-	u.currentAction.targetTileY = uty + vy
+	u.currentAction.failedContinuously = false
+	u.currentAction.setTargetTileCoords(ttx, tty)
 }
 
 func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y int) actor {
