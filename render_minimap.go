@@ -24,7 +24,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 		for x := range b.tiles {
 			for y := range b.tiles[x] {
 				color := rl.Magenta
-				if pc.controlledFaction.isTileAtCoordsExplored(x, y) {
+				if pc.controlledFaction.hasTileAtCoordsExplored(x, y) {
 					switch b.tiles[x][y].code {
 					case TILE_SAND:
 						color = rl.Orange

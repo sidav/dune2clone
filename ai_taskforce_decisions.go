@@ -27,9 +27,14 @@ func (ai *aiStruct) areAllTaskForcesFull() bool {
 }
 
 func (ai *aiStruct) assignUnitToTaskForce(u *unit) {
+	const minSpeedForBeingRecon = 0.1
+	isUnitSuitableForRecon := u.getStaticData().movementSpeed >= minSpeedForBeingRecon
 	selectedTf := ai.taskForces[0]
 	for _, tf := range ai.taskForces {
-		if tf.getFullnessPercent() < selectedTf.getFullnessPercent() && !tf.isFull() {
+		if tf.getFullnessPercent() < selectedTf.getFullnessPercent() && !tf.isFull() ||
+			// don't assign slow units to recon
+			(selectedTf.mission == AITF_MISSION_RECON && !isUnitSuitableForRecon) {
+
 			selectedTf = tf
 		}
 	}
@@ -67,7 +72,7 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 				tf.nextTickToGiveOrders = b.currentTick + 5*DESIRED_TPS
 			}
 		} else {
-			tf.target = ai.findTargetForAttack(b)
+			tf.target = ai.findVisibleTargetForAttack(b)
 		}
 	}
 	if tf.target == nil {
@@ -84,7 +89,7 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 			tf.nextTickToGiveOrders = b.currentTick + 5*DESIRED_TPS
 		}
 	} else {
-		tf.target = ai.findTargetNearBase(b, basePatrolRadius)
+		tf.target = ai.findVisibleTargetNearBase(b, basePatrolRadius)
 	}
 	if tf.target == nil || !ai.isActorInRangeFromBase(tf.target, basePatrolRadius) {
 		ai.giveRoamNearBaseOrderToTaskForce(b, tf)
@@ -110,22 +115,31 @@ func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskF
 }
 
 func (ai *aiStruct) giveReconOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
-	reconRange, _ := b.getSize()
+	minReconRange := 20
+	maxReconRange, _ := b.getSize()
 	coordX, coordY := -1, -1
-	if rnd.OneChanceFrom(10) {
-		coordX, coordY = geometry.SpiralSearchForClosestConditionFrom(
+	if rnd.OneChanceFrom(4) {
+		coordX, coordY = geometry.SpiralSearchForFarthestConditionFrom(
 			func(x, y int) bool {
 				return b.areTileCoordsValid(x, y) && !ai.controlsFaction.seesTileAtCoords(x, y)
 			},
-			ai.currBaseCenterX, ai.currBaseCenterY, reconRange, rnd.Rand(4),
+			ai.currBaseCenterX, ai.currBaseCenterY, rnd.RandInRange(minReconRange, maxReconRange), rnd.Rand(4),
 		)
 	} else {
-		coordX, coordY = geometry.SpiralSearchForClosestConditionFrom(
+		// search close to base
+		coordX, coordY = geometry.SpiralSearchForFarthestConditionFrom(
 			func(x, y int) bool {
-				return b.areTileCoordsValid(x, y) && !ai.controlsFaction.isTileAtCoordsExplored(x, y)
+				return b.areTileCoordsValid(x, y) && !ai.controlsFaction.hasTileAtCoordsExplored(x, y)
 			},
-			ai.currBaseCenterX, ai.currBaseCenterY, reconRange, rnd.Rand(4),
-		)
+			ai.currBaseCenterX, ai.currBaseCenterY, rnd.RandInRange(minReconRange, maxReconRange), rnd.Rand(4))
+		// if nowhere to search, search farther, but select closest unexplored tile
+		//if coordX == -1 && coordY == -1 {
+		//	coordX, coordY = geometry.SpiralSearchForClosestConditionFrom(
+		//		func(x, y int) bool {
+		//			return b.areTileCoordsValid(x, y) && !ai.controlsFaction.hasTileAtCoordsExplored(x, y)
+		//		},
+		//		ai.currBaseCenterX, ai.currBaseCenterY, rnd.RandInRange(reconRange/3, reconRange), rnd.Rand(4))
+		//}
 	}
 	if coordX != -1 && coordY != -1 {
 		for _, u := range tf.units {
@@ -133,29 +147,29 @@ func (ai *aiStruct) giveReconOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
 			u.currentOrder.setTargetTileCoords(coordX, coordY)
 		}
 	}
-	tf.nextTickToGiveOrders = b.currentTick + 5 * DESIRED_TPS
+	tf.nextTickToGiveOrders = b.currentTick + 10*DESIRED_TPS
 }
 
-func (ai *aiStruct) findTargetNearBase(b *battlefield, radius int) actor {
+func (ai *aiStruct) findVisibleTargetNearBase(b *battlefield, radius int) actor {
 	for i := b.units.Front(); i != nil; i = i.Next() {
 		currActor := i.Value.(actor)
 		if currActor.getFaction() == ai.controlsFaction {
 			continue
 		}
-		if ai.isActorInRangeFromBase(currActor, radius) {
+		if ai.isActorInRangeFromBase(currActor, radius) && b.canFactionSeeActor(ai.controlsFaction, currActor) {
 			return currActor
 		}
 	}
 	return nil
 }
 
-func (ai *aiStruct) findTargetForAttack(b *battlefield) actor {
+func (ai *aiStruct) findVisibleTargetForAttack(b *battlefield) actor {
 	var selectedTarget actor = nil
-	attackBuildings := rnd.OneChanceFrom(3)
+	attackBuildings := rnd.OneChanceFrom(2)
 	if attackBuildings {
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			currActor := i.Value.(actor)
-			if currActor.getFaction() != ai.controlsFaction {
+			if currActor.getFaction() != ai.controlsFaction && b.hasFactionExploredBuilding(ai.controlsFaction, currActor.(*building)) {
 				if selectedTarget == nil || rnd.OneChanceFrom(4) {
 					selectedTarget = currActor
 				}
@@ -164,7 +178,7 @@ func (ai *aiStruct) findTargetForAttack(b *battlefield) actor {
 	} else {
 		for i := b.units.Front(); i != nil; i = i.Next() {
 			currActor := i.Value.(actor)
-			if currActor.getFaction() != ai.controlsFaction {
+			if currActor.getFaction() != ai.controlsFaction && b.canFactionSeeActor(ai.controlsFaction, currActor) {
 				if selectedTarget == nil || rnd.OneChanceFrom(4) {
 					selectedTarget = currActor
 				}

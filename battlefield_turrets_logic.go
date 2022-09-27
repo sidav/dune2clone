@@ -40,7 +40,9 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		// shooterTileX, shooterTileY = bld.topLeftX, bld.topLeftY
 		shooterX, shooterY = bld.getPhysicalCenterCoords()
 	}
-	if t.targetActor != nil && (!t.targetActor.isAlive() || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, t.getStaticData().fireRange)) {
+	if t.targetActor != nil && b.canFactionSeeActor(shooter.getFaction(), t.targetActor) &&
+		(!t.targetActor.isAlive() || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, t.getStaticData().fireRange)) {
+
 		t.targetActor = nil
 	}
 	if t.targetActor == nil {

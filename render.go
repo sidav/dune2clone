@@ -85,7 +85,7 @@ func (r *renderer) renderCollisionMap(b *battlefield, pc *playerController) {
 			if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 				continue
 			}
-			if !pc.controlledFaction.isTileAtCoordsExplored(x, y) {
+			if !pc.controlledFaction.hasTileAtCoordsExplored(x, y) {
 				return
 			}
 			// Debug draw collisions
@@ -103,7 +103,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
-	if !pc.controlledFaction.isTileAtCoordsExplored(x, y) {
+	if !pc.controlledFaction.hasTileAtCoordsExplored(x, y) {
 		// rl.DrawRectangle(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Black)
 		return
 	}

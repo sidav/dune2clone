@@ -79,7 +79,7 @@ func (f *faction) resetVisibilityMaps(mapW, mapH int) {
 	//}
 }
 
-func (f *faction) isTileAtCoordsExplored(x, y int) bool {
+func (f *faction) hasTileAtCoordsExplored(x, y int) bool {
 	return f.explorationCheat || f.visibilityCheat || f.exploredTilesMap[x][y]
 }
 

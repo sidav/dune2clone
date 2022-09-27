@@ -24,12 +24,17 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	if !r.isRectInViewport(osx, osy, int32(w*TILE_SIZE_IN_PIXELS), int32(h*TILE_SIZE_IN_PIXELS)) {
 		return
 	}
-	if !b.canFactionSeeActor(pc.controlledFaction, bld) {
+	if !b.hasFactionExploredBuilding(pc.controlledFaction, bld) {
 		return
 	}
 
 	// draw sprite
-	if bld.isUnderConstruction() && (b.currentTick/10)%2 != 0 {
+	seen := b.canFactionSeeActor(pc.controlledFaction, bld)
+	tint := DEFAULT_TINT
+	if !seen {
+		tint = FOG_OF_WAR_TINT
+	}
+	if seen && bld.isUnderConstruction() && (b.currentTick/10)%2 != 0 {
 		// under construction
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		for x := 0; x < w; x++ {
@@ -39,7 +44,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 					underConstructionAtlas.getSpriteByFrame(frameNumber),
 					osx+int32(x)*TILE_SIZE_IN_PIXELS,
 					osy+int32(y)*TILE_SIZE_IN_PIXELS,
-					DEFAULT_TINT,
+					tint,
 				)
 			}
 		}
@@ -61,7 +66,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 				s,
 				osx,
 				osy,
-				DEFAULT_TINT,
+				tint,
 			)
 		}
 	}
@@ -72,21 +77,6 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		rl.DrawRectangleLines(osx-1, osy-1, TILE_SIZE_IN_PIXELS*int32(w)+2, TILE_SIZE_IN_PIXELS*int32(h), col)
 		rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
 	}
-	// render completion bar
-	if bld.currentAction.getCompletionPercent() >= 0 {
-		//r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
-		//	osy+int32(TILE_SIZE_IN_PIXELS*h/2),
-		//	TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
-		r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
-	}
-	if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
-		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
-			&factionColors[bld.getFaction().colorNumber])
-	}
-	// render unit inside
-	if bld.unitPlacedInside != nil && bld.currentAction.code != ACTION_BEING_BUILT {
-		r.renderUnit(b, pc, bld.unitPlacedInside)
-	}
 	// render faction flag
 	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
 		r.renderFactionFlagAt(
@@ -95,27 +85,44 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS),
 		)
 	}
-	// render energy if not enough
-	if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
-		r.renderBlinkingIconCenteredAt("energyicon",
-			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
-			0,
-		)
-	}
-	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
-		r.renderBlinkingIconCenteredAt("readyicon",
-			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
-			1,
-		)
-	}
-	if bld.isRepairingSelf {
-		r.renderBlinkingIconCenteredAt("repairicon",
-			osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
-			2,
-		)
+	if seen {
+		// render completion bar
+		if bld.currentAction.getCompletionPercent() >= 0 {
+			//r.drawProgressCircle(osx+int32(TILE_SIZE_IN_PIXELS*w/2),
+			//	osy+int32(TILE_SIZE_IN_PIXELS*h/2),
+			//	TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
+			r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
+		}
+		if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
+				&factionColors[bld.getFaction().colorNumber])
+		}
+		// render unit inside
+		if bld.unitPlacedInside != nil && bld.currentAction.code != ACTION_BEING_BUILT {
+			r.renderUnit(b, pc, bld.unitPlacedInside)
+		}
+		// render energy if not enough
+		if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
+			r.renderBlinkingIconCenteredAt("energyicon",
+				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				0,
+			)
+		}
+		if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
+			r.renderBlinkingIconCenteredAt("readyicon",
+				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				1,
+			)
+		}
+		if bld.isRepairingSelf {
+			r.renderBlinkingIconCenteredAt("repairicon",
+				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				2,
+			)
+		}
 	}
 }
 

@@ -56,6 +56,17 @@ func (b *battlefield) performResourceGrowth() {
 	}
 }
 
+func (b *battlefield) hasFactionExploredBuilding(f *faction, bld *building) bool {
+	for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
+		for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
+			if f.hasTileAtCoordsExplored(tx, ty) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 	switch a.(type) {
 	case *unit:
@@ -68,9 +79,12 @@ func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 		bld := a.(*building)
 		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
 			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
-				return f.seesTileAtCoords(tx, ty)
+				if f.seesTileAtCoords(tx, ty) {
+					return true
+				}
 			}
 		}
+		return false
 	default:
 		panic("wat")
 	}
