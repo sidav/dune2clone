@@ -29,6 +29,7 @@ type projectileStatic struct {
 	spriteCode                string
 	size                      float64
 	speed                     float64
+	splashRadius              float64
 	createsEffectOnImpact     bool
 	effectCreatedOnImpactCode effectCode
 	rotationSpeed             int
@@ -38,6 +39,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 	PRJ_SHELL: {
 		spriteCode:                "shell",
 		size:                      0.3,
+		splashRadius:              0.25,
 		speed:                     0.7,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
@@ -53,6 +55,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 		spriteCode:                "missile",
 		size:                      0.3,
 		speed:                     0.3,
+		splashRadius:              0.75,
 		rotationSpeed:             1,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
@@ -60,6 +63,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 	PRJ_INFANTRY_MISSILE: {
 		spriteCode:                "aamissile",
 		size:                      0.3,
+		splashRadius:              0.15,
 		speed:                     0.45,
 		rotationSpeed:             35,
 		createsEffectOnImpact:     true,

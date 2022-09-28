@@ -167,13 +167,20 @@ func (r *renderer) renderEffect(e *effect) {
 			return
 		}
 		neededAtlas := effectsAtlaces[e.getStaticData().spriteCode]
-		currentFrame := geometry.GetPartitionIndex(e.getExpirationPercent(r.btl.currentTick), 0, 100, neededAtlas.totalFrames())
+		expPercent := e.getExpirationPercent(r.btl.currentTick)
+		currentFrame := geometry.GetPartitionIndex(expPercent, 0, 100, neededAtlas.totalFrames())
 		rl.DrawTexture(
 			neededAtlas.getSpriteByFrame(currentFrame),
 			osx-neededAtlas.getSpriteByFrame(currentFrame).Width/2,
 			osy-neededAtlas.getSpriteByFrame(currentFrame).Height/2,
 			DEFAULT_TINT, // proj.faction.factionColor,
 		)
+		if e.splashCircleRadius > 0 {
+			radius := float32(float64(expPercent * TILE_SIZE_IN_PIXELS) * e.splashCircleRadius) / 100.0
+			rl.DrawCircleLines(osx, osy, radius, rl.Red)
+			rl.DrawCircleLines(osx, osy, radius+1, rl.Red)
+			rl.DrawCircleLines(osx, osy, radius+2, rl.Red)
+		}
 	}
 }
 

@@ -1,9 +1,10 @@
 package main
 
 type effect struct {
-	centerX, centerY float64
-	code             effectCode
-	creationTick     int
+	centerX, centerY   float64
+	code               effectCode
+	creationTick       int
+	splashCircleRadius float64
 }
 
 func (e *effect) getStaticData() *effectStatic {

@@ -15,40 +15,39 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	p.centerX += spd * vx
 	p.centerY += spd * vy
 	p.fuel -= spd
+
+	var hitTarget actor
 	if p.targetActor != nil && p.getStaticData().rotationSpeed > 0 {
 		targX, targY := p.targetActor.getPhysicalCenterCoords()
 		rotateTo := geometry.GetDegreeOfFloatVector(targX-p.centerX, targY-p.centerY)
 		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().rotationSpeed)
 		p.rotationDegree = geometry.NormalizeDegree(p.rotationDegree)
 		if geometry.GetApproxDistFloat64(targX, targY, p.centerX, p.centerY) < 1 {
-			b.dealDamageToActor(p.damage, p.damageType, p.targetActor)
+			hitTarget = p.targetActor
 			p.setToRemove = true
-			if p.getStaticData().createsEffectOnImpact {
-				b.addEffect(&effect{
-					centerX:      p.centerX,
-					centerY:      p.centerY,
-					code:         p.getStaticData().effectCreatedOnImpactCode,
-					creationTick: b.currentTick,
-				})
-			}
-			return
 		}
 	}
-	if p.fuel <= 0 {
+	if p.fuel <= 0 && hitTarget == nil {
 		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
-		targ := b.getActorAtTileCoordinates(tilex, tiley)
-		if targ != nil && (p.targetActor == nil || targ.isInAir() == p.targetActor.isInAir()) {
-			b.dealDamageToActor(p.damage, p.damageType, targ)
+		hitTarget = b.getActorAtTileCoordinates(tilex, tiley)
+		if hitTarget != nil && hitTarget.isInAir() != p.targetActor.isInAir() {
+			hitTarget = nil
+		}
+		p.setToRemove = true
+	}
+	if p.setToRemove {
+		if hitTarget != nil {
+			b.dealDamageToActor(p.damage, p.damageType, p.targetActor)
 		}
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{
-				centerX:      p.centerX,
-				centerY:      p.centerY,
-				code:         p.getStaticData().effectCreatedOnImpactCode,
-				creationTick: b.currentTick,
+				centerX:            p.centerX,
+				centerY:            p.centerY,
+				splashCircleRadius: p.getStaticData().splashRadius,
+				code:               p.getStaticData().effectCreatedOnImpactCode,
+				creationTick:       b.currentTick,
 			})
 		}
-		p.setToRemove = true
 	}
 	// debugWritef("%+v spd: %f\n", p, spd)
 }
