@@ -45,7 +45,7 @@ func TrueCoordsToTileCoords(tx, ty float64) (int, int) {
 	return int(tx), int(ty)
 }
 
-func TileCoordsToPhysicalCoords(tx, ty int) (float64, float64) {
+func TileCoordsToTrueCoords(tx, ty int) (float64, float64) {
 	//halfTileSize := TILE_PHYSICAL_SIZE/2
 	//if TILE_PHYSICAL_SIZE % 2 == 1 {
 	//	halfTileSize++

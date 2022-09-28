@@ -25,7 +25,7 @@ type unit struct {
 }
 
 func createUnit(code, tx, ty int, fact *faction) *unit {
-	cx, cy := geometry.TileCoordsToPhysicalCoords(tx, ty)
+	cx, cy := geometry.TileCoordsToTrueCoords(tx, ty)
 	u := &unit{
 		code:             code,
 		centerX:          cx,

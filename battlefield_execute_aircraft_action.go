@@ -18,7 +18,7 @@ func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
 }
 
 func (b *battlefield) executeAirMoveActionForUnit(u *unit) {
-	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
 	u.setPhysicalCenterCoords(
 		u.centerX+u.getStaticData().movementSpeed*vx,
@@ -42,7 +42,7 @@ func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
 		return
 	}
 	newSpeed := 3 * u.getStaticData().movementSpeed / 4
-	targetTrueX, targetTrueY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	targetTrueX, targetTrueY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
 	u.rotateChassisTowardsVector(vx, vy)
 	u.approachTrueCoordinatesAsAir(targetTrueX, targetTrueY, newSpeed)
@@ -93,7 +93,7 @@ func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
 func (b *battlefield) executeAirDropActionForUnit(u *unit) {
 	debugWrite("DROP: STARTING")
 	atx, aty := geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())
-	u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToPhysicalCoords(atx, aty))
+	u.carriedUnit.setPhysicalCenterCoords(geometry.TileCoordsToTrueCoords(atx, aty))
 	b.addActor(u.carriedUnit)
 	u.carriedUnit = nil
 	u.currentAction.resetAction()

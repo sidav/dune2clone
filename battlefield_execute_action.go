@@ -80,7 +80,7 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 		if u.currentAction.targetTileX == -1 {
 			u.currentAction.targetTileX, u.currentAction.targetTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		}
-		targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+		targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
 		u.setPhysicalCenterCoords(
 			u.centerX+u.getStaticData().movementSpeed*vx,
@@ -140,7 +140,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 	if u.currentAction.targetActor.(*building).unitPlacedInside == nil {
 		u.currentAction.code = ACTION_WAIT
-		ptx, pty := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetActor.(*building).getUnitPlacementAbsoluteCoords())
+		ptx, pty := geometry.TileCoordsToTrueCoords(u.currentAction.targetActor.(*building).getUnitPlacementAbsoluteCoords())
 		u.setPhysicalCenterCoords(ptx, pty)
 		u.chassisDegree = 90
 		ux, uy := u.getTileCoords()
@@ -186,7 +186,7 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 
 func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
-	targetX, targetY := geometry.TileCoordsToPhysicalCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := targetX-x, targetY-y
 	if areFloatsRoughlyEqual(x, targetX) && areFloatsRoughlyEqual(y, targetY) {
 		u.centerX = targetX
@@ -211,7 +211,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	}
 
 	currTx, currTy := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
-	currTcx, currTcy := geometry.TileCoordsToPhysicalCoords(currTx, currTy)
+	currTcx, currTcy := geometry.TileCoordsToTrueCoords(currTx, currTy)
 	// if we're passing through tile center by our movement...
 	if math.Signbit(currTcx-u.centerX) != math.Signbit(currTcx-u.centerX-displacementX) ||
 		math.Signbit(currTcy-u.centerY) != math.Signbit(currTcy-u.centerY-displacementY) ||
@@ -273,7 +273,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
 				if unt.getStaticData().isAircraft || b.costMapForMovement(x, y) != -1 {
-					unt.centerX, unt.centerY = geometry.TileCoordsToPhysicalCoords(x, y)
+					unt.centerX, unt.centerY = geometry.TileCoordsToTrueCoords(x, y)
 					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {
 						unt.currentOrder.code = ORDER_MOVE
 						unt.currentOrder.setTargetTileCoords(bld.rallyTileX, bld.rallytileY)

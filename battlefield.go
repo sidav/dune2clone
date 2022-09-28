@@ -156,7 +156,7 @@ func (b *battlefield) removeActor(a actor) {
 					// just to be sure, maybe clear a tile at which the unit moves
 					// The logic ON PURPOSE doesn't look at unit's action
 					// check unit displacement
-					tileCx, tileCy := geometry.TileCoordsToPhysicalCoords(x, y)
+					tileCx, tileCy := geometry.TileCoordsToTrueCoords(x, y)
 					ux, uy := unt.getPhysicalCenterCoords()
 					dispX, dispY := geometry.Float64VectorToIntUnitVector(ux-tileCx, uy-tileCy)
 					// clear the tile if it is set occupied by this unit

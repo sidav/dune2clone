@@ -52,9 +52,9 @@ func (b *battlefield) dealSplashDamage(centerX, centerY, radius float64, damage 
 						b.dealDamageToActor(damage, damageType, u)
 					}
 				}
-				
+
 				if bld, ok := b.tiles[x][y].isOccupiedByActor.(*building); ok {
-					cx, cy := geometry.TileCoordsToPhysicalCoords(x, y)
+					cx, cy := geometry.TileCoordsToTrueCoords(x, y)
 					if geometry.GetApproxDistFloat64(cx, cy, centerX, centerY) <= radius+0.25 {
 						b.dealDamageToActor(damage, damageType, bld)
 					}

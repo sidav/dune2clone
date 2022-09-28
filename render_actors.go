@@ -6,7 +6,7 @@ import (
 )
 
 func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *building) {
-	x, y := geometry.TileCoordsToPhysicalCoords(bld.topLeftX, bld.topLeftY)
+	x, y := geometry.TileCoordsToTrueCoords(bld.topLeftX, bld.topLeftY)
 	x -= 0.5
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
@@ -15,7 +15,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	// render rally point. Called BEFORE viewport check.
 	if bld.rallyTileX != -1 {
 		centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
-		rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToPhysicalCoords(bld.rallyTileX, bld.rallytileY))
+		rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToTrueCoords(bld.rallyTileX, bld.rallytileY))
 		rl.DrawLine(centerX, centerY, rallyX, rallyY, rl.White)
 		rl.DrawRectangleLines(rallyX-TILE_SIZE_IN_PIXELS/4, rallyY-TILE_SIZE_IN_PIXELS/4,
 			2*TILE_SIZE_IN_PIXELS/4, 2*TILE_SIZE_IN_PIXELS/4, rl.White)
