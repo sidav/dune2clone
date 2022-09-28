@@ -88,15 +88,12 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 	rangeSpread := t.getStaticData().shotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
 	b.addProjectile(&projectile{
 		faction:        shooter.getFaction(),
-		code:           t.getStaticData().firesProjectileOfCode,
+		staticData:     t.getStaticData().firedProjectileData,
 		centerX:        projX,
 		centerY:        projY,
 		rotationDegree: t.rotationDegree + degreeSpread,
 		fuel:           geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
 		targetActor:    t.targetActor,
-		damage:         t.getStaticData().projectileDamage,
-		splashDamage:   t.getStaticData().projectileDamage,
-		damageType:     t.getStaticData().projectileDamageType,
 	})
 	t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"dune2clone/fibrandom"
+	"flag"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -9,6 +10,18 @@ var rnd fibrandom.FibRandom
 
 func main() {
 	// geometry.SetDegreesInCircleAmount(100)
+
+	runSanity := flag.Bool("sanity", false, "Perform static data sanity")
+	flag.Parse()
+	nonDefaultFlagSet := false
+	if *runSanity {
+		performAllDataSanityChecks()
+		nonDefaultFlagSet = true
+	}
+	if nonDefaultFlagSet {
+		return
+	}
+
 	rl.InitWindow(int32(WINDOW_W), int32(WINDOW_H), "DAS IST KEIN DUNE 2!")
 	rl.SetTargetFPS(RENDERER_DESIRED_FPS)
 	rl.SetWindowState(rl.FlagWindowResizable)

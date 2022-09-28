@@ -37,9 +37,9 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	}
 	if p.setToRemove {
 		if hitTarget != nil {
-			b.dealDamageToActor(p.damage, p.damageType, p.targetActor)
+			b.dealDamageToActor(p.getStaticData().hitDamage, p.getStaticData().damageType, p.targetActor)
 		}
-		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius, p.splashDamage, p.damageType)
+		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius, p.getStaticData().splashDamage, p.getStaticData().damageType)
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{
 				centerX:            p.centerX,

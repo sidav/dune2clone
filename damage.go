@@ -8,7 +8,7 @@ import (
 type armorCode int
 
 const (
-	ARMORTYPE_CRASH_IF_THIS_SET armorCode = iota
+	ARMORTYPE_FORGOTTEN_TO_BE_SET armorCode = iota
 	ARMORTYPE_INFANTRY
 	ARMORTYPE_HEAVY
 	ARMORTYPE_BUILDING
@@ -17,7 +17,7 @@ const (
 type damageCode int
 
 const (
-	DAMAGETYPE_CRASH_IF_THIS_SET damageCode = iota
+	DAMAGETYPE_FORGOTTEN_TO_BE_SET damageCode = iota
 	DAMAGETYPE_ANTI_INFANTRY
 	DAMAGETYPE_ANTI_BUILDING
 	DAMAGETYPE_OMNI
@@ -66,10 +66,10 @@ func (b *battlefield) dealSplashDamage(centerX, centerY, radius float64, damage 
 }
 
 func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int {
-	if dmgType == DAMAGETYPE_CRASH_IF_THIS_SET {
+	if dmgType == DAMAGETYPE_FORGOTTEN_TO_BE_SET {
 		panic("Oh, damage is nothing")
 	}
-	if armType == ARMORTYPE_CRASH_IF_THIS_SET {
+	if armType == ARMORTYPE_FORGOTTEN_TO_BE_SET {
 		panic("Oh, armor is nothing")
 	}
 	percent := 100

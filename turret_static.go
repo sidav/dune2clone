@@ -12,7 +12,5 @@ type turretStatic struct {
 
 	attacksLand, attacksAir bool
 
-	firesProjectileOfCode int
-	projectileDamage      int
-	projectileDamageType  damageCode
+	firedProjectileData *projectileStatic
 }
