@@ -1,6 +1,9 @@
 package main
 
-import "math"
+import (
+	"dune2clone/geometry"
+	"math"
+)
 
 type armorCode int
 
@@ -32,6 +35,32 @@ func (b *battlefield) dealDamageToActor(dmg int, dmgType damageCode, act actor) 
 				math.Ceil(float64(unt.getStaticData().maxSquadSize) *
 					float64(unt.currentHitpoints) / float64(unt.getStaticData().maxHitpoints)),
 			)
+		}
+	}
+}
+
+func (b *battlefield) dealSplashDamage(centerX, centerY, radius float64, damage int, damageType damageCode) {
+	// TODO: air units too
+	searchRadius := int(math.Ceil(radius))
+	ctx, cty := geometry.TrueCoordsToTileCoords(centerX, centerY)
+	for x := ctx - searchRadius; x <= ctx+searchRadius; x++ {
+		for y := cty - searchRadius; y <= cty+searchRadius; y++ {
+			if b.areTileCoordsValid(x, y) && b.tiles[x][y].isOccupiedByActor != nil {
+
+				if u, ok := b.tiles[x][y].isOccupiedByActor.(*unit); ok {
+					if geometry.GetApproxDistFloat64(u.centerX, u.centerY, centerX, centerY) <= radius+0.5 {
+						b.dealDamageToActor(damage, damageType, u)
+					}
+				}
+				
+				if bld, ok := b.tiles[x][y].isOccupiedByActor.(*building); ok {
+					cx, cy := geometry.TileCoordsToPhysicalCoords(x, y)
+					if geometry.GetApproxDistFloat64(cx, cy, centerX, centerY) <= radius+0.25 {
+						b.dealDamageToActor(damage, damageType, bld)
+					}
+				}
+
+			}
 		}
 	}
 }

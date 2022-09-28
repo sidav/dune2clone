@@ -40,6 +40,6 @@ var sTableEffects = map[effectCode]*effectStatic{
 	},
 	EFFECT_BIGGER_EXPLOSION: {
 		spriteCode:      "biggerexplosion",
-		defaultLifeTime: 36,
+		defaultLifeTime: 32,
 	},
 }

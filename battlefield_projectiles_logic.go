@@ -39,6 +39,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		if hitTarget != nil {
 			b.dealDamageToActor(p.damage, p.damageType, p.targetActor)
 		}
+		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius, p.splashDamage, p.damageType)
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{
 				centerX:            p.centerX,

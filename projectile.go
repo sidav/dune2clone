@@ -5,9 +5,10 @@ type projectile struct {
 	code             int
 	centerX, centerY float64
 	rotationDegree   int
-	fuel             float64    // how many 'speeds' it spends until it is destroyed
-	targetActor      actor      // for homing projectiles
-	damage           int        // set by turret, not proj static data
+	fuel             float64 // how many 'speeds' it spends until it is destroyed
+	targetActor      actor   // for homing projectiles
+	damage           int     // set by turret, not proj static data
+	splashDamage     int
 	damageType       damageCode // this too
 	setToRemove      bool
 }
@@ -40,6 +41,7 @@ var sTableProjectiles = map[int]*projectileStatic{
 		spriteCode:                "shell",
 		size:                      0.3,
 		splashRadius:              0.25,
+
 		speed:                     0.7,
 		createsEffectOnImpact:     true,
 		effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
