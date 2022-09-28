@@ -13,7 +13,6 @@ type aiTaskForce struct {
 	nextTickToGiveOrders         int
 	desiredSize                  int
 	maxFullnessPercentForRetreat int
-	noRetreatAllowed             bool
 	units                        []*unit
 	target                       actor
 }
@@ -27,7 +26,7 @@ func (atf *aiTaskForce) getFullnessPercent() int {
 }
 
 func (atf *aiTaskForce) shouldBeRetreated() bool {
-	return atf.maxFullnessPercentForRetreat != 0 && atf.getFullnessPercent() <= atf.maxFullnessPercentForRetreat
+	return atf.maxFullnessPercentForRetreat > 0 && atf.getFullnessPercent() <= atf.maxFullnessPercentForRetreat
 }
 
 func (atf *aiTaskForce) isFull() bool {

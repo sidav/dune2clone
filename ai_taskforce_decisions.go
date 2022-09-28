@@ -38,6 +38,7 @@ func (ai *aiStruct) assignUnitToTaskForce(u *unit) {
 			selectedTf = tf
 		}
 	}
+	ai.debugWritef("adding %s to task force %d/%d\n", u.getName(), selectedTf.getSize(), selectedTf.desiredSize)
 	selectedTf.addUnit(u)
 }
 
@@ -62,10 +63,12 @@ func (ai *aiStruct) giveOrdersToAllTaskForces(b *battlefield) {
 
 func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) {
 	if tf.shouldBeRetreated() {
+		ai.debugWritef("Attack TF: size %d, retreat!\n", tf.getSize())
 		tf.target = nil
 	}
 	if tf.isFull() || tf.target != nil {
 		if tf.target != nil {
+			ai.debugWritef("Attack TF: attack %s!\n", tf.target.getName())
 			for _, u := range tf.units {
 				u.currentOrder.code = ORDER_ATTACK
 				u.currentOrder.targetActor = tf.target
@@ -76,7 +79,12 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 		}
 	}
 	if tf.target == nil {
-		ai.giveRoamNearBaseOrderToTaskForce(b, tf)
+		if tf.isFull() {
+			ai.debugWritef("Attack TF: battle recon!\n")
+			ai.giveReconOrderToTaskForce(b, tf)
+		} else {
+			ai.giveRoamNearBaseOrderToTaskForce(b, tf)
+		}
 	}
 }
 

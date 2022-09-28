@@ -32,7 +32,7 @@ func (ai *aiStruct) selectWhatToProduce(producer *building) int {
 		code = ai.selectRandomProducableCodeByFunction(availableCodes, decisionWeights[decidedIndex].weightCode)
 	}
 
-	debugWritef("AI %s decided to produce %s from weights %v\n", ai.name, decisionWeights[decidedIndex].weightCode, decisionWeights)
+	ai.debugWritef("decided to produce %s from weights %v\n", decisionWeights[decidedIndex].weightCode, decisionWeights)
 	return code
 }
 

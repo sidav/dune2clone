@@ -7,7 +7,7 @@ func createAi(f *faction, name, personality string) *aiStruct {
 		current:                     aiAnalytics{},
 		alreadyOrderedBuildThisTick: false,
 		desired: aiAnalytics{
-			defenses:       5,
+			defenses:       4,
 			builders:       2,
 			eco:            2,
 			production:     3,
@@ -37,6 +37,7 @@ func createAi(f *faction, name, personality string) *aiStruct {
 		for k, _ := range aiPersonalitySetters {
 			if selectedIndex == currIndex {
 				persSetter = aiPersonalitySetters[k]
+				break
 			}
 			currIndex++
 		}
@@ -50,124 +51,89 @@ func createAi(f *faction, name, personality string) *aiStruct {
 	return &ai
 }
 
-var aiPersonalitySetters = map[string]func(*aiStruct) {
+var aiPersonalitySetters = map[string]func(*aiStruct){
 	"balanced": func(ai *aiStruct) {
 		ai.personalityName = "Balanced"
 		ai.moneyPoorMax = 2500
 		ai.moneyRichMin = 10000
-		ai.taskForces = []*aiTaskForce{
-			{
-				mission:     AITF_MISSION_RECON,
-				desiredSize: 1,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  10,
-				maxFullnessPercentForRetreat: 10,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 5,
-				units:       make([]*unit, 0),
-			},
+		addTaskForceToAi(ai, AITF_MISSION_RECON, 1, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 10, 0)
+		addTaskForceToAi(ai, AITF_MISSION_DEFEND, 5, 0)
+		ai.desired = aiAnalytics{
+			defenses:       4,
+			builders:       2,
+			eco:            2,
+			production:     3,
+			combatUnits:    20,
+			nonCombatUnits: 5,
+			harvesters:     5,
+			transports:     3,
 		}
 	},
-	"rush": func(ai *aiStruct){
+	"rush": func(ai *aiStruct) {
 		ai.personalityName = "Rush"
 		ai.moneyPoorMax = 1000
 		ai.moneyRichMin = 5000
-		ai.taskForces = []*aiTaskForce{
-			{
-				mission:     AITF_MISSION_RECON,
-				desiredSize: 1,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  2,
-				maxFullnessPercentForRetreat: 0,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  2,
-				maxFullnessPercentForRetreat: 0,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 2,
-				units:       make([]*unit, 0),
-			},
+		addTaskForceToAi(ai, AITF_MISSION_RECON, 1, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 2, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 2, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 2, 0)
+		ai.desired = aiAnalytics{
+			defenses:       0,
+			builders:       2,
+			eco:            1,
+			production:     2,
+			combatUnits:    20,
+			nonCombatUnits: 5,
+			harvesters:     5,
+			transports:     3,
 		}
 	},
-	"turtle": func(ai *aiStruct){
+	"turtle": func(ai *aiStruct) {
 		ai.personalityName = "Turtle"
 		ai.moneyPoorMax = 2500
 		ai.moneyRichMin = 5000
-		ai.taskForces = []*aiTaskForce{
-			{
-				mission:     AITF_MISSION_RECON,
-				desiredSize: 1,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  25,
-				maxFullnessPercentForRetreat: 10,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 4,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 4,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 4,
-				units:       make([]*unit, 0),
-			},
+		addTaskForceToAi(ai, AITF_MISSION_RECON, 1, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 10, 0)
+		addTaskForceToAi(ai, AITF_MISSION_DEFEND, 5, 0)
+		addTaskForceToAi(ai, AITF_MISSION_DEFEND, 3, 0)
+		ai.desired = aiAnalytics{
+			defenses:       7,
+			builders:       2,
+			eco:            2,
+			production:     3,
+			combatUnits:    20,
+			nonCombatUnits: 5,
+			harvesters:     5,
+			transports:     3,
 		}
 	},
-	"pressure": func(ai *aiStruct){
+	"pressure": func(ai *aiStruct) {
 		ai.personalityName = "Pressure"
 		ai.moneyPoorMax = 2500
 		ai.moneyRichMin = 8000
-		ai.taskForces = []*aiTaskForce{
-			{
-				mission:     AITF_MISSION_RECON,
-				desiredSize: 1,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  3,
-				maxFullnessPercentForRetreat: 0,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:                      AITF_MISSION_ATTACK,
-				desiredSize:                  15,
-				maxFullnessPercentForRetreat: 0,
-				units:                        make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 4,
-				units:       make([]*unit, 0),
-			},
-			{
-				mission:     AITF_MISSION_DEFEND,
-				desiredSize: 4,
-				units:       make([]*unit, 0),
-			},
+		addTaskForceToAi(ai, AITF_MISSION_RECON, 1, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 3, 0)
+		addTaskForceToAi(ai, AITF_MISSION_ATTACK, 10, 0)
+		addTaskForceToAi(ai, AITF_MISSION_DEFEND, 5, 0)
+		ai.desired = aiAnalytics{
+			defenses:       3,
+			builders:       2,
+			eco:            2,
+			production:     3,
+			combatUnits:    25,
+			nonCombatUnits: 5,
+			harvesters:     5,
+			transports:     3,
 		}
 	},
+}
+
+func addTaskForceToAi(ai *aiStruct, mission taskForceMission, desiredSize, retreatPercent int) {
+	ai.taskForces = append(ai.taskForces, &aiTaskForce{
+		mission:                      mission,
+		desiredSize:                  desiredSize,
+		maxFullnessPercentForRetreat: retreatPercent,
+		units:                        make([]*unit, 0),
+	})
 }

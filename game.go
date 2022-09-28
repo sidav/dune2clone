@@ -137,7 +137,8 @@ func (g *game) startGame() {
 		}
 		timeReportString += fmt.Sprintf("Render/sleep %dms", time.Since(timeCurrentActionStarted)/time.Millisecond)
 
-		if (g.battlefield.currentTick-1)%10 == 0 {
+		// 887 is just a bug enough prime
+		if (g.battlefield.currentTick-1)%887 == 0 {
 			debugWrite(timeReportString)
 			// debugWrite(g.battlefield.collectStatisticsForDebug())
 		}
@@ -249,10 +250,10 @@ func (g *game) createTimeReportString(actionName string, timeSince time.Time, cr
 	}
 	mcs := time.Since(timeSince) / time.Microsecond
 	criticalMcs := time.Duration(criticalValueMs) * time.Microsecond
-	if mcs > criticalMcs {
-		// time.Sleep(1000 * time.Millisecond)
-		debugWritef("WARNING: %s took %d mcs!\n", actionName, mcs)
-	}
+	//if mcs > criticalMcs {
+	//	// time.Sleep(1000 * time.Millisecond)
+	//	debugWritef("WARNING: %s took %d mcs!\n", actionName, mcs)
+	//}
 
 	neededFound := false
 	for i := range g.render.timeDebugInfosToRender {
