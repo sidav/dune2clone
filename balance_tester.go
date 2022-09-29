@@ -65,12 +65,12 @@ func (bt *balanceTester) autobattleTwoActors(u1, u2 actor) int {
 		if dmg1 > 0 {
 			bt.dealDamageToActor(u2, dmg1)
 			damagePossible = true
-			debugWritef("%s hits %s for %d damage!\n", u1.getName(), u2.getName(), dmg1)
+			// debugWritef("%s hits %s for %d damage!\n", u1.getName(), u2.getName(), dmg1)
 		}
 		if dmg2 > 0 {
 			bt.dealDamageToActor(u1, dmg2)
 			damagePossible = true
-			debugWritef("%s hits %s for %d damage!\n", u2.getName(), u1.getName(), dmg2)
+			// debugWritef("%s hits %s for %d damage!\n", u2.getName(), u1.getName(), dmg2)
 		}
 		if !damagePossible && round >= 500 {
 			return 0

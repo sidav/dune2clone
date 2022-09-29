@@ -5,7 +5,7 @@ const (
 	UNT_RECONINFANTRY
 	UNT_ROCKETINFANTRY
 	UNT_HEAVYINFANTRY
-	UNT_TANK
+	UNT_TANK1
 	UNT_TANK2
 	UNT_DEVASTATOR
 	UNT_MCV1
@@ -219,12 +219,12 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            7,
 		hotkeyToBuild:        "Q",
 	},
-	UNT_TANK: {
-		displayedName:     "Super duper tank",
+	UNT_TANK1: {
+		displayedName:     "Medium tank",
 		chassisSpriteCode: "tank",
-		movementSpeed:     0.1,
+		movementSpeed:     0.09,
 		visionRange:       4,
-		maxHitpoints:      120,
+		maxHitpoints:      125,
 		armorType:         ARMORTYPE_HEAVY,
 		turretsData: []*turretStatic{
 			{
@@ -232,14 +232,14 @@ var sTableUnits = map[int]*unitStatic{
 				attacksLand:       true,
 				rotateSpeed:       7,
 				fireRange:         5,
-				fireSpreadDegrees: 7,
+				fireSpreadDegrees: 6,
 				shotRangeSpread:   0.7,
 				attackCooldown:    45,
 				firedProjectileData: &projectileStatic{
 					spriteCode:                "shell",
 					damageType:                DAMAGETYPE_HEAVY,
 					splashRadius:              0.25,
-					splashDamage:              15,
+					splashDamage:              16,
 					size:                      0.3,
 					speed:                     0.7,
 					createsEffectOnImpact:     true,
@@ -248,7 +248,7 @@ var sTableUnits = map[int]*unitStatic{
 			},
 		},
 		chassisRotationSpeed: 5,
-		cost:                 450,
+		cost:                 500,
 		buildTime:            12,
 		hotkeyToBuild:        "T",
 	},
@@ -402,7 +402,7 @@ var sTableUnits = map[int]*unitStatic{
 	},
 	UNT_AATANK: {
 		displayedName:     "AA tank",
-		chassisSpriteCode: "quad",
+		chassisSpriteCode: "tank",
 		movementSpeed:     0.05,
 		visionRange:       3,
 		maxHitpoints:      75,

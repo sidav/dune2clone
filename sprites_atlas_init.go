@@ -98,19 +98,19 @@ func CreateDirectionalAtlasFromFile(filename string, originalSpriteSize, desired
 }
 
 func replaceImageColorsToFactionImages(img *rl.Image, factionColorNumber int) {
-	rl.ImageColorReplace(img, color.RGBA{192, 192, 192, 255}, factionColors[factionColorNumber])
+	// rl.ImageColorReplace(img, color.RGBA{192, 192, 192, 255}, factionColors[factionColorNumber])
 	rl.ImageColorReplace(img, color.RGBA{255, 0, 255, 255}, factionColors[factionColorNumber])
 	darkerFactionTint := factionColors[factionColorNumber]
 	darkerFactionTint.R /= 2
 	darkerFactionTint.G /= 2
 	darkerFactionTint.B /= 2
-	rl.ImageColorReplace(img, color.RGBA{128, 128, 128, 255}, darkerFactionTint)
+	// rl.ImageColorReplace(img, color.RGBA{128, 128, 128, 255}, darkerFactionTint)
 	rl.ImageColorReplace(img, color.RGBA{128, 0, 128, 255}, darkerFactionTint)
 	darkestFactionTint := factionColors[factionColorNumber]
 	darkestFactionTint.R /= 3
 	darkestFactionTint.G /= 3
 	darkestFactionTint.B /= 3
-	rl.ImageColorReplace(img, color.RGBA{64, 64, 64, 255}, darkestFactionTint)
+	// rl.ImageColorReplace(img, color.RGBA{64, 64, 64, 255}, darkestFactionTint)
 	rl.ImageColorReplace(img, color.RGBA{64, 0, 64, 255}, darkestFactionTint)
 }
 
