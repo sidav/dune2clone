@@ -87,6 +87,7 @@ func loadSprites() {
 	turretsAtlaces["aamsltank"] = CreateDirectionalAtlasFromFile(currPath+"aatank_turret.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["combatharvester"] = CreateDirectionalAtlasFromFile(currPath+"combat_harvester.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["fastharvester"] = CreateDirectionalAtlasFromFile(currPath+"fast_harvester.png", 32, 16, 1, 2, true)
+	unitChassisAtlaces["mcv"] = CreateDirectionalAtlasFromFile(currPath+"mcv.png", 32, 16, 1, 2, true)
 
 	currPath = "resources/sprites/units/aircrafts/"
 	unitChassisAtlaces["air_gunship"] = CreateDirectionalAtlasFromFile(currPath+"combat_plane.png", 32, 16, 1, 2, true)
