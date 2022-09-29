@@ -12,10 +12,15 @@ func main() {
 	// geometry.SetDegreesInCircleAmount(100)
 
 	runSanity := flag.Bool("sanity", false, "Perform static data sanity")
+	runBalanceTester := flag.Bool("test-balance", false, "Perform balance check")
 	flag.Parse()
 	nonDefaultFlagSet := false
 	if *runSanity {
 		performAllDataSanityChecks()
+		nonDefaultFlagSet = true
+	}
+	if *runBalanceTester {
+		testCombatBalance()
 		nonDefaultFlagSet = true
 	}
 	if nonDefaultFlagSet {

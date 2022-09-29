@@ -87,9 +87,11 @@ func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int 
 		}
 	}
 
-	dmg = int(math.Round(float64(dmg*percent) / 100.0)) // round up when neccessary
-	if dmg == 0 {
-		dmg = 1
+	if dmg > 0 {
+		dmg = int(math.Round(float64(dmg*percent) / 100.0)) // round up when neccessary
+		if dmg == 0 {
+			dmg = 1
+		}
 	}
 	return dmg
 }
