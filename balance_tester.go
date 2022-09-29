@@ -1,13 +1,24 @@
 package main
 
+import "sort"
+
 func testCombatBalance() {
 	debugWritef("===== BALANCE CHECK =====\n")
+	codesToCompare := make([]int, 0)
 	for k1, v1 := range sTableUnits {
 		if len(v1.turretsData) > 0 {
-			for k2, v2 := range sTableUnits {
-				if len(v2.turretsData) > 0 && k1 != k2 {
-					autobattleTwoUnits(createUnit(k1, 0, 0, nil), createUnit(k2, 0, 0, nil))
-				}
+			codesToCompare = append(codesToCompare, k1)
+		}
+	}
+	sort.Slice(codesToCompare, func(i, j int) bool {
+		return sTableUnits[codesToCompare[i]].displayedName[0] < sTableUnits[codesToCompare[j]].displayedName[0]
+	})
+	for i := range codesToCompare {
+		for j := range codesToCompare {
+			if i != j {
+				autobattleTwoUnits(
+					createUnit(codesToCompare[i], 0, 0, nil),
+					createUnit(codesToCompare[j], 0, 0, nil))
 			}
 		}
 	}
