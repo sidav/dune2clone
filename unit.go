@@ -52,6 +52,15 @@ func (u *unit) isAlive() bool {
 	return u.currentHitpoints > 0
 }
 
+func (u *unit) recalculateSquadSize() {
+	if u.getStaticData().maxSquadSize > 1 {
+		u.squadSize = int(
+			math.Ceil(float64(u.getStaticData().maxSquadSize) *
+				float64(u.currentHitpoints) / float64(u.getStaticData().maxHitpoints)),
+		)
+	}
+}
+
 func (u *unit) getHitpoints() int {
 	return u.currentHitpoints
 }

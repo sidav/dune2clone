@@ -30,12 +30,7 @@ func (b *battlefield) dealDamageToActor(dmg int, dmgType damageCode, act actor) 
 	}
 	if unt, ok := act.(*unit); ok {
 		unt.currentHitpoints -= calculateDamageOnArmor(dmg, dmgType, unt.getStaticData().armorType)
-		if unt.getStaticData().maxSquadSize > 1 {
-			unt.squadSize = int(
-				math.Ceil(float64(unt.getStaticData().maxSquadSize) *
-					float64(unt.currentHitpoints) / float64(unt.getStaticData().maxHitpoints)),
-			)
-		}
+		unt.recalculateSquadSize()
 	}
 }
 
