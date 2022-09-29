@@ -136,7 +136,7 @@ var sTableUnits = map[int]*unitStatic{
 				attackCooldown:    105,
 				firedProjectileData: &projectileStatic{
 					spriteCode:                "aamissile",
-					splashDamage:              7,
+					hitDamage:                 7,
 					splashRadius:              0.15,
 					damageType:                DAMAGETYPE_HEAVY,
 					size:                      0.3,
@@ -405,7 +405,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisSpriteCode: "quad",
 		movementSpeed:     0.05,
 		visionRange:       3,
-		maxHitpoints:      40,
+		maxHitpoints:      75,
 		armorType:         ARMORTYPE_HEAVY,
 		turretsData: []*turretStatic{
 			{
@@ -415,12 +415,12 @@ var sTableUnits = map[int]*unitStatic{
 				fireRange:         10,
 				fireSpreadDegrees: 35,
 				shotRangeSpread:   0.7,
-				attackCooldown:    75,
+				attackCooldown:    35,
 				firedProjectileData: &projectileStatic{
 					spriteCode:                "aamissile",
 					size:                      0.3,
 					speed:                     0.65,
-					hitDamage:                 25,
+					hitDamage:                 45,
 					damageType:                DAMAGETYPE_HEAVY,
 					rotationSpeed:             45,
 					createsEffectOnImpact:     true,
@@ -514,7 +514,7 @@ var sTableUnits = map[int]*unitStatic{
 				fireRange:         6,
 				fireSpreadDegrees: 12,
 				shotRangeSpread:   1.0,
-				attackCooldown:    15,
+				attackCooldown:    35,
 				firedProjectileData: &projectileStatic{
 					spriteCode:                "shell",
 					size:                      0.3,

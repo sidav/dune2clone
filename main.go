@@ -20,7 +20,8 @@ func main() {
 		nonDefaultFlagSet = true
 	}
 	if *runBalanceTester {
-		testCombatBalance()
+		bt := balanceTester{}
+		bt.testCombatBalance()
 		nonDefaultFlagSet = true
 	}
 	if nonDefaultFlagSet {
