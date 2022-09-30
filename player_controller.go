@@ -82,22 +82,6 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	if pc.IsKeyCodeEqualToString(kk, "R", true) && bld.getHitpointsPercentage() < 100 {
 		bld.isRepairingSelf = true
 	}
-	if bld.currentAction.code == ACTION_WAIT {
-		// maybe build?
-		for _, code := range bld.getStaticData().builds {
-			if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForBuildingOfCode(code) {
-				bld.currentOrder.code = ORDER_BUILD
-				bld.currentOrder.targetActorCode = int(code)
-			}
-		}
-		// maybe product?
-		for _, code := range bld.getStaticData().produces {
-			if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) {
-				bld.currentOrder.code = ORDER_PRODUCE
-				bld.currentOrder.targetActorCode = code
-			}
-		}
-	}
 	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
 		if bld.currentAction.getCompletionPercent() >= 100 || bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
 			// if NOT building:
@@ -110,10 +94,32 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 				bld.currentOrder.targetTileX = tx
 				bld.currentOrder.targetTileY = ty
 				pc.changeMode(PCMODE_NONE)
+			} else if rl.IsMouseButtonPressed(rl.MouseRightButton) {
+				pc.changeMode(PCMODE_NONE)
+				if bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
+					bld.currentOrder.resetOrder()
+				}
+				pc.deselect()
 			}
 			return true
 		}
 	} else {
+		if bld.currentAction.code == ACTION_WAIT {
+			// maybe build?
+			for _, code := range bld.getStaticData().builds {
+				if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForBuildingOfCode(code) {
+					bld.currentOrder.code = ORDER_BUILD
+					bld.currentOrder.targetActorCode = int(code)
+				}
+			}
+			// maybe product?
+			for _, code := range bld.getStaticData().produces {
+				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) {
+					bld.currentOrder.code = ORDER_PRODUCE
+					bld.currentOrder.targetActorCode = code
+				}
+			}
+		}
 		pc.changeMode(PCMODE_NONE)
 	}
 	return false
@@ -162,11 +168,11 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 	if !b.areTileCoordsValid(tx, ty) {
 		return
 	}
-	pc.orderGivenX, pc.orderGivenY = tx, ty
-	pc.tickOrderGiven = b.currentTick
 	aac := b.getActorAtTileCoordinates(tx, ty)
 	for i := range pc.selection {
 		if u, ok := pc.selection[i].(*unit); ok {
+			pc.orderGivenX, pc.orderGivenY = tx, ty
+			pc.tickOrderGiven = b.currentTick
 			u.currentOrder.resetOrder()
 			u.currentOrder.targetTileX = tx
 			u.currentOrder.targetTileY = ty
