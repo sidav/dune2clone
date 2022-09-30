@@ -55,7 +55,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 		// draw units and buildings TODO: optimize by reducing loop traversion?
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			bld := i.Value.(*building)
-			if b.canFactionSeeActor(pc.controlledFaction, bld) {
+			if b.hasFactionExploredBuilding(pc.controlledFaction, bld) {
 				x, y, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
 				rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(w*tileSize), int32(h*tileSize), factionColors[bld.faction.colorNumber])
 			}

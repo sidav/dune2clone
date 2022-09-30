@@ -62,7 +62,7 @@ func (b *battlefield) finalizeTileVariants() {
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for spNumber := range startPoints {
-		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 1))
+		b.factions = append(b.factions, createFaction(spNumber, 0, 10000, 4, 5))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		// TODO: faction selection
@@ -76,7 +76,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	// player faction settings
 	//b.factions[0].resourcesMultiplier = 1
 	//b.factions[0].buildSpeedMultiplier = 10
-	// b.factions[0].visibilityCheat = true
+	//b.factions[0].visibilityCheat = true
 	// b.factions[0].explorationCheat = true
 
 	b.ais = append(b.ais, createAi(b.factions[0], "Player-side", "random"))
@@ -90,6 +90,13 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
 	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
+	// create all units for debugging
+	//coord := 0
+	//for k, _ := range sTableUnits {
+	//	b.addActor(createUnit(k, startPoints[0][0]-10+coord, startPoints[0][1]+2, b.factions[0]))
+	//	b.addActor(createUnit(k, startPoints[1][0]-10+coord, startPoints[1][1]+2, b.factions[1]))
+	//	coord++
+	//}
 	//for i := 0; i < 14; i++ {
 	//	b.addActor(createUnit(UNT_INFANTRY, startPoints[0][0]-1, startPoints[0][1], b.factions[0]))
 	//}
