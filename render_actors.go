@@ -34,40 +34,43 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	if !seen {
 		tint = FOG_OF_WAR_TINT
 	}
-	if seen && bld.isUnderConstruction() && (b.currentTick/10)%2 != 0 {
-		// under construction
-		underConstructionAtlas := buildingsAtlaces["underconstruction"]
-		for x := 0; x < w; x++ {
-			for y := 0; y < h; y++ {
-				frameNumber := (x + y + b.currentTick/250) % underConstructionAtlas.totalFrames()
-				rl.DrawTexture(
-					underConstructionAtlas.getSpriteByFrame(frameNumber),
-					osx+int32(x)*TILE_SIZE_IN_PIXELS,
-					osy+int32(y)*TILE_SIZE_IN_PIXELS,
-					tint,
-				)
-			}
+	var sprites []rl.Texture2D
+	frameNumber := b.currentTick / (DESIRED_TPS / 4)
+	if bld.turret != nil && bld.turret.getStaticData().spriteCode != "" {
+		sprites = []rl.Texture2D{
+			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
+			turretsAtlaces[bld.turret.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
 		}
 	} else {
-		var sprites []rl.Texture2D
-		frameNumber := b.currentTick/(DESIRED_TPS /4)
-		if bld.turret != nil && bld.turret.getStaticData().spriteCode != "" {
-			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
-				turretsAtlaces[bld.turret.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
-			}
-		} else {
-			sprites = []rl.Texture2D{
-				buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
-			}
+		sprites = []rl.Texture2D{
+			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
 		}
-		for _, s := range sprites {
-			rl.DrawTexture(
-				s,
-				osx,
-				osy,
-				tint,
-			)
+	}
+	for _, s := range sprites {
+		rl.DrawTexture(
+			s,
+			osx,
+			osy,
+			tint,
+		)
+	}
+	if seen && bld.isUnderConstruction() { // && (b.currentTick/10)%2 != 0 {
+		// render "under construction" animation
+		underConstructionAtlas := buildingsAtlaces["underconstruction"]
+		bldArea := w*h
+		unbuiltCells := bldArea - geometry.GetPartitionIndex(bld.currentAction.getCompletionPercent(), 0, 100, bldArea) - 1
+		for x := 0; x < w; x++ {
+			for y := 0; y < h; y++ {
+				frameNumber := (x + w*y + b.currentTick/(DESIRED_TPS*10)) % underConstructionAtlas.totalFrames()
+				if (x + w*y /* + b.currentTick/(DESIRED_TPS*10) */) % bldArea <= unbuiltCells {
+					rl.DrawTexture(
+						underConstructionAtlas.getSpriteByFrame(frameNumber),
+						osx+int32(x)*TILE_SIZE_IN_PIXELS,
+						osy+int32(y)*TILE_SIZE_IN_PIXELS,
+						tint,
+					)
+				}
+			}
 		}
 	}
 
