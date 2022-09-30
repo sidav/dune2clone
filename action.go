@@ -11,6 +11,7 @@ type action struct {
 
 	currentFailuresCount uint8
 	failedContinuously   bool
+	interruptMovement    bool
 
 	// construction-related
 	moneySpentOnAction                    int

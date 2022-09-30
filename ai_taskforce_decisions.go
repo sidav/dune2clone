@@ -112,6 +112,7 @@ func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskF
 			coordY := rnd.RandInRange(ai.currBaseCenterY-radius, ai.currBaseCenterY+radius)
 			if b.isTileClearToBeMovedInto(coordX, coordY, nil) {
 				for _, u := range tf.units {
+					u.currentOrder.resetOrder()
 					u.currentOrder.code = ORDER_MOVE
 					u.currentOrder.setTargetTileCoords(coordX, coordY)
 				}
@@ -151,6 +152,7 @@ func (ai *aiStruct) giveReconOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
 	}
 	if coordX != -1 && coordY != -1 {
 		for _, u := range tf.units {
+			u.currentOrder.resetOrder()
 			u.currentOrder.code = ORDER_MOVE
 			u.currentOrder.setTargetTileCoords(coordX, coordY)
 		}

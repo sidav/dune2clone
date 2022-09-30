@@ -6,6 +6,12 @@ import (
 )
 
 func (b *battlefield) executeOrderForUnit(u *unit) {
+	if u.currentOrder.isNew {
+		if u.currentAction.code == ACTION_MOVE {
+			u.currentAction.interruptMovement = true
+		}
+		u.currentOrder.isNew = false
+	}
 	if !b.canUnitsActionBeInterrupted(u) {
 		return
 	}

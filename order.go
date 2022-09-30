@@ -8,6 +8,7 @@ type order struct {
 	targetActor                actor
 	targetActorCode            int
 	failedToExecute            bool
+	isNew                      bool // so that action will be interrupted if possible
 
 	dispatchCalled bool
 	// targetX, targetY         float64
@@ -24,6 +25,7 @@ func (o *order) resetOrder() {
 	o.targetActor = nil
 	o.failedToExecute = false
 	o.dispatchCalled = false
+	o.isNew = true
 }
 
 func (o *order) setTargetTileCoords(x, y int) {

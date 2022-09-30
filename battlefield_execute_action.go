@@ -186,7 +186,16 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 
 func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	x, y := u.centerX, u.centerY
+	currTx, currTy := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+	// interrupting movement, if another order was given
+	if u.currentAction.interruptMovement {
+		// setting target to the nearest tile
+		intVx, intVy := geometry.Float64VectorToIntUnitVector(targetX-x, targetY-y)
+		u.currentAction.targetTileX, u.currentAction.targetTileY = currTx + intVx, currTy + intVy
+		targetX, targetY = geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
+		u.currentAction.interruptMovement = false
+	}
 	vx, vy := targetX-x, targetY-y
 	if areFloatsRoughlyEqual(x, targetX) && areFloatsRoughlyEqual(y, targetY) {
 		u.centerX = targetX
@@ -210,7 +219,6 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 		displacementY = u.getStaticData().movementSpeed * vy / math.Abs(vy)
 	}
 
-	currTx, currTy := geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 	currTcx, currTcy := geometry.TileCoordsToTrueCoords(currTx, currTy)
 	// if we're passing through tile center by our movement...
 	if math.Signbit(currTcx-u.centerX) != math.Signbit(currTcx-u.centerX-displacementX) ||
