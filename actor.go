@@ -13,6 +13,7 @@ type actor interface {
 	getVisionRange() int
 	isPresentAt(int, int) bool
 	addExperienceAmount(int)
+	getExperienceLevel() int
 	isInAir() bool
 	isAlive() bool
 }

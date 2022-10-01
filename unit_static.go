@@ -29,6 +29,7 @@ type unitStatic struct {
 	turretsData []*turretStatic
 
 	maxHitpoints int
+	hpRegen      int
 	armorType    armorCode
 	visionRange  int
 
@@ -88,6 +89,7 @@ var sTableUnits = map[int]*unitStatic{
 		displayedName:     "Recon trike",
 		chassisSpriteCode: "infantryrecon",
 		maxHitpoints:      35,
+		hpRegen:           1,
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       6,
 		movementSpeed:     0.16,
@@ -475,6 +477,7 @@ var sTableUnits = map[int]*unitStatic{
 		movementSpeed:          0.072,
 		visionRange:            2,
 		maxHitpoints:           200,
+		hpRegen:                1,
 		armorType:              ARMORTYPE_HEAVY,
 		chassisRotationSpeed:   7,
 		cost:                   1600,

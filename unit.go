@@ -73,6 +73,13 @@ func (u *unit) isAlive() bool {
 	return u.currentHitpoints > 0
 }
 
+func  (u *unit) receiveHealing(amount int) {
+	u.currentHitpoints += amount
+	if u.currentHitpoints > u.getMaxHitpoints() {
+		u.currentHitpoints = u.getMaxHitpoints()
+	}
+}
+
 func (u *unit) recalculateSquadSize() {
 	if u.getStaticData().maxSquadSize > 1 {
 		u.squadSize = int(

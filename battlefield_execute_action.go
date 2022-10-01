@@ -123,10 +123,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().repairsUnits && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.getHitpointsPercentage() < 100 {
 			const REPAIR_PER_TICK = 2
-			bld.unitPlacedInside.currentHitpoints += REPAIR_PER_TICK
-			if bld.unitPlacedInside.currentHitpoints > bld.unitPlacedInside.getStaticData().maxHitpoints {
-				bld.unitPlacedInside.currentHitpoints = bld.unitPlacedInside.getStaticData().maxHitpoints
-			}
+			bld.unitPlacedInside.receiveHealing(REPAIR_PER_TICK)
 		} else {
 			// force clear tile so that the entry point will be cleared for airplanes too
 			upx, upy := bld.getUnitPlacementAbsoluteCoords()

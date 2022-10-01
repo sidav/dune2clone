@@ -32,6 +32,7 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 func (b *battlefield) actTurret(shooter actor, t *turret) {
 	// shooterTileX, shooterTileY := 0, 0
 	shooterX, shooterY := 0.0, 0.0
+	turretRange := modifyTurretRangeByUnitExpLevel(t.getStaticData().fireRange, shooter.getExperienceLevel())
 	if u, ok := shooter.(*unit); ok {
 		// shooterTileX, shooterTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		shooterX, shooterY = u.centerX, u.centerY
@@ -41,13 +42,13 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		shooterX, shooterY = bld.getPhysicalCenterCoords()
 	}
 	if t.targetActor != nil && (!b.canFactionSeeActor(shooter.getFaction(), t.targetActor) ||
-		!t.targetActor.isAlive() || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, t.getStaticData().fireRange)) {
+		!t.targetActor.isAlive() || !b.areActorsInRangeFromEachOther(shooter, t.targetActor, turretRange)) {
 
 		t.targetActor = nil
 	}
 	if t.targetActor == nil {
 		// if targetActor not set...
-		actorsInRange := b.getListOfActorsInRangeFromActor(shooter, t.getStaticData().fireRange)
+		actorsInRange := b.getListOfActorsInRangeFromActor(shooter, turretRange)
 		for l := actorsInRange.Front(); l != nil; l = l.Next() {
 			targetCandidate := l.Value.(actor)
 			if targetCandidate.getFaction() != shooter.getFaction() &&

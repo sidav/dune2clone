@@ -54,6 +54,10 @@ func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *b
 func (b *building) addExperienceAmount(amnt int) {
 }
 
+func (b *building) getExperienceLevel() int {
+	return 0
+}
+
 func (b *building) markSelected(s bool) {
 	b.isSelected = s
 }
