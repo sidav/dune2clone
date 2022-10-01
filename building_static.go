@@ -334,7 +334,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:                          12,
 		builds:                             nil,
 		consumesEnergy:                     15,
-		produces:                           []int{UNT_TANK1, UNT_JUGGERNAUT, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_FAST_HARVESTER},
+		produces:                           []int{UNT_TANK1, UNT_DEVASTATOR, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_FAST_HARVESTER},
 		hotkeyToBuild:                      "F",
 	},
 
@@ -404,7 +404,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		buildTime:                          12,
 		builds:                             nil,
 		consumesEnergy:                     15,
-		produces:                           []int{UNT_TANK2, UNT_DEVASTATOR, UNT_MCV2, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_COMBAT_HARVESTER},
+		produces:                           []int{UNT_TANK2, UNT_JUGGERNAUT, UNT_MCV2, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_COMBAT_HARVESTER},
 		hotkeyToBuild:                      "F",
 	},
 }
