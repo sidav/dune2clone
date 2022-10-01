@@ -82,9 +82,10 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 		}
 		targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 		vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
+		speed := u.getMovementSpeed()
 		u.setPhysicalCenterCoords(
-			u.centerX+u.getStaticData().movementSpeed*vx,
-			u.centerY+u.getStaticData().movementSpeed*vy,
+			u.centerX+speed*vx,
+			u.centerY+speed*vy,
 		)
 		orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
 		if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
@@ -208,12 +209,13 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	}
 
 	displacementX, displacementY := vx, vy
+	speed := u.getMovementSpeed()
 
-	if math.Abs(vx) > u.getStaticData().movementSpeed {
-		displacementX = u.getStaticData().movementSpeed * vx / math.Abs(vx)
+	if math.Abs(vx) > speed {
+		displacementX = speed * vx / math.Abs(vx)
 	}
-	if math.Abs(vy) > u.getStaticData().movementSpeed {
-		displacementY = u.getStaticData().movementSpeed * vy / math.Abs(vy)
+	if math.Abs(vy) > speed {
+		displacementY = speed * vy / math.Abs(vy)
 	}
 
 	currTcx, currTcy := geometry.TileCoordsToTrueCoords(currTx, currTy)

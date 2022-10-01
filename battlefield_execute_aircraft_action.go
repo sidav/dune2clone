@@ -20,9 +20,10 @@ func (u *unit) approachTrueCoordinatesAsAir(x, y, speed float64) {
 func (b *battlefield) executeAirMoveActionForUnit(u *unit) {
 	targetX, targetY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := geometry.DegreeToUnitVector(u.chassisDegree)
+	movementSpeed := u.getMovementSpeed()
 	u.setPhysicalCenterCoords(
-		u.centerX+u.getStaticData().movementSpeed*vx,
-		u.centerY+u.getStaticData().movementSpeed*vy,
+		u.centerX+movementSpeed*vx,
+		u.centerY+movementSpeed*vy,
 	)
 	orderVectorX, orderVectorY := targetX-u.centerX, targetY-u.centerY
 	if !geometry.IsVectorDegreeEqualTo(orderVectorX, orderVectorY, u.chassisDegree) {
@@ -41,7 +42,7 @@ func (b *battlefield) executeAirApproachLandTileActionForUnit(u *unit) {
 		b.executeAirMoveActionForUnit(u)
 		return
 	}
-	newSpeed := 3 * u.getStaticData().movementSpeed / 4
+	newSpeed := 3 * u.getMovementSpeed() / 4
 	targetTrueX, targetTrueY := geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 	vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
 	u.rotateChassisTowardsVector(vx, vy)
@@ -58,7 +59,7 @@ func (b *battlefield) executeAirApproachTargetActorActionForUnit(u *unit) {
 		return
 	}
 	u.rotateChassisTowardsDegree(u.currentAction.targetActor.(*unit).chassisDegree)
-	newSpeed := 3 * u.getStaticData().movementSpeed / 4
+	newSpeed := 3 * u.getMovementSpeed() / 4
 	u.approachTrueCoordinatesAsAir(targetTrueX, targetTrueY, newSpeed)
 }
 
@@ -82,7 +83,7 @@ func (b *battlefield) executeAirPickUnitUpActionForUnit(u *unit) {
 		b.removeActor(u.currentAction.targetActor)
 		u.currentAction.resetAction()
 	} else {
-		newSpeed := u.getStaticData().movementSpeed / 2
+		newSpeed := u.getMovementSpeed() / 2
 		vx, vy := geometry.VectorToUnitVectorFloat64(targetTrueX-u.centerX, targetTrueY-u.centerY)
 		u.centerX += newSpeed * vx
 		u.centerY += newSpeed * vy

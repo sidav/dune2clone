@@ -28,7 +28,7 @@ func (ai *aiStruct) areAllTaskForcesFull() bool {
 
 func (ai *aiStruct) assignUnitToTaskForce(u *unit) {
 	const minSpeedForBeingRecon = 0.14
-	isUnitSuitableForRecon := u.getStaticData().movementSpeed >= minSpeedForBeingRecon
+	isUnitSuitableForRecon := u.getMovementSpeed() >= minSpeedForBeingRecon
 	selectedTf := ai.taskForces[0]
 	for _, tf := range ai.taskForces {
 		if tf.getFullnessPercent() < selectedTf.getFullnessPercent() && !tf.isFull() ||

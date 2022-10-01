@@ -97,6 +97,10 @@ func (u *unit) getMaxHitpoints() int {
 	return modifyUnitMaxHpByExpLevel(u.getStaticData().maxHitpoints, u.getExperienceLevel())
 }
 
+func (u *unit) getMovementSpeed() float64 {
+	return modifyUnitSpeedByExpLevel(u.getStaticData().movementSpeed, u.getExperienceLevel())
+}
+
 func (u *unit) getHitpointsPercentage() int {
 	return getPercentInt(u.currentHitpoints, u.getMaxHitpoints())
 }
