@@ -90,6 +90,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:                               500,
 		buildTime:                          10,
 		requiresTechLevel:                  2,
+		consumesEnergy:                     7,
 		builds:                             nil,
 		produces:                           []int{UNT_INFANTRY, UNT_RECONINFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
 		hotkeyToBuild:                      "B",

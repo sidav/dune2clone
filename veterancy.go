@@ -11,6 +11,17 @@ func modifyTurretRangeByUnitExpLevel(tRange, level int) int {
 	return tRange+1
 }
 
+func modifyTurretCooldownByUnitExpLevel(tCd, level int) int {
+	return (100 - 4 * level) * tCd / 100
+}
+
+func modifyVisionRangeByUnitExpLevel(radius, level int) int {
+	if level <= 1 {
+		return radius
+	}
+	return radius+level-1
+}
+
 func getVeterancyBasedRegen(level int) int {
 	if level <= 1 {
 		return 0

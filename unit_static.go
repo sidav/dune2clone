@@ -486,15 +486,13 @@ var sTableUnits = map[int]*unitStatic{
 	},
 	// aircrafts
 	AIR_TRANSPORT: {
-		displayedName:     "Carrier aircraft",
-		chassisSpriteCode: "air_transport",
-		maxHitpoints:      100,
-		armorType:         ARMORTYPE_HEAVY,
-		movementSpeed:     0.2,
-		visionRange:       1,
-		turretsData: []*turretStatic{
-
-		},
+		displayedName:        "Carrier aircraft",
+		chassisSpriteCode:    "air_transport",
+		maxHitpoints:         100,
+		armorType:            ARMORTYPE_HEAVY,
+		movementSpeed:        0.2,
+		visionRange:          1,
+		hpRegen:              1,
 		chassisRotationSpeed: 5,
 		cost:                 500,
 		buildTime:            20,

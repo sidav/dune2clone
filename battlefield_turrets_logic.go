@@ -99,7 +99,7 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		whoShot:     shooter,
 		targetActor: t.targetActor,
 	})
-	t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
+	t.nextTickToAct = b.currentTick + modifyTurretCooldownByUnitExpLevel(t.getStaticData().attackCooldown, shooter.getExperienceLevel())
 }
 
 func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {
