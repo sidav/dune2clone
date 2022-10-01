@@ -22,7 +22,7 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 		}
 		if bld, ok := a.(*building); ok {
 			// buildings' turrets won't shoot without energy
-			if bld.turret.nextTickToAct <= b.currentTick && bld.faction.getAvailableEnergy() >= 0 {
+			if bld.turret.nextTickToAct <= b.currentTick && bld.faction.getAvailableEnergy() >= 0 && !bld.isUnderConstruction() {
 				b.actTurret(a, bld.turret)
 			}
 		}

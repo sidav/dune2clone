@@ -42,12 +42,10 @@ func (ai *aiStruct) actForBuilding(b *battlefield, bld *building) {
 	if bld.currentAction.code != ACTION_WAIT {
 		return
 	}
-	if bld.getHitpointsPercentage() < 50 || (!ai.isPoor() && rnd.OneChanceFrom(10)) {
+	if bld.getHitpointsPercentage() < 50 || (!ai.isPoor() && bld.getHitpointsPercentage() < 100 && rnd.OneChanceFrom(10)) {
 		bld.isRepairingSelf = true
 	}
-	if bld.getStaticData().builds != nil && ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings &&
-		!ai.alreadyOrderedBuildThisTick && (!ai.isPoor() || rnd.OneChanceFrom(30)) {
-
+	if bld.getStaticData().builds != nil && ai.checkIfShouldBuildNow() {
 		bld.currentOrder.code = ORDER_BUILD
 		bld.currentOrder.targetActorCode = int(ai.selectWhatToBuild(bld))
 		ai.alreadyOrderedBuildThisTick = true

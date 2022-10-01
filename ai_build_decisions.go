@@ -7,6 +7,13 @@ type aiDecisionWeight struct {
 	weight     int
 }
 
+func (ai *aiStruct) checkIfShouldBuildNow() bool {
+	return ai.current.nonDefenseBuildings < ai.max.nonDefenseBuildings &&
+		!ai.alreadyOrderedBuildThisTick &&
+		(ai.controlsFaction.getAvailableEnergy() < 0 || ai.controlsFaction.getStorageRemaining() < 50 ||
+			!ai.isPoor() || rnd.OneChanceFrom(30))
+}
+
 func (ai *aiStruct) selectWhatToBuild(builder *building) buildingCode {
 	availableCodes := builder.getStaticData().builds
 	// make the list of weights
@@ -22,7 +29,7 @@ func (ai *aiStruct) selectWhatToBuild(builder *building) buildingCode {
 	}
 	// energy
 	if ai.controlsFaction.getAvailableEnergy() <= 0 {
-		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 100})
+		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 150})
 	} else if ai.controlsFaction.getAvailableEnergy() <= 5 {
 		decisionWeights = append(decisionWeights, aiDecisionWeight{"energy", 5})
 	}
@@ -66,7 +73,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildin
 	for i := range availableCodes {
 		fncts := ai.deduceBuildingFunctions(availableCodes[i])
 		for j := range fncts {
-			if (function == "any" || fncts[j] == function) && ai.canUseBuilding(availableCodes[i]) {
+			if (function == "any" || fncts[j] == function) && ai.isAllowedToBuildThis(availableCodes[i]) {
 				candidates = append(candidates, availableCodes[i])
 			}
 		}
@@ -118,7 +125,7 @@ func (ai *aiStruct) deduceBuildingFunctions(bldCode buildingCode) []string {
 	return codes
 }
 
-func (ai *aiStruct) canUseBuilding(bldCode buildingCode) bool {
+func (ai *aiStruct) isAllowedToBuildThis(bldCode buildingCode) bool {
 	switch bldCode {
 	default:
 		return ai.controlsFaction.isTechAvailableForBuildingOfCode(bldCode)

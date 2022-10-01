@@ -79,17 +79,16 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	//b.factions[0].visibilityCheat = true
 	//b.factions[0].explorationCheat = true
 
-	// b.ais = append(b.ais, createAi(b.factions[0], "Player-side", "random"))
+	b.ais = append(b.ais, createAi(b.factions[0], "Player-side", "random"))
 	for i := 1; i < len(b.factions); i++ {
 		b.ais = append(b.ais, createAi(b.factions[i], fmt.Sprintf("Enemy %d", i), "random"))
 	}
+
 	for i := range b.ais {
 		b.ais[i].controlsFaction.resourcesMultiplier = 2
 		b.ais[i].controlsFaction.storagesMultiplier = 1
-		b.ais[i].controlsFaction.experienceMultiplier = 1.5
+		b.ais[i].controlsFaction.experienceMultiplier = 2
 	}
-	//b.ais[len(b.ais)-1].controlsFaction.resourcesMultiplier = 1.0
-	//b.ais[len(b.ais)-1].controlsFaction.money = 5000
 
 	// create all units for debugging
 	//coord := 0
@@ -98,6 +97,6 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	//	b.addActor(createUnit(k, startPoints[1][0]-10+coord, startPoints[1][1]+2, b.factions[1]))
 	//	coord++
 	//}
-	// unt.currentHitpoints = 1
-	// unt.currentAction.setTargetTileCoords(10, 10)
+	// b.addActor(createUnit(UNT_JUGGERNAUT, startPoints[0][0]-1, startPoints[0][1]+2, b.factions[0]))
+	//b.addActor(createUnit(UNT_TANK1, startPoints[0][0]-1, startPoints[0][1]+3, b.factions[1]))
 }
