@@ -11,6 +11,10 @@ func modifyTurretRangeByUnitExpLevel(tRange, level int) int {
 	return tRange+1
 }
 
+func modifyUnitMaxHpByExpLevel(maxHp, level int) int {
+	return (100 + level*5) * maxHp / 100
+}
+
 func modifyTurretCooldownByUnitExpLevel(tCd, level int) int {
 	return (100 - 4 * level) * tCd / 100
 }

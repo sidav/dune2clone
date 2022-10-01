@@ -179,8 +179,8 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		}
 	}
 
-	if u.currentHitpoints < u.getStaticData().maxHitpoints {
-		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getStaticData().maxHitpoints,
+	if u.currentHitpoints < u.getMaxHitpoints() {
+		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getMaxHitpoints(),
 			&factionColors[u.getFaction().colorNumber])
 	}
 	// render completion bar

@@ -84,7 +84,7 @@ func (u *unit) recalculateSquadSize() {
 	if u.getStaticData().maxSquadSize > 1 {
 		u.squadSize = int(
 			math.Ceil(float64(u.getStaticData().maxSquadSize) *
-				float64(u.currentHitpoints) / float64(u.getStaticData().maxHitpoints)),
+				float64(u.currentHitpoints) / float64(u.getMaxHitpoints())),
 		)
 	}
 }
@@ -94,11 +94,11 @@ func (u *unit) getHitpoints() int {
 }
 
 func (u *unit) getMaxHitpoints() int {
-	return u.getStaticData().maxHitpoints
+	return modifyUnitMaxHpByExpLevel(u.getStaticData().maxHitpoints, u.getExperienceLevel())
 }
 
 func (u *unit) getHitpointsPercentage() int {
-	return getPercentInt(u.currentHitpoints, u.getStaticData().maxHitpoints)
+	return getPercentInt(u.currentHitpoints, u.getMaxHitpoints())
 }
 
 func (u *unit) markSelected(b bool) {
