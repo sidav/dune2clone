@@ -51,6 +51,19 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 
 func (u *unit) addExperienceAmount(amnt int) {
 	u.experience += amnt
+	if u.getStaticData().hasEliteVersion && u.getExperienceLevel() == MAX_VETERANCY_LEVEL {
+		u.convertToElite()
+	}
+}
+
+func (u *unit) convertToElite() {
+	u.code = u.getStaticData().eliteVersionCode
+	u.turrets = []*turret{}
+	if u.getStaticData().turretsData != nil {
+		for i := range u.getStaticData().turretsData {
+			u.turrets = append(u.turrets, &turret{staticData: u.getStaticData().turretsData[i], rotationDegree: 270})
+		}
+	}
 }
 
 func (u *unit) getExperienceLevel() int {

@@ -8,6 +8,7 @@ const (
 	UNT_TANK1
 	UNT_TANK2
 	UNT_DEVASTATOR
+	EUNT_DEVASTATOR
 	UNT_MCV1
 	UNT_MCV2
 	UNT_QUAD
@@ -25,6 +26,8 @@ const (
 type unitStatic struct {
 	displayedName     string
 	chassisSpriteCode string
+	hasEliteVersion   bool
+	eliteVersionCode  int
 
 	turretsData []*turretStatic
 
@@ -291,6 +294,8 @@ var sTableUnits = map[int]*unitStatic{
 	UNT_DEVASTATOR: {
 		displayedName:     "Devastator",
 		chassisSpriteCode: "devastator",
+		hasEliteVersion:   true,
+		eliteVersionCode:  EUNT_DEVASTATOR,
 		movementSpeed:     0.04,
 		visionRange:       5,
 		maxHitpoints:      500,
@@ -332,6 +337,39 @@ var sTableUnits = map[int]*unitStatic{
 					speed:                     0.7,
 					createsEffectOnImpact:     true,
 					effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
+				},
+			},
+		},
+		chassisRotationSpeed: 5,
+		cost:                 1500,
+		buildTime:            30,
+		hotkeyToBuild:        "D",
+	},
+	EUNT_DEVASTATOR: {
+		displayedName:     "Elite Devastator",
+		chassisSpriteCode: "devastator",
+		movementSpeed:     0.04,
+		visionRange:       5,
+		maxHitpoints:      550,
+		armorType:         ARMORTYPE_HEAVY,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:        "devastator",
+				attacksLand:       true,
+				rotateSpeed:       5,
+				fireRange:         6,
+				fireSpreadDegrees: 6,
+				shotRangeSpread:   0.45,
+				attackCooldown:    65,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "shell",
+					size:                      0.3,
+					splashRadius:              0.35,
+					splashDamage:              20,
+					damageType:                DAMAGETYPE_HEAVY,
+					speed:                     0.7,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_BIGGER_EXPLOSION,
 				},
 			},
 		},
