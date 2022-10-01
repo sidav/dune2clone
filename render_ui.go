@@ -127,6 +127,12 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 				x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 			lineNum++
 		}
+		r.drawText(fmt.Sprintf("Experience: %d (Level %d - %s)", u.experience, u.getExperienceLevel(), getExpLevelName(u.getExperienceLevel())),
+			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+		lineNum++
+		r.drawText(fmt.Sprintf("Speed %.2f Regen %d", u.getMovementSpeed(), u.getRegenAmount()),
+			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+		lineNum++
 		r.drawText(fmt.Sprintf("(%.1f, %.1f); Rotation: %d", u.centerX, u.centerY, u.chassisDegree),
 			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 		lineNum++

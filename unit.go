@@ -56,6 +56,10 @@ func (u *unit) receiveExperienceAmount(amnt int) {
 	}
 }
 
+func (u *unit) getRegenAmount() int {
+	return u.getStaticData().hpRegen + getVeterancyBasedRegen(u.getExperienceLevel())
+}
+
 func (u *unit) convertToElite() {
 	u.code = u.getStaticData().eliteVersionCode
 	u.turrets = []*turret{}

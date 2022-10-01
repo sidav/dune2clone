@@ -28,8 +28,7 @@ var allPatterns = []*generationPattern{
 }
 
 func GetPatternByIndex(ind int) *generationPattern {
-	if ind < 0 {
-		ind = -ind
-	}
-	return allPatterns[ind%len(allPatterns)]
+	// this magic is "getting modulus instead of remainder"
+	ind = (ind%len(allPatterns) + len(allPatterns)) % len(allPatterns)
+	return allPatterns[ind]
 }

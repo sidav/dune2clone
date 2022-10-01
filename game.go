@@ -181,7 +181,7 @@ func (g *game) traverseAllActors() {
 			unt.faction.exploreAround(tx, ty, 1, 1,
 				modifyVisionRangeByUnitExpLevel(unt.getVisionRange(), unt.getExperienceLevel()))
 			if g.battlefield.currentTick % REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
-				unt.receiveHealing(unt.getStaticData().hpRegen + getVeterancyBasedRegen(unt.getExperienceLevel()))
+				unt.receiveHealing(unt.getRegenAmount())
 			}
 		}
 	}
