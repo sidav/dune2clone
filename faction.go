@@ -17,18 +17,18 @@ type faction struct {
 	team int // 0 means "enemy to all"
 
 	exploredTilesMap, visibleTilesMap [][]bool
-	explorationCheat, visibilityCheat bool
 
 	hasBuildings  map[buildingCode]bool
 	currTechLevel int
 
 	dispatchRequests list.List
 
-	// cheats
+	// cheats and "handicaps"
 	resourcesMultiplier  float64
-	buildSpeedMultiplier float64
 	storagesMultiplier   float64
+	buildSpeedMultiplier float64
 	experienceMultiplier float64
+	explorationCheat, visibilityCheat bool
 }
 
 func createFaction(colorNumber, team int, initialMoney float64) *faction {
@@ -38,8 +38,8 @@ func createFaction(colorNumber, team int, initialMoney float64) *faction {
 		energyProduction:     999, // will be overwritten anyway
 		team:                 team,
 		resourcesMultiplier:  1,
-		buildSpeedMultiplier: 1,
 		storagesMultiplier:   1,
+		buildSpeedMultiplier: 1,
 		experienceMultiplier: 1,
 	}
 	return f

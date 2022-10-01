@@ -9,6 +9,7 @@ const (
 	UNT_TANK2
 	UNT_DEVASTATOR
 	EUNT_DEVASTATOR
+	UNT_JUGGERNAUT
 	UNT_MCV1
 	UNT_MCV2
 	UNT_QUAD
@@ -256,6 +257,59 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 500,
 		buildTime:            12,
 		hotkeyToBuild:        "T",
+	},
+	UNT_JUGGERNAUT: {
+		displayedName:     "Juggernaut",
+		chassisSpriteCode: "juggernaut",
+		movementSpeed:     0.02,
+		visionRange:       5,
+		maxHitpoints:      1000,
+		armorType:         ARMORTYPE_HEAVY,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:        "juggernautmain",
+				attacksLand:       true,
+				rotateSpeed:       5,
+				fireRange:         5,
+				fireSpreadDegrees: 8,
+				shotRangeSpread:   0.7,
+				attackCooldown:    250,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "shell",
+					damageType:                DAMAGETYPE_HEAVY,
+					splashRadius:              0.75,
+					splashDamage:              55,
+					size:                      0.3,
+					speed:                     0.65,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_BIGGER_EXPLOSION,
+				},
+			},
+			{
+				spriteCode:        "juggernautsec",
+				attacksLand:       true,
+				attacksAir:        true,
+				rotateSpeed:       15,
+				fireRange:         6,
+				fireSpreadDegrees: 12,
+				shotRangeSpread:   0.7,
+				attackCooldown:    25,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "aamissile",
+					damageType:                DAMAGETYPE_ANTI_INFANTRY,
+					splashRadius:              0.25,
+					splashDamage:              8,
+					size:                      0.3,
+					speed:                     0.7,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+				},
+			},
+		},
+		chassisRotationSpeed: 1,
+		cost:                 2500,
+		buildTime:            50,
+		hotkeyToBuild:        "J",
 	},
 	UNT_TANK2: {
 		displayedName:     "Anjaopterix tank",
