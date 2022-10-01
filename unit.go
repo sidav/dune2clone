@@ -153,6 +153,9 @@ func (u *unit) rotateChassisTowardsDegree(deg int) {
 	u.normalizeDegrees()
 	if u.carriedUnit != nil {
 		u.carriedUnit.chassisDegree = u.chassisDegree
+		for _, t := range u.carriedUnit.turrets {
+			t.rotationDegree = u.chassisDegree
+		}
 	}
 }
 

@@ -6,6 +6,7 @@ func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
 	if !u.getStaticData().isAircraft {
 		panic("Aircraft order assigned to non-aircraft")
 	}
+	// look for dispatch requests
 	i := u.faction.dispatchRequests.Front()
 	if i != nil {
 		dr := i.Value.(*dispatchRequestStruct)

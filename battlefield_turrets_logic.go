@@ -83,7 +83,8 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 	shooterX, shooterY := shooter.getPhysicalCenterCoords()
 	targetCenterX, targetCenterY := t.targetActor.getPhysicalCenterCoords()
-	projX, projY := shooterX, shooterY // TODO: turret displacement
+	vectX, vectY := geometry.DegreeToUnitVector(t.rotationDegree)
+	projX, projY := shooterX+vectX/2, shooterY+vectY/2 // TODO: turret displacement
 	degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
 	rangeSpread := t.getStaticData().shotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
 	b.addProjectile(&projectile{
@@ -92,7 +93,8 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		centerX:        projX,
 		centerY:        projY,
 		rotationDegree: t.rotationDegree + degreeSpread,
-		fuel:           geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread,
+		// next 0.5 is for initial projectile displacement
+		fuel:           geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread - 0.5,
 		targetActor:    t.targetActor,
 	})
 	t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown

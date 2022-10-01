@@ -153,7 +153,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 				effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
 			},
 		},
-		hotkeyToBuild: "M",
+		hotkeyToBuild: "G",
 	},
 	BLD_TURRET_CANNON: {
 		spriteCode:        "turret_base",
