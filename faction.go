@@ -14,10 +14,7 @@ type faction struct {
 	energyProduction, energyConsumption int
 	lastAvailableEnergy                 int // for when current energy is needed mid-calculation
 
-	team                 int // 0 means "enemy to all"
-	resourcesMultiplier  float64
-	buildSpeedMultiplier float64
-	storagesMultiplier   float64
+	team int // 0 means "enemy to all"
 
 	exploredTilesMap, visibleTilesMap [][]bool
 	explorationCheat, visibilityCheat bool
@@ -26,17 +23,24 @@ type faction struct {
 	currTechLevel int
 
 	dispatchRequests list.List
+
+	// cheats
+	resourcesMultiplier  float64
+	buildSpeedMultiplier float64
+	storagesMultiplier   float64
+	experienceMultiplier float64
 }
 
-func createFaction(colorNumber, team int, initialMoney, resourcesMultiplier, buildSpeedMultiplier float64) *faction {
+func createFaction(colorNumber, team int, initialMoney float64) *faction {
 	f := &faction{
 		colorNumber:          colorNumber,
 		money:                initialMoney,
 		energyProduction:     999, // will be overwritten anyway
 		team:                 team,
-		resourcesMultiplier:  resourcesMultiplier,
-		buildSpeedMultiplier: buildSpeedMultiplier,
+		resourcesMultiplier:  1,
+		buildSpeedMultiplier: 1,
 		storagesMultiplier:   1,
+		experienceMultiplier: 1,
 	}
 	return f
 }

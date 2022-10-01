@@ -49,7 +49,7 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	return u
 }
 
-func (u *unit) addExperienceAmount(amnt int) {
+func (u *unit) receiveExperienceAmount(amnt int) {
 	u.experience += amnt
 	if u.getStaticData().hasEliteVersion && u.getExperienceLevel() == MAX_VETERANCY_LEVEL {
 		u.convertToElite()
@@ -67,19 +67,7 @@ func (u *unit) convertToElite() {
 }
 
 func (u *unit) getExperienceLevel() int {
-	cost := u.getStaticData().cost
-	switch {
-	case u.experience < cost:
-		return 0
-	case u.experience < 2*cost:
-		return 1
-	case u.experience < 3*cost:
-		return 2
-	case u.experience < 4*cost:
-		return 3
-	default:
-		return 4
-	}
+	return getExperienceLevelByAmountAndCost(u.experience, u.getStaticData().cost)
 }
 
 func (u *unit) isAlive() bool {

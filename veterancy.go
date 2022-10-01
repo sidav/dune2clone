@@ -1,5 +1,20 @@
 package main
 
+func getExperienceLevelByAmountAndCost(totalExp, cost int) int {
+	switch {
+	case totalExp < cost:
+		return 0
+	case totalExp < 2*cost:
+		return 1
+	case totalExp < 3*cost:
+		return 2
+	case totalExp < 4*cost:
+		return 3
+	default:
+		return 4
+	}
+}
+
 func modifyDamageByUnitExpLevel(damage, level int) int {
 	return (100+(10*level))*damage/100
 }

@@ -43,16 +43,16 @@ func (b *battlefield) actForProjectile(p *projectile) {
 			b.dealDamageToActor(modifyDamageByUnitExpLevel(p.getStaticData().hitDamage, p.whoShot.getExperienceLevel()),
 				p.getStaticData().damageType, p.targetActor)
 			// add experience
+			expAmount := 1
 			if !hitTarget.isAlive() {
 				if u, ok := hitTarget.(*unit); ok {
-					p.whoShot.addExperienceAmount(u.getStaticData().cost)
+					expAmount = u.getStaticData().cost
 				}
 				if b, ok := hitTarget.(*building); ok {
-					p.whoShot.addExperienceAmount(b.getStaticData().cost)
+					expAmount = b.getStaticData().cost
 				}
-			} else {
-				p.whoShot.addExperienceAmount(1)
 			}
+			p.whoShot.receiveExperienceAmount(int(p.whoShot.getFaction().experienceMultiplier * float64(expAmount)))
 		}
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{

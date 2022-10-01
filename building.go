@@ -51,7 +51,7 @@ func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *b
 	}
 }
 
-func (b *building) addExperienceAmount(amnt int) {
+func (b *building) receiveExperienceAmount(amnt int) {
 }
 
 func (b *building) getExperienceLevel() int {
