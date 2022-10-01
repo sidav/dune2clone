@@ -94,8 +94,9 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		centerY:        projY,
 		rotationDegree: t.rotationDegree + degreeSpread,
 		// next 0.5 is for initial projectile displacement
-		fuel:           geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread - 0.5,
-		targetActor:    t.targetActor,
+		fuel:        geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread - 0.5,
+		whoShot:     shooter,
+		targetActor: t.targetActor,
 	})
 	t.nextTickToAct = b.currentTick + t.getStaticData().attackCooldown
 }

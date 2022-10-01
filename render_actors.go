@@ -57,12 +57,12 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	if seen && bld.isUnderConstruction() { // && (b.currentTick/10)%2 != 0 {
 		// render "under construction" animation
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
-		bldArea := w*h
+		bldArea := w * h
 		unbuiltCells := bldArea - geometry.GetPartitionIndex(bld.currentAction.getCompletionPercent(), 0, 100, bldArea) - 1
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
 				frameNumber := (x + w*y + b.currentTick/(DESIRED_TPS*10)) % underConstructionAtlas.totalFrames()
-				if (x + w*y /* + b.currentTick/(DESIRED_TPS*10) */) % bldArea <= unbuiltCells {
+				if (x+w*y /* + b.currentTick/(DESIRED_TPS*10) */)%bldArea <= unbuiltCells {
 					rl.DrawTexture(
 						underConstructionAtlas.getSpriteByFrame(frameNumber),
 						osx+int32(x)*TILE_SIZE_IN_PIXELS,
@@ -186,6 +186,16 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	// render completion bar
 	if u.currentAction.getCompletionPercent() >= 0 {
 		r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS), u.currentAction.getCompletionPercent(), 100, &rl.Blue)
+	}
+	// render veterancy thing
+	if u.getExperienceLevel() > 0 {
+		sprite := uiAtlaces["veterancy"].getSpriteByFrame(u.getExperienceLevel()-1)
+		rl.DrawTexture(
+			sprite,
+			osx+TILE_SIZE_IN_PIXELS-sprite.Width,
+			osy+TILE_SIZE_IN_PIXELS-sprite.Height,
+			DEFAULT_TINT,
+		)
 	}
 	if u.isSelected {
 		col := rl.DarkGreen

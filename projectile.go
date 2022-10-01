@@ -6,7 +6,8 @@ type projectile struct {
 	centerX, centerY float64
 	rotationDegree   int
 	fuel             float64 // how many 'speeds' it spends until it is destroyed
-	targetActor      actor   // for homing projectiles
+	whoShot          actor
+	targetActor      actor // for homing projectiles
 	setToRemove      bool
 }
 
@@ -23,7 +24,7 @@ type projectileStatic struct {
 	effectCreatedOnImpactCode effectCode
 	rotationSpeed             int
 
-	hitDamage                 int
-	splashDamage              int
-	damageType                damageCode
+	hitDamage    int
+	splashDamage int
+	damageType   damageCode
 }

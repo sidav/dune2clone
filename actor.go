@@ -12,6 +12,7 @@ type actor interface {
 	getPhysicalCenterCoords() (float64, float64)
 	getVisionRange() int
 	isPresentAt(int, int) bool
+	addExperienceAmount(int)
 	isInAir() bool
 	isAlive() bool
 }

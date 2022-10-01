@@ -22,6 +22,7 @@ type unit struct {
 	carriedUnit *unit // for transports
 
 	isSelected bool // for rendering selection thingy
+	experience int
 }
 
 func createUnit(code, tx, ty int, fact *faction) *unit {
@@ -46,6 +47,26 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 	u.currentOrder.targetTileY = -1
 	u.currentAction.resetAction()
 	return u
+}
+
+func (u *unit) addExperienceAmount(amnt int) {
+	u.experience += amnt
+}
+
+func (u *unit) getExperienceLevel() int {
+	cost := u.getStaticData().cost
+	switch {
+	case u.experience < cost:
+		return 0
+	case u.experience < 2*cost:
+		return 1
+	case u.experience < 3*cost:
+		return 2
+	case u.experience < 4*cost:
+		return 3
+	default:
+		return 4
+	}
 }
 
 func (u *unit) isAlive() bool {

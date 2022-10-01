@@ -108,6 +108,7 @@ func loadSprites() {
 	uiAtlaces["energyicon"] = CreateDirectionalAtlasFromFile(currPath+"energy_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["repairicon"] = CreateDirectionalAtlasFromFile(currPath+"repair_icon.png", 16, 8, 1, 1, false)
 	uiAtlaces["readyicon"] = CreateDirectionalAtlasFromFile(currPath+"ready_icon.png", 16, 8, 1, 1, false)
+	uiAtlaces["veterancy"] = CreateDirectionalAtlasFromFile(currPath+"veterancy.png", 10, 5, 4, 1, false)
 
 	drawLoadingScreen("LOADING: EFFECTS")
 	currPath = "resources/sprites/effects/"

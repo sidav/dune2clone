@@ -36,10 +36,21 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		p.setToRemove = true
 	}
 	if p.setToRemove {
+		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius, p.getStaticData().splashDamage, p.getStaticData().damageType)
 		if hitTarget != nil {
 			b.dealDamageToActor(p.getStaticData().hitDamage, p.getStaticData().damageType, p.targetActor)
+			// add experience
+			if !hitTarget.isAlive() {
+				if u, ok := hitTarget.(*unit); ok {
+					p.whoShot.addExperienceAmount(u.getStaticData().cost)
+				}
+				if b, ok := hitTarget.(*building); ok {
+					p.whoShot.addExperienceAmount(b.getStaticData().cost)
+				}
+			} else {
+				p.whoShot.addExperienceAmount(1)
+			}
 		}
-		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius, p.getStaticData().splashDamage, p.getStaticData().damageType)
 		if p.getStaticData().createsEffectOnImpact {
 			b.addEffect(&effect{
 				centerX:            p.centerX,
