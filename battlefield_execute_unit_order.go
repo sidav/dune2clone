@@ -80,6 +80,15 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 			u.currentAction.code = ACTION_MOVE
 			u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
 		} else {
+			// find the closest tile, from which the target can be reached
+			orderTileX, orderTileY := geometry.SpiralSearchForLowestScoreFrom(
+				func(x, y int) int { return geometry.GetApproxDistFromTo(x, y, utx, uty) },
+				func(x, y int) bool {
+					return b.areTileCoordsValid(x, y) &&
+						geometry.GetApproxDistFromTo(x, y, orderTileX, orderTileY) <= u.getMainTurretRange()
+				},
+				orderTileX, orderTileY, u.getMainTurretRange(), b.tickToNonImportantRandom(4),
+			)
 			b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 		}
 	}
@@ -199,7 +208,7 @@ func (b *battlefield) SetActionForUnitForPathTo(u *unit, tx, ty int) {
 
 	path := b.findPathForUnitTo(u, tx, ty, false)
 	vx, vy := path.GetNextStepVector()
-	nowhereToMove :=  vx == 0 && vy == 0
+	nowhereToMove := vx == 0 && vy == 0
 
 	// creating BIG move action for several same-vector path cells
 	currPathChild := path.Child
