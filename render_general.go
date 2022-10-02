@@ -4,16 +4,16 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, bgColor, textColor rl.Color) {
+func (r *renderer) drawLineInfoBox(x, y, w int32, title, info string, outlineColor, bgColor, textColor rl.Color) {
 	var textSize int32 = 32
 	var textCharW int32 = 20
 	titleBoxW := int32((len(title)+1)*int(textCharW) + 2)
 	infoW := int32(len(info)) * textCharW
 	infoBoxW := w - titleBoxW
 
-	r.drawOutlinedRect(x, y, w, textSize+2, 4, rl.DarkGreen, bgColor)
-	rl.DrawLine(x+titleBoxW, y, x+titleBoxW, y+textSize+2, rl.DarkGreen)
-	rl.DrawLine(x+titleBoxW+1, y, x+titleBoxW+1, y+textSize+2, rl.DarkGreen)
+	r.drawOutlinedRect(x, y, w, textSize+2, 4, outlineColor, bgColor)
+	rl.DrawLine(x+titleBoxW, y, x+titleBoxW, y+textSize+2, outlineColor)
+	rl.DrawLine(x+titleBoxW+1, y, x+titleBoxW+1, y+textSize+2, outlineColor)
 	// r.drawOutlinedRect(x+titleBoxW, y, w-titleBoxW, textSize+2, 2, rl.Green, bgColor)
 
 	titlePosition := x + (titleBoxW / 2) - textCharW*int32(len(title))/2 + 4

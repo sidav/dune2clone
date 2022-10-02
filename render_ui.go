@@ -18,7 +18,7 @@ const BUILD_PANEL_HEIGHT = 500
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
 	r.renderSelectedActorUI(b, pc, 0, 3*WINDOW_H/4)
-	r.drawMinimap(b, pc, WINDOW_W-256, WINDOW_H-256, 256, 256)
+	r.drawMinimap(b, pc, 320, 320)
 	if pc.mode == PCMODE_PLACE_BUILDING {
 		r.renderBuildCursor(b, pc)
 	}
@@ -84,14 +84,16 @@ func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerControlle
 }
 
 func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
+	factColor := pc.controlledFaction.getDarkerColor()
 	// draw money
 	moneyStr := fmt.Sprintf("%.f", math.Round(pc.controlledFaction.getMoney()))
-	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, rl.Black, rl.White)
+	r.drawLineInfoBox(WINDOW_W-500, 0, 250, "$", moneyStr, factColor, rl.Black, rl.White)
 	// draw storage
-	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()), rl.Black, rl.White)
+	r.drawLineInfoBox(WINDOW_W-250, 0, 250, "STRG", fmt.Sprintf("%.f", pc.controlledFaction.getStorageRemaining()),
+		factColor, rl.Black, rl.White)
 	// draw tech level
 	techLevel := pc.controlledFaction.currTechLevel
-	r.drawLineInfoBox(WINDOW_W-500, 32, 150, "TECH", fmt.Sprintf("%d", techLevel), rl.Black, rl.White)
+	r.drawLineInfoBox(WINDOW_W-500, 32, 150, "TECH", fmt.Sprintf("%d", techLevel), factColor, rl.Black, rl.White)
 	// draw energy
 	energyStr := fmt.Sprintf("%d/%d", pc.controlledFaction.energyConsumption, pc.controlledFaction.energyProduction)
 	energyBgColor := rl.Black
@@ -100,7 +102,7 @@ func (r *renderer) renderResourcesUI(b *battlefield, pc *playerController) {
 		energyBgColor = rl.Red
 		energyFgColor = rl.Black
 	}
-	r.drawLineInfoBox(WINDOW_W-350, 32, 350, "ENERGY", energyStr, energyBgColor, energyFgColor)
+	r.drawLineInfoBox(WINDOW_W-350, 32, 350, "ENERGY", energyStr, factColor, energyBgColor, energyFgColor)
 }
 
 func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x, y int32) {
@@ -108,7 +110,7 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		return
 	}
 	// draw outline
-	r.drawOutlinedRect(x, y, 2*WINDOW_W/5, WINDOW_H/4, 2, rl.Green, rl.Black)
+	r.drawOutlinedRect(x, y, 2*WINDOW_W/5, WINDOW_H/4, 2, pc.controlledFaction.getDarkerColor(), rl.Black)
 	var lineNum int32
 	r.drawText(fmt.Sprintf("%s (%d/%d)", pc.getFirstSelection().getName(),
 		pc.getFirstSelection().getHitpoints(),

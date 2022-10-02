@@ -25,6 +25,18 @@ var allPatterns = []*generationPattern{
 		MinHeight:      96,
 		generationFunc: generateByFourPlayersPattern,
 	},
+	{
+		Name:           "5 players FFA",
+		MinWidth:       96,
+		MinHeight:      96,
+		generationFunc: generateByFivePlayersPattern,
+	},
+	{
+		Name:           "6 players FFA",
+		MinWidth:       128,
+		MinHeight:      128,
+		generationFunc: generateBySixPlayersPattern,
+	},
 }
 
 func GetPatternByIndex(ind int) *generationPattern {

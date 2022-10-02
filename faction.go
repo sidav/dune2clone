@@ -169,6 +169,19 @@ func (f *faction) resetCurrents() {
 	f.energyConsumption = 0
 }
 
+func (f *faction) getColor() color.RGBA {
+	return factionColors[f.colorNumber]
+}
+
+func (f *faction) getDarkerColor() color.RGBA {
+	return color.RGBA{
+		R: factionColors[f.colorNumber].R/2,
+		G: factionColors[f.colorNumber].G/2,
+		B: factionColors[f.colorNumber].B/2,
+		A: factionColors[f.colorNumber].A,
+	}
+}
+
 const zeroTiltColor = 32
 const strongerTiltColor = 128
 

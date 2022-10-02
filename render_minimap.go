@@ -5,14 +5,16 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY, w, h int32) {
-	var tileSize = int(w) / len(b.tiles)
-	if h > w {
-		tileSize = int(h) / len(b.tiles)
+func (r *renderer) drawMinimap(b *battlefield, pc *playerController, maxW, maxH int32) {
+	var tileSize = int(maxW / int32(len(b.tiles)))
+	if maxH < maxW {
+		tileSize = int(maxH / int32(len(b.tiles[0])))
 	}
+	w, h := int32(tileSize * len(b.tiles)), int32(tileSize * len(b.tiles[0]))
+	posX, posY := WINDOW_W-w-2, WINDOW_H-h-2
+	r.drawOutlinedRect(posX-2, posY-2, w+4, h+4, 2, pc.controlledFaction.getDarkerColor(), rl.DarkGray)
 	// draw random noise if energy is insufficient
 	if pc.controlledFaction.getAvailableEnergy() < 0 {
-		r.drawOutlinedRect(posX-2, posY-2, w, h, 2, rl.Green, rl.DarkGray)
 		for i := int32(0); i < 2*(w+h); i++ {
 			nx := int32(rnd.Rand(int(w)))
 			ny := int32(rnd.Rand(int(h)))
@@ -20,7 +22,6 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, posX, posY,
 			rl.DrawRectangle(posX+nx, posY+ny, size, size, rl.LightGray)
 		}
 	} else {
-		r.drawOutlinedRect(posX-2, posY-2, w, h, 2, rl.Green, rl.Black)
 		for x := range b.tiles {
 			for y := range b.tiles[x] {
 				color := rl.Magenta
