@@ -62,7 +62,7 @@ func (b *battlefield) finalizeTileVariants() {
 
 func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 	for spNumber := range startPoints {
-		b.factions = append(b.factions, createFaction(spNumber, 0, 10000))
+		b.factions = append(b.factions, createFaction(-1, 0, 10000))
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
 		// TODO: faction selection
@@ -72,6 +72,20 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 			b.addActor(createUnit(UNT_MCV2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
 		}
 		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
+	}
+	// randomize colors
+	for _, f1 := range b.factions {
+		colorIsUnique := false
+		for !colorIsUnique {
+			f1.colorNumber = rnd.Rand(len(factionColors))
+			colorIsUnique = true
+			for _, f2 := range b.factions {
+				if f1 != f2 && f1.colorNumber == f2.colorNumber {
+					colorIsUnique = false
+					break
+				}
+			}
+		}
 	}
 	// player faction settings
 	//b.factions[0].resourcesMultiplier = 1

@@ -56,7 +56,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	}
 
 	for p := b.projectiles.Front(); p != nil; p = p.Next() {
-		r.renderProjectile(p.Value.(*projectile))
+		r.renderProjectile(p.Value.(*projectile), pc)
 	}
 
 	// render aircrafts
@@ -141,11 +141,15 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	}
 }
 
-func (r *renderer) renderProjectile(proj *projectile) {
+func (r *renderer) renderProjectile(proj *projectile, pc *playerController) {
 	x, y := proj.centerX, proj.centerY
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
+		return
+	}
+	tx, ty := geometry.TrueCoordsToTileCoords(x, y)
+	if !pc.controlledFaction.seesTileAtCoords(tx, ty) {
 		return
 	}
 	sprite := projectilesAtlaces[proj.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(0, proj.rotationDegree, 0)
@@ -169,18 +173,18 @@ func (r *renderer) renderEffect(e *effect) {
 		neededAtlas := effectsAtlaces[e.getStaticData().spriteCode]
 		expPercent := e.getExpirationPercent(r.btl.currentTick)
 		currentFrame := geometry.GetPartitionIndex(expPercent, 0, 100, neededAtlas.totalFrames())
+		if e.splashCircleRadius > 0 {
+			radius := float32(float64(expPercent * TILE_SIZE_IN_PIXELS) * e.splashCircleRadius) / 100.0
+			rl.DrawCircleLines(osx, osy, radius, rl.Red)
+			rl.DrawCircleLines(osx, osy, radius+1, rl.Maroon)
+			rl.DrawCircleLines(osx, osy, radius+2, rl.Yellow)
+		}
 		rl.DrawTexture(
 			neededAtlas.getSpriteByFrame(currentFrame),
 			osx-neededAtlas.getSpriteByFrame(currentFrame).Width/2,
 			osy-neededAtlas.getSpriteByFrame(currentFrame).Height/2,
 			DEFAULT_TINT, // proj.faction.factionColor,
 		)
-		if e.splashCircleRadius > 0 {
-			radius := float32(float64(expPercent * TILE_SIZE_IN_PIXELS) * e.splashCircleRadius) / 100.0
-			rl.DrawCircleLines(osx, osy, radius, rl.Red)
-			rl.DrawCircleLines(osx, osy, radius+1, rl.Red)
-			rl.DrawCircleLines(osx, osy, radius+2, rl.Red)
-		}
 	}
 }
 

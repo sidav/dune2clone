@@ -31,10 +31,10 @@ func (g *game) selectMapToGenerateBattlefield() {
 			currSelectedPatternIndex++
 		} else if rl.IsKeyDown(rl.KeyLeft) {
 			currSelectedPatternIndex--
-		} else if rl.IsKeyDown(rl.KeyUp) {
+		} else if rl.IsKeyDown(rl.KeyDown) {
 			w -= 16
 			h -= 16
-		} else if rl.IsKeyDown(rl.KeyDown) {
+		} else if rl.IsKeyDown(rl.KeyUp) {
 			w += 16
 			h += 16
 		} else {

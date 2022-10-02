@@ -10,8 +10,8 @@ import (
 func drawGeneratedMap(gm *map_generator.GeneratedMap, patternIndex int) {
 	rl.BeginDrawing()
 	rl.DrawText("Select map. SPACE to generate new, ENTER to select current.", 0, 0, 28, rl.White)
-	rl.DrawText("UP and DOWN to change map pattern", 0, 30, 28, rl.White)
-	rl.DrawText(fmt.Sprintf("<- and -> to change size (current: %dx%d)", len(gm.Tiles), len(gm.Tiles[0])), 0, 60, 28, rl.White)
+	rl.DrawText(fmt.Sprintf("UP and DOWN to change size (current: %dx%d)", len(gm.Tiles), len(gm.Tiles[0])), 0, 30, 28, rl.White)
+	rl.DrawText("<- and -> to change map pattern", 0, 60, 28, rl.White)
 	rl.DrawText(fmt.Sprintf("%35s", map_generator.GetPatternByIndex(patternIndex).Name), 0, 90, 36, rl.Gold)
 	offset := int32(128)
 	var tileSize = int((WINDOW_H - offset) / int32(len(gm.Tiles[0])))

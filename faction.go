@@ -24,10 +24,10 @@ type faction struct {
 	dispatchRequests list.List
 
 	// cheats and "handicaps"
-	resourcesMultiplier  float64
-	storagesMultiplier   float64
-	buildSpeedMultiplier float64
-	experienceMultiplier float64
+	resourcesMultiplier               float64
+	storagesMultiplier                float64
+	buildSpeedMultiplier              float64
+	experienceMultiplier              float64
 	explorationCheat, visibilityCheat bool
 }
 
@@ -195,6 +195,18 @@ var factionColors = []color.RGBA{
 		R: 255,
 		G: 255,
 		B: zeroTiltColor,
+		A: 255,
+	},
+	{
+		R: zeroTiltColor,
+		G: 255,
+		B: 255,
+		A: 255,
+	},
+	{
+		R: 255,
+		G: zeroTiltColor,
+		B: 255,
 		A: 255,
 	},
 }
