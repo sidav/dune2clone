@@ -19,7 +19,8 @@ const (
 	UNT_FAST_HARVESTER
 
 	// aircrafts
-	AIR_TRANSPORT
+	AIR_TRANSPORT1
+	AIR_TRANSPORT2
 	AIR_GUNSHIP
 	AIR_FIGHTER
 )
@@ -578,20 +579,56 @@ var sTableUnits = map[int]*unitStatic{
 		hotkeyToBuild:          "H",
 	},
 	// aircrafts
-	AIR_TRANSPORT: {
+	AIR_TRANSPORT1: {
 		displayedName:        "Carrier aircraft",
-		chassisSpriteCode:    "air_transport",
+		chassisSpriteCode:    "airtransport",
 		maxHitpoints:         100,
 		armorType:            ARMORTYPE_HEAVY,
-		movementSpeed:        0.2,
+		movementSpeed:        0.205,
 		visionRange:          1,
 		hpRegen:              1,
+		chassisRotationSpeed: 6,
+		cost:                 650,
+		buildTime:            20,
+		hotkeyToBuild:        "C",
+		isAircraft:           true,
+		isTransport:          true,
+	},
+	AIR_TRANSPORT2: {
+		displayedName:        "Combat carrier",
+		chassisSpriteCode:    "airtransport2",
+		maxHitpoints:         120,
+		armorType:            ARMORTYPE_HEAVY,
+		movementSpeed:        0.2,
+		visionRange:          2,
 		chassisRotationSpeed: 5,
 		cost:                 500,
 		buildTime:            20,
 		hotkeyToBuild:        "C",
 		isAircraft:           true,
 		isTransport:          true,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:        "",
+				attacksLand:       true,
+				attacksAir:        true,
+				rotateSpeed:       25,
+				fireRange:         5,
+				fireSpreadDegrees: 45,
+				shotRangeSpread:   0.4,
+				attackCooldown:    14,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "aamissile",
+					hitDamage:                 5,
+					damageType:                DAMAGETYPE_ANTI_INFANTRY,
+					size:                      0.2,
+					speed:                     0.5,
+					rotationSpeed:             5,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+				},
+			},
+		},
 	},
 	AIR_GUNSHIP: {
 		displayedName:     "Gunship",

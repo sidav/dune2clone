@@ -18,6 +18,9 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		return
 	}
 	u.currentOrder.resetOrder()
+	if u.getStaticData().isTransport {
+		return // don't touch transports, they're automated!
+	}
 	if u.getStaticData().canBeDeployed {
 		ai.deployDeployableUnitSomewhere(b, u)
 		return

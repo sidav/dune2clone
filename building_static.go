@@ -13,7 +13,8 @@ const (
 	BLD_FACTORY1
 	BLD_FACTORY2
 	BLD_REPAIR_DEPOT
-	BLD_AIRFACTORY
+	BLD_AIRFACTORY1
+	BLD_AIRFACTORY2
 	BLD_TURRET_MINIGUN
 	BLD_TURRET_CANNON
 	BLD_TURRET_AA
@@ -109,21 +110,6 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		unitPlacementX:                     1, unitPlacementY: 1,
 		consumesEnergy: 10,
 		hotkeyToBuild:  "D",
-	},
-	BLD_AIRFACTORY: {
-		spriteCode:        "airfactory",
-		maxHitpoints:      750,
-		w:                 2,
-		h:                 3,
-		displayedName:     "Aircraft Factory",
-		cost:              1000,
-		requiresTechLevel: 3,
-		givesTechLevel:    4,
-		buildTime:         10,
-		produces:          []int{AIR_TRANSPORT, AIR_GUNSHIP, AIR_FIGHTER},
-		consumesEnergy:    15,
-		// produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
-		hotkeyToBuild: "A",
 	},
 	BLD_TURRET_MINIGUN: {
 		spriteCode:        "turret_base",
@@ -278,7 +264,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:           2500,
 		buildTime:      30,
 		givesTechLevel: 1,
-		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY1, BLD_FACTORY1, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY1, BLD_FACTORY1, BLD_REPAIR_DEPOT, BLD_AIRFACTORY1,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -337,6 +323,21 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		produces:                           []int{UNT_TANK1, UNT_DEVASTATOR, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_FAST_HARVESTER},
 		hotkeyToBuild:                      "F",
 	},
+	BLD_AIRFACTORY1: {
+		spriteCode:        "airfactory",
+		maxHitpoints:      750,
+		w:                 2,
+		h:                 3,
+		displayedName:     "Aircraft Factory",
+		cost:              1000,
+		requiresTechLevel: 3,
+		givesTechLevel:    4,
+		buildTime:         10,
+		produces:          []int{AIR_TRANSPORT1, AIR_GUNSHIP, AIR_FIGHTER},
+		consumesEnergy:    15,
+		// produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
+		hotkeyToBuild: "A",
+	},
 
 	// FACTION 2
 	BLD_CONYARD2: {
@@ -348,7 +349,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:           2500,
 		buildTime:      30,
 		givesTechLevel: 1,
-		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY2, BLD_FACTORY2, BLD_REPAIR_DEPOT, BLD_AIRFACTORY,
+		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY2, BLD_FACTORY2, BLD_REPAIR_DEPOT, BLD_AIRFACTORY2,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
 		buildType:     BTYPE_PLACE_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -406,5 +407,20 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		consumesEnergy:                     15,
 		produces:                           []int{UNT_TANK2, UNT_JUGGERNAUT, UNT_MCV2, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_COMBAT_HARVESTER},
 		hotkeyToBuild:                      "F",
+	},
+	BLD_AIRFACTORY2: {
+		spriteCode:        "airfactory",
+		maxHitpoints:      750,
+		w:                 2,
+		h:                 3,
+		displayedName:     "Commonwealth Avionics Facility",
+		cost:              1000,
+		requiresTechLevel: 3,
+		givesTechLevel:    4,
+		buildTime:         10,
+		produces:          []int{AIR_TRANSPORT2, AIR_GUNSHIP, AIR_FIGHTER},
+		consumesEnergy:    15,
+		// produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
+		hotkeyToBuild: "A",
 	},
 }

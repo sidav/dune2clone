@@ -58,11 +58,11 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		// render "under construction" animation
 		underConstructionAtlas := buildingsAtlaces["underconstruction"]
 		bldArea := w * h
-		unbuiltCells := bldArea - geometry.GetPartitionIndex(bld.currentAction.getCompletionPercent(), 0, 100, bldArea) - 1
+		builtCells := geometry.GetPartitionIndex(bld.currentAction.getCompletionPercent(), 0, 100, bldArea) - 1
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
 				frameNumber := (x + w*y + b.currentTick/(DESIRED_TPS*10)) % underConstructionAtlas.totalFrames()
-				if (x+w*y /* + b.currentTick/(DESIRED_TPS*10) */)%bldArea <= unbuiltCells {
+				if (x+w*y /* + b.currentTick/(DESIRED_TPS*10) */)%bldArea > builtCells {
 					rl.DrawTexture(
 						underConstructionAtlas.getSpriteByFrame(frameNumber),
 						osx+int32(x)*TILE_SIZE_IN_PIXELS,
