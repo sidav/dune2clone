@@ -539,13 +539,13 @@ var sTableUnits = map[int]*unitStatic{
 		armorType:              ARMORTYPE_HEAVY,
 		turretsData: []*turretStatic{
 			{
-				spriteCode:        "",
+				spriteCode:        "combatharvester",
 				attacksLand:       true,
-				rotateSpeed:       90,
+				rotateSpeed:       25,
 				fireRange:         5,
 				fireSpreadDegrees: 11,
 				shotRangeSpread:   0.4,
-				attackCooldown:    15,
+				attackCooldown:    14,
 				firedProjectileData: &projectileStatic{
 					spriteCode:                "bullets",
 					hitDamage:                 5,
