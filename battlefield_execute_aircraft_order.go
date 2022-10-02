@@ -44,15 +44,23 @@ func (b *battlefield) executeAirMoveToRepairOrder(u *unit) {
 }
 
 func (b *battlefield) executeCarryUnitOrderForAircraft(carrier *unit) {
-	// carrierTx, carrierTy := geometry.TrueCoordsToTileCoords(carrier.centerX, carrier.centerY)
 	// Order: pick targetActor up, then move it to target coords, then drop it down
+	carrierTx, carrierTy := carrier.getTileCoords()
 	targetUnit := carrier.currentOrder.targetActor.(*unit)
-	targetX, targetY := geometry.TrueCoordsToTileCoords(targetUnit.centerX, targetUnit.centerY)
+	targetX, targetY := targetUnit.getTileCoords()
 	if carrier.carriedUnit == nil { // need to pick up
 		distOfPickableToItsTarget := geometry.GetApproxDistFromTo(targetX, targetY, carrier.currentOrder.targetTileX, carrier.currentOrder.targetTileY)
-		if distOfPickableToItsTarget <= 5 && carrier.carriedUnit == nil {
+		if distOfPickableToItsTarget <= 5 {
 			// target is too close already, no need for transport
 			carrier.currentOrder.resetOrder()
+			return
+		}
+		const rangeToLockOn = 2
+		if geometry.GetApproxDistFromTo(carrierTx, carrierTy, targetX, targetY) > rangeToLockOn {
+			// debugWrite("FLYING TO")
+			carrier.currentAction.setTargetTileCoords(targetX, targetY)
+			carrier.currentAction.targetActor = targetUnit
+			carrier.currentAction.code = ACTION_AIR_APPROACH_ACTOR
 			return
 		}
 		// debugWrite("PICK ORDER SET")
