@@ -88,7 +88,7 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 	projX, projY := shooterX+vectX/2, shooterY+vectY/2 // TODO: turret displacement
 	degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
 	rangeSpread := t.getStaticData().shotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
-	b.addProjectile(&projectile{
+	proj := &projectile{
 		faction:        shooter.getFaction(),
 		staticData:     t.getStaticData().firedProjectileData,
 		centerX:        projX,
@@ -98,7 +98,11 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		fuel:        geometry.GetPreciseDistFloat64(targetCenterX, targetCenterY, shooterX, shooterY) + rangeSpread - 0.5,
 		whoShot:     shooter,
 		targetActor: t.targetActor,
-	})
+	}
+	if proj.isHoming() {
+		proj.fuel *= 1.5
+	}
+	b.addProjectile(proj)
 	t.nextTickToAct = b.currentTick + modifyTurretCooldownByUnitExpLevel(t.getStaticData().attackCooldown, shooter.getExperienceLevel())
 }
 

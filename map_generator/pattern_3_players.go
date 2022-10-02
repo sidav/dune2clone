@@ -19,7 +19,7 @@ func generateByThreePlayersPattern(gm *GeneratedMap) {
 	)
 
 	gm.performNAutomatasLike(20,
-		rnd.RandInRange(5, 15),
+		rnd.RandInRange(1, 15),
 		0,
 		automat{
 			drawsChar: ROCKS,

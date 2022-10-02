@@ -128,7 +128,7 @@ func (g *game) startGame() {
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
 		if g.battlefield.currentTick > DESIRED_TPS {
-			timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 5)
+			timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 15)
 		}
 
 		timeCurrentActionStarted = time.Now()

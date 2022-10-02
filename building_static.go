@@ -321,7 +321,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		codeForFreeUnitOnCreation: UNT_FAST_HARVESTER,
 	},
 	BLD_FACTORY1: {
-		spriteCode:                         "factory",
+		spriteCode:                         "factory1",
 		maxHitpoints:                       750,
 		w:                                  3,
 		h:                                  2,
@@ -391,7 +391,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		codeForFreeUnitOnCreation: UNT_COMBAT_HARVESTER,
 	},
 	BLD_FACTORY2: {
-		spriteCode:                         "factory",
+		spriteCode:                         "factory2",
 		maxHitpoints:                       750,
 		w:                                  3,
 		h:                                  2,

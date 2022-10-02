@@ -15,6 +15,10 @@ func (p *projectile) getStaticData() *projectileStatic {
 	return p.staticData
 }
 
+func (p *projectile) isHoming() bool {
+	return p.getStaticData().rotationSpeed > 0
+}
+
 type projectileStatic struct {
 	spriteCode                string
 	size                      float64

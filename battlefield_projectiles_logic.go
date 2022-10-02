@@ -17,7 +17,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	p.fuel -= spd
 
 	var hitTarget actor
-	if p.targetActor != nil && p.getStaticData().rotationSpeed > 0 {
+	if p.targetActor != nil && p.isHoming() {
 		targX, targY := p.targetActor.getPhysicalCenterCoords()
 		rotateTo := geometry.GetDegreeOfFloatVector(targX-p.centerX, targY-p.centerY)
 		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().rotationSpeed)
