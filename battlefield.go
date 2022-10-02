@@ -145,38 +145,30 @@ func (b *battlefield) isActorPresentOnBattlefield(a actor) bool {
 }
 
 func (b *battlefield) removeActor(a actor) {
+	removals := 0 // for debugging
+	var next *list.Element // for deletion while iterating
 	switch a.(type) {
 	case *unit:
-		for i := b.units.Front(); i != nil; i = i.Next() {
+		for i := b.units.Front(); i != nil; i = next {
+			next = i.Next()
 			if i.Value == a {
-				unt := a.(*unit)
-				if !unt.isInAir() {
-					x, y := unt.getTileCoords()
-					b.clearTilesOccupationInRect(x, y, 1, 1)
-					// just to be sure, maybe clear a tile at which the unit moves
-					// The logic ON PURPOSE doesn't look at unit's action
-					// check unit displacement
-					tileCx, tileCy := geometry.TileCoordsToTrueCoords(x, y)
-					ux, uy := unt.getPhysicalCenterCoords()
-					dispX, dispY := geometry.Float64VectorToIntUnitVector(ux-tileCx, uy-tileCy)
-					// clear the tile if it is set occupied by this unit
-					if b.tiles[x+dispX][y+dispY].isOccupiedByActor == unt {
-						b.clearTilesOccupationInRect(x+dispX, y+dispY, 1, 1)
-					}
-				}
+				b.clearTileOccupationForActor(a)
 				b.units.Remove(i)
 			}
 		}
 	case *building:
-		for i := b.buildings.Front(); i != nil; i = i.Next() {
+		for i := b.buildings.Front(); i != nil; i = next {
+			next = i.Next()
 			if i.Value == a {
-				bld := a.(*building)
-				b.clearTilesOccupationInRect(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h)
+				b.clearTileOccupationForActor(a)
 				b.buildings.Remove(i)
 			}
 		}
 	default:
 		panic("wat")
+	}
+	if removals > 1 {
+		debugWritef("WAT?! %s removed %d times\n", a.getName(), removals)
 	}
 }
 
@@ -207,6 +199,28 @@ func (b *battlefield) clearTilesOccupationInRect(x, y, w, h int) {
 		for j := y; j < y+h; j++ {
 			b.tiles[i][j].isOccupiedByActor = nil
 		}
+	}
+}
+
+func (b *battlefield) clearTileOccupationForActor(a actor) {
+	if unt, ok := a.(*unit); ok {
+		if !unt.isInAir() {
+			x, y := unt.getTileCoords()
+			b.clearTilesOccupationInRect(x, y, 1, 1)
+			// just to be sure, maybe clear a tile at which the unit moves
+			// The logic ON PURPOSE doesn't look at unit's action
+			// check unit displacement
+			tileCx, tileCy := geometry.TileCoordsToTrueCoords(x, y)
+			ux, uy := unt.getPhysicalCenterCoords()
+			dispX, dispY := geometry.Float64VectorToIntUnitVector(ux-tileCx, uy-tileCy)
+			// clear the tile if it is set occupied by this unit
+			if b.tiles[x+dispX][y+dispY].isOccupiedByActor == unt {
+				b.clearTilesOccupationInRect(x+dispX, y+dispY, 1, 1)
+			}
+		}
+	}
+	if bld, ok := a.(*building); ok {
+		b.clearTilesOccupationInRect(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h)
 	}
 }
 

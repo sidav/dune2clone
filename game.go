@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/list"
 	"dune2clone/geometry"
 	"fmt"
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -62,35 +63,30 @@ func (g *game) startGame() {
 		}
 		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {
 			timeCurrentActionStarted = time.Now()
-			for i := g.battlefield.projectiles.Front(); i != nil; i = i.Next() {
+			// "next" is for deletion while iterating
+			var next *list.Element
+			for i := g.battlefield.projectiles.Front(); i != nil; i = next {
+				next = i.Next()
 				proj := i.Value.(*projectile)
 				g.battlefield.actForProjectile(proj)
 				tx, ty := geometry.TrueCoordsToTileCoords(proj.centerX, proj.centerY)
 				if !g.battlefield.areTileCoordsValid(tx, ty) || proj.setToRemove {
 					// debugWrite("Projectile deleted.")
-					// deleting while iterating
-					setI := i
-					if i.Prev() != nil {
-						i = i.Prev()
-					}
-					g.battlefield.projectiles.Remove(setI)
+					g.battlefield.projectiles.Remove(i)
 				}
 			}
 			timeReportString += g.createTimeReportString("projectiles", timeCurrentActionStarted, 2)
 		}
 		// effects
 		timeCurrentActionStarted = time.Now()
-		for i := g.battlefield.effects.Front(); i != nil; i = i.Next() {
+		var next *list.Element
+		for i := g.battlefield.effects.Front(); i != nil; i = next {
+			next = i.Next()
 			eff := i.Value.(*effect)
 			g.battlefield.actForEffect(eff)
 			if eff.getExpirationPercent(g.battlefield.currentTick) > 100 {
-				// debugWrite("Effect deleted.")
 				// deleting while iterating
-				setI := i
-				if i.Prev() != nil {
-					i = i.Prev()
-				}
-				g.battlefield.effects.Remove(setI)
+				g.battlefield.effects.Remove(i)
 			}
 		}
 		timeReportString += g.createTimeReportString("effects", timeCurrentActionStarted, 2)
@@ -164,7 +160,9 @@ func (g *game) traverseAllActors() {
 		f.cleanExpiredFactionDispatchRequests(g.battlefield.currentTick)
 		f.resetVisibilityMaps(len(g.battlefield.tiles), len(g.battlefield.tiles[0]))
 	}
-	for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
+	var next *list.Element // for deletion while iterating the list
+	for i := g.battlefield.units.Front(); i != nil; i = next {
+		next = i.Next()
 		unt := i.Value.(*unit)
 		tx, ty := geometry.TrueCoordsToTileCoords(unt.getPhysicalCenterCoords())
 		if !unt.isAlive() {
@@ -186,7 +184,8 @@ func (g *game) traverseAllActors() {
 		}
 	}
 
-	for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
+	for i := g.battlefield.buildings.Front(); i != nil; i = next {
+		next = i.Next()
 		bld := i.Value.(*building)
 		if !bld.isAlive() {
 			// for deletion while iterating
