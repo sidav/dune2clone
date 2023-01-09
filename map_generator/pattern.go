@@ -26,6 +26,12 @@ var allPatterns = []*generationPattern{
 		generationFunc: generateByFourPlayersPattern,
 	},
 	{
+		Name:           "4 players Asymm",
+		MinWidth:       96,
+		MinHeight:      96,
+		generationFunc: generateByFourPlayersPatternAsymm,
+	},
+	{
 		Name:           "5 players FFA",
 		MinWidth:       96,
 		MinHeight:      96,

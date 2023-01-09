@@ -10,7 +10,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, maxW, maxH 
 	if maxH < maxW {
 		tileSize = int(maxH / int32(len(b.tiles[0])))
 	}
-	w, h := int32(tileSize * len(b.tiles)), int32(tileSize * len(b.tiles[0]))
+	w, h := int32(tileSize*len(b.tiles)), int32(tileSize*len(b.tiles[0]))
 	posX, posY := WINDOW_W-w-2, WINDOW_H-h-2
 	r.drawOutlinedRect(posX-2, posY-2, w+4, h+4, 2, pc.controlledFaction.getDarkerColor(), rl.DarkGray)
 	// draw random noise if energy is insufficient
@@ -32,7 +32,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, maxW, maxH 
 						if b.tiles[x][y].resourcesAmount > 0 {
 							color = rl.DarkPurple
 						}
-					case TILE_ROCK:
+					case TILE_ROCK, TILE_BUILDABLE_DAMAGED:
 						color = rl.DarkBrown
 					case TILE_BUILDABLE:
 						color = rl.Brown

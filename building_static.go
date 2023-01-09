@@ -9,7 +9,8 @@ const (
 	BLD_POWERPLANT1
 	BLD_POWERPLANT2
 	BLD_FUSION
-	BLD_BARRACKS
+	BLD_BARRACKS1
+	BLD_BARRACKS2
 	BLD_FACTORY1
 	BLD_FACTORY2
 	BLD_REPAIR_DEPOT
@@ -80,21 +81,6 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		produces:      nil,
 		givesEnergy:   200,
 		hotkeyToBuild: "L",
-	},
-	BLD_BARRACKS: {
-		spriteCode:                         "barracks",
-		maxHitpoints:                       500,
-		w:                                  2,
-		h:                                  2,
-		displayedName:                      "Barracks",
-		needsEmptyRowBelowWhenConstructing: true,
-		cost:                               500,
-		buildTime:                          10,
-		requiresTechLevel:                  2,
-		consumesEnergy:                     7,
-		builds:                             nil,
-		produces:                           []int{UNT_INFANTRY, UNT_RECONINFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
-		hotkeyToBuild:                      "B",
 	},
 	BLD_REPAIR_DEPOT: {
 		spriteCode:                         "depot",
@@ -256,7 +242,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 
 	// faction 1
 	BLD_CONYARD1: {
-		spriteCode:     "base",
+		spriteCode:     "conyard",
 		maxHitpoints:   1000,
 		w:              2,
 		h:              2,
@@ -264,7 +250,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:           2500,
 		buildTime:      30,
 		givesTechLevel: 1,
-		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY1, BLD_FACTORY1, BLD_REPAIR_DEPOT, BLD_AIRFACTORY1,
+		builds: []buildingCode{BLD_POWERPLANT1, BLD_FUSION, BLD_BARRACKS1, BLD_REFINERY1, BLD_FACTORY1, BLD_REPAIR_DEPOT, BLD_AIRFACTORY1,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
 		buildType:     BTYPE_BUILD_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -306,6 +292,21 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		givesFreeUnitOnCreation:   true,
 		codeForFreeUnitOnCreation: UNT_FAST_HARVESTER,
 	},
+	BLD_BARRACKS1: {
+		spriteCode:                         "barracks",
+		maxHitpoints:                       500,
+		w:                                  2,
+		h:                                  2,
+		displayedName:                      "Barracks",
+		needsEmptyRowBelowWhenConstructing: true,
+		cost:                               500,
+		buildTime:                          10,
+		requiresTechLevel:                  2,
+		consumesEnergy:                     7,
+		builds:                             nil,
+		produces:                           []int{UNT_INFANTRY, UNT_RECONINFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
+		hotkeyToBuild:                      "B",
+	},
 	BLD_FACTORY1: {
 		spriteCode:                         "factory1",
 		maxHitpoints:                       750,
@@ -341,7 +342,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 
 	// FACTION 2
 	BLD_CONYARD2: {
-		spriteCode:     "base",
+		spriteCode:     "conyard2",
 		maxHitpoints:   1000,
 		w:              2,
 		h:              2,
@@ -349,7 +350,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		cost:           2500,
 		buildTime:      30,
 		givesTechLevel: 1,
-		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS, BLD_REFINERY2, BLD_FACTORY2, BLD_REPAIR_DEPOT, BLD_AIRFACTORY2,
+		builds: []buildingCode{BLD_POWERPLANT2, BLD_FUSION, BLD_BARRACKS2, BLD_REFINERY2, BLD_FACTORY2, BLD_REPAIR_DEPOT, BLD_AIRFACTORY2,
 			BLD_TURRET_CANNON, BLD_TURRET_MINIGUN, BLD_SILO, BLD_FORTRESS, BLD_TURRET_AA},
 		buildType:     BTYPE_PLACE_FIRST, //BTYPE_PLACE_FIRST,
 		givesEnergy:   10,
@@ -390,6 +391,21 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 
 		givesFreeUnitOnCreation:   true,
 		codeForFreeUnitOnCreation: UNT_COMBAT_HARVESTER,
+	},
+	BLD_BARRACKS2: {
+		spriteCode:                         "barracks2",
+		maxHitpoints:                       500,
+		w:                                  2,
+		h:                                  2,
+		displayedName:                      "Barracks",
+		needsEmptyRowBelowWhenConstructing: true,
+		cost:                               500,
+		buildTime:                          10,
+		requiresTechLevel:                  2,
+		consumesEnergy:                     7,
+		builds:                             nil,
+		produces:                           []int{UNT_INFANTRY, UNT_RECONINFANTRY, UNT_ROCKETINFANTRY, UNT_HEAVYINFANTRY},
+		hotkeyToBuild:                      "B",
 	},
 	BLD_FACTORY2: {
 		spriteCode:                         "factory2",

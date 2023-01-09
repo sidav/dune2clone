@@ -13,7 +13,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	w, h := bld.getStaticData().w, bld.getStaticData().h
 	// fmt.Printf("%d, %d \n", osx, osy)
 	// render rally point. Called BEFORE viewport check.
-	if bld.rallyTileX != -1 {
+	if bld.isSelected && bld.rallyTileX != -1 {
 		centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
 		rallyX, rallyY := r.physicalToOnScreenCoords(geometry.TileCoordsToTrueCoords(bld.rallyTileX, bld.rallytileY))
 		rl.DrawLine(centerX, centerY, rallyX, rallyY, rl.White)
@@ -189,7 +189,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	}
 	// render veterancy thing
 	if u.getExperienceLevel() > 0 {
-		sprite := uiAtlaces["veterancy"].getSpriteByFrame(u.getExperienceLevel()-1)
+		sprite := uiAtlaces["veterancy"].getSpriteByFrame(u.getExperienceLevel() - 1)
 		rl.DrawTexture(
 			sprite,
 			osx+TILE_SIZE_IN_PIXELS-sprite.Width,

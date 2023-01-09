@@ -51,11 +51,13 @@ func loadSprites() {
 	// WARNING: IT HAS FRAMES
 	buildingsAtlaces["underconstruction"] = CreateAtlasFromFile(currPath+"under_construction.png", 0, 0, 32, 32, 16, 16, 7, false, false)
 
-	buildingsAtlaces["base"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 64, 64, 32, 32, 1, false, true)
+	buildingsAtlaces["conyard"] = CreateAtlasFromFile(currPath+"base.png", 0, 0, 64, 64, 32, 32, 1, false, true)
+	buildingsAtlaces["conyard2"] = CreateAtlasFromFile(currPath+"anjaopterix/conyard.png", 0, 0, 64, 64, 32, 32, 1, false, true)
 	buildingsAtlaces["powerplant1"] = CreateAtlasFromFile(currPath+"powerplant.png", 0, 0, 64, 64, 32, 32, 1, false, true)
 	buildingsAtlaces["powerplant2"] = CreateAtlasFromFile(currPath+"anjaopterix/powerplant.png", 0, 0, 64, 64, 32, 32, 4, false, true)
 	buildingsAtlaces["fusionreactor"] = CreateAtlasFromFile(currPath+"super_reactor.png", 0, 0, 64, 64, 48, 48, 23, false, true)
 	buildingsAtlaces["barracks"] = CreateAtlasFromFile(currPath+"barracks.png", 0, 0, 64, 64, 32, 32, 1, false, true)
+	buildingsAtlaces["barracks2"] = CreateAtlasFromFile(currPath+"anjaopterix/barracks.png", 0, 0, 64, 64, 32, 32, 1, false, true)
 	buildingsAtlaces["factory1"] = CreateAtlasFromFile(currPath+"factory.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["factory2"] = CreateAtlasFromFile(currPath+"factory2.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["airfactory"] = CreateAtlasFromFile(currPath+"airfactory.png", 0, 0, 64, 96, 32, 48, 1, false, true)
