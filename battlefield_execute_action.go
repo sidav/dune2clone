@@ -67,7 +67,7 @@ func (b *battlefield) executeActionForActor(a actor) {
 
 func (b *battlefield) executeBuildingSelfRepair(bld *building) {
 	cost := float64(bld.getStaticData().cost/2) / float64(bld.getStaticData().maxHitpoints)
-	if bld.currentHitpoints >= bld.getStaticData().maxHitpoints || bld.faction.getMoney() < cost {
+	if bld.currentHitpoints >= bld.getMaxHitpoints() || bld.faction.getMoney() < cost {
 		bld.isRepairingSelf = false
 		return
 	}
@@ -190,7 +190,7 @@ func (b *battlefield) executeGroundMoveActionForUnit(u *unit) {
 	if u.currentAction.interruptMovement {
 		// setting target to the nearest tile
 		intVx, intVy := geometry.Float64VectorToIntUnitVector(targetX-x, targetY-y)
-		u.currentAction.targetTileX, u.currentAction.targetTileY = currTx + intVx, currTy + intVy
+		u.currentAction.targetTileX, u.currentAction.targetTileY = currTx+intVx, currTy+intVy
 		targetX, targetY = geometry.TileCoordsToTrueCoords(u.currentAction.targetTileX, u.currentAction.targetTileY)
 		u.currentAction.interruptMovement = false
 	}

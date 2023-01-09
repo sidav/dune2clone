@@ -88,6 +88,15 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS),
 		)
 	}
+	if bld.getExperienceLevel() > 0 {
+		sprite := uiAtlaces["veterancy"].getSpriteByFrame(bld.getExperienceLevel() - 1)
+		rl.DrawTexture(
+			sprite,
+			osx+(int32(w)*TILE_SIZE_IN_PIXELS)-sprite.Width,
+			osy+(int32(h)*TILE_SIZE_IN_PIXELS)-sprite.Height,
+			DEFAULT_TINT,
+		)
+	}
 	if seen {
 		// render completion bar
 		if bld.currentAction.getCompletionPercent() >= 0 {
@@ -96,7 +105,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			//	TILE_SIZE_IN_PIXELS/4, bld.currentAction.getCompletionPercent(), rl.Green)
 			r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
 		}
-		if bld.currentHitpoints < bld.getStaticData().maxHitpoints {
+		if bld.currentHitpoints < bld.getMaxHitpoints() {
 			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
 				&factionColors[bld.getFaction().colorNumber])
 		}

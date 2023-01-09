@@ -123,14 +123,19 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 	lineNum++
 
+	expLevel := pc.getFirstSelection().getExperienceLevel()
+	if expLevel > 0 {
+		r.drawText(fmt.Sprintf("Experience: %d (Level %d - %s)", pc.getFirstSelection().getExperience(),
+			expLevel, getExpLevelName(expLevel)),
+			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+	}
+
 	if u, ok := pc.getFirstSelection().(*unit); ok {
 		if u.getStaticData().maxCargoAmount > 0 {
 			r.drawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
 				x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 			lineNum++
 		}
-		r.drawText(fmt.Sprintf("Experience: %d (Level %d - %s)", u.experience, u.getExperienceLevel(), getExpLevelName(u.getExperienceLevel())),
-			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 		lineNum++
 		r.drawText(fmt.Sprintf("Speed %.2f Regen %d", u.getMovementSpeed(), u.getRegenAmount()),
 			x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)

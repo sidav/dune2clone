@@ -78,11 +78,15 @@ func (u *unit) isAlive() bool {
 	return u.currentHitpoints > 0
 }
 
-func  (u *unit) receiveHealing(amount int) {
+func (u *unit) receiveHealing(amount int) {
 	u.currentHitpoints += amount
 	if u.currentHitpoints > u.getMaxHitpoints() {
 		u.currentHitpoints = u.getMaxHitpoints()
 	}
+}
+
+func (u *unit) getExperience() int {
+	return u.experience
 }
 
 func (u *unit) recalculateSquadSize() {
@@ -99,11 +103,11 @@ func (u *unit) getHitpoints() int {
 }
 
 func (u *unit) getMaxHitpoints() int {
-	return modifyUnitMaxHpByExpLevel(u.getStaticData().maxHitpoints, u.getExperienceLevel())
+	return modifyMaxHpByExpLevel(u.getStaticData().maxHitpoints, u.getExperienceLevel())
 }
 
 func (u *unit) getMovementSpeed() float64 {
-	return modifyUnitSpeedByExpLevel(u.getStaticData().movementSpeed, u.getExperienceLevel())
+	return modifyUnitSpeedByLevel(u.getStaticData().movementSpeed, u.getExperienceLevel())
 }
 
 func (u *unit) getHitpointsPercentage() int {

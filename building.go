@@ -16,6 +16,7 @@ type building struct {
 	unitPlacedInside       *unit
 	rallyTileX, rallytileY int
 	isRepairingSelf        bool
+	experience             int
 }
 
 func (b *building) isAlive() bool {
@@ -27,11 +28,11 @@ func (b *building) getHitpoints() int {
 }
 
 func (b *building) getMaxHitpoints() int {
-	return b.getStaticData().maxHitpoints
+	return modifyMaxHpByExpLevel(b.getStaticData().maxHitpoints, b.getExperienceLevel())
 }
 
 func (b *building) getHitpointsPercentage() int {
-	return getPercentInt(b.currentHitpoints, b.getStaticData().maxHitpoints)
+	return getPercentInt(b.currentHitpoints, b.getMaxHitpoints())
 }
 
 func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *building {
@@ -52,10 +53,26 @@ func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *b
 }
 
 func (b *building) receiveExperienceAmount(amnt int) {
+	b.experience += amnt
+}
+
+func (b *building) receiveHealing(amnt int) {
+	b.currentHitpoints += amnt
+	if b.currentHitpoints > b.getMaxHitpoints() {
+		b.currentHitpoints = b.getMaxHitpoints()
+	}
+}
+
+func (b *building) getRegenAmount() int {
+	return getVeterancyBasedRegen(b.getExperienceLevel())
+}
+
+func (b *building) getExperience() int {
+	return b.experience
 }
 
 func (b *building) getExperienceLevel() int {
-	return 0
+	return getExperienceLevelByAmountAndCost(b.experience, b.getStaticData().cost)
 }
 
 func (b *building) markSelected(s bool) {

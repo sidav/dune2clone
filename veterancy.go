@@ -38,15 +38,15 @@ func modifyTurretRangeByUnitExpLevel(tRange, level int) int {
 	return tRange + 1
 }
 
-func modifyUnitMaxHpByExpLevel(maxHp, level int) int {
+func modifyMaxHpByExpLevel(maxHp, level int) int {
 	return (100 + level*5) * maxHp / 100
 }
 
-func modifyUnitSpeedByExpLevel(spd float64, level int) float64 {
+func modifyUnitSpeedByLevel(spd float64, level int) float64 {
 	return spd * (1.0 + float64(level)*0.05)
 }
 
-func modifyTurretCooldownByUnitExpLevel(tCd, level int) int {
+func modifyTurretCooldownByExpLevel(tCd, level int) int {
 	return (100 - 4*level) * tCd / 100
 }
 

@@ -104,7 +104,7 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		proj.fuel *= 1.5
 	}
 	b.addProjectile(proj)
-	t.nextTickToAct = b.currentTick + modifyTurretCooldownByUnitExpLevel(t.getStaticData().attackCooldown, shooter.getExperienceLevel())
+	t.nextTickToAct = b.currentTick + modifyTurretCooldownByExpLevel(t.getStaticData().attackCooldown, shooter.getExperienceLevel())
 }
 
 func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {

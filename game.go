@@ -178,7 +178,7 @@ func (g *game) traverseAllActors() {
 		} else {
 			unt.faction.exploreAround(tx, ty, 1, 1,
 				modifyVisionRangeByUnitExpLevel(unt.getVisionRange(), unt.getExperienceLevel()))
-			if g.battlefield.currentTick % REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
+			if g.battlefield.currentTick%REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
 				unt.receiveHealing(unt.getRegenAmount())
 			}
 		}
@@ -217,7 +217,10 @@ func (g *game) traverseAllActors() {
 				bld.faction.increaseResourcesStorage(bld.getStaticData().storageAmount)
 			}
 			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
-				bld.getVisionRange())
+				modifyVisionRangeByUnitExpLevel(bld.getVisionRange(), bld.getExperienceLevel()))
+			if g.battlefield.currentTick%REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
+				bld.receiveHealing(bld.getRegenAmount())
+			}
 		}
 	}
 }
