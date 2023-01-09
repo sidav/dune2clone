@@ -33,7 +33,7 @@ func (pc *playerController) playerControl(b *battlefield) {
 	pc.scrollCooldown--
 	pc.scroll(b)
 
-	tx, ty := pc.mouseCoordsToTileCoords()
+	tx, ty, fromMinimap := pc.mouseCoordsToTileCoords(b)
 	if rl.IsMouseButtonPressed(rl.MouseRightButton) {
 		pc.rightClickWithActorSelected(b, tx, ty)
 	}
@@ -47,6 +47,10 @@ func (pc *playerController) playerControl(b *battlefield) {
 	// selection
 	if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
 		pc.mouseDownForTicks = 0
+		if fromMinimap {
+			pc.centerCameraAtTile(b, tx, ty)
+			return
+		}
 		actr := b.getActorAtTileCoordinates(tx, ty)
 		pc.deselect()
 		if actr != nil {
@@ -89,7 +93,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 				return false
 			}
 			pc.changeMode(PCMODE_PLACE_BUILDING)
-			tx, ty := pc.mouseCoordsToTileCoords()
+			tx, ty, _ := pc.mouseCoordsToTileCoords(b)
 			if rl.IsMouseButtonPressed(rl.MouseLeftButton) && b.canBuildingBePlacedAt(bld.currentOrder.targetActor.(*building), tx, ty, 0, false) {
 				bld.currentOrder.targetTileX = tx
 				bld.currentOrder.targetTileY = ty
@@ -135,6 +139,9 @@ func (pc *playerController) scroll(b *battlefield) {
 	const SCROLL_CD = 1
 
 	v := rl.GetMousePosition()
+	if areScreenCoordsOnMinimap(int32(v.X), int32(v.Y), b) {
+		return
+	}
 	if v.X < SCROLL_MARGIN {
 		pc.camTopLeftX -= SCROLL_AMOUNT
 	}
@@ -251,9 +258,13 @@ func (pc *playerController) deselect() {
 	pc.selection = []actor{}
 }
 
-func (pc *playerController) mouseCoordsToTileCoords() (int, int) {
+func (pc *playerController) mouseCoordsToTileCoords(b *battlefield) (int, int, bool) {
 	v := rl.GetMousePosition()
-	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS
+	if areScreenCoordsOnMinimap(int32(v.X), int32(v.Y), b) {
+		tx, ty := screenCoordsToMinimapTileCoords(int32(v.X), int32(v.Y), b)
+		return tx, ty, true
+	}
+	return int(float32(pc.camTopLeftX)+v.X) / TILE_SIZE_IN_PIXELS, int(float32(pc.camTopLeftY)+v.Y) / TILE_SIZE_IN_PIXELS, false
 }
 
 func (pc *playerController) IsKeyCodeEqualToString(keyCode int32, keyString string, withShift bool) bool {

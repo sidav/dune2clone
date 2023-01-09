@@ -5,13 +5,39 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *renderer) drawMinimap(b *battlefield, pc *playerController, maxW, maxH int32) {
-	var tileSize = int(maxW / int32(len(b.tiles)))
-	if maxH < maxW {
-		tileSize = int(maxH / int32(len(b.tiles[0])))
+const (
+	minimapMaxW = 320
+	minimapMaxH = 320
+)
+
+// Well, I don't know where to put that if not in renderer...
+func getMinimapRect(b *battlefield) (int32, int32, int32, int32) {
+	var tileSize = int(minimapMaxW / int32(len(b.tiles)))
+	if minimapMaxH < minimapMaxH {
+		tileSize = int(minimapMaxH / int32(len(b.tiles[0])))
 	}
 	w, h := int32(tileSize*len(b.tiles)), int32(tileSize*len(b.tiles[0]))
 	posX, posY := WINDOW_W-w-2, WINDOW_H-h-2
+	return posX, posY, w, h
+}
+
+func screenCoordsToMinimapTileCoords(x, y int32, b *battlefield) (int, int) {
+	var tileSize = int(minimapMaxW / int32(len(b.tiles)))
+	if minimapMaxH < minimapMaxH {
+		tileSize = int(minimapMaxH / int32(len(b.tiles[0])))
+	}
+	mmx, mmy, _, _ := getMinimapRect(b)
+	return int(x-mmx) / tileSize, int(y-mmy) / tileSize
+}
+
+func areScreenCoordsOnMinimap(sx, sy int32, b *battlefield) bool {
+	mmx, mmy, mmw, mmh := getMinimapRect(b)
+	return sx >= mmx && sx < mmx+mmw && sy >= mmy && sy < mmy+mmh
+}
+
+func (r *renderer) drawMinimap(b *battlefield, pc *playerController) {
+	posX, posY, w, h := getMinimapRect(b)
+	var tileSize = int(w / int32(len(b.tiles)))
 	r.drawOutlinedRect(posX-2, posY-2, w+4, h+4, 2, pc.controlledFaction.getDarkerColor(), rl.DarkGray)
 	// draw random noise if energy is insufficient
 	if pc.controlledFaction.getAvailableEnergy() < 0 {
@@ -32,9 +58,9 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController, maxW, maxH 
 						if b.tiles[x][y].resourcesAmount > 0 {
 							color = rl.DarkPurple
 						}
-					case TILE_ROCK, TILE_BUILDABLE_DAMAGED:
+					case TILE_ROCK:
 						color = rl.DarkBrown
-					case TILE_BUILDABLE:
+					case TILE_BUILDABLE, TILE_BUILDABLE_DAMAGED:
 						color = rl.Brown
 					default:
 						color = rl.Magenta

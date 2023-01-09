@@ -18,7 +18,7 @@ const BUILD_PANEL_HEIGHT = 500
 func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 	r.renderResourcesUI(b, pc)
 	r.renderSelectedActorUI(b, pc, 0, 3*WINDOW_H/4)
-	r.drawMinimap(b, pc, 320, 320)
+	r.drawMinimap(b, pc)
 	if pc.mode == PCMODE_PLACE_BUILDING {
 		r.renderBuildCursor(b, pc)
 	}
@@ -153,7 +153,7 @@ func (r *renderer) renderBuildCursor(b *battlefield, pc *playerController) {
 		return
 	}
 	targetBuilding := pc.getFirstSelection().(*building).currentOrder.targetActor.(*building)
-	tx, ty := pc.mouseCoordsToTileCoords()
+	tx, ty, _ := pc.mouseCoordsToTileCoords(b)
 	_, _, w, h := targetBuilding.getDimensionsForConstructon()
 	color := rl.Red
 	if b.canBuildingBePlacedAt(targetBuilding, tx, ty, 0, false) {
