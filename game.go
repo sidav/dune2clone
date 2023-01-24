@@ -9,8 +9,9 @@ import (
 )
 
 type game struct {
-	battlefield battlefield
-	render      *renderer
+	gameIsRunning bool
+	battlefield   battlefield
+	render        *renderer
 }
 
 func (g *game) startGame() {
@@ -26,7 +27,8 @@ func (g *game) startGame() {
 	timeCurrentActionStarted := time.Now()
 	timeLogicStarted := time.Now()
 
-	for !rl.WindowShouldClose() {
+	g.gameIsRunning = true
+	for !rl.WindowShouldClose() && g.gameIsRunning {
 		timeReportString := fmt.Sprintf("Tick %d. ", g.battlefield.currentTick)
 		timeLoopStarted = time.Now()
 		timeCurrentActionStarted = time.Now()
@@ -138,6 +140,10 @@ func (g *game) startGame() {
 			debugWrite(timeReportString)
 			// debugWrite(g.battlefield.collectStatisticsForDebug())
 		}
+
+		if (g.battlefield.currentTick)%300 == 0 {
+			g.checkGameEnd()
+		}
 	}
 }
 
@@ -205,6 +211,9 @@ func (g *game) traverseAllActors() {
 				g.battlefield.addActor(bld.unitPlacedInside)
 				bld.unitPlacedInside = nil
 			}
+			if bld.currentAction.code == ACTION_BUILD {
+				bld.currentAction.targetActor.setHitpoints(0)
+			}
 			g.battlefield.removeActor(bld)
 		} else {
 			bld.faction.hasBuildings[bld.code] = true
@@ -223,6 +232,49 @@ func (g *game) traverseAllActors() {
 			}
 		}
 	}
+}
+
+func (g *game) checkGameEnd() {
+	var remainingFaction *faction
+	moreThanOneFactionRemains := false
+	playerIsDefeated := true
+	for b := g.battlefield.buildings.Front(); b != nil; b = b.Next() {
+		if remainingFaction == nil {
+			remainingFaction = b.Value.(actor).getFaction()
+		} else {
+			if b.Value.(actor).getFaction() != remainingFaction {
+				moreThanOneFactionRemains = true
+			}
+		}
+		if b.Value.(actor).getFaction() == g.battlefield.factions[0] {
+			playerIsDefeated = false
+			if moreThanOneFactionRemains {
+				break
+			}
+		}
+	}
+	if playerIsDefeated {
+		// check units then
+		for u := g.battlefield.units.Front(); u != nil; u = u.Next() {
+			if u.Value.(actor).getFaction() == g.battlefield.factions[0] {
+				playerIsDefeated = false
+				moreThanOneFactionRemains = true
+				break
+			}
+		}
+	}
+	if playerIsDefeated {
+		if moreThanOneFactionRemains {
+			g.render.drawEndGame(g.battlefield.factions, nil, true)
+		} else {
+			g.render.drawEndGame(g.battlefield.factions, remainingFaction, true)
+		}
+	} else if !moreThanOneFactionRemains {
+		g.render.drawEndGame(g.battlefield.factions, remainingFaction, false)
+	} else {
+		return
+	}
+	g.gameIsRunning = false
 }
 
 func (g *game) centerPlayerCameraAtStartPosition(pc *playerController) {

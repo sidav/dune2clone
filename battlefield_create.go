@@ -87,6 +87,16 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int, conditions []*star
 			b.ais = append(b.ais, createAi(b.factions[spNumber], fmt.Sprintf("Enemy %d", spNumber), conditions[spNumber].aiType))
 			b.factions[spNumber].experienceMultiplier = 2
 			b.factions[spNumber].storagesMultiplier = 1
+			b.factions[spNumber].playerName = fmt.Sprintf("Player %d (AI %s)", spNumber+1, conditions[spNumber].aiType)
+			// b.factions[spNumber].buildSpeedMultiplier = 10
+			// b.factions[spNumber].visibilityCheat = true
+			// b.factions[spNumber].explorationCheat = true
+		} else {
+			// player faction settings
+			//b.factions[spNumber].buildSpeedMultiplier = 10
+			//b.factions[spNumber].visibilityCheat = true
+			//b.factions[spNumber].explorationCheat = true
+			b.factions[spNumber].playerName = "Player"
 		}
 	}
 	// randomize colors
@@ -103,10 +113,6 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int, conditions []*star
 			}
 		}
 	}
-	// player faction settings
-	//b.factions[0].buildSpeedMultiplier = 10
-	//b.factions[0].visibilityCheat = true
-	//b.factions[0].explorationCheat = true
 
 	// create all units for debugging
 	//coord := 0

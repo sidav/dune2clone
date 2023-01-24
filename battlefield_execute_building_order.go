@@ -15,7 +15,7 @@ func (b *battlefield) executeOrderForBuilding(bld *building) {
 }
 
 func (b *battlefield) executeBuildOrder(bld *building) {
-	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) {
+	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) && bld.currentAction.getCompletionPercent() == 0 {
 		panic("Tech requirements are ignored somewhere")
 	}
 	switch bld.getStaticData().buildType {

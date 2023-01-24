@@ -86,6 +86,10 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	if pc.IsKeyCodeEqualToString(kk, "R", true) && bld.getHitpointsPercentage() < 100 {
 		bld.isRepairingSelf = true
 	}
+	if pc.IsKeyCodeEqualToString(kk, "S", true) {
+		// TODO: appropriate selling of buildings
+		bld.currentHitpoints = 0
+	}
 	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
 		if bld.currentAction.getCompletionPercent() >= 100 || bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
 			// if NOT building:

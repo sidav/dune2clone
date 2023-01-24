@@ -136,6 +136,27 @@ func (r *renderer) drawLoadingScreen(msg string) {
 	rl.EndDrawing()
 }
 
+func (r *renderer) drawEndGame(fcts []*faction, winner *faction, playerLost bool) {
+	for rl.GetKeyPressed() != rl.KeyEnter {
+		rl.BeginDrawing()
+		rl.ClearBackground(rl.Black)
+		rl.DrawText(fmt.Sprintf("%30s", "Game ends"), 0, 0, 80, rl.White)
+		if playerLost && winner == nil {
+			rl.DrawText("Player is defeated", 50, 100, 60, rl.White)
+		} else {
+			rl.DrawText(fmt.Sprintf("%s wins", winner.playerName), 50, 100, 60, rl.White)
+		}
+		rl.DrawText(fmt.Sprintf("%25s %10s %10s %10s %10s", "Player", "Built", "Produced", "Destroyed", "Harvested"), 0, 175, 40, rl.White)
+		for i, f := range fcts {
+			rl.DrawText(fmt.Sprintf("%25s", f.playerName), 0, 185+int32(i+1)*44, 40, f.getDarkerColor())
+			statsString := fmt.Sprintf("%10d %10d %10d %10d", f.gameStatistics.totalBuilt, f.gameStatistics.totalProduced, f.gameStatistics.totalDestroyed, f.gameStatistics.totalHarvested)
+			coord := rl.MeasureText(fmt.Sprintf("%30s", "Player"), 40)
+			rl.DrawText(statsString, coord, 185+int32(i+1)*44, 40, f.getDarkerColor())
+		}
+		rl.EndDrawing()
+	}
+}
+
 // Very bad code :(
 func selectStringInArrayAfter(arr []string, curr string) string {
 	for i := range arr {

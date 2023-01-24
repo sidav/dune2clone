@@ -6,6 +6,7 @@ type actor interface {
 	getCurrentOrder() *order
 	getName() string
 	getHitpoints() int
+	setHitpoints(int)
 	getMaxHitpoints() int
 	getHitpointsPercentage() int
 	getFaction() *faction

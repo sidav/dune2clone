@@ -30,7 +30,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	if p.fuel <= 0 && hitTarget == nil {
 		tilex, tiley := geometry.TrueCoordsToTileCoords(p.centerX, p.centerY)
 		hitTarget = b.getActorAtTileCoordinates(tilex, tiley)
-		if hitTarget != nil && hitTarget.isInAir() != p.targetActor.isInAir() {
+		if hitTarget != nil && !(hitTarget.isAlive() && hitTarget.isInAir() == p.targetActor.isInAir()) {
 			hitTarget = nil
 		}
 		p.setToRemove = true
@@ -45,6 +45,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 			// add experience
 			expAmount := 1
 			if !hitTarget.isAlive() {
+				p.whoShot.getFaction().gameStatistics.totalDestroyed++
 				if u, ok := hitTarget.(*unit); ok {
 					expAmount = u.getStaticData().cost
 				}

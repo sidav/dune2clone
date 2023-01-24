@@ -27,6 +27,10 @@ func (b *building) getHitpoints() int {
 	return b.currentHitpoints
 }
 
+func (b *building) setHitpoints(hp int) {
+	b.currentHitpoints = hp
+}
+
 func (b *building) getMaxHitpoints() int {
 	return modifyMaxHpByExpLevel(b.getStaticData().maxHitpoints, b.getExperienceLevel())
 }

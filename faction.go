@@ -8,6 +8,7 @@ import (
 )
 
 type faction struct {
+	playerName                          string
 	colorNumber                         int
 	currentResources, resourceStorage   float64
 	money                               float64 // float because of division when spending
@@ -29,6 +30,13 @@ type faction struct {
 	buildSpeedMultiplier              float64
 	experienceMultiplier              float64
 	explorationCheat, visibilityCheat bool
+
+	gameStatistics struct {
+		totalBuilt     int
+		totalProduced  int
+		totalDestroyed int
+		totalHarvested int
+	}
 }
 
 func createFaction(colorNumber, team int, initialMoney float64) *faction {
@@ -149,6 +157,7 @@ func (f *faction) receiveResources(amount float64, asMoney bool) {
 	if asMoney {
 		f.money += amount * f.resourcesMultiplier
 	} else {
+		f.gameStatistics.totalHarvested += int(amount * f.resourcesMultiplier)
 		f.currentResources += amount * f.resourcesMultiplier
 		if f.currentResources > f.resourceStorage {
 			f.currentResources = f.resourceStorage
@@ -175,9 +184,9 @@ func (f *faction) getColor() color.RGBA {
 
 func (f *faction) getDarkerColor() color.RGBA {
 	return color.RGBA{
-		R: factionColors[f.colorNumber].R/2,
-		G: factionColors[f.colorNumber].G/2,
-		B: factionColors[f.colorNumber].B/2,
+		R: factionColors[f.colorNumber].R / 2,
+		G: factionColors[f.colorNumber].G / 2,
+		B: factionColors[f.colorNumber].B / 2,
 		A: factionColors[f.colorNumber].A,
 	}
 }

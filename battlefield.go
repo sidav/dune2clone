@@ -104,12 +104,14 @@ func (b *battlefield) changeTilesCodesInRectTo(x, y, w, h, code int) {
 func (b *battlefield) addActor(a actor) {
 	switch a.(type) {
 	case *unit:
+		a.getFaction().gameStatistics.totalProduced++
 		b.units.PushBack(a)
 		x, y := a.(*unit).getTileCoords()
 		if !a.isInAir() {
 			b.setTilesOccupiedByActor(x, y, 1, 1, a)
 		}
 	case *building:
+		a.getFaction().gameStatistics.totalBuilt++
 		bld := a.(*building)
 		if bld.getStaticData().givesFreeUnitOnCreation {
 			x, y := bld.getUnitPlacementAbsoluteCoords()
@@ -145,7 +147,7 @@ func (b *battlefield) isActorPresentOnBattlefield(a actor) bool {
 }
 
 func (b *battlefield) removeActor(a actor) {
-	removals := 0 // for debugging
+	removals := 0          // for debugging
 	var next *list.Element // for deletion while iterating
 	switch a.(type) {
 	case *unit:
