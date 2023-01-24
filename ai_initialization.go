@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 func createAi(f *faction, name, personality string) *aiStruct {
 	ai := aiStruct{
 		name:                        name,
@@ -49,6 +51,15 @@ func createAi(f *faction, name, personality string) *aiStruct {
 	}
 	persSetter(&ai)
 	return &ai
+}
+
+func getListOfAIPersonalities() []string {
+	pers := make([]string, 0)
+	for k, _ := range aiPersonalitySetters {
+		pers = append(pers, k)
+	}
+	sort.Strings(pers)
+	return pers
 }
 
 var aiPersonalitySetters = map[string]func(*aiStruct){

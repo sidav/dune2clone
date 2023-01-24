@@ -57,5 +57,6 @@ func (g *game) selectMapToGenerateBattlefield() {
 			h = map_generator.GetPatternByIndex(currSelectedPatternIndex).MinHeight
 		}
 	}
-	g.battlefield.initFromRandomMap(generatedMap)
+	scs := g.render.drawStartSelectionMenu(len(generatedMap.StartPoints))
+	g.battlefield.initFromRandomMap(generatedMap, scs)
 }

@@ -6,7 +6,13 @@ import (
 	"fmt"
 )
 
-func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap) {
+type startConditions struct {
+	aiType              string
+	factionName         string
+	resourcesMultiplier float64
+}
+
+func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap, conds []*startConditions) {
 	b.tiles = make([][]tile, len(rm.Tiles))
 	for i := range b.tiles {
 		b.tiles[i] = make([]tile, len(rm.Tiles[i]))
@@ -46,7 +52,7 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap) {
 		MapWidth:                  len(b.tiles),
 		MapHeight:                 len(b.tiles[0]),
 	}
-	b.placeInitialStuff(rm.StartPoints)
+	b.placeInitialStuff(rm.StartPoints, conds)
 	b.finalizeTileVariants()
 }
 
@@ -60,18 +66,28 @@ func (b *battlefield) finalizeTileVariants() {
 	}
 }
 
-func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
+func (b *battlefield) placeInitialStuff(startPoints [][2]int, conditions []*startConditions) {
 	for spNumber := range startPoints {
 		b.factions = append(b.factions, createFaction(-1, 0, 10000))
+		b.factions[spNumber].resourcesMultiplier = conditions[spNumber].resourcesMultiplier
 		b.factions[spNumber].resetVisibilityMaps(len(b.tiles), len(b.tiles[0]))
 		b.factions[spNumber].exploreAround(startPoints[spNumber][0], startPoints[spNumber][1], 2, 2, 3)
-		// TODO: faction selection
-		if rnd.OneChanceFrom(2) {
-			b.addActor(createUnit(UNT_MCV1, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
-		} else {
-			b.addActor(createUnit(UNT_MCV2, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+		untToCreate := UNT_MCV1
+		switch conditions[spNumber].factionName {
+		case "Commonwealth":
+			untToCreate = UNT_MCV2
+		case "Random":
+			if rnd.OneChanceFrom(2) {
+				untToCreate = UNT_MCV2
+			}
 		}
-		// b.addActor(createUnit(UNT_HARVESTER, startPoints[spNumber][0]-1, startPoints[spNumber][1]-1, b.factions[spNumber]))
+		b.addActor(createUnit(untToCreate, startPoints[spNumber][0], startPoints[spNumber][1], b.factions[spNumber]))
+
+		if conditions[spNumber].aiType != "player" {
+			b.ais = append(b.ais, createAi(b.factions[spNumber], fmt.Sprintf("Enemy %d", spNumber), conditions[spNumber].aiType))
+			b.factions[spNumber].experienceMultiplier = 2
+			b.factions[spNumber].storagesMultiplier = 1
+		}
 	}
 	// randomize colors
 	for _, f1 := range b.factions {
@@ -88,21 +104,9 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int) {
 		}
 	}
 	// player faction settings
-	//b.factions[0].resourcesMultiplier = 1
 	//b.factions[0].buildSpeedMultiplier = 10
 	//b.factions[0].visibilityCheat = true
 	//b.factions[0].explorationCheat = true
-
-	b.ais = append(b.ais, createAi(b.factions[0], "Player-side", "random"))
-	for i := 1; i < len(b.factions); i++ {
-		b.ais = append(b.ais, createAi(b.factions[i], fmt.Sprintf("Enemy %d", i), "random"))
-	}
-
-	for i := range b.ais {
-		b.ais[i].controlsFaction.resourcesMultiplier = 2
-		b.ais[i].controlsFaction.storagesMultiplier = 1
-		b.ais[i].controlsFaction.experienceMultiplier = 2
-	}
 
 	// create all units for debugging
 	//coord := 0
