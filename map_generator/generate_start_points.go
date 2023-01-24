@@ -1,6 +1,8 @@
 package map_generator
 
-import "dune2clone/geometry"
+import (
+	"dune2clone/geometry"
+)
 
 func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, radialSymmetryCount int) {
 	// TODO: rewrite this completely
@@ -8,7 +10,7 @@ func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, radialSymmetr
 	for cx := range gm.Tiles {
 		for cy := range gm.Tiles[cx] {
 			// search quadrant
-			if gm.areCoordsGoodForStartPoint(cx, cy) {
+			if gm.areCoordsGoodForStartPoint(cx, cy, 5) {
 				candidates = append(candidates, [2]int{cx, cy})
 			}
 		}
@@ -35,10 +37,60 @@ func (gm *GeneratedMap) searchAndSetStartPoints(symmH, symmV bool, radialSymmetr
 	}
 }
 
-func (gm *GeneratedMap) areCoordsGoodForStartPoint(x, y int) bool {
-	const sRange = 5
-	for sx := x - sRange; sx <= x+sRange; sx++ {
-		for sy := y - sRange; sy <= y+sRange; sy++ {
+func (gm *GeneratedMap) searchAndSetStartPointsAsymmetric(count int) {
+	// TODO: rewrite this completely
+	candidates := make([][2]int, 0)
+	for cx := range gm.Tiles {
+		for cy := range gm.Tiles[cx] {
+			// search quadrant
+			if gm.areCoordsGoodForStartPoint(cx, cy, 4) {
+				candidates = append(candidates, [2]int{cx, cy})
+			}
+		}
+	}
+	if len(candidates) < count*count*count {
+		return
+	}
+	var selected [][2]int
+
+	for try := 0; try < len(candidates)*len(candidates); try++ {
+		isGood := false
+		currCand := [2]int{0, 0}
+		indexTry := 0
+		for !isGood {
+			isGood = true
+			rndInd := rnd.Rand(len(candidates))
+			currCand[0] = candidates[rndInd][0]
+			currCand[1] = candidates[rndInd][1]
+			for i := 0; i < len(selected); i++ {
+				if geometry.GetApproxDistFromTo(currCand[0], currCand[1], selected[i][0], selected[i][1]) < 10 {
+					isGood = false
+					break
+				}
+			}
+			if isGood {
+				selected = append(selected, currCand)
+			}
+			indexTry++
+			if indexTry > len(candidates) {
+				break
+			}
+		}
+		if len(selected) == count {
+			break
+		}
+	}
+	if len(selected) < count {
+		return
+	}
+	for i := 0; i < len(selected) && i < count; i++ {
+		gm.StartPoints = append(gm.StartPoints, selected[i])
+	}
+}
+
+func (gm *GeneratedMap) areCoordsGoodForStartPoint(x, y, buildableRange int) bool {
+	for sx := x - buildableRange; sx <= x+buildableRange; sx++ {
+		for sy := y - buildableRange; sy <= y+buildableRange; sy++ {
 			if !(sx > 1 && sy > 1 && sx < len(gm.Tiles)-2 && sy < len(gm.Tiles[0])-2) || gm.Tiles[sx][sy] != BUILDABLE_TERRAIN {
 				return false
 			}
@@ -65,4 +117,3 @@ func (gm *GeneratedMap) areAllStartPointsGood() bool {
 	}
 	return true
 }
-

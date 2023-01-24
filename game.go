@@ -10,7 +10,7 @@ import (
 
 type game struct {
 	battlefield battlefield
-	render      renderer
+	render      *renderer
 }
 
 func (g *game) startGame() {

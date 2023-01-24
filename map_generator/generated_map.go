@@ -15,6 +15,8 @@ func SetRandom(r *fibrandom.FibRandom) {
 type GeneratedMap struct {
 	Tiles       [][]tileCode
 	StartPoints [][2]int
+
+	GenerationTries int
 }
 
 func (gm *GeneratedMap) init(w, h int) {
@@ -41,16 +43,17 @@ func (gm *GeneratedMap) reset() {
 	gm.StartPoints = make([][2]int, 0)
 }
 
-func (gm *GeneratedMap) Generate(w, h, patternIndex int) {
+func (gm *GeneratedMap) Generate(w, h, patternIndex int, channelFinish chan<- bool) {
+	// ChannelFinish receives true when generation is over (for goroutines)
 	gm.init(w, h)
-	tries := 0
+	gm.GenerationTries = 0
 	for len(gm.StartPoints) == 0 || !gm.areAllStartPointsGood() {
-		tries++
+		gm.GenerationTries++
 		GetPatternByIndex(patternIndex).generationFunc(gm)
 	}
-	fmt.Printf("GENERATOR: Generated from %d try.\n", tries)
+	fmt.Printf("GENERATOR: Generated from %d try.\n", gm.GenerationTries)
+	channelFinish <- true
 }
-
 
 func (gm *GeneratedMap) getNumberOfTilesPercent(perc int) int {
 	total := len(gm.Tiles) * len(gm.Tiles[0])
@@ -126,7 +129,7 @@ func GetListOfCoordsRadialSymmetricTo(count, x, y, mapW, mapH int) [][2]int {
 	if count < 2 {
 		panic("Bad count")
 	}
-	degreesBetweenCoords := 2*math.Pi / float64(count)
+	degreesBetweenCoords := 2 * math.Pi / float64(count)
 	centerFloatX, centerFloatY := float64(mapW-1)/2, float64(mapH-1)/2
 	coords := make([][2]int, count)
 	vectorX, vectorY := float64(x)-centerFloatX, float64(y)-centerFloatY
@@ -137,27 +140,27 @@ func GetListOfCoordsRadialSymmetricTo(count, x, y, mapW, mapH int) [][2]int {
 	//	}
 	//}
 	for i := 0; i < count; i++ {
-		currTileX := int(math.Round(vectorX+centerFloatX))
-		currTileY := int(math.Round(vectorY+centerFloatY))
+		currTileX := int(math.Round(vectorX + centerFloatX))
+		currTileY := int(math.Round(vectorY + centerFloatY))
 
 		if currTileX < 0 {
 			currTileX = 0
 		}
 		if currTileX >= mapW {
-			currTileX = mapW-1
+			currTileX = mapW - 1
 		}
 		if currTileY < 0 {
 			currTileY = 0
 		}
 		if currTileY >= mapH {
-			currTileY = mapH-1
+			currTileY = mapH - 1
 		}
 		coords[i][0] = currTileX
 		coords[i][1] = currTileY
 		// rotate vector
 		t := vectorX
-		vectorX = vectorX * math.Cos(degreesBetweenCoords) - vectorY * math.Sin(degreesBetweenCoords)
-		vectorY = t * math.Sin(degreesBetweenCoords) + vectorY * math.Cos(degreesBetweenCoords)
+		vectorX = vectorX*math.Cos(degreesBetweenCoords) - vectorY*math.Sin(degreesBetweenCoords)
+		vectorY = t*math.Sin(degreesBetweenCoords) + vectorY*math.Cos(degreesBetweenCoords)
 	}
 	for _, c := range coords {
 		if c[0] < 0 || c[0] >= mapW || c[1] < 0 || c[1] >= mapH {

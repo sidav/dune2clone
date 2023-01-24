@@ -34,14 +34,15 @@ func main() {
 	rl.SetExitKey(rl.KeyEscape)
 
 	rnd.InitDefault()
-	loadResources()
+	rendererInstance := &renderer{}
+	loadResources(rendererInstance)
 
 	//for i := 0; i <= 360; i+=10 {
 	//	debugWritef("%ddeg is %d sector\n", i, degreeToRotationFrameNumber(i))
 	//}
 	game := game{}
+	game.render = rendererInstance
 	game.startGame()
-
 
 	rl.CloseWindow()
 }

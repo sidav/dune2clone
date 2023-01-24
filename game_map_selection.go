@@ -3,6 +3,7 @@ package main
 import (
 	"dune2clone/map_generator"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"strings"
 	"time"
 )
 
@@ -15,13 +16,21 @@ func (g *game) selectMapToGenerateBattlefield() {
 	reGenerate := true
 	for {
 		if reGenerate {
-			drawLoadingScreen("Generating...")
-			generatedMap.Generate(w, h, currSelectedPatternIndex)
+			ch := make(chan bool, 1)
+			go generatedMap.Generate(w, h, currSelectedPatternIndex, ch)
+			generated := false
+			for !generated {
+				dots := (generatedMap.GenerationTries / 10) % 4
+				g.render.drawLoadingScreen("Generating" + strings.Repeat(".", dots) + strings.Repeat(" ", 4-dots))
+				if len(ch) > 0 {
+					generated = <-ch
+				}
+			}
 			time.Sleep(100 * time.Millisecond)
 		}
 		reGenerate = true
 		rl.BeginDrawing()
-		drawGeneratedMap(generatedMap, currSelectedPatternIndex)
+		g.render.drawGeneratedMap(generatedMap, currSelectedPatternIndex)
 		rl.EndDrawing()
 		time.Sleep(100 * time.Millisecond)
 		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
@@ -50,4 +59,3 @@ func (g *game) selectMapToGenerateBattlefield() {
 	}
 	g.battlefield.initFromRandomMap(generatedMap)
 }
-

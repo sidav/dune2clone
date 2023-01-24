@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func drawGeneratedMap(gm *map_generator.GeneratedMap, patternIndex int) {
+func (r *renderer) drawGeneratedMap(gm *map_generator.GeneratedMap, patternIndex int) {
 	rl.BeginDrawing()
 	rl.DrawText("Select map. SPACE to generate new, ENTER to select current.", 0, 0, 28, rl.White)
 	rl.DrawText(fmt.Sprintf("UP and DOWN to change size (current: %dx%d)", len(gm.Tiles), len(gm.Tiles[0])), 0, 30, 28, rl.White)
@@ -45,7 +45,7 @@ func drawGeneratedMap(gm *map_generator.GeneratedMap, patternIndex int) {
 	rl.EndDrawing()
 }
 
-func drawLoadingScreen(msg string) {
+func (r *renderer) drawLoadingScreen(msg string) {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.Black)
 	rl.DrawText(fmt.Sprintf("%30s", msg), 0, WINDOW_H/2-40, 80, rl.White)
