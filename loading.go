@@ -80,6 +80,7 @@ func loadSprites(r *renderer) {
 	unitChassisAtlaces["infantryrocket"] = CreateDirectionalAtlasFromFile(currPath+"infantry_rocket.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["infantryrecon"] = CreateDirectionalAtlasFromFile(currPath+"infantry_recon.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["infantryheavy"] = CreateDirectionalAtlasFromFile(currPath+"infantry_heavy.png", 32, 16, 1, 2, true)
+	unitChassisAtlaces["infantrysniper"] = CreateDirectionalAtlasFromFile(currPath+"infantry_sniper.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["tank"] = CreateDirectionalAtlasFromFile(currPath+"tank_chassis.png", 32, 16, 1, 2, true)
 	turretsAtlaces["tank"] = CreateDirectionalAtlasFromFile(currPath+"tank_cannon.png", 32, 16, 1, 2, true)
 	unitChassisAtlaces["tank2"] = CreateDirectionalAtlasFromFile(currPath+"anjaopterix/tank_chassis.png", 32, 16, 2, 2, true)

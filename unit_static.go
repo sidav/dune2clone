@@ -5,6 +5,7 @@ const (
 	UNT_RECONINFANTRY
 	UNT_ROCKETINFANTRY
 	UNT_HEAVYINFANTRY
+	UNT_SNIPERINFANTRY
 	UNT_TANK1
 	UNT_TANK2
 	UNT_DEVASTATOR
@@ -164,7 +165,7 @@ var sTableUnits = map[int]*unitStatic{
 	UNT_HEAVYINFANTRY: {
 		displayedName:     "Heavy infantry squad",
 		chassisSpriteCode: "infantryheavy",
-		maxHitpoints:      150,
+		maxHitpoints:      850,
 		armorType:         ARMORTYPE_INFANTRY,
 		visionRange:       4,
 		movementSpeed:     0.06,
@@ -191,10 +192,45 @@ var sTableUnits = map[int]*unitStatic{
 		},
 		maxSquadSize:         3,
 		chassisRotationSpeed: 90,
-		cost:                 550,
+		cost:                 750,
 		buildTime:            15,
 		hotkeyToBuild:        "H",
 		requiresBuilding:     BLD_AIRFACTORY1,
+	},
+	UNT_SNIPERINFANTRY: {
+		displayedName:     "Sniper squad",
+		chassisSpriteCode: "infantrysniper",
+		maxHitpoints:      55,
+		armorType:         ARMORTYPE_INFANTRY,
+		visionRange:       6,
+		movementSpeed:     0.03,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:        "",
+				attacksLand:       true,
+				rotateSpeed:       0,
+				fireRange:         8,
+				fireSpreadDegrees: 2,
+				shotRangeSpread:   0.45,
+				attackCooldown:    40,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "bullets",
+					hitDamage:                 40,
+					damageType:                DAMAGETYPE_ANTI_INFANTRY,
+					size:                      0.3,
+					speed:                     0.85,
+					rotationSpeed:             0,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+				},
+			},
+		},
+		maxSquadSize:         3,
+		chassisRotationSpeed: 90,
+		cost:                 750,
+		buildTime:            25,
+		hotkeyToBuild:        "S",
+		requiresBuilding:     BLD_AIRFACTORY2,
 	},
 	UNT_QUAD: {
 		displayedName:     "Quad",

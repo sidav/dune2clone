@@ -75,6 +75,8 @@ func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int 
 		switch armType {
 		case ARMORTYPE_HEAVY:
 			percent = 25
+		case ARMORTYPE_BUILDING:
+			percent = 25
 		}
 	case DAMAGETYPE_HEAVY:
 		switch armType {
