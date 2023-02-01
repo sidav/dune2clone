@@ -140,7 +140,12 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 
 func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	x, y := u.centerX, u.centerY
-	osx, osy := r.physicalToOnScreenCoords(x-0.5, y-0.5)
+	offset := 0.5
+	chassisW := unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0).Width
+	if chassisW > TILE_SIZE_IN_PIXELS {
+		offset = float64(chassisW) / float64(TILE_SIZE_IN_PIXELS) / 2
+	}
+	osx, osy := r.physicalToOnScreenCoords(x-offset, y-offset)
 	// fmt.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
@@ -154,10 +159,14 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		r.renderUnit(b, pc, u.carriedUnit)
 	}
 
+	//rectX, rectY := r.physicalToOnScreenCoords(geometry.TileCoordsToTrueCoords(geometry.TrueCoordsToTileCoords(u.getPhysicalCenterCoords())))
+	//rl.DrawRectangle(rectX, rectY, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, rl.Gray)
+	//debugWritef("%s: OFFSET %.f WID %d\n", u.getName(), offset, schassisW)
+
 	// draw chassis sprite
 	relativeSquadCoords := getListOfRelativeCoordsForSquadMembers(u.squadSize)
 	for _, relSquadCoord := range relativeSquadCoords {
-		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-0.5, y+relSquadCoord[1]-0.5)
+		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-offset, y+relSquadCoord[1]-offset)
 		rl.DrawTexture(
 			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0),
 			osx,
@@ -189,7 +198,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	}
 
 	if u.currentHitpoints < u.getMaxHitpoints() {
-		r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS), u.currentHitpoints, u.getMaxHitpoints(),
+		r.drawProgressBar(osx, osy-4, chassisW, u.currentHitpoints, u.getMaxHitpoints(),
 			&factionColors[u.getFaction().colorNumber])
 	}
 	// render completion bar
@@ -201,20 +210,21 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		sprite := uiAtlaces["veterancy"].getSpriteByFrame(u.getExperienceLevel() - 1)
 		rl.DrawTexture(
 			sprite,
-			osx+TILE_SIZE_IN_PIXELS-sprite.Width,
-			osy+TILE_SIZE_IN_PIXELS-sprite.Height,
+			osx+chassisW-sprite.Width,
+			osy+chassisW-sprite.Height,
 			DEFAULT_TINT,
 		)
 	}
 	if u.isSelected {
 		col := rl.DarkGreen
-		circleX := osx + TILE_SIZE_IN_PIXELS/2
-		circleY := osy + TILE_SIZE_IN_PIXELS/2
-		rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2, col)
-		rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-1, col)
+		circleX := osx + chassisW/2
+		circleY := osy + chassisW/2
+		floatW := float32(chassisW)
+		rl.DrawCircleLines(circleX, circleY, floatW/2, col)
+		rl.DrawCircleLines(circleX, circleY, floatW/2-1, col)
 		//rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-2, col)
-		rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-3, col)
-		rl.DrawCircleLines(circleX, circleY, TILE_SIZE_IN_PIXELS/2-4, col)
+		rl.DrawCircleLines(circleX, circleY, floatW/2-3, col)
+		rl.DrawCircleLines(circleX, circleY, floatW/2-4, col)
 		//rl.DrawRectangleLines(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS, col)
 		//rl.DrawRectangleLines(int32(osx-1), int32(osy-1), TILE_SIZE_IN_PIXELS+2, TILE_SIZE_IN_PIXELS+2, col)
 		//rl.DrawRectangleLines(int32(osx+1), int32(osy+1), TILE_SIZE_IN_PIXELS-2, TILE_SIZE_IN_PIXELS-2, col)

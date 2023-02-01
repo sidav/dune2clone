@@ -24,6 +24,7 @@ const (
 	AIR_TRANSPORT2
 	AIR_GUNSHIP
 	AIR_FIGHTER
+	AIR_FORTRESS
 )
 
 type unitStatic struct {
@@ -738,5 +739,66 @@ var sTableUnits = map[int]*unitStatic{
 		buildTime:            25,
 		hotkeyToBuild:        "F",
 		isAircraft:           true,
+	},
+	AIR_FORTRESS: {
+		displayedName:     "Big Sister",
+		chassisSpriteCode: "air_fortress",
+		eliteVersionCode:  0,
+		turretsData: []*turretStatic{
+			{
+				spriteCode:        "",
+				attacksLand:       true,
+				attacksAir:        true,
+				rotateSpeed:       45,
+				fireRange:         6,
+				fireSpreadDegrees: 15,
+				shotRangeSpread:   1.5,
+				attackCooldown:    45,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "aamissile",
+					size:                      0.3,
+					speed:                     0.6,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_REGULAR_EXPLOSION,
+					hitDamage:                 25,
+					rotationSpeed:             1,
+					splashDamage:              15,
+					splashRadius:              0.5,
+					damageType:                DAMAGETYPE_HEAVY,
+				},
+			},
+			{
+				spriteCode:        "",
+				attacksLand:       true,
+				attacksAir:        true,
+				rotateSpeed:       45,
+				fireRange:         6,
+				fireSpreadDegrees: 15,
+				shotRangeSpread:   1.5,
+				attackCooldown:    10,
+				firedProjectileData: &projectileStatic{
+					spriteCode:                "bullets",
+					size:                      0.3,
+					speed:                     0.7,
+					createsEffectOnImpact:     true,
+					effectCreatedOnImpactCode: EFFECT_SMALL_EXPLOSION,
+					hitDamage:                 4,
+					rotationSpeed:             1,
+					damageType:                DAMAGETYPE_ANTI_INFANTRY,
+				},
+			},
+		},
+		maxHitpoints:         750,
+		hpRegen:              1,
+		armorType:            ARMORTYPE_HEAVY,
+		visionRange:          12,
+		movementSpeed:        0.05,
+		chassisRotationSpeed: 3,
+		canBeDeployed:        false,
+		isAircraft:           true,
+		isTransport:          false,
+		cost:                 4000,
+		buildTime:            55,
+		hotkeyToBuild:        "A",
 	},
 }

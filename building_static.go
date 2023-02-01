@@ -336,7 +336,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		requiresTechLevel: 3,
 		givesTechLevel:    4,
 		buildTime:         10,
-		produces:          []int{AIR_TRANSPORT1, AIR_GUNSHIP, AIR_FIGHTER},
+		produces:          []int{AIR_TRANSPORT1, AIR_GUNSHIP, AIR_FIGHTER, AIR_FORTRESS},
 		consumesEnergy:    15,
 		// produces:       []int{UNT_TANK, UNT_QUAD, UNT_MSLTANK, UNT_HARVESTER},
 		hotkeyToBuild: "A",
