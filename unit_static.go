@@ -46,10 +46,11 @@ type unitStatic struct {
 
 	defaultOrderOnCreation orderCode
 
-	canBeDeployed bool
-	deploysInto   buildingCode // building code
-	isAircraft    bool
-	isTransport   bool
+	canBeDeployed    bool
+	deploysInto      buildingCode
+	requiresBuilding buildingCode
+	isAircraft       bool
+	isTransport      bool
 
 	cost          int
 	buildTime     int // seconds
@@ -193,6 +194,7 @@ var sTableUnits = map[int]*unitStatic{
 		cost:                 550,
 		buildTime:            15,
 		hotkeyToBuild:        "H",
+		requiresBuilding:     BLD_AIRFACTORY1,
 	},
 	UNT_QUAD: {
 		displayedName:     "Quad",
@@ -311,6 +313,7 @@ var sTableUnits = map[int]*unitStatic{
 		chassisRotationSpeed: 1,
 		cost:                 2500,
 		buildTime:            50,
+		requiresBuilding:     BLD_AIRFACTORY2,
 		hotkeyToBuild:        "J",
 	},
 	UNT_TANK2: {
@@ -397,6 +400,7 @@ var sTableUnits = map[int]*unitStatic{
 			},
 		},
 		chassisRotationSpeed: 5,
+		requiresBuilding:     BLD_AIRFACTORY1,
 		cost:                 1500,
 		buildTime:            30,
 		hotkeyToBuild:        "D",
@@ -633,7 +637,7 @@ var sTableUnits = map[int]*unitStatic{
 	AIR_GUNSHIP: {
 		displayedName:     "Gunship",
 		chassisSpriteCode: "air_gunship",
-		maxHitpoints:      100,
+		maxHitpoints:      120,
 		armorType:         ARMORTYPE_HEAVY,
 		movementSpeed:     0.20,
 		visionRange:       7,

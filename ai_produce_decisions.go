@@ -2,6 +2,13 @@ package main
 
 import "fmt"
 
+func (ai *aiStruct) isAllowedToProduceThis(unitCode int) bool {
+	switch unitCode {
+	default:
+		return ai.controlsFaction.isTechAvailableForUnitOfCode(unitCode)
+	}
+}
+
 func (ai *aiStruct) selectWhatToProduce(producer *building) int {
 	availableCodes := producer.getStaticData().produces
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
@@ -38,16 +45,13 @@ func (ai *aiStruct) selectWhatToProduce(producer *building) int {
 
 func (ai *aiStruct) selectRandomProducableCodeByFunction(availableCodes []int, function string) int {
 	candidates := make([]int, 0)
-	if function == "any" {
-		candidates = availableCodes
-	} else {
-		for i := range availableCodes {
-			if ai.deduceUnitFunction(availableCodes[i]) == function {
-				candidates = append(candidates, availableCodes[i])
-			}
+	for i := range availableCodes {
+		if (function == "any" || ai.deduceUnitFunction(availableCodes[i]) == function) && ai.isAllowedToProduceThis(availableCodes[i]) {
+			candidates = append(candidates, availableCodes[i])
 		}
 	}
 	if len(candidates) == 0 {
+		ai.debugWritef("No variant available from %v with func %s\n", availableCodes, function)
 		//panic("No such function: " + function)
 		return -1
 	}

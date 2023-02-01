@@ -4,7 +4,8 @@ type buildTypeCode int
 type buildingCode int
 
 const (
-	BLD_CONYARD1 buildingCode = iota
+	BLD_NULL buildingCode = iota
+	BLD_CONYARD1
 	BLD_CONYARD2
 	BLD_POWERPLANT1
 	BLD_POWERPLANT2

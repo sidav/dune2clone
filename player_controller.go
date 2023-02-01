@@ -122,7 +122,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 			}
 			// maybe product?
 			for _, code := range bld.getStaticData().produces {
-				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) {
+				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForUnitOfCode(code) {
 					bld.currentOrder.code = ORDER_PRODUCE
 					bld.currentOrder.targetActorCode = code
 				}

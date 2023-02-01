@@ -15,8 +15,8 @@ func (b *battlefield) executeOrderForBuilding(bld *building) {
 }
 
 func (b *battlefield) executeBuildOrder(bld *building) {
-	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) && bld.currentAction.getCompletionPercent() == 0 {
-		panic("Tech requirements are ignored somewhere")
+	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) {
+		debugWritef("Tech requirements are ignored: bld %s at (%d, %d)", bld.getName(), bld.topLeftX, bld.topLeftY)
 	}
 	switch bld.getStaticData().buildType {
 	case BTYPE_BUILD_FIRST:
@@ -76,6 +76,9 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 }
 
 func (b *battlefield) executeProduceOrder(bld *building) {
+	if !bld.faction.isTechAvailableForUnitOfCode(bld.currentOrder.targetActorCode) {
+		debugWritef("Tech requirements are ignored: %s at (%d, %d)", bld.getName(), bld.topLeftX, bld.topLeftY)
+	}
 	if bld.currentAction.code != ACTION_BUILD {
 		bld.currentAction.code = ACTION_BUILD
 		bld.currentAction.targetActor = createUnit(bld.currentOrder.targetActorCode, 0, 0, bld.faction)

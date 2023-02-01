@@ -58,9 +58,20 @@ func (f *faction) isTechAvailableForBuildingOfCode(bldCode buildingCode) bool {
 		return false
 	}
 	for _, req := range sTableBuildings[bldCode].requiresToBeBuilt {
-		if _, ok := f.hasBuildings[req]; !ok {
+		if !f.hasBuilding(req) {
 			return false
 		}
+	}
+	return true
+}
+
+func (f *faction) isTechAvailableForUnitOfCode(untCode int) bool {
+	return sTableUnits[untCode].requiresBuilding == BLD_NULL || f.hasBuilding(sTableUnits[untCode].requiresBuilding)
+}
+
+func (f *faction) hasBuilding(bldCode buildingCode) bool {
+	if _, ok := f.hasBuildings[bldCode]; !ok {
+		return false
 	}
 	return true
 }

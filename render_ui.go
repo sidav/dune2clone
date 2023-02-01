@@ -212,9 +212,13 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 			line++
 		}
 		for _, code := range bld.getStaticData().produces {
+			color := rl.Orange
+			if !bld.faction.isTechAvailableForUnitOfCode(code) {
+				color = rl.DarkGray
+			}
 			r.drawText(r.collectLineForBuildMenu(sTableUnits[code].hotkeyToBuild,
 				sTableUnits[code].displayedName, sTableUnits[code].cost),
-				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, rl.Orange)
+				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, color)
 			line++
 		}
 	}
