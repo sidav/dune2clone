@@ -110,12 +110,17 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 		return
 	}
 	// draw outline
-	r.drawOutlinedRect(x, y, 2*WINDOW_W/5, WINDOW_H/4, 2, pc.controlledFaction.getDarkerColor(), rl.Black)
-	var lineNum int32
-	r.drawText(fmt.Sprintf("%s (%d/%d)", pc.getFirstSelection().getName(),
+	nameHpLine := fmt.Sprintf("%s (%d/%d)", pc.getFirstSelection().getName(),
 		pc.getFirstSelection().getHitpoints(),
-		pc.getFirstSelection().getMaxHitpoints()),
-		x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
+		pc.getFirstSelection().getMaxHitpoints())
+	width := 2 * WINDOW_W / 5
+	measuredWidth := rl.MeasureText(nameHpLine+"      ", UI_FONT_SIZE)
+	if measuredWidth > width {
+		width = measuredWidth + WINDOW_W/20
+	}
+	r.drawOutlinedRect(x, y, width, WINDOW_H/4, 2, pc.controlledFaction.getDarkerColor(), rl.Black)
+	var lineNum int32
+	r.drawText(nameHpLine, x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 	lineNum++
 	r.drawText(fmt.Sprintf("%s - %s)",
 		pc.getFirstSelection().getCurrentOrder().getTextDescription(),
