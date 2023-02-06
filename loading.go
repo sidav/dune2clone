@@ -134,12 +134,12 @@ func loadSprites(r *renderer) {
 }
 
 func importUnitsDataOrCreateFile() {
-	const filePath = "units_json.json"
+	const filePath = "units_data.json"
 	fiBytes, err := os.ReadFile(filePath)
 	if errors.Is(err, os.ErrNotExist) {
 
 		// create new file with units data
-		res, _ := json.Marshal(sTableUnits)
+		res, _ := json.MarshalIndent(sTableUnits, "", "\t")
 		fo, err := os.Create(filePath)
 		if err != nil {
 			panic(err)
