@@ -27,13 +27,13 @@ func (b *battlefield) initFromRandomMap(rm *map_generator.GeneratedMap, conds []
 				currTileCode = TILE_ROCK
 			case map_generator.POOR_RESOURCES:
 				currTileCode = TILE_SAND
-				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_MIN_GENERATED, RESOURCE_IN_TILE_POOR_MAX)
+				b.tiles[i][j].resourcesAmount = rnd.RandInRange(config.Economy.ResourcesInTileMinGenerated, config.Economy.ResourceInTilePoorMax)
 			case map_generator.MEDIUM_RESOURCES:
 				currTileCode = TILE_SAND
-				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_POOR_MAX, RESOURCE_IN_TILE_MEDIUM_MAX)
+				b.tiles[i][j].resourcesAmount = rnd.RandInRange(config.Economy.ResourceInTilePoorMax, config.Economy.ResourceInTileMediumMax)
 			case map_generator.RICH_RESOURCES:
 				currTileCode = TILE_SAND
-				b.tiles[i][j].resourcesAmount = rnd.RandInRange(RESOURCE_IN_TILE_MEDIUM_MAX, RESOURCE_IN_TILE_RICH_MAX)
+				b.tiles[i][j].resourcesAmount = rnd.RandInRange(config.Economy.ResourceInTileMediumMax, config.Economy.ResourceInTileRichMax)
 			case map_generator.RESOURCE_VEIN:
 				currTileCode = TILE_SAND
 				b.tiles[i][j].hasResourceVein = true

@@ -39,13 +39,13 @@ func (g *game) startGame() {
 		g.performAiActions()
 		timeReportString += g.createTimeReportString("AI", timeCurrentActionStarted, 1)
 
-		if g.battlefield.currentTick%RESOURCES_GROW_EACH_TICK == 0 {
+		if g.battlefield.currentTick%config.Economy.ResourcesGrowthPeriod == 0 {
 			g.battlefield.performResourceGrowth()
 		}
 
 		// execute actions
 		timeLogicStarted = time.Now()
-		if g.battlefield.currentTick%UNIT_ACTIONS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.UnitsActionPeriod == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeActionForActor(i.Value.(*unit))
@@ -53,7 +53,7 @@ func (g *game) startGame() {
 			}
 			timeReportString += g.createTimeReportString("units", timeCurrentActionStarted, 2)
 		}
-		if g.battlefield.currentTick%BUILDINGS_ACTIONS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.BuildingsActionPeriod == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeActionForActor(i.Value.(*building))
@@ -63,7 +63,7 @@ func (g *game) startGame() {
 			}
 			timeReportString += g.createTimeReportString("buildings", timeCurrentActionStarted, 2)
 		}
-		if g.battlefield.currentTick%PROJECTILES_ACTIONS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.ProjectilesActionPeriod == 0 {
 			timeCurrentActionStarted = time.Now()
 			// "next" is for deletion while iterating
 			var next *list.Element
@@ -95,28 +95,28 @@ func (g *game) startGame() {
 		timeReportString += g.createTimeReportString("all actions", timeLogicStarted, 2)
 
 		// cleanup and faction calculations
-		if g.battlefield.currentTick%TRAVERSE_ALL_ACTORS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.CleanupPeriod == 0 {
 			g.traverseAllActors()
 		}
 
 		// execute orders
-		if g.battlefield.currentTick%UNIT_ORDERS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.UnitsListenOrderPeriod == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.units.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForUnit(i.Value.(*unit))
 			}
 			timeReportString += g.createTimeReportString("unit orders", timeCurrentActionStarted, 2)
-			//if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
+			//if g.battlefield.currentTick%(config.Engine.UnitActionPeriod*30) == 1 {
 			//	debugWritef("Tick %d, orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			//}
 		}
-		if g.battlefield.currentTick%BUILDINGS_ORDERS_TICK_EACH == 0 {
+		if g.battlefield.currentTick%config.Engine.BuildingListenOrderPeriod == 0 {
 			timeCurrentActionStarted = time.Now()
 			for i := g.battlefield.buildings.Front(); i != nil; i = i.Next() {
 				g.battlefield.executeOrderForBuilding(i.Value.(*building))
 			}
 			timeReportString += g.createTimeReportString("blds orders", timeCurrentActionStarted, 2)
-			//if g.battlefield.currentTick%(UNIT_ACTIONS_TICK_EACH*30) == 1 {
+			//if g.battlefield.currentTick%(config.Engine.UnitActionPeriod*30) == 1 {
 			//	debugWritef("Tick %d, bld orders logic: %dms\n", g.battlefield.currentTick, time.Since(timeCurrentActionStarted)/time.Millisecond)
 			//}
 		}
@@ -184,7 +184,7 @@ func (g *game) traverseAllActors() {
 		} else {
 			unt.faction.exploreAround(tx, ty, 1, 1,
 				modifyVisionRangeByUnitExpLevel(unt.getVisionRange(), unt.getExperienceLevel()))
-			if g.battlefield.currentTick%REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
+			if g.battlefield.currentTick%config.Engine.RegenHpPeriod == 0 {
 				unt.receiveHealing(unt.getRegenAmount())
 			}
 		}
@@ -227,7 +227,7 @@ func (g *game) traverseAllActors() {
 			}
 			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
 				modifyVisionRangeByUnitExpLevel(bld.getVisionRange(), bld.getExperienceLevel()))
-			if g.battlefield.currentTick%REGEN_HP_EACH_TRAVERSE_LOOP == 0 {
+			if g.battlefield.currentTick%config.Engine.RegenHpPeriod == 0 {
 				bld.receiveHealing(bld.getRegenAmount())
 			}
 		}

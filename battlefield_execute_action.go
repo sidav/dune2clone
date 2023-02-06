@@ -253,11 +253,11 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	// calculate spending
 	if bld, ok := act.targetActor.(*building); ok {
 		moneySpent = float64(bld.getStaticData().cost) /
-			float64(bld.getStaticData().buildTime*(config.TargetTPS/BUILDINGS_ACTIONS_TICK_EACH))
+			float64(bld.getStaticData().buildTime*(config.TargetTPS/config.Engine.BuildingsActionPeriod))
 	}
 	if unt, ok := act.targetActor.(*unit); ok {
 		moneySpent = float64(unt.getStaticData().Cost) /
-			float64(unt.getStaticData().BuildTime*(config.TargetTPS/BUILDINGS_ACTIONS_TICK_EACH))
+			float64(unt.getStaticData().BuildTime*(config.TargetTPS/config.Engine.BuildingsActionPeriod))
 	}
 	// spend money
 	coeff := a.getFaction().getEnergyProductionMultiplier()
@@ -318,7 +318,7 @@ func (b *battlefield) executeBeingDeployedActionForUnit(u *unit) {
 			targetBld.topLeftY = ty
 			targetBld.currentAction.code = ACTION_BEING_BUILT
 			targetBld.currentAction.builtAs = BTYPE_BUILD_FIRST
-			targetBld.currentAction.maxCompletionAmount = BUILDING_ANIMATION_TICKS
+			targetBld.currentAction.maxCompletionAmount = float64(config.Engine.BuildingAnimationTicks)
 			b.removeActor(u)
 			b.addActor(targetBld)
 			return

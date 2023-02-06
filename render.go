@@ -127,9 +127,9 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 	}
 	if t.resourcesAmount > 0 {
 		resourceTileAtlasName := "melangerich"
-		if t.resourcesAmount <= RESOURCE_IN_TILE_POOR_MAX {
+		if t.resourcesAmount <= config.Economy.ResourceInTilePoorMax {
 			resourceTileAtlasName = "melangepoor"
-		} else if t.resourcesAmount <= RESOURCE_IN_TILE_MEDIUM_MAX {
+		} else if t.resourcesAmount <= config.Economy.ResourceInTileMediumMax {
 			resourceTileAtlasName = "melangemedium"
 		}
 		rl.DrawTexture(

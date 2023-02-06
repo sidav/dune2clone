@@ -130,6 +130,7 @@ func loadSprites(r *renderer) {
 	effectsAtlaces["regularexplosion"] = CreateAtlasFromFile(currPath+"explosion.png", 0, 0, 16, 16, 16, 16, 3, false, false)
 	effectsAtlaces["biggerexplosion"] = CreateAtlasFromFile(currPath+"explosion_bigger.png", 0, 0, 40, 40, 20, 20, 3, false, false)
 
+	r.drawLoadingScreen("LOADING: DATA")
 	importUnitsDataOrCreateFile()
 }
 

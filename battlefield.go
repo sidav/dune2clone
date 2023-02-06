@@ -42,14 +42,14 @@ func (b *battlefield) performResourceGrowth() {
 				growX, growY = geometry.SpiralSearchForClosestConditionFrom(
 					func(x, y int) bool {
 						return b.areTileCoordsValid(x, y) && b.tiles[x][y].canHaveResources() &&
-							b.tiles[x][y].resourcesAmount < RESOURCE_IN_TILE_MEDIUM_MAX &&
-							geometry.GetApproxDistFromTo(tx, ty, x, y) <= RESOURCES_GROWTH_RADIUS
+							b.tiles[x][y].resourcesAmount < config.Economy.ResourceInTileMediumMax &&
+							geometry.GetApproxDistFromTo(tx, ty, x, y) <= config.Economy.ResourcesGrowthRadius
 					},
-					tx, ty, RESOURCES_GROWTH_RADIUS, rnd.Rand(4),
+					tx, ty, config.Economy.ResourcesGrowthRadius, rnd.Rand(4),
 				)
 				// }
 				if growX != -1 {
-					b.tiles[growX][growY].resourcesAmount += rnd.RandInRange(RESOURCES_GROWTH_MIN, RESOURCES_GROWTH_MAX)
+					b.tiles[growX][growY].resourcesAmount += rnd.RandInRange(config.Economy.ResourcesGrowthMin, config.Economy.ResourcesGrowthMax)
 				}
 			}
 		}
