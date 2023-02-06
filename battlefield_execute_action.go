@@ -20,7 +20,7 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 	case ACTION_MOVE:
 		if u, ok := a.(*unit); ok {
-			if u.getStaticData().isAircraft {
+			if u.getStaticData().IsAircraft {
 				b.executeAirMoveActionForUnit(u)
 			} else {
 				b.executeGroundMoveActionForUnit(u)
@@ -40,19 +40,19 @@ func (b *battlefield) executeActionForActor(a actor) {
 		}
 
 	case ACTION_AIR_APPROACH_LAND_TILE:
-		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
+		if u, ok := a.(*unit); ok && u.getStaticData().IsAircraft {
 			b.executeAirApproachLandTileActionForUnit(u)
 		}
 	case ACTION_AIR_APPROACH_ACTOR:
-		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
+		if u, ok := a.(*unit); ok && u.getStaticData().IsAircraft {
 			b.executeAirApproachTargetActorActionForUnit(u)
 		}
 	case ACTION_AIR_PICK_UNIT_UP:
-		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
+		if u, ok := a.(*unit); ok && u.getStaticData().IsAircraft {
 			b.executeAirPickUnitUpActionForUnit(u)
 		}
 	case ACTION_AIR_DROP_UNIT:
-		if u, ok := a.(*unit); ok && u.getStaticData().isAircraft {
+		if u, ok := a.(*unit); ok && u.getStaticData().IsAircraft {
 			b.executeAirDropActionForUnit(u)
 		}
 	case ACTION_DEPLOY:
@@ -76,7 +76,7 @@ func (b *battlefield) executeBuildingSelfRepair(bld *building) {
 }
 
 func (b *battlefield) executeWaitActionForUnit(u *unit) {
-	if u.getStaticData().isAircraft {
+	if u.getStaticData().IsAircraft {
 		if u.currentAction.targetTileX == -1 {
 			u.currentAction.targetTileX, u.currentAction.targetTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		}
@@ -153,9 +153,9 @@ func (b *battlefield) executeHarvestActionForActor(a actor) {
 	if u, ok := a.(*unit); ok {
 		x, y := u.getPhysicalCenterCoords()
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
-		if u.currentCargoAmount < u.getStaticData().maxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
+		if u.currentCargoAmount < u.getStaticData().MaxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
 			harvestedAmount := min(b.tiles[utx][uty].resourcesAmount, HARVEST_PER_TICK) // TODO: replace
-			harvestedAmount = min(harvestedAmount, u.getStaticData().maxCargoAmount-u.currentCargoAmount)
+			harvestedAmount = min(harvestedAmount, u.getStaticData().MaxCargoAmount-u.currentCargoAmount)
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount
 		} else {
@@ -169,14 +169,14 @@ func (b *battlefield) executeRotateActionForUnit(u *unit) {
 		if u.turrets[0].rotationDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
 		} else if u.turrets[0].targetActor == nil {
-			u.turrets[0].rotationDegree += geometry.GetDiffForRotationStep(u.turrets[0].rotationDegree, u.currentAction.targetRotation, u.turrets[0].getStaticData().rotateSpeed)
+			u.turrets[0].rotationDegree += geometry.GetDiffForRotationStep(u.turrets[0].rotationDegree, u.currentAction.targetRotation, u.turrets[0].getStaticData().RotateSpeed)
 			u.normalizeDegrees()
 		}
 	} else {
 		if u.chassisDegree == u.currentAction.targetRotation {
 			u.currentAction.code = ACTION_WAIT
 		} else {
-			u.chassisDegree += geometry.GetDiffForRotationStep(u.chassisDegree, u.currentAction.targetRotation, u.getStaticData().chassisRotationSpeed)
+			u.chassisDegree += geometry.GetDiffForRotationStep(u.chassisDegree, u.currentAction.targetRotation, u.getStaticData().ChassisRotationSpeed)
 			u.normalizeDegrees()
 		}
 	}
@@ -256,8 +256,8 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 			float64(bld.getStaticData().buildTime*(DESIRED_TPS/BUILDINGS_ACTIONS_TICK_EACH))
 	}
 	if unt, ok := act.targetActor.(*unit); ok {
-		moneySpent = float64(unt.getStaticData().cost) /
-			float64(unt.getStaticData().buildTime*(DESIRED_TPS/BUILDINGS_ACTIONS_TICK_EACH))
+		moneySpent = float64(unt.getStaticData().Cost) /
+			float64(unt.getStaticData().BuildTime*(DESIRED_TPS/BUILDINGS_ACTIONS_TICK_EACH))
 	}
 	// spend money
 	coeff := a.getFaction().getEnergyProductionMultiplier()
@@ -279,12 +279,12 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 			for x := bld.topLeftX; x < bld.topLeftX+bld.getStaticData().w; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
 				y := bld.topLeftY + bld.getStaticData().h
-				if unt.getStaticData().isAircraft || b.costMapForMovement(x, y) != -1 {
+				if unt.getStaticData().IsAircraft || b.costMapForMovement(x, y) != -1 {
 					unt.centerX, unt.centerY = geometry.TileCoordsToTrueCoords(x, y)
 					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {
 						unt.currentOrder.code = ORDER_MOVE
 						unt.currentOrder.setTargetTileCoords(bld.rallyTileX, bld.rallytileY)
-						if !unt.getStaticData().isAircraft {
+						if !unt.getStaticData().IsAircraft {
 							bld.faction.addDispatchRequest(unt, bld.rallyTileX, bld.rallytileY, ORDER_CARRY_UNIT_TO_TARGET_COORDS, b.currentTick+100)
 						}
 					}

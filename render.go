@@ -50,7 +50,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 	}
 	// render ground units
 	for i := b.units.Front(); i != nil; i = i.Next() {
-		if !i.Value.(*unit).getStaticData().isAircraft {
+		if !i.Value.(*unit).getStaticData().IsAircraft {
 			r.renderUnit(b, pc, i.Value.(*unit))
 		}
 	}
@@ -61,7 +61,7 @@ func (r *renderer) renderBattlefield(b *battlefield, pc *playerController) {
 
 	// render aircrafts
 	for i := b.units.Front(); i != nil; i = i.Next() {
-		if i.Value.(*unit).getStaticData().isAircraft {
+		if i.Value.(*unit).getStaticData().IsAircraft {
 			r.renderUnit(b, pc, i.Value.(*unit))
 		}
 	}
@@ -152,7 +152,7 @@ func (r *renderer) renderProjectile(proj *projectile, pc *playerController) {
 	if !pc.controlledFaction.seesTileAtCoords(tx, ty) {
 		return
 	}
-	sprite := projectilesAtlaces[proj.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(0, proj.rotationDegree, 0)
+	sprite := projectilesAtlaces[proj.getStaticData().SpriteCode].getSpriteByColorDegreeAndFrameNumber(0, proj.rotationDegree, 0)
 	rl.DrawTexture(
 		sprite,
 		osx-sprite.Width/2,
@@ -174,7 +174,7 @@ func (r *renderer) renderEffect(e *effect) {
 		expPercent := e.getExpirationPercent(r.btl.currentTick)
 		currentFrame := geometry.GetPartitionIndex(expPercent, 0, 100, neededAtlas.totalFrames())
 		if e.splashCircleRadius > 0 {
-			radius := float32(float64(expPercent * TILE_SIZE_IN_PIXELS) * e.splashCircleRadius) / 100.0
+			radius := float32(float64(expPercent*TILE_SIZE_IN_PIXELS)*e.splashCircleRadius) / 100.0
 			rl.DrawCircleLines(osx, osy, radius, rl.Red)
 			rl.DrawCircleLines(osx, osy, radius+1, rl.Maroon)
 			rl.DrawCircleLines(osx, osy, radius+2, rl.Yellow)

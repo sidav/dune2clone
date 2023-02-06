@@ -32,7 +32,7 @@ func (b *battlefield) actorForActorsTurret(a actor) {
 func (b *battlefield) actTurret(shooter actor, t *turret) {
 	// shooterTileX, shooterTileY := 0, 0
 	shooterX, shooterY := 0.0, 0.0
-	turretRange := modifyTurretRangeByUnitExpLevel(t.getStaticData().fireRange, shooter.getExperienceLevel())
+	turretRange := modifyTurretRangeByUnitExpLevel(t.getStaticData().FireRange, shooter.getExperienceLevel())
 	if u, ok := shooter.(*unit); ok {
 		// shooterTileX, shooterTileY = geometry.TrueCoordsToTileCoords(u.centerX, u.centerY)
 		shooterX, shooterY = u.centerX, u.centerY
@@ -73,11 +73,11 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 		rotateTo = geometry.GetDegreeOfFloatVector(targetCenterX-shooterX, targetCenterY-shooterY)
 	}
 	if t.canRotate() {
-		t.rotationDegree += geometry.GetDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().rotateSpeed)
+		t.rotationDegree += geometry.GetDiffForRotationStep(t.rotationDegree, rotateTo, t.getStaticData().RotateSpeed)
 		t.normalizeDegrees()
 	}
 
-	if abs(t.rotationDegree-rotateTo) <= t.getStaticData().fireSpreadDegrees/2 {
+	if abs(t.rotationDegree-rotateTo) <= t.getStaticData().FireSpreadDegrees/2 {
 		b.shootAsTurretAtTarget(shooter, t)
 	}
 }
@@ -87,11 +87,11 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 	targetCenterX, targetCenterY := t.targetActor.getPhysicalCenterCoords()
 	vectX, vectY := geometry.DegreeToUnitVector(t.rotationDegree)
 	projX, projY := shooterX+vectX/2, shooterY+vectY/2 // TODO: turret displacement
-	degreeSpread := rnd.RandInRange(-t.getStaticData().fireSpreadDegrees, t.getStaticData().fireSpreadDegrees)
-	rangeSpread := t.getStaticData().shotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
+	degreeSpread := rnd.RandInRange(-t.getStaticData().FireSpreadDegrees, t.getStaticData().FireSpreadDegrees)
+	rangeSpread := t.getStaticData().ShotRangeSpread * float64(rnd.RandInRange(-100, 100)) / 100
 	proj := &projectile{
 		faction:        shooter.getFaction(),
-		staticData:     t.getStaticData().firedProjectileData,
+		staticData:     t.getStaticData().FiredProjectileData,
 		centerX:        projX,
 		centerY:        projY,
 		rotationDegree: t.rotationDegree + degreeSpread,
@@ -104,12 +104,12 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		proj.fuel *= 1.5
 	}
 	b.addProjectile(proj)
-	t.nextTickToAct = b.currentTick + modifyTurretCooldownByExpLevel(t.getStaticData().attackCooldown, shooter.getExperienceLevel())
+	t.nextTickToAct = b.currentTick + modifyTurretCooldownByExpLevel(t.getStaticData().AttackCooldown, shooter.getExperienceLevel())
 }
 
 func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {
 	if a.isInAir() {
-		return t.getStaticData().attacksAir
+		return t.getStaticData().AttacksAir
 	}
-	return t.getStaticData().attacksLand
+	return t.getStaticData().AttacksLand
 }

@@ -16,19 +16,19 @@ func (p *projectile) getStaticData() *projectileStatic {
 }
 
 func (p *projectile) isHoming() bool {
-	return p.getStaticData().rotationSpeed > 0
+	return p.getStaticData().RotationSpeed > 0
 }
 
 type projectileStatic struct {
-	spriteCode                string
-	size                      float64
-	speed                     float64
-	splashRadius              float64
-	createsEffectOnImpact     bool
-	effectCreatedOnImpactCode effectCode
-	rotationSpeed             int
+	SpriteCode                string     `json:"sprite_code,omitempty"`
+	Size                      float64    `json:"size,omitempty"`
+	Speed                     float64    `json:"speed,omitempty"`
+	SplashRadius              float64    `json:"splash_radius,omitempty"`
+	CreatesEffectOnImpact     bool       `json:"creates_effect_on_impact,omitempty"`
+	EffectCreatedOnImpactCode effectCode `json:"effect_created_on_impact_code,omitempty"`
+	RotationSpeed             int        `json:"rotation_speed,omitempty"`
 
-	hitDamage    int
-	splashDamage int
-	damageType   damageCode
+	HitDamage    int        `json:"hit_damage,omitempty"`
+	SplashDamage int        `json:"splash_damage,omitempty"`
+	DamageType   damageCode `json:"damage_type,omitempty"`
 }

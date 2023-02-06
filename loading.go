@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"os"
 )
 
 var (
@@ -126,4 +129,39 @@ func loadSprites(r *renderer) {
 	effectsAtlaces["smallexplosion"] = CreateAtlasFromFile(currPath+"explosion_small.png", 0, 0, 4, 4, 4, 4, 16, false, false)
 	effectsAtlaces["regularexplosion"] = CreateAtlasFromFile(currPath+"explosion.png", 0, 0, 16, 16, 16, 16, 3, false, false)
 	effectsAtlaces["biggerexplosion"] = CreateAtlasFromFile(currPath+"explosion_bigger.png", 0, 0, 40, 40, 20, 20, 3, false, false)
+
+	importUnitsDataOrCreateFile()
+}
+
+func importUnitsDataOrCreateFile() {
+	const filePath = "units_json.json"
+	fiBytes, err := os.ReadFile(filePath)
+	if errors.Is(err, os.ErrNotExist) {
+
+		// create new file with units data
+		res, _ := json.Marshal(sTableUnits)
+		fo, err := os.Create(filePath)
+		if err != nil {
+			panic(err)
+		}
+		defer func() {
+			if err := fo.Close(); err != nil {
+				panic(err)
+			}
+		}()
+		fo.Write(res)
+		return
+
+	} else if err != nil {
+		panic(err)
+	}
+
+	nonPointerTable := make(map[string]unitStatic, 0)
+	err = json.Unmarshal(fiBytes, &nonPointerTable)
+	if err != nil {
+		panic(err)
+	}
+
+	sTableUnits = make(map[int]*unitStatic, 0)
+	err = json.Unmarshal(fiBytes, &sTableUnits)
 }

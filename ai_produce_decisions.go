@@ -62,7 +62,7 @@ func (ai *aiStruct) selectRandomProducableCodeByFunction(availableCodes []int, f
 		index = rnd.SelectRandomIndexFromWeighted(len(candidates),
 			func(x int) int {
 				consideredCode := candidates[x]
-				if int(ai.controlsFaction.getMoney()) > sTableUnits[consideredCode].cost {
+				if int(ai.controlsFaction.getMoney()) > sTableUnits[consideredCode].Cost {
 					return 5
 				} else if !ai.isPoor() {
 					return 3
@@ -76,16 +76,16 @@ func (ai *aiStruct) selectRandomProducableCodeByFunction(availableCodes []int, f
 
 func (ai *aiStruct) deduceUnitFunction(untCode int) string {
 	usd := sTableUnits[untCode]
-	if usd.maxCargoAmount > 0 {
+	if usd.MaxCargoAmount > 0 {
 		return "harvester"
 	}
-	if usd.canBeDeployed {
+	if usd.CanBeDeployed {
 		return "deployable"
 	}
-	if usd.isTransport {
+	if usd.IsTransport {
 		return "transport"
 	}
-	if len(usd.turretsData) > 0 {
+	if len(usd.TurretsData) > 0 {
 		return "combat"
 	}
 	panic(fmt.Sprintf("%d: wat is it?!", untCode))

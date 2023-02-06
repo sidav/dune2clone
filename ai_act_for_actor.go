@@ -1,7 +1,7 @@
 package main
 
 func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
-	if u.getStaticData().maxCargoAmount > 0 {
+	if u.getStaticData().MaxCargoAmount > 0 {
 		if ai.shouldUnitBeSentForRepairs(u) {
 			ai.sendUnitForRepairs(u)
 			return
@@ -18,14 +18,14 @@ func (ai *aiStruct) actForUnit(b *battlefield, u *unit) {
 		return
 	}
 	u.currentOrder.resetOrder()
-	if u.getStaticData().isTransport {
+	if u.getStaticData().IsTransport {
 		return // don't touch transports, they're automated!
 	}
-	if u.getStaticData().canBeDeployed {
+	if u.getStaticData().CanBeDeployed {
 		ai.deployDeployableUnitSomewhere(b, u)
 		return
 	}
-	if u.getStaticData().maxCargoAmount > 0 {
+	if u.getStaticData().MaxCargoAmount > 0 {
 		u.currentOrder.code = ORDER_HARVEST
 		return
 	}

@@ -3,7 +3,7 @@ package main
 import "dune2clone/geometry"
 
 type turret struct {
-	staticData     *turretStatic
+	staticData     *TurretStatic
 	rotationDegree int
 	nextTickToAct  int
 
@@ -12,10 +12,10 @@ type turret struct {
 }
 
 func (t *turret) canRotate() bool {
-	return t.getStaticData().rotateSpeed > 0
+	return t.getStaticData().RotateSpeed > 0
 }
 
-func (t *turret) getStaticData() *turretStatic {
+func (t *turret) getStaticData() *TurretStatic {
 	return t.staticData
 }
 

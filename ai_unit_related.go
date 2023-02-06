@@ -3,7 +3,7 @@ package main
 import "dune2clone/geometry"
 
 func (ai *aiStruct) deployDeployableUnitSomewhere(b *battlefield, u *unit) {
-	bld := createBuilding(u.getStaticData().deploysInto, 0, 0, u.faction)
+	bld := createBuilding(u.getStaticData().DeploysInto, 0, 0, u.faction)
 	tx, ty := u.getTileCoords()
 	if !b.canUnitBeDeployedAt(u, tx, ty) {
 		depX, depY := -1, -1

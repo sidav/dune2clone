@@ -36,10 +36,10 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	}
 	var sprites []rl.Texture2D
 	frameNumber := b.currentTick / (DESIRED_TPS / 4)
-	if bld.turret != nil && bld.turret.getStaticData().spriteCode != "" {
+	if bld.turret != nil && bld.turret.getStaticData().SpriteCode != "" {
 		sprites = []rl.Texture2D{
 			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
-			turretsAtlaces[bld.turret.getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
+			turretsAtlaces[bld.turret.getStaticData().SpriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
 		}
 	} else {
 		sprites = []rl.Texture2D{
@@ -141,7 +141,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	x, y := u.centerX, u.centerY
 	offset := 0.5
-	chassisW := unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0).Width
+	chassisW := unitChassisAtlaces[sTableUnits[u.code].ChassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0).Width
 	if chassisW > TILE_SIZE_IN_PIXELS {
 		offset = float64(chassisW) / float64(TILE_SIZE_IN_PIXELS) / 2
 	}
@@ -168,26 +168,26 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 	for _, relSquadCoord := range relativeSquadCoords {
 		osx, osy := r.physicalToOnScreenCoords(x+relSquadCoord[0]-offset, y+relSquadCoord[1]-offset)
 		rl.DrawTexture(
-			unitChassisAtlaces[sTableUnits[u.code].chassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0),
+			unitChassisAtlaces[sTableUnits[u.code].ChassisSpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.chassisDegree, 0),
 			osx,
 			osy,
 			DEFAULT_TINT,
 		)
 		// draw turrets
 		for turrIndex := range u.turrets {
-			if u.turrets[turrIndex].getStaticData().spriteCode == "" {
+			if u.turrets[turrIndex].getStaticData().SpriteCode == "" {
 				continue
 			}
 			usd := u.getStaticData()
 			// calculate turret displacement
-			dsplX, dsplY := usd.turretsData[turrIndex].turretCenterX, usd.turretsData[turrIndex].turretCenterY
+			dsplX, dsplY := usd.TurretsData[turrIndex].TurretCenterX, usd.TurretsData[turrIndex].TurretCenterY
 			if dsplX != 0 || dsplY != 0 {
 				// rotate according to units face
 				chassisShownDegree := geometry.SnapDegreeToFixedDirections(u.chassisDegree, 8)
 				dsplX, dsplY = geometry.RotateFloat64Vector(dsplX, dsplY, chassisShownDegree)
 			}
 			turrOsX, turrOsY := r.physicalToOnScreenCoords(x+dsplX, y+dsplY)
-			sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().spriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.turrets[turrIndex].rotationDegree, 0)
+			sprite := turretsAtlaces[u.turrets[turrIndex].getStaticData().SpriteCode].getSpriteByColorDegreeAndFrameNumber(u.faction.colorNumber, u.turrets[turrIndex].rotationDegree, 0)
 			rl.DrawTexture(
 				sprite,
 				turrOsX-sprite.Width/2,

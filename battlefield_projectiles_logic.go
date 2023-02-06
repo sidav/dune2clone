@@ -11,7 +11,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	}
 	// move forward
 	vx, vy := geometry.DegreeToUnitVector(p.rotationDegree)
-	spd := math.Min(p.getStaticData().speed, p.fuel)
+	spd := math.Min(p.getStaticData().Speed, p.fuel)
 	p.centerX += spd * vx
 	p.centerY += spd * vy
 	p.fuel -= spd
@@ -20,7 +20,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 	if p.targetActor != nil && p.isHoming() {
 		targX, targY := p.targetActor.getPhysicalCenterCoords()
 		rotateTo := geometry.GetDegreeOfFloatVector(targX-p.centerX, targY-p.centerY)
-		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().rotationSpeed)
+		p.rotationDegree += geometry.GetDiffForRotationStep(p.rotationDegree, rotateTo, p.getStaticData().RotationSpeed)
 		p.rotationDegree = geometry.NormalizeDegree(p.rotationDegree)
 		if geometry.GetApproxDistFloat64(targX, targY, p.centerX, p.centerY) < 1 {
 			hitTarget = p.targetActor
@@ -36,18 +36,18 @@ func (b *battlefield) actForProjectile(p *projectile) {
 		p.setToRemove = true
 	}
 	if p.setToRemove {
-		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().splashRadius,
-			modifyDamageByUnitExpLevel(p.getStaticData().splashDamage, p.whoShot.getExperienceLevel()),
-			p.getStaticData().damageType)
+		b.dealSplashDamage(p.centerX, p.centerY, p.getStaticData().SplashRadius,
+			modifyDamageByUnitExpLevel(p.getStaticData().SplashDamage, p.whoShot.getExperienceLevel()),
+			p.getStaticData().DamageType)
 		if hitTarget != nil {
-			b.dealDamageToActor(modifyDamageByUnitExpLevel(p.getStaticData().hitDamage, p.whoShot.getExperienceLevel()),
-				p.getStaticData().damageType, p.targetActor)
+			b.dealDamageToActor(modifyDamageByUnitExpLevel(p.getStaticData().HitDamage, p.whoShot.getExperienceLevel()),
+				p.getStaticData().DamageType, p.targetActor)
 			// add experience
 			expAmount := 1
 			if !hitTarget.isAlive() {
 				p.whoShot.getFaction().gameStatistics.totalDestroyed++
 				if u, ok := hitTarget.(*unit); ok {
-					expAmount = u.getStaticData().cost
+					expAmount = u.getStaticData().Cost
 				}
 				if b, ok := hitTarget.(*building); ok {
 					expAmount = b.getStaticData().cost
@@ -55,12 +55,12 @@ func (b *battlefield) actForProjectile(p *projectile) {
 			}
 			p.whoShot.receiveExperienceAmount(int(p.whoShot.getFaction().experienceMultiplier * float64(expAmount)))
 		}
-		if p.getStaticData().createsEffectOnImpact {
+		if p.getStaticData().CreatesEffectOnImpact {
 			b.addEffect(&effect{
 				centerX:            p.centerX,
 				centerY:            p.centerY,
-				splashCircleRadius: p.getStaticData().splashRadius,
-				code:               p.getStaticData().effectCreatedOnImpactCode,
+				splashCircleRadius: p.getStaticData().SplashRadius,
+				code:               p.getStaticData().EffectCreatedOnImpactCode,
 				creationTick:       b.currentTick,
 			})
 		}

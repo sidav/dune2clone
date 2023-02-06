@@ -16,7 +16,7 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 		return
 	}
 	if u.currentOrder.code == ORDER_NONE {
-		if u.getStaticData().isAircraft {
+		if u.getStaticData().IsAircraft {
 			b.executeWaitOrderForAircraft(u)
 		}
 		return // TODO: look around for targets etc
@@ -32,7 +32,7 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 	case ORDER_RETURN_TO_REFINERY:
 		b.executeReturnResourcesOrder(u)
 	case ORDER_MOVE_TO_REPAIR:
-		if u.getStaticData().isAircraft {
+		if u.getStaticData().IsAircraft {
 			b.executeAirMoveToRepairOrder(u)
 		} else {
 			b.executeGroundMoveToRepairOrder(u)
@@ -55,7 +55,7 @@ func (b *battlefield) executeMoveOrder(u *unit) {
 		u.currentOrder.resetOrder()
 		return
 	}
-	if u.getStaticData().isAircraft {
+	if u.getStaticData().IsAircraft {
 		u.currentAction.code = ACTION_MOVE
 		u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
 	} else {
@@ -76,7 +76,7 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 	if geometry.GetApproxDistFromTo(utx, uty, orderTileX, orderTileY) <= u.getMainTurretRange() {
 		return
 	} else {
-		if u.getStaticData().isAircraft {
+		if u.getStaticData().IsAircraft {
 			u.currentAction.code = ACTION_MOVE
 			u.currentAction.targetTileX, u.currentAction.targetTileY = orderTileX, orderTileY
 		} else {
@@ -95,7 +95,7 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 }
 
 func (b *battlefield) executeHarvestOrder(u *unit) {
-	if u.currentCargoAmount >= u.getStaticData().maxCargoAmount || u.currentOrder.failedToExecute {
+	if u.currentCargoAmount >= u.getStaticData().MaxCargoAmount || u.currentOrder.failedToExecute {
 		u.currentOrder.dispatchCalled = false
 		u.currentOrder.failedToExecute = false
 		u.currentOrder.code = ORDER_RETURN_TO_REFINERY
@@ -196,9 +196,9 @@ func (b *battlefield) executeGroundMoveToRepairOrder(u *unit) {
 }
 
 func (b *battlefield) executeDeployOrderForUnit(u *unit) {
-	if u.getStaticData().canBeDeployed {
+	if u.getStaticData().CanBeDeployed {
 		u.currentAction.code = ACTION_DEPLOY
-		u.currentAction.targetActor = createBuilding(u.getStaticData().deploysInto, 0, 0, u.getFaction())
+		u.currentAction.targetActor = createBuilding(u.getStaticData().DeploysInto, 0, 0, u.getFaction())
 		u.currentAction.maxCompletionAmount = 2 * (DESIRED_TPS / UNIT_ACTIONS_TICK_EACH)
 	}
 }

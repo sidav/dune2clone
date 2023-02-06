@@ -9,7 +9,7 @@ func (bt *balanceTester) testCombatBalance() {
 	debugWritef("===== BALANCE CHECK =====\n")
 	unitCodesToCompare := make([]int, 0)
 	for k1, v1 := range sTableUnits {
-		if len(v1.turretsData) > 0 {
+		if len(v1.TurretsData) > 0 {
 			unitCodesToCompare = append(unitCodesToCompare, k1)
 		}
 	}
@@ -20,7 +20,7 @@ func (bt *balanceTester) testCombatBalance() {
 		}
 	}
 	sort.Slice(unitCodesToCompare, func(i, j int) bool {
-		return sTableUnits[unitCodesToCompare[i]].displayedName[0] < sTableUnits[unitCodesToCompare[j]].displayedName[0]
+		return sTableUnits[unitCodesToCompare[i]].DisplayedName[0] < sTableUnits[unitCodesToCompare[j]].DisplayedName[0]
 	})
 	for i := range unitCodesToCompare {
 		debugWritef("\n")
@@ -50,7 +50,7 @@ func (bt *balanceTester) testCombatBalance() {
 				totalBattles++
 			}
 		}
-		debugWritef("%s win rate is %.1f%%\n", sTableUnits[unitCodesToCompare[i]].displayedName,
+		debugWritef("%s win rate is %.1f%%\n", sTableUnits[unitCodesToCompare[i]].DisplayedName,
 			100*totalWon/totalBattles)
 	}
 }
@@ -101,7 +101,7 @@ func (bt *balanceTester) getAutobattledDamageOfAllTurretsOnUnit(shooter, target 
 			sqSize = u.squadSize
 		}
 		for i := 0; i < sqSize; i++ {
-			for _, t := range u.getStaticData().turretsData {
+			for _, t := range u.getStaticData().TurretsData {
 				dmg += bt.getTotalDamageOfSingleTurretOnActorInRound(t, target, round)
 			}
 		}
@@ -122,18 +122,18 @@ func (bt *balanceTester) dealDamageToActor(target actor, damage int) {
 	}
 }
 
-func (bt *balanceTester) getTotalDamageOfSingleTurretOnActorInRound(t *turretStatic, target actor, round int) int {
+func (bt *balanceTester) getTotalDamageOfSingleTurretOnActorInRound(t *TurretStatic, target actor, round int) int {
 	dmg := 0
-	if t.attacksLand && !target.isInAir() || t.attacksAir && target.isInAir() {
+	if t.AttacksLand && !target.isInAir() || t.AttacksAir && target.isInAir() {
 		armorType := ARMORTYPE_BUILDING
 		if u, ok := target.(*unit); ok {
-			armorType = u.getStaticData().armorType
+			armorType = u.getStaticData().ArmorType
 		}
-		if round%t.attackCooldown == 0 {
-			dmg += calculateDamageOnArmor(t.firedProjectileData.hitDamage,
-				t.firedProjectileData.damageType, armorType)
-			dmg += calculateDamageOnArmor(t.firedProjectileData.splashDamage,
-				t.firedProjectileData.damageType, armorType)
+		if round%t.AttackCooldown == 0 {
+			dmg += calculateDamageOnArmor(t.FiredProjectileData.HitDamage,
+				t.FiredProjectileData.DamageType, armorType)
+			dmg += calculateDamageOnArmor(t.FiredProjectileData.SplashDamage,
+				t.FiredProjectileData.DamageType, armorType)
 		}
 	}
 	return dmg

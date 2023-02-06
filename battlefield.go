@@ -367,7 +367,7 @@ func (b *battlefield) findPathForUnitTo(u *unit, tileX, tileY int, forceIncludeF
 
 func (b *battlefield) canUnitBeDeployedAt(u *unit, x, y int) bool {
 	// tx, ty := u.getTileCoords()
-	bld := createBuilding(u.getStaticData().deploysInto, 0, 0, u.faction)
+	bld := createBuilding(u.getStaticData().DeploysInto, 0, 0, u.faction)
 	b.removeActor(u)
 	can := b.canBuildingBePlacedAt(bld, x, y, 0, true)
 	b.addActor(u)

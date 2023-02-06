@@ -122,7 +122,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 			}
 			// maybe product?
 			for _, code := range bld.getStaticData().produces {
-				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForUnitOfCode(code) {
+				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].HotkeyToBuild, false) && bld.faction.isTechAvailableForUnitOfCode(code) {
 					bld.currentOrder.code = ORDER_PRODUCE
 					bld.currentOrder.targetActorCode = code
 				}
@@ -193,10 +193,10 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 				u.currentOrder.targetActor = aac
 				return
 			}
-			if len(pc.selection) == 1 && aac == pc.selection[0] && u.getStaticData().canBeDeployed {
+			if len(pc.selection) == 1 && aac == pc.selection[0] && u.getStaticData().CanBeDeployed {
 				u.currentOrder.code = ORDER_DEPLOY
 			}
-			if u.getStaticData().maxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
+			if u.getStaticData().MaxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
 				u.currentOrder.code = ORDER_HARVEST
 			}
 			if bld, ok := aac.(*building); ok {
@@ -204,7 +204,7 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_MOVE_TO_REPAIR
 				}
-				if bld.getStaticData().receivesResources && u.getStaticData().maxCargoAmount > 0 {
+				if bld.getStaticData().receivesResources && u.getStaticData().MaxCargoAmount > 0 {
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 				}

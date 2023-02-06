@@ -136,8 +136,8 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 	}
 
 	if u, ok := pc.getFirstSelection().(*unit); ok {
-		if u.getStaticData().maxCargoAmount > 0 {
-			r.drawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().maxCargoAmount),
+		if u.getStaticData().MaxCargoAmount > 0 {
+			r.drawText(fmt.Sprintf("Cargo: %d/%d", u.currentCargoAmount, u.getStaticData().MaxCargoAmount),
 				x+15, y+1+lineNum*UI_FONT_SIZE, UI_FONT_SIZE, rl.Green)
 			lineNum++
 		}
@@ -221,8 +221,8 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 			if !bld.faction.isTechAvailableForUnitOfCode(code) {
 				color = rl.DarkGray
 			}
-			r.drawText(r.collectLineForBuildMenu(sTableUnits[code].hotkeyToBuild,
-				sTableUnits[code].displayedName, sTableUnits[code].cost),
+			r.drawText(r.collectLineForBuildMenu(sTableUnits[code].HotkeyToBuild,
+				sTableUnits[code].DisplayedName, sTableUnits[code].Cost),
 				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, color)
 			line++
 		}

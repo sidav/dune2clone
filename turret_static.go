@@ -1,16 +1,16 @@
 package main
 
-type turretStatic struct {
-	spriteCode  string // empty means invisible turret
-	rotateSpeed int
+type TurretStatic struct {
+	SpriteCode  string `json:"sprite_code,omitempty"` // empty means invisible turret
+	RotateSpeed int    `json:"rotate_speed,omitempty"`
 
-	turretCenterX, turretCenterY float64 // relative to unit's center
+	TurretCenterX, TurretCenterY float64 // relative to unit's center
 
-	fireRange, attackCooldown int
-	fireSpreadDegrees         int
-	shotRangeSpread           float64
+	FireRange, AttackCooldown int
+	FireSpreadDegrees         int     `json:"fire_spread_degrees,omitempty"`
+	ShotRangeSpread           float64 `json:"shot_range_spread,omitempty"`
 
-	attacksLand, attacksAir bool
+	AttacksLand, AttacksAir bool
 
-	firedProjectileData *projectileStatic
+	FiredProjectileData *projectileStatic `json:"fired_projectile_data,omitempty"`
 }

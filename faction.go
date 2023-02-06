@@ -66,7 +66,7 @@ func (f *faction) isTechAvailableForBuildingOfCode(bldCode buildingCode) bool {
 }
 
 func (f *faction) isTechAvailableForUnitOfCode(untCode int) bool {
-	return sTableUnits[untCode].requiresBuilding == BLD_NULL || f.hasBuilding(sTableUnits[untCode].requiresBuilding)
+	return sTableUnits[untCode].RequiresBuilding == BLD_NULL || f.hasBuilding(sTableUnits[untCode].RequiresBuilding)
 }
 
 func (f *faction) hasBuilding(bldCode buildingCode) bool {

@@ -82,7 +82,7 @@ func (a *action) getCompletionPercent() int {
 			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_TPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
-			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (DESIRED_TPS / BUILDINGS_ACTIONS_TICK_EACH))
+			return int(100*a.completionAmount) / (b.getStaticData().BuildTime * (DESIRED_TPS / BUILDINGS_ACTIONS_TICK_EACH))
 		}
 	}
 	if a.maxCompletionAmount > 0 {

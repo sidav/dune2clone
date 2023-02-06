@@ -31,18 +31,18 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 		code:             code,
 		centerX:          cx,
 		centerY:          cy,
-		currentHitpoints: sTableUnits[code].maxHitpoints,
-		squadSize:        sTableUnits[code].maxSquadSize,
+		currentHitpoints: sTableUnits[code].MaxHitpoints,
+		squadSize:        sTableUnits[code].MaxSquadSize,
 		faction:          fact,
 		chassisDegree:    270,
 	}
-	if sTableUnits[code].turretsData != nil {
-		for i := range sTableUnits[code].turretsData {
-			u.turrets = append(u.turrets, &turret{staticData: sTableUnits[code].turretsData[i], rotationDegree: 270})
+	if sTableUnits[code].TurretsData != nil {
+		for i := range sTableUnits[code].TurretsData {
+			u.turrets = append(u.turrets, &turret{staticData: sTableUnits[code].TurretsData[i], rotationDegree: 270})
 		}
 	}
 
-	u.currentOrder.code = u.getStaticData().defaultOrderOnCreation
+	u.currentOrder.code = u.getStaticData().DefaultOrderOnCreation
 	u.currentOrder.targetTileX = -1
 	u.currentOrder.targetTileY = -1
 	u.currentAction.resetAction()
@@ -51,13 +51,13 @@ func createUnit(code, tx, ty int, fact *faction) *unit {
 
 func (u *unit) receiveExperienceAmount(amnt int) {
 	u.experience += amnt
-	if u.getStaticData().hasEliteVersion && u.getExperienceLevel() == MAX_VETERANCY_LEVEL {
+	if u.getStaticData().HasEliteVersion && u.getExperienceLevel() == MAX_VETERANCY_LEVEL {
 		u.convertToElite()
 	}
 }
 
 func (u *unit) getRegenAmount() int {
-	return u.getStaticData().hpRegen + getVeterancyBasedRegen(u.getExperienceLevel())
+	return u.getStaticData().HpRegen + getVeterancyBasedRegen(u.getExperienceLevel())
 }
 
 func (u *unit) setHitpoints(hp int) {
@@ -65,17 +65,17 @@ func (u *unit) setHitpoints(hp int) {
 }
 
 func (u *unit) convertToElite() {
-	u.code = u.getStaticData().eliteVersionCode
+	u.code = u.getStaticData().EliteVersionCode
 	u.turrets = []*turret{}
-	if u.getStaticData().turretsData != nil {
-		for i := range u.getStaticData().turretsData {
-			u.turrets = append(u.turrets, &turret{staticData: u.getStaticData().turretsData[i], rotationDegree: 270})
+	if u.getStaticData().TurretsData != nil {
+		for i := range u.getStaticData().TurretsData {
+			u.turrets = append(u.turrets, &turret{staticData: u.getStaticData().TurretsData[i], rotationDegree: 270})
 		}
 	}
 }
 
 func (u *unit) getExperienceLevel() int {
-	return getExperienceLevelByAmountAndCost(u.experience, u.getStaticData().cost)
+	return getExperienceLevelByAmountAndCost(u.experience, u.getStaticData().Cost)
 }
 
 func (u *unit) isAlive() bool {
@@ -94,9 +94,9 @@ func (u *unit) getExperience() int {
 }
 
 func (u *unit) recalculateSquadSize() {
-	if u.getStaticData().maxSquadSize > 1 {
+	if u.getStaticData().MaxSquadSize > 1 {
 		u.squadSize = int(
-			math.Ceil(float64(u.getStaticData().maxSquadSize) *
+			math.Ceil(float64(u.getStaticData().MaxSquadSize) *
 				float64(u.currentHitpoints) / float64(u.getMaxHitpoints())),
 		)
 	}
@@ -107,11 +107,11 @@ func (u *unit) getHitpoints() int {
 }
 
 func (u *unit) getMaxHitpoints() int {
-	return modifyMaxHpByExpLevel(u.getStaticData().maxHitpoints, u.getExperienceLevel())
+	return modifyMaxHpByExpLevel(u.getStaticData().MaxHitpoints, u.getExperienceLevel())
 }
 
 func (u *unit) getMovementSpeed() float64 {
-	return modifyUnitSpeedByLevel(u.getStaticData().movementSpeed, u.getExperienceLevel())
+	return modifyUnitSpeedByLevel(u.getStaticData().MovementSpeed, u.getExperienceLevel())
 }
 
 func (u *unit) getHitpointsPercentage() int {
@@ -131,7 +131,7 @@ func (u *unit) getTileCoords() (int, int) {
 }
 
 func (u *unit) getVisionRange() int {
-	vr := u.getStaticData().visionRange
+	vr := u.getStaticData().VisionRange
 	if vr <= 0 {
 		vr = 1
 	}
@@ -153,7 +153,7 @@ func (u *unit) isPresentAt(tileX, tileY int) bool {
 }
 
 func (u *unit) getName() string {
-	return u.getStaticData().displayedName
+	return u.getStaticData().DisplayedName
 }
 
 func (u *unit) getCurrentAction() *action {
@@ -190,7 +190,7 @@ func (u *unit) rotateChassisTowardsDegree(deg int) {
 	if u.chassisDegree == deg {
 		return
 	}
-	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, deg, u.getStaticData().chassisRotationSpeed)
+	rotateSpeed := geometry.GetDiffForRotationStep(u.chassisDegree, deg, u.getStaticData().ChassisRotationSpeed)
 	u.chassisDegree += rotateSpeed
 	for i := range u.turrets {
 		u.turrets[i].rotationDegree += rotateSpeed
@@ -212,9 +212,9 @@ func (u *unit) getMainTurretRange() int {
 	if len(u.turrets) == 0 {
 		return 0
 	}
-	return u.turrets[0].getStaticData().fireRange
+	return u.turrets[0].getStaticData().FireRange
 }
 
 func (u *unit) isInAir() bool {
-	return u.getStaticData().isAircraft
+	return u.getStaticData().IsAircraft
 }

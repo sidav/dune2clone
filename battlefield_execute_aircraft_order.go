@@ -3,14 +3,14 @@ package main
 import "dune2clone/geometry"
 
 func (b *battlefield) executeWaitOrderForAircraft(u *unit) {
-	if !u.getStaticData().isAircraft {
+	if !u.getStaticData().IsAircraft {
 		panic("Aircraft order assigned to non-aircraft")
 	}
 	// look for dispatch requests
 	i := u.faction.dispatchRequests.Front()
 	if i != nil {
 		dr := i.Value.(*dispatchRequestStruct)
-		if dr.assignedOrderCode == ORDER_CARRY_UNIT_TO_TARGET_COORDS && u.getStaticData().isTransport {
+		if dr.assignedOrderCode == ORDER_CARRY_UNIT_TO_TARGET_COORDS && u.getStaticData().IsTransport {
 			u.currentOrder.setTargetTileCoords(dr.targetTileX, dr.targetTileY)
 			u.currentOrder.targetActor = dr.requester
 			u.currentOrder.code = dr.assignedOrderCode

@@ -29,7 +29,7 @@ func (b *battlefield) dealDamageToActor(dmg int, dmgType damageCode, act actor) 
 		bld.currentHitpoints -= calculateDamageOnArmor(dmg, dmgType, ARMORTYPE_BUILDING)
 	}
 	if unt, ok := act.(*unit); ok {
-		unt.currentHitpoints -= calculateDamageOnArmor(dmg, dmgType, unt.getStaticData().armorType)
+		unt.currentHitpoints -= calculateDamageOnArmor(dmg, dmgType, unt.getStaticData().ArmorType)
 		unt.recalculateSquadSize()
 	}
 }
