@@ -100,7 +100,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_TURRET_MINIGUN: {
 		spriteCode:        "turret_base",
-		maxHitpoints:      110,
+		maxHitpoints:      140,
 		w:                 1,
 		h:                 1,
 		displayedName:     "Minigun tower",
@@ -116,7 +116,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 			FireRange:         6,
 			FireSpreadDegrees: 7,
 			ShotRangeSpread:   0.7,
-			AttackCooldown:    5,
+			AttackCooldown:    8,
 			FiredProjectileData: &projectileStatic{
 				SpriteCode:                "bullets",
 				HitDamage:                 4,
@@ -132,7 +132,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 	},
 	BLD_TURRET_CANNON: {
 		spriteCode:        "turret_base",
-		maxHitpoints:      150,
+		maxHitpoints:      200,
 		w:                 1,
 		h:                 1,
 		displayedName:     "Heavy tower",
@@ -145,9 +145,9 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 			AttacksLand:       true,
 			RotateSpeed:       15,
 			FireRange:         6,
-			FireSpreadDegrees: 7,
-			ShotRangeSpread:   0.7,
-			AttackCooldown:    50,
+			FireSpreadDegrees: 6,
+			ShotRangeSpread:   0.6,
+			AttackCooldown:    45,
 			FiredProjectileData: &projectileStatic{
 				SpriteCode:                "shell",
 				Size:                      0.3,
@@ -179,10 +179,10 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 			AttacksLand:       false,
 			AttacksAir:        true,
 			RotateSpeed:       180,
-			FireRange:         8,
+			FireRange:         12,
 			FireSpreadDegrees: 30,
 			ShotRangeSpread:   0.3,
-			AttackCooldown:    100,
+			AttackCooldown:    200,
 			FiredProjectileData: &projectileStatic{
 				SpriteCode:                "aamissile",
 				Size:                      0.3,
