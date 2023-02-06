@@ -125,12 +125,12 @@ func (g *game) startGame() {
 
 		timeReportString += g.createTimeReportString("cleanup+orders", timeLogicStarted, 2)
 
-		if g.battlefield.currentTick > DESIRED_TPS {
+		if g.battlefield.currentTick > config.TargetTPS {
 			timeReportString += g.createTimeReportString("whole tick", timeLoopStarted, 15)
 		}
 
 		timeCurrentActionStarted = time.Now()
-		if g.shouldTickBeRendered(g.battlefield.currentTick, RENDERER_DESIRED_FPS, DESIRED_TPS) {
+		if g.shouldTickBeRendered(g.battlefield.currentTick, config.TargetFPS, config.TargetTPS) {
 			g.render.renderBattlefield(&g.battlefield, pc)
 		}
 		timeReportString += fmt.Sprintf("Render/sleep %dms", time.Since(timeCurrentActionStarted)/time.Millisecond)
@@ -149,12 +149,12 @@ func (g *game) startGame() {
 
 func (g *game) performAiActions() {
 	for i := range g.battlefield.ais {
-		if g.battlefield.currentTick%AI_ANALYZES_EACH == i {
+		if g.battlefield.currentTick%config.AiSettings.AiAnalyzePeriod == i {
 			g.battlefield.ais[i].aiAnalyze(&g.battlefield)
 		}
 	}
 	for i := range g.battlefield.ais {
-		if g.battlefield.currentTick%AI_ACTS_EACH == i {
+		if g.battlefield.currentTick%config.AiSettings.AiActPeriod == i {
 			g.battlefield.ais[i].aiControl(&g.battlefield)
 		}
 	}

@@ -35,7 +35,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		tint = FOG_OF_WAR_TINT
 	}
 	var sprites []rl.Texture2D
-	frameNumber := b.currentTick / (DESIRED_TPS / 4)
+	frameNumber := b.currentTick / (config.TargetTPS / 4)
 	if bld.turret != nil && bld.turret.getStaticData().SpriteCode != "" {
 		sprites = []rl.Texture2D{
 			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
@@ -61,8 +61,8 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		builtCells := geometry.GetPartitionIndex(bld.currentAction.getCompletionPercent(), 0, 100, bldArea) - 1
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
-				frameNumber := (x + w*y + b.currentTick/(DESIRED_TPS*10)) % underConstructionAtlas.totalFrames()
-				if (x+w*y /* + b.currentTick/(DESIRED_TPS*10) */)%bldArea > builtCells {
+				frameNumber := (x + w*y + b.currentTick/(config.TargetTPS*10)) % underConstructionAtlas.totalFrames()
+				if (x+w*y /* + b.currentTick/(config.TargetTPS*10) */)%bldArea > builtCells {
 					rl.DrawTexture(
 						underConstructionAtlas.getSpriteByFrame(frameNumber),
 						osx+int32(x)*TILE_SIZE_IN_PIXELS,

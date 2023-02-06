@@ -6,22 +6,22 @@ import (
 )
 
 func debugWrite(msg string) {
-	if DEBUG_OUTPUT {
+	if config.DebugOutput {
 		fmt.Println(msg)
 	}
 }
 
 func debugWritef(msg string, args ...interface{}) {
-	if DEBUG_OUTPUT {
+	if config.DebugOutput {
 		fmt.Printf(msg, args...)
 	}
 }
 
 type debugTimeInfo struct {
-	logicName              string
-	duration               time.Duration
-	maxRecordedDuration    time.Duration
-	criticalDuration       time.Duration
+	logicName           string
+	duration            time.Duration
+	maxRecordedDuration time.Duration
+	criticalDuration    time.Duration
 
 	// for mean calculation
 	totalChanges           int

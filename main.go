@@ -6,9 +6,13 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-var rnd fibrandom.FibRandom
+var (
+	config yamlConfig
+	rnd    fibrandom.FibRandom
+)
 
 func main() {
+	config.initFromFileOrCreate()
 	// geometry.SetDegreesInCircleAmount(100)
 
 	runSanity := flag.Bool("sanity", false, "Perform static data sanity")
@@ -29,7 +33,7 @@ func main() {
 	}
 
 	rl.InitWindow(int32(WINDOW_W), int32(WINDOW_H), "DAS IST KEIN DUNE 2!")
-	rl.SetTargetFPS(RENDERER_DESIRED_FPS)
+	rl.SetTargetFPS(int32(config.TargetFPS))
 	rl.SetWindowState(rl.FlagWindowResizable)
 	rl.SetExitKey(rl.KeyEscape)
 

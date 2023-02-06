@@ -72,7 +72,7 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 			for _, u := range tf.units {
 				u.currentOrder.code = ORDER_ATTACK
 				u.currentOrder.targetActor = tf.target
-				tf.nextTickToGiveOrders = b.currentTick + 5*DESIRED_TPS
+				tf.nextTickToGiveOrders = b.currentTick + 5*config.TargetTPS
 			}
 		} else {
 			tf.target = ai.findVisibleTargetForAttack(b)
@@ -94,7 +94,7 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 		for _, u := range tf.units {
 			u.currentOrder.code = ORDER_ATTACK
 			u.currentOrder.targetActor = tf.target
-			tf.nextTickToGiveOrders = b.currentTick + 5*DESIRED_TPS
+			tf.nextTickToGiveOrders = b.currentTick + 5*config.TargetTPS
 		}
 	} else {
 		tf.target = ai.findVisibleTargetNearBase(b, basePatrolRadius)
@@ -119,7 +119,7 @@ func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskF
 				return
 			}
 		}
-		tf.nextTickToGiveOrders = b.currentTick + DESIRED_TPS*10
+		tf.nextTickToGiveOrders = b.currentTick + config.TargetTPS*10
 	}
 }
 
@@ -157,7 +157,7 @@ func (ai *aiStruct) giveReconOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
 			u.currentOrder.setTargetTileCoords(coordX, coordY)
 		}
 	}
-	tf.nextTickToGiveOrders = b.currentTick + 10*DESIRED_TPS
+	tf.nextTickToGiveOrders = b.currentTick + 10*config.TargetTPS
 }
 
 func (ai *aiStruct) findVisibleTargetNearBase(b *battlefield, radius int) actor {

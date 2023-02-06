@@ -189,7 +189,7 @@ func (r *renderer) renderEffect(e *effect) {
 }
 
 func (r *renderer) renderFactionFlagAt(f *faction, leftX, bottomY int32) {
-	frame := (6 * r.btl.currentTick / DESIRED_TPS) % uiAtlaces["factionflag"].totalFrames()
+	frame := (6 * r.btl.currentTick / config.TargetTPS) % uiAtlaces["factionflag"].totalFrames()
 	spr := uiAtlaces["factionflag"].getSpriteByColorAndFrame(f.colorNumber, frame)
 	rl.DrawTexture(
 		spr,
