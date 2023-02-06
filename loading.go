@@ -156,11 +156,11 @@ func importUnitsDataOrCreateFile() {
 		panic(err)
 	}
 
-	nonPointerTable := make(map[string]unitStatic, 0)
-	err = json.Unmarshal(fiBytes, &nonPointerTable)
-	if err != nil {
-		panic(err)
-	}
+	//nonPointerTable := make(map[string]unitStatic, 0)
+	//err = json.Unmarshal(fiBytes, &nonPointerTable)
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	sTableUnits = make(map[int]*unitStatic, 0)
 	err = json.Unmarshal(fiBytes, &sTableUnits)
