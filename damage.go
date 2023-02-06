@@ -5,23 +5,23 @@ import (
 	"math"
 )
 
-type armorCode int
+type armorCode string
 
 const (
-	ARMORTYPE_FORGOTTEN_TO_BE_SET armorCode = iota
-	ARMORTYPE_INFANTRY
-	ARMORTYPE_HEAVY
-	ARMORTYPE_BUILDING
+	ARMORTYPE_FORGOTTEN_TO_BE_SET armorCode = ""
+	ARMORTYPE_INFANTRY            armorCode = "ARMOR_INFANTRY"
+	ARMORTYPE_HEAVY               armorCode = "ARMOR_HEAVY"
+	ARMORTYPE_BUILDING            armorCode = "ARMOR_BUILDING"
 )
 
-type damageCode int
+type damageCode string
 
 const (
-	DAMAGETYPE_FORGOTTEN_TO_BE_SET damageCode = iota
-	DAMAGETYPE_ANTI_INFANTRY
-	DAMAGETYPE_ANTI_BUILDING
-	DAMAGETYPE_OMNI
-	DAMAGETYPE_HEAVY
+	DAMAGETYPE_FORGOTTEN_TO_BE_SET damageCode = ""
+	DAMAGETYPE_ANTI_INFANTRY       damageCode = "ANTI_INFANTRY"
+	DAMAGETYPE_ANTI_BUILDING       damageCode = "ANTI_BUILDING"
+	DAMAGETYPE_OMNI                damageCode = "OMNI"
+	DAMAGETYPE_HEAVY               damageCode = "HEAVY"
 )
 
 func (b *battlefield) dealDamageToActor(dmg int, dmgType damageCode, act actor) {
@@ -67,30 +67,15 @@ func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int 
 	if armType == ARMORTYPE_FORGOTTEN_TO_BE_SET {
 		panic("Oh, armor is nothing")
 	}
-	percent := 100
-	switch dmgType {
-	case DAMAGETYPE_OMNI:
-		percent = 100
-	case DAMAGETYPE_ANTI_INFANTRY:
-		switch armType {
-		case ARMORTYPE_HEAVY:
-			percent = 25
-		case ARMORTYPE_BUILDING:
-			percent = 25
-		}
-	case DAMAGETYPE_HEAVY:
-		switch armType {
-		case ARMORTYPE_INFANTRY:
-			percent = 25
-		}
-	case DAMAGETYPE_ANTI_BUILDING:
-		if armType != ARMORTYPE_BUILDING {
-			percent = 25
-		}
+
+	factor := config.DamageOnArmorFactorsTable[string(dmgType)][string(armType)]
+
+	if factor == 0 {
+		debugWritef("Factor for damage %s on armor %s may be not set!", dmgType, armType)
 	}
 
-	if dmg > 0 {
-		dmg = int(math.Round(float64(dmg*percent) / 100.0)) // round up when neccessary
+	if dmg > 0 && factor > 0 {
+		dmg = int(math.Round(float64(dmg) * factor)) // round up when neccessary
 		if dmg == 0 {
 			dmg = 1
 		}
