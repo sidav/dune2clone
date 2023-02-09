@@ -32,7 +32,6 @@ func (g *game) selectMapToGenerateBattlefield() {
 		rl.BeginDrawing()
 		g.render.drawGeneratedMap(generatedMap, currSelectedPatternIndex)
 		rl.EndDrawing()
-		time.Sleep(100 * time.Millisecond)
 		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
 			break
 		} else if rl.IsKeyDown(rl.KeySpace) {
