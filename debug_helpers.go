@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 	"time"
 )
 
@@ -58,7 +59,7 @@ func recoverPanicToFile() {
 		if err != nil {
 			panic(err)
 		}
-		fo.Write([]byte(fmt.Sprintf("Panic: %v", x)))
+		fo.Write([]byte(fmt.Sprintf("Panic: %v \nTrace:\n%s", x, string(debug.Stack()))))
 
 		if err := fo.Close(); err != nil {
 			panic(err)

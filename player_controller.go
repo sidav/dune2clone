@@ -239,6 +239,8 @@ func (pc *playerController) elasticFrameSelect(b *battlefield) {
 		h = -h
 		y -= h
 	}
+	w += 1
+	h += 1
 
 	actrs := b.getListOfActorsInTilesRect(x, y, w, h)
 	for i := actrs.Front(); i != nil; i = i.Next() {
