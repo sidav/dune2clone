@@ -25,13 +25,12 @@ func (g *game) selectMapToGenerateBattlefield() {
 				if len(ch) > 0 {
 					generated = <-ch
 				}
+				time.Sleep(100 * time.Millisecond)
 			}
-			time.Sleep(100 * time.Millisecond)
 		}
 		reGenerate = true
-		rl.BeginDrawing()
 		g.render.drawGeneratedMap(generatedMap, currSelectedPatternIndex)
-		rl.EndDrawing()
+		time.Sleep(100 * time.Millisecond)
 		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
 			break
 		} else if rl.IsKeyDown(rl.KeySpace) {
