@@ -11,7 +11,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
 	w, h := bld.getStaticData().w, bld.getStaticData().h
-	// fmt.Printf("%d, %d \n", osx, osy)
+	// log.Printf("%d, %d \n", osx, osy)
 	// render rally point. Called BEFORE viewport check.
 	if bld.isSelected && bld.rallyTileX != -1 {
 		centerX, centerY := r.physicalToOnScreenCoords(bld.getPhysicalCenterCoords())
@@ -146,7 +146,7 @@ func (r *renderer) renderUnit(b *battlefield, pc *playerController, u *unit) {
 		offset = float64(chassisW) / float64(TILE_SIZE_IN_PIXELS) / 2
 	}
 	osx, osy := r.physicalToOnScreenCoords(x-offset, y-offset)
-	// fmt.Printf("%d, %d \n", osx, osy)
+	// log.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}

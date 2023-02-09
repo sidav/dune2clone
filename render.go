@@ -144,7 +144,7 @@ func (r *renderer) renderTile(b *battlefield, pc *playerController, x, y int) {
 func (r *renderer) renderProjectile(proj *projectile, pc *playerController) {
 	x, y := proj.centerX, proj.centerY
 	osx, osy := r.physicalToOnScreenCoords(x, y)
-	// fmt.Printf("%d, %d \n", osx, osy)
+	// log.Printf("%d, %d \n", osx, osy)
 	if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 		return
 	}
@@ -166,7 +166,7 @@ func (r *renderer) renderEffect(e *effect) {
 	if e.creationTick <= r.btl.currentTick && e.getExpirationPercent(r.btl.currentTick) <= 100 {
 		x, y := e.centerX, e.centerY
 		osx, osy := r.physicalToOnScreenCoords(x, y)
-		// fmt.Printf("%d, %d \n", osx, osy)
+		// log.Printf("%d, %d \n", osx, osy)
 		if !r.isRectInViewport(osx, osy, TILE_SIZE_IN_PIXELS, TILE_SIZE_IN_PIXELS) {
 			return
 		}
@@ -211,7 +211,7 @@ func (r *renderer) isRectInViewport(rx, ry, rw, rh int32) bool {
 }
 
 func (r *renderer) AreOnScreenCoordsInViewport(osx, osy int32) bool {
-	// fmt.Printf("%d, %d \n", osx, osy)
+	// log.Printf("%d, %d \n", osx, osy)
 	return osx >= 0 && osx < int32(r.viewportW) && osy >= 0 && osy < int32(r.viewportH)
 }
 

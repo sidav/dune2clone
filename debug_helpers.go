@@ -2,18 +2,20 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"time"
 )
 
 func debugWrite(msg string) {
 	if config.DebugOutput {
-		fmt.Println(msg)
+		log.Println(msg)
 	}
 }
 
 func debugWritef(msg string, args ...interface{}) {
 	if config.DebugOutput {
-		fmt.Printf(msg, args...)
+		log.Printf(msg, args...)
 	}
 }
 
@@ -27,6 +29,10 @@ type debugTimeInfo struct {
 	totalChanges           int
 	meanDurAccumulator     time.Duration
 	calculatedMeanDuration int64
+}
+
+func raylibTraceLogFn(x int, str string) {
+	debugWritef(str)
 }
 
 func (dti *debugTimeInfo) setNewValue(dur time.Duration) {
@@ -43,5 +49,22 @@ func (dti *debugTimeInfo) setNewValue(dur time.Duration) {
 	if dti.totalChanges == changesToResetMean {
 		dti.meanDurAccumulator = 0
 		dti.totalChanges = 0
+	}
+}
+
+func recoverPanicToFile() {
+	if x := recover(); x != nil {
+		fo, err := os.Create("crash_report.log")
+		if err != nil {
+			panic(err)
+		}
+		fo.Write([]byte(fmt.Sprintf("Panic: %v", x)))
+
+		if err := fo.Close(); err != nil {
+			panic(err)
+		}
+
+		// Panic again for a crash
+		panic(x)
 	}
 }

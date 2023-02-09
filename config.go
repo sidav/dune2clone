@@ -8,6 +8,7 @@ import (
 
 type yamlConfig struct {
 	DebugOutput bool `yaml:"debug_output"`
+	LogToFile   bool `yaml:"log_to_file"`
 	TargetFPS   int  `yaml:"target_fps"`
 	TargetTPS   int  `yaml:"target_tps"`
 
@@ -51,6 +52,7 @@ type yamlConfig struct {
 
 func (c *yamlConfig) setDefaultValues() {
 	c.DebugOutput = true
+	c.LogToFile = false
 	c.TargetFPS = 60
 	c.TargetTPS = 60
 

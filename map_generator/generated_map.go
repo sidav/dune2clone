@@ -2,7 +2,7 @@ package map_generator
 
 import (
 	"dune2clone/fibrandom"
-	"fmt"
+	"log"
 	"math"
 )
 
@@ -51,13 +51,13 @@ func (gm *GeneratedMap) Generate(w, h, patternIndex int, channelFinish chan<- bo
 		gm.GenerationTries++
 		GetPatternByIndex(patternIndex).generationFunc(gm)
 	}
-	fmt.Printf("GENERATOR: Generated from %d try.\n", gm.GenerationTries)
+	// log.Printf("GENERATOR: Generated from %d try.\n", gm.GenerationTries)
 	channelFinish <- true
 }
 
 func (gm *GeneratedMap) getNumberOfTilesPercent(perc int) int {
 	total := len(gm.Tiles) * len(gm.Tiles[0])
-	// fmt.Printf("w, h %d,%d total %d; %d percentage, got %d\n",len(gm.Tiles), len(gm.Tiles[0]), total, perc, perc*total/100)
+	// log.Printf("w, h %d,%d total %d; %d percentage, got %d\n",len(gm.Tiles), len(gm.Tiles[0]), total, perc, perc*total/100)
 	return perc * total / 100
 }
 
@@ -164,7 +164,7 @@ func GetListOfCoordsRadialSymmetricTo(count, x, y, mapW, mapH int) [][2]int {
 	}
 	for _, c := range coords {
 		if c[0] < 0 || c[0] >= mapW || c[1] < 0 || c[1] >= mapH {
-			fmt.Printf("%v crashed\n", coords)
+			log.Printf("%v crashed\n", coords)
 			break
 		}
 	}
