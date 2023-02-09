@@ -15,7 +15,11 @@ type game struct {
 }
 
 func (g *game) startGame() {
+	g.gameIsRunning = true
 	g.selectMapToGenerateBattlefield()
+	if !g.gameIsRunning {
+		return
+	}
 
 	pc := &playerController{
 		controlledFaction: g.battlefield.factions[0],
@@ -27,7 +31,6 @@ func (g *game) startGame() {
 	timeCurrentActionStarted := time.Now()
 	timeLogicStarted := time.Now()
 
-	g.gameIsRunning = true
 	for !rl.WindowShouldClose() && g.gameIsRunning {
 		timeReportString := fmt.Sprintf("Tick %d. ", g.battlefield.currentTick)
 		timeLoopStarted = time.Now()

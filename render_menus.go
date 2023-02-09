@@ -102,6 +102,8 @@ func (r *renderer) drawStartSelectionMenu(startPointsNum int) []*startConditions
 		switch key {
 		case rl.KeyEnter:
 			return scs
+		case rl.KeyEscape:
+			return nil
 		case rl.KeyF:
 			scs[cursor].factionName = selectStringInArrayAfter(allFactions, scs[cursor].factionName)
 		case rl.KeyA:

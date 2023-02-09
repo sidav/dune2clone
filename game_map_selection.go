@@ -31,8 +31,11 @@ func (g *game) selectMapToGenerateBattlefield() {
 		reGenerate = true
 		g.render.drawGeneratedMap(generatedMap, currSelectedPatternIndex)
 		time.Sleep(100 * time.Millisecond)
-		if rl.IsKeyDown(rl.KeyEnter) || rl.IsKeyDown(rl.KeyEscape) {
+		if rl.IsKeyDown(rl.KeyEnter) {
 			break
+		} else if rl.IsKeyDown(rl.KeyEscape) {
+			g.gameIsRunning = false
+			return
 		} else if rl.IsKeyDown(rl.KeySpace) {
 		} else if rl.IsKeyDown(rl.KeyRight) {
 			currSelectedPatternIndex++
@@ -56,5 +59,9 @@ func (g *game) selectMapToGenerateBattlefield() {
 		}
 	}
 	scs := g.render.drawStartSelectionMenu(len(generatedMap.StartPoints))
+	if scs == nil {
+		g.gameIsRunning = false
+		return
+	}
 	g.battlefield.initFromRandomMap(generatedMap, scs)
 }
