@@ -79,10 +79,12 @@ func (a *action) getCompletionPercent() int {
 				return a.targetActor.getCurrentAction().getCompletionPercent()
 				// int(100*a.targetActor.(*building).currentAction.completionAmount) / a.targetActor.(*building).getStaticData().maxHitpoints
 			}
-			return int(100*a.completionAmount) / (b.getStaticData().buildTime * (config.TargetTPS / config.Engine.BuildingsActionPeriod))
+			return int(100*a.completionAmount) / (b.getStaticData().buildTime *
+				(config.Engine.TicksPerNominalSecond / config.Engine.BuildingsActionPeriod))
 		}
 		if b, ok := a.targetActor.(*unit); ok {
-			return int(100*a.completionAmount) / (b.getStaticData().BuildTime * (config.TargetTPS / config.Engine.BuildingsActionPeriod))
+			return int(100*a.completionAmount) / (b.getStaticData().BuildTime *
+				(config.Engine.TicksPerNominalSecond / config.Engine.BuildingsActionPeriod))
 		}
 	}
 	if a.maxCompletionAmount > 0 {

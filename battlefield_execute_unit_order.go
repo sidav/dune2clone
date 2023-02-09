@@ -199,7 +199,7 @@ func (b *battlefield) executeDeployOrderForUnit(u *unit) {
 	if u.getStaticData().CanBeDeployed {
 		u.currentAction.code = ACTION_DEPLOY
 		u.currentAction.targetActor = createBuilding(u.getStaticData().DeploysInto, 0, 0, u.getFaction())
-		u.currentAction.maxCompletionAmount = 2 * float64(config.TargetTPS/config.Engine.UnitsActionPeriod)
+		u.currentAction.maxCompletionAmount = 2 * float64(config.Engine.TicksPerNominalSecond/config.Engine.UnitsActionPeriod)
 	}
 }
 

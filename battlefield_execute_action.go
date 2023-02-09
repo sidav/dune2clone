@@ -253,11 +253,11 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	// calculate spending
 	if bld, ok := act.targetActor.(*building); ok {
 		moneySpent = float64(bld.getStaticData().cost) /
-			float64(bld.getStaticData().buildTime*(config.TargetTPS/config.Engine.BuildingsActionPeriod))
+			float64(bld.getStaticData().buildTime*(config.Engine.TicksPerNominalSecond/config.Engine.BuildingsActionPeriod))
 	}
 	if unt, ok := act.targetActor.(*unit); ok {
 		moneySpent = float64(unt.getStaticData().Cost) /
-			float64(unt.getStaticData().BuildTime*(config.TargetTPS/config.Engine.BuildingsActionPeriod))
+			float64(unt.getStaticData().BuildTime*(config.Engine.TicksPerNominalSecond/config.Engine.BuildingsActionPeriod))
 	}
 	// spend money
 	coeff := a.getFaction().getEnergyProductionMultiplier()

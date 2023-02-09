@@ -20,6 +20,7 @@ type yamlConfig struct {
 		ProjectilesActionPeriod   int `yaml:"projectiles_action_period"`
 		CleanupPeriod             int `yaml:"cleanup_period"`
 		RegenHpPeriod             int `yaml:"regen_hp_period"`
+		TicksPerNominalSecond     int `yaml:"ticks_per_nominal_second"`
 		BuildingAnimationTicks    int `yaml:"building_animation_ticks"`
 	} `yaml:"engine"`
 
@@ -64,6 +65,7 @@ func (c *yamlConfig) setDefaultValues() {
 	c.Engine.CleanupPeriod = 6
 	c.Engine.RegenHpPeriod = 60
 	c.Engine.BuildingAnimationTicks = 12
+	c.Engine.TicksPerNominalSecond = 60
 
 	c.Economy.ResourcesGrowthPeriod = 420
 	c.Economy.ResourcesGrowthRadius = 5
