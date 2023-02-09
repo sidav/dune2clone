@@ -50,7 +50,7 @@ func (b *battlefield) actForProjectile(p *projectile) {
 					expAmount = u.getStaticData().Cost
 				}
 				if b, ok := hitTarget.(*building); ok {
-					expAmount = b.getStaticData().cost
+					expAmount = b.getStaticData().Cost
 				}
 			}
 			p.whoShot.receiveExperienceAmount(int(p.whoShot.getFaction().experienceMultiplier * float64(expAmount)))

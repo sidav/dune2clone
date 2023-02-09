@@ -54,10 +54,10 @@ func createFaction(colorNumber, team int, initialMoney float64) *faction {
 }
 
 func (f *faction) isTechAvailableForBuildingOfCode(bldCode buildingCode) bool {
-	if f.currTechLevel < sTableBuildings[bldCode].requiresTechLevel {
+	if f.currTechLevel < sTableBuildings[bldCode].RequiresTechLevel {
 		return false
 	}
-	for _, req := range sTableBuildings[bldCode].requiresToBeBuilt {
+	for _, req := range sTableBuildings[bldCode].RequiresToBeBuilt {
 		if !f.hasBuilding(req) {
 			return false
 		}

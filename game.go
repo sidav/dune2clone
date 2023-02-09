@@ -202,13 +202,13 @@ func (g *game) traverseAllActors() {
 				i = i.Prev()
 			}
 			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_REGULAR_EXPLOSION, 50,
-				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H, 20,
 			)
 			g.battlefield.RandomlyAddEffectInTileRect(EFFECT_BIGGER_EXPLOSION, 50,
-				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, 20,
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H, 20,
 			)
 			g.battlefield.changeTilesCodesInRectTo(
-				bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, TILE_BUILDABLE_DAMAGED,
+				bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H, TILE_BUILDABLE_DAMAGED,
 			)
 			if bld.unitPlacedInside != nil {
 				g.battlefield.addActor(bld.unitPlacedInside)
@@ -220,15 +220,15 @@ func (g *game) traverseAllActors() {
 			g.battlefield.removeActor(bld)
 		} else {
 			bld.faction.hasBuildings[bld.code] = true
-			if bld.getStaticData().givesTechLevel > bld.faction.currTechLevel {
-				bld.faction.currTechLevel = bld.getStaticData().givesTechLevel
+			if bld.getStaticData().GivesTechLevel > bld.faction.currTechLevel {
+				bld.faction.currTechLevel = bld.getStaticData().GivesTechLevel
 			}
 			if !bld.isUnderConstruction() {
-				bld.faction.energyProduction += bld.getStaticData().givesEnergy
-				bld.faction.energyConsumption += bld.getStaticData().consumesEnergy
-				bld.faction.increaseResourcesStorage(bld.getStaticData().storageAmount)
+				bld.faction.energyProduction += bld.getStaticData().GivesEnergy
+				bld.faction.energyConsumption += bld.getStaticData().ConsumesEnergy
+				bld.faction.increaseResourcesStorage(bld.getStaticData().StorageAmount)
 			}
-			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h,
+			bld.faction.exploreAround(bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H,
 				modifyVisionRangeByUnitExpLevel(bld.getVisionRange(), bld.getExperienceLevel()))
 			if g.battlefield.currentTick%config.Engine.RegenHpPeriod == 0 {
 				bld.receiveHealing(bld.getRegenAmount())

@@ -10,7 +10,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	x -= 0.5
 	y -= 0.5
 	osx, osy := r.physicalToOnScreenCoords(x, y)
-	w, h := bld.getStaticData().w, bld.getStaticData().h
+	w, h := bld.getStaticData().W, bld.getStaticData().H
 	// log.Printf("%d, %d \n", osx, osy)
 	// render rally point. Called BEFORE viewport check.
 	if bld.isSelected && bld.rallyTileX != -1 {
@@ -38,12 +38,12 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 	frameNumber := b.currentTick / (config.TargetTPS / 4)
 	if bld.turret != nil && bld.turret.getStaticData().SpriteCode != "" {
 		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
+			buildingsAtlaces[bld.getStaticData().SpriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
 			turretsAtlaces[bld.turret.getStaticData().SpriteCode].getSpriteByColorDegreeAndFrameNumber(bld.faction.colorNumber, bld.turret.rotationDegree, 0),
 		}
 	} else {
 		sprites = []rl.Texture2D{
-			buildingsAtlaces[bld.getStaticData().spriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
+			buildingsAtlaces[bld.getStaticData().SpriteCode].getSpriteByColorAndFrame(bld.getFaction().colorNumber, frameNumber),
 		}
 	}
 	for _, s := range sprites {
@@ -81,11 +81,11 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		rl.DrawRectangleLines(osx+1, osy+1, TILE_SIZE_IN_PIXELS*int32(w)-2, TILE_SIZE_IN_PIXELS*int32(h), col)
 	}
 	// render faction flag
-	if bld.faction != nil && bld.getStaticData().w > 1 || bld.getStaticData().h > 1 {
+	if bld.faction != nil && bld.getStaticData().W > 1 || bld.getStaticData().H > 1 {
 		r.renderFactionFlagAt(
 			bld.faction,
 			osx+4,
-			osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS),
+			osy+int32(bld.getStaticData().H*TILE_SIZE_IN_PIXELS),
 		)
 	}
 	if bld.getExperienceLevel() > 0 {
@@ -106,7 +106,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
 		}
 		if bld.currentHitpoints < bld.getMaxHitpoints() {
-			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().maxHitpoints,
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().MaxHitpoints,
 				&factionColors[bld.getFaction().colorNumber])
 		}
 		// render unit inside
@@ -116,22 +116,22 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 		// render energy if not enough
 		if bld.faction != nil && bld.faction.getAvailableEnergy() < 0 {
 			r.renderBlinkingIconCenteredAt("energyicon",
-				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				osx+int32(bld.getStaticData().W*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().H*TILE_SIZE_IN_PIXELS)/2,
 				0,
 			)
 		}
 		if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
 			r.renderBlinkingIconCenteredAt("readyicon",
-				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				osx+int32(bld.getStaticData().W*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().H*TILE_SIZE_IN_PIXELS)/2,
 				1,
 			)
 		}
 		if bld.isRepairingSelf {
 			r.renderBlinkingIconCenteredAt("repairicon",
-				osx+int32(bld.getStaticData().w*TILE_SIZE_IN_PIXELS)/2,
-				osy+int32(bld.getStaticData().h*TILE_SIZE_IN_PIXELS)/2,
+				osx+int32(bld.getStaticData().W*TILE_SIZE_IN_PIXELS)/2,
+				osy+int32(bld.getStaticData().H*TILE_SIZE_IN_PIXELS)/2,
 				2,
 			)
 		}

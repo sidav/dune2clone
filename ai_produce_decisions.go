@@ -10,7 +10,7 @@ func (ai *aiStruct) isAllowedToProduceThis(unitCode int) bool {
 }
 
 func (ai *aiStruct) selectWhatToProduce(producer *building) int {
-	availableCodes := producer.getStaticData().produces
+	availableCodes := producer.getStaticData().Produces
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
 
 	if ai.current.harvesters < ai.desired.harvesters {

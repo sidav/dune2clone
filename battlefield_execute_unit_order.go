@@ -243,7 +243,7 @@ func (b *battlefield) getClosestEmptyFactionRefineryFromCoords(f *faction, x, y 
 	closestDist := math.MaxInt64
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
-		if bld.faction != f || !bld.getStaticData().receivesResources || bld.unitPlacedInside != nil {
+		if bld.faction != f || !bld.getStaticData().ReceivesResources || bld.unitPlacedInside != nil {
 			continue
 		}
 		bldCX, bldCY := bld.getUnitPlacementAbsoluteCoords()
@@ -261,7 +261,7 @@ func (b *battlefield) getClosestEmptyFactionRepairDepotFromCoords(f *faction, x,
 	closestDist := math.MaxInt64
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
-		if bld.faction != f || !bld.getStaticData().repairsUnits || bld.unitPlacedInside != nil {
+		if bld.faction != f || !bld.getStaticData().RepairsUnits || bld.unitPlacedInside != nil {
 			continue
 		}
 		bldCX, bldCY := bld.getUnitPlacementAbsoluteCoords()

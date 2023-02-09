@@ -19,11 +19,11 @@ func performAllDataSanityChecks() {
 		}
 	}
 	for _, v := range sTableBuildings {
-		if v.turretData != nil {
-			performTurretSanity(v.displayedName, v.turretData)
+		if v.TurretData != nil {
+			performTurretSanity(v.DisplayedName, v.TurretData)
 		}
-		if v.maxHitpoints == 0 {
-			debugWritef(" It looks like %s has 0 HP!\n", v.displayedName)
+		if v.MaxHitpoints == 0 {
+			debugWritef(" It looks like %s has 0 HP!\n", v.DisplayedName)
 		}
 	}
 	debugWritef("===== %-30s =====\n", "STATICS SANITY CHECKS ENDED")

@@ -15,7 +15,7 @@ func (ai *aiStruct) checkIfShouldBuildNow() bool {
 }
 
 func (ai *aiStruct) selectWhatToBuild(builder *building) buildingCode {
-	availableCodes := builder.getStaticData().builds
+	availableCodes := builder.getStaticData().Builds
 	// make the list of weights
 	decisionWeights := []aiDecisionWeight{{"any", 1}}
 	// create weights according to the needs
@@ -89,7 +89,7 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildin
 		index = rnd.SelectRandomIndexFromWeighted(len(candidates),
 			func(x int) int {
 				consideredCode := candidates[x]
-				if int(ai.controlsFaction.getMoney()) > sTableBuildings[consideredCode].cost {
+				if int(ai.controlsFaction.getMoney()) > sTableBuildings[consideredCode].Cost {
 					return 5
 				} else if !ai.isPoor() {
 					return 3
@@ -104,22 +104,22 @@ func (ai *aiStruct) selectRandomBuildableCodeByFunction(availableCodes []buildin
 func (ai *aiStruct) deduceBuildingFunctions(bldCode buildingCode) []string {
 	codes := make([]string, 0)
 	bsd := sTableBuildings[bldCode]
-	if bsd.receivesResources {
+	if bsd.ReceivesResources {
 		codes = append(codes, "eco")
 	}
-	if bsd.givesEnergy > 0 {
+	if bsd.GivesEnergy > 0 {
 		codes = append(codes, "energy")
 	}
-	if bsd.storageAmount > 0 {
+	if bsd.StorageAmount > 0 {
 		codes = append(codes, "silo")
 	}
-	if len(bsd.builds) > 0 {
+	if len(bsd.Builds) > 0 {
 		codes = append(codes, "builder")
 	}
-	if len(bsd.produces) > 0 {
+	if len(bsd.Produces) > 0 {
 		codes = append(codes, "production")
 	}
-	if bsd.turretData != nil {
+	if bsd.TurretData != nil {
 		codes = append(codes, "defense")
 	}
 	return codes
@@ -143,7 +143,7 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 			func(x, y int) int {
 				return geometry.GetApproxDistFromTo(x, y, w/2, h/2)/10 -
 					geometry.GetApproxDistFromTo(startX, startY, x, y) +
-					+ rnd.Rand(distToSearchFromBuilder)
+					+rnd.Rand(distToSearchFromBuilder)
 			},
 			func(x, y int) bool {
 				return geometry.GetSqDistFromCoordsToRectangleBorder(x, y, 0, 0, w, h) > 10 &&
@@ -152,7 +152,7 @@ func (ai *aiStruct) placeBuilding(b *battlefield, builder, whatIsBuilt *building
 			startX, startY, distToSearchFromBuilder, rnd.Rand(4),
 		)
 
-	// non-defenses placement logic
+		// non-defenses placement logic
 	} else {
 		sx, sy = geometry.SpiralSearchForClosestConditionFrom(
 			func(x, y int) bool {

@@ -83,7 +83,7 @@ func (r *renderer) drawMinimap(b *battlefield, pc *playerController) {
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			bld := i.Value.(*building)
 			if b.hasFactionExploredBuilding(pc.controlledFaction, bld) {
-				x, y, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+				x, y, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H
 				rl.DrawRectangle(posX+int32(x*tileSize), posY+int32(y*tileSize), int32(w*tileSize), int32(h*tileSize), factionColors[bld.faction.colorNumber])
 			}
 		}

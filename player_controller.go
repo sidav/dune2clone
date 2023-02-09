@@ -91,9 +91,9 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 		bld.currentHitpoints = 0
 	}
 	if bld.currentOrder.code == ORDER_WAIT_FOR_BUILDING_PLACEMENT {
-		if bld.currentAction.getCompletionPercent() >= 100 || bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
+		if bld.currentAction.getCompletionPercent() >= 100 || bld.getStaticData().BuildType == BTYPE_PLACE_FIRST {
 			// if NOT building:
-			if _, ok := bld.currentAction.targetActor.(*building); !ok && bld.getStaticData().buildType != BTYPE_PLACE_FIRST {
+			if _, ok := bld.currentAction.targetActor.(*building); !ok && bld.getStaticData().BuildType != BTYPE_PLACE_FIRST {
 				return false
 			}
 			pc.changeMode(PCMODE_PLACE_BUILDING)
@@ -104,7 +104,7 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 				pc.changeMode(PCMODE_NONE)
 			} else if rl.IsMouseButtonPressed(rl.MouseRightButton) {
 				pc.changeMode(PCMODE_NONE)
-				if bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
+				if bld.getStaticData().BuildType == BTYPE_PLACE_FIRST {
 					bld.currentOrder.resetOrder()
 				}
 				pc.deselect()
@@ -114,14 +114,14 @@ func (pc *playerController) GiveOrderToBuilding(b *battlefield, bld *building) b
 	} else {
 		if bld.currentAction.code == ACTION_WAIT {
 			// maybe build?
-			for _, code := range bld.getStaticData().builds {
-				if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].hotkeyToBuild, false) && bld.faction.isTechAvailableForBuildingOfCode(code) {
+			for _, code := range bld.getStaticData().Builds {
+				if pc.IsKeyCodeEqualToString(kk, sTableBuildings[code].HotkeyToBuild, false) && bld.faction.isTechAvailableForBuildingOfCode(code) {
 					bld.currentOrder.code = ORDER_BUILD
 					bld.currentOrder.targetActorCode = int(code)
 				}
 			}
 			// maybe product?
-			for _, code := range bld.getStaticData().produces {
+			for _, code := range bld.getStaticData().Produces {
 				if pc.IsKeyCodeEqualToString(kk, sTableUnits[code].HotkeyToBuild, false) && bld.faction.isTechAvailableForUnitOfCode(code) {
 					bld.currentOrder.code = ORDER_PRODUCE
 					bld.currentOrder.targetActorCode = code
@@ -200,11 +200,11 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 				u.currentOrder.code = ORDER_HARVEST
 			}
 			if bld, ok := aac.(*building); ok {
-				if bld.getStaticData().repairsUnits {
+				if bld.getStaticData().RepairsUnits {
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_MOVE_TO_REPAIR
 				}
-				if bld.getStaticData().receivesResources && u.getStaticData().MaxCargoAmount > 0 {
+				if bld.getStaticData().ReceivesResources && u.getStaticData().MaxCargoAmount > 0 {
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_RETURN_TO_REFINERY
 				}
@@ -213,7 +213,7 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 	}
 	if bld, ok := pc.getFirstSelection().(*building); ok {
 		// set rally
-		if bld.getStaticData().produces != nil {
+		if bld.getStaticData().Produces != nil {
 			bld.rallyTileX, bld.rallytileY = tx, ty
 		}
 	}

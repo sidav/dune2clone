@@ -66,7 +66,7 @@ func (b *battlefield) executeActionForActor(a actor) {
 }
 
 func (b *battlefield) executeBuildingSelfRepair(bld *building) {
-	cost := float64(bld.getStaticData().cost/2) / float64(bld.getStaticData().maxHitpoints)
+	cost := float64(bld.getStaticData().Cost/2) / float64(bld.getStaticData().MaxHitpoints)
 	if bld.currentHitpoints >= bld.getMaxHitpoints() || bld.faction.getMoney() < cost {
 		bld.isRepairingSelf = false
 		return
@@ -104,7 +104,7 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 }
 
 func (b *battlefield) executeWaitActionForBuilding(bld *building) {
-	if bld.getStaticData().receivesResources && bld.unitPlacedInside != nil {
+	if bld.getStaticData().ReceivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
 			// Receive resources
 			const HARVEST_PER_TICK = 8
@@ -121,7 +121,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 			bld.unitPlacedInside = nil
 		}
 	}
-	if bld.getStaticData().repairsUnits && bld.unitPlacedInside != nil {
+	if bld.getStaticData().RepairsUnits && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.getHitpointsPercentage() < 100 {
 			const REPAIR_PER_TICK = 2
 			bld.unitPlacedInside.receiveHealing(REPAIR_PER_TICK)
@@ -252,8 +252,8 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	moneySpent := 0.0
 	// calculate spending
 	if bld, ok := act.targetActor.(*building); ok {
-		moneySpent = float64(bld.getStaticData().cost) /
-			float64(bld.getStaticData().buildTime*(config.Engine.TicksPerNominalSecond/config.Engine.BuildingsActionPeriod))
+		moneySpent = float64(bld.getStaticData().Cost) /
+			float64(bld.getStaticData().BuildTime*(config.Engine.TicksPerNominalSecond/config.Engine.BuildingsActionPeriod))
 	}
 	if unt, ok := act.targetActor.(*unit); ok {
 		moneySpent = float64(unt.getStaticData().Cost) /
@@ -266,7 +266,7 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 		a.getFaction().spendMoney(moneySpent)
 		act.completionAmount += coeff
 		if bld, ok := a.(*building); ok {
-			if bld.getStaticData().buildType == BTYPE_PLACE_FIRST {
+			if bld.getStaticData().BuildType == BTYPE_PLACE_FIRST {
 				if tBld, ok := a.(*building).currentAction.targetActor.(*building); ok {
 					tBld.getCurrentAction().completionAmount = act.completionAmount
 				}
@@ -276,9 +276,9 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 	// if it was a unit, place it right away
 	if unt, ok := act.targetActor.(*unit); ok && act.getCompletionPercent() >= 100 {
 		if bld, ok := a.(*building); ok {
-			for x := bld.topLeftX; x < bld.topLeftX+bld.getStaticData().w; x++ {
+			for x := bld.topLeftX; x < bld.topLeftX+bld.getStaticData().W; x++ {
 				// for y := bld.topLeftY-1; y <= bld.topLeftY+bld.getStaticData().h; y++ {
-				y := bld.topLeftY + bld.getStaticData().h
+				y := bld.topLeftY + bld.getStaticData().H
 				if unt.getStaticData().IsAircraft || b.costMapForMovement(x, y) != -1 {
 					unt.centerX, unt.centerY = geometry.TileCoordsToTrueCoords(x, y)
 					if bld.rallyTileX != -1 && unt.currentOrder.code == ORDER_NONE {

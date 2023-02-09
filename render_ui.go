@@ -151,7 +151,7 @@ func (r *renderer) renderSelectedActorUI(b *battlefield, pc *playerController, x
 	}
 
 	if bld, ok := pc.getFirstSelection().(*building); ok {
-		if len(bld.getStaticData().builds) != 0 || len(bld.getStaticData().produces) != 0 {
+		if len(bld.getStaticData().Builds) != 0 || len(bld.getStaticData().Produces) != 0 {
 			r.renderSelectedBuildingUI(bld, WINDOW_W-BUILD_PANEL_WIDTH, 100)
 		}
 	}
@@ -206,17 +206,17 @@ func (r *renderer) renderSelectedBuildingUI(bld *building, x, y int32) {
 	var line int32
 	r.drawOutlinedRect(x, y, BUILD_PANEL_WIDTH, BUILD_PANEL_HEIGHT, 2, rl.Green, rl.Black)
 	if bld.currentAction.code == ACTION_WAIT {
-		for _, code := range bld.getStaticData().builds {
+		for _, code := range bld.getStaticData().Builds {
 			color := rl.Orange
 			if !bld.faction.isTechAvailableForBuildingOfCode(code) {
 				color = rl.DarkGray
 			}
-			r.drawText(r.collectLineForBuildMenu(sTableBuildings[code].hotkeyToBuild,
-				sTableBuildings[code].displayedName, sTableBuildings[code].cost),
+			r.drawText(r.collectLineForBuildMenu(sTableBuildings[code].HotkeyToBuild,
+				sTableBuildings[code].DisplayedName, sTableBuildings[code].Cost),
 				x+4, y+1+BUILD_LIST_FONT_SIZE*line, BUILD_LIST_FONT_SIZE, color)
 			line++
 		}
-		for _, code := range bld.getStaticData().produces {
+		for _, code := range bld.getStaticData().Produces {
 			color := rl.Orange
 			if !bld.faction.isTechAvailableForUnitOfCode(code) {
 				color = rl.DarkGray

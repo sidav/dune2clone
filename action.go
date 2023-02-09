@@ -75,11 +75,11 @@ func (a *action) resetAction() {
 func (a *action) getCompletionPercent() int {
 	if a.code == ACTION_BUILD {
 		if b, ok := a.targetActor.(*building); ok {
-			if b.getStaticData().buildType == BTYPE_PLACE_FIRST {
+			if b.getStaticData().BuildType == BTYPE_PLACE_FIRST {
 				return a.targetActor.getCurrentAction().getCompletionPercent()
 				// int(100*a.targetActor.(*building).currentAction.completionAmount) / a.targetActor.(*building).getStaticData().maxHitpoints
 			}
-			return int(100*a.completionAmount) / (b.getStaticData().buildTime *
+			return int(100*a.completionAmount) / (b.getStaticData().BuildTime *
 				(config.Engine.TicksPerNominalSecond / config.Engine.BuildingsActionPeriod))
 		}
 		if b, ok := a.targetActor.(*unit); ok {

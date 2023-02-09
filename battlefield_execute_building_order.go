@@ -18,7 +18,7 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 	if !bld.faction.isTechAvailableForBuildingOfCode(buildingCode(bld.currentOrder.targetActorCode)) {
 		debugWritef("Tech requirements are ignored: bld %s at (%d, %d)", bld.getName(), bld.topLeftX, bld.topLeftY)
 	}
-	switch bld.getStaticData().buildType {
+	switch bld.getStaticData().BuildType {
 	case BTYPE_BUILD_FIRST:
 		if bld.currentAction.code != ACTION_BUILD {
 			bld.currentAction.code = ACTION_BUILD
@@ -48,7 +48,7 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 }
 
 func (b *battlefield) executePlaceBuildingOrder(bld *building) {
-	switch bld.getStaticData().buildType {
+	switch bld.getStaticData().BuildType {
 	case BTYPE_BUILD_FIRST:
 		whatIsBuilt := bld.currentAction.targetActor.(*building)
 		if bld.currentOrder.targetTileX != -1 && bld.currentOrder.targetTileY != -1 {
@@ -66,7 +66,7 @@ func (b *battlefield) executePlaceBuildingOrder(bld *building) {
 			whatIsBuilt.topLeftX, whatIsBuilt.topLeftY = bld.currentOrder.targetTileX, bld.currentOrder.targetTileY
 			whatIsBuilt.currentAction.code = ACTION_BEING_BUILT
 			whatIsBuilt.currentAction.builtAs = BTYPE_PLACE_FIRST
-			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().buildTime *
+			whatIsBuilt.currentAction.maxCompletionAmount = float64(whatIsBuilt.getStaticData().BuildTime *
 				(config.Engine.TicksPerNominalSecond / config.Engine.BuildingsActionPeriod))
 			b.addActor(whatIsBuilt)
 			bld.currentAction.code = ACTION_BUILD

@@ -57,8 +57,8 @@ func (b *battlefield) performResourceGrowth() {
 }
 
 func (b *battlefield) hasFactionExploredBuilding(f *faction, bld *building) bool {
-	for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
-		for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
+	for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().W; tx++ {
+		for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().H; ty++ {
 			if f.hasTileAtCoordsExplored(tx, ty) {
 				return true
 			}
@@ -77,8 +77,8 @@ func (b *battlefield) canFactionSeeActor(f *faction, a actor) bool {
 		return f.seesTileAtCoords(x, y)
 	case *building:
 		bld := a.(*building)
-		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().w; tx++ {
-			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().h; ty++ {
+		for tx := bld.topLeftX; tx < bld.topLeftX+bld.getStaticData().W; tx++ {
+			for ty := bld.topLeftY; ty < bld.topLeftY+bld.getStaticData().H; ty++ {
 				if f.seesTileAtCoords(tx, ty) {
 					return true
 				}
@@ -113,13 +113,13 @@ func (b *battlefield) addActor(a actor) {
 	case *building:
 		a.getFaction().gameStatistics.totalBuilt++
 		bld := a.(*building)
-		if bld.getStaticData().givesFreeUnitOnCreation {
+		if bld.getStaticData().GivesFreeUnitOnCreation {
 			x, y := bld.getUnitPlacementAbsoluteCoords()
-			unt := createUnit(bld.getStaticData().codeForFreeUnitOnCreation, x, y, bld.getFaction())
+			unt := createUnit(bld.getStaticData().CodeForFreeUnitOnCreation, x, y, bld.getFaction())
 			unt.chassisDegree = 90 // looking down
 			bld.unitPlacedInside = unt
 		}
-		b.setTilesOccupiedByActor(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h, a)
+		b.setTilesOccupiedByActor(bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H, a)
 		b.buildings.PushBack(a)
 	default:
 		panic("wat")
@@ -190,7 +190,7 @@ func (b *battlefield) setTilesOccupiedByActor(x, y, w, h int, a actor) {
 	}
 	if bld, ok := a.(*building); ok {
 		if bld.getStaticData().canUnitBePlacedIn() && bld.unitPlacedInside == nil {
-			freeX, freeY := bld.getStaticData().unitPlacementX, bld.getStaticData().unitPlacementY
+			freeX, freeY := bld.getStaticData().UnitPlacementX, bld.getStaticData().UnitPlacementY
 			b.tiles[x+freeX][y+freeY].isOccupiedByActor = nil
 		}
 	}
@@ -222,7 +222,7 @@ func (b *battlefield) clearTileOccupationForActor(a actor) {
 		}
 	}
 	if bld, ok := a.(*building); ok {
-		b.clearTilesOccupationInRect(bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h)
+		b.clearTilesOccupationInRect(bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H)
 	}
 }
 
@@ -313,7 +313,7 @@ func (b *battlefield) areActorsInRangeFromEachOther(a1, a2 actor, r int) bool {
 		case *building:
 			x1, y1 := a1.(*unit).getTileCoords()
 			bld := a2.(*building)
-			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H
 			return geometry.AreRectsInRange(x1, y1, 1, 1, x2, y2, w, h, r)
 		}
 	case *building:
@@ -321,13 +321,13 @@ func (b *battlefield) areActorsInRangeFromEachOther(a1, a2 actor, r int) bool {
 		case *unit:
 			unitX, unitY := a2.(*unit).getTileCoords()
 			bld := a1.(*building)
-			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
+			x2, y2, w, h := bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H
 			return geometry.AreRectsInRange(unitX, unitY, 1, 1, x2, y2, w, h, r)
 		case *building:
 			bld1 := a1.(*building)
-			x1, y1, w1, h1 := bld1.topLeftX, bld1.topLeftY, bld1.getStaticData().w, bld1.getStaticData().h
+			x1, y1, w1, h1 := bld1.topLeftX, bld1.topLeftY, bld1.getStaticData().W, bld1.getStaticData().H
 			bld2 := a2.(*building)
-			x2, y2, w2, h2 := bld2.topLeftX, bld2.topLeftY, bld2.getStaticData().w, bld2.getStaticData().h
+			x2, y2, w2, h2 := bld2.topLeftX, bld2.topLeftY, bld2.getStaticData().W, bld2.getStaticData().H
 			return geometry.AreRectsInRange(x1, y1, w1, h1, x2, y2, w2, h2, r)
 		}
 	}
@@ -346,7 +346,7 @@ func (b *battlefield) getListOfActorsInTilesRect(x, y, w, h int) *list.List {
 	for i := b.buildings.Front(); i != nil; i = i.Next() {
 		bld := i.Value.(*building)
 		if geometry.AreTwoCellRectsOverlapping(x, y, w, h,
-			bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h) {
+			bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H) {
 
 			lst.PushBack(bld)
 		}
@@ -397,8 +397,8 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 	const MAX_MARGIN_FROM_EXISTING_BUILDING = 2
 	_, _, w, h := placingBld.getDimensionsForConstructon()
 	if forcedDistanceFromOtherBuildings > 0 {
-		w = placingBld.getStaticData().w
-		h = placingBld.getStaticData().h
+		w = placingBld.getStaticData().W
+		h = placingBld.getStaticData().H
 	}
 	for x := topLeftX - forcedDistanceFromOtherBuildings; x < topLeftX+w+forcedDistanceFromOtherBuildings; x++ {
 		for y := topLeftY - forcedDistanceFromOtherBuildings; y < topLeftY+h+forcedDistanceFromOtherBuildings; y++ {
@@ -430,8 +430,8 @@ func (b *battlefield) canBuildingBePlacedAt(placingBld *building, topLeftX, topL
 			if bld.getFaction() != placingBld.getFaction() {
 				continue
 			}
-			bx, by, bw, bh := bld.topLeftX, bld.topLeftY, bld.getStaticData().w, bld.getStaticData().h
-			if geometry.AreRectsInTaxicabRange(bx, by, bw, bh, topLeftX, topLeftY, placingBld.getStaticData().w, placingBld.getStaticData().h, MAX_MARGIN_FROM_EXISTING_BUILDING) {
+			bx, by, bw, bh := bld.topLeftX, bld.topLeftY, bld.getStaticData().W, bld.getStaticData().H
+			if geometry.AreRectsInTaxicabRange(bx, by, bw, bh, topLeftX, topLeftY, placingBld.getStaticData().W, placingBld.getStaticData().H, MAX_MARGIN_FROM_EXISTING_BUILDING) {
 				return true
 			}
 		}

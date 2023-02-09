@@ -15,7 +15,7 @@ func (bt *balanceTester) testCombatBalance() {
 	}
 	bldCodesToCompare := make([]buildingCode, 0)
 	for k1, v1 := range sTableBuildings {
-		if v1.turretData != nil {
+		if v1.TurretData != nil {
 			bldCodesToCompare = append(bldCodesToCompare, k1)
 		}
 	}

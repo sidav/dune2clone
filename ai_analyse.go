@@ -25,16 +25,16 @@ func (aa *aiAnalytics) reset() {
 }
 
 func (aa *aiAnalytics) increaseCountersForBuilding(bld *building) {
-	if bld.getStaticData().receivesResources {
+	if bld.getStaticData().ReceivesResources {
 		aa.eco++
 	}
-	if bld.getStaticData().produces != nil {
+	if bld.getStaticData().Produces != nil {
 		aa.production++
 	}
-	if bld.getStaticData().builds != nil {
+	if bld.getStaticData().Builds != nil {
 		aa.builders++
 	}
-	if bld.getStaticData().repairsUnits {
+	if bld.getStaticData().RepairsUnits {
 		aa.repairDepots++
 	}
 	if bld.turret != nil {

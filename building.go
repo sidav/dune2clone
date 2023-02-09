@@ -32,7 +32,7 @@ func (b *building) setHitpoints(hp int) {
 }
 
 func (b *building) getMaxHitpoints() int {
-	return modifyMaxHpByExpLevel(b.getStaticData().maxHitpoints, b.getExperienceLevel())
+	return modifyMaxHpByExpLevel(b.getStaticData().MaxHitpoints, b.getExperienceLevel())
 }
 
 func (b *building) getHitpointsPercentage() int {
@@ -41,12 +41,12 @@ func (b *building) getHitpointsPercentage() int {
 
 func createBuilding(code buildingCode, topLeftX, topLeftY int, fact *faction) *building {
 	var turr *turret
-	if sTableBuildings[code].turretData != nil {
-		turr = &turret{staticData: sTableBuildings[code].turretData, rotationDegree: 270}
+	if sTableBuildings[code].TurretData != nil {
+		turr = &turret{staticData: sTableBuildings[code].TurretData, rotationDegree: 270}
 	}
 	return &building{
 		code:             code,
-		currentHitpoints: sTableBuildings[code].maxHitpoints,
+		currentHitpoints: sTableBuildings[code].MaxHitpoints,
 		topLeftX:         topLeftX,
 		topLeftY:         topLeftY,
 		faction:          fact,
@@ -76,7 +76,7 @@ func (b *building) getExperience() int {
 }
 
 func (b *building) getExperienceLevel() int {
-	return getExperienceLevelByAmountAndCost(b.experience, b.getStaticData().cost)
+	return getExperienceLevelByAmountAndCost(b.experience, b.getStaticData().Cost)
 }
 
 func (b *building) markSelected(s bool) {
@@ -95,20 +95,20 @@ func (b *building) getVisionRange() int {
 }
 
 func (b *building) getDimensionsForConstructon() (int, int, int, int) {
-	h := b.getStaticData().h
+	h := b.getStaticData().H
 	// prevent closing bottom side for producing buildings
-	if b.getStaticData().needsEmptyRowBelowWhenConstructing {
+	if b.getStaticData().NeedsEmptyRowBelowWhenConstructing {
 		h++
 	}
-	return b.topLeftX, b.topLeftY, b.getStaticData().w, h
+	return b.topLeftX, b.topLeftY, b.getStaticData().W, h
 }
 
 func (b *building) getUnitPlacementAbsoluteCoords() (int, int) {
-	return b.topLeftX + b.getStaticData().unitPlacementX, b.topLeftY + b.getStaticData().unitPlacementY
+	return b.topLeftX + b.getStaticData().UnitPlacementX, b.topLeftY + b.getStaticData().UnitPlacementY
 }
 
 func (b *building) getName() string {
-	return b.getStaticData().displayedName
+	return b.getStaticData().DisplayedName
 }
 
 func (b *building) getCurrentAction() *action {
@@ -124,11 +124,11 @@ func (b *building) getFaction() *faction {
 }
 
 func (b *building) getPhysicalCenterCoords() (float64, float64) {
-	return float64(b.topLeftX) + float64(b.getStaticData().w)/2, float64(b.topLeftY) + float64(b.getStaticData().h)/2
+	return float64(b.topLeftX) + float64(b.getStaticData().W)/2, float64(b.topLeftY) + float64(b.getStaticData().H)/2
 }
 
 func (b *building) isPresentAt(tileX, tileY int) bool {
-	w, h := b.getStaticData().w, b.getStaticData().h
+	w, h := b.getStaticData().W, b.getStaticData().H
 	return geometry.AreCoordsInTileRect(tileX, tileY, b.topLeftX, b.topLeftY, w, h)
 }
 
