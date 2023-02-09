@@ -36,9 +36,13 @@ type yamlConfig struct {
 	} `yaml:"economy"`
 
 	Gameplay struct {
-		DamageOnArmorFactorsTable map[string]map[string]float64 `yaml:"damage_on_armor_factors_table"`
-		CostForLevelUpMultiplier  float64                       `yaml:"cost_for_level_up_multiplier"`
-		CostForLevelUpExponent    float64                       `yaml:"cost_for_level_up_exponent"`
+		DamageOnArmorFactorsTable                     map[string]map[string]float64 `yaml:"damage_on_armor_factors_table"`
+		CostForLevelUpMultiplier                      float64                       `yaml:"cost_for_level_up_multiplier"`
+		CostForLevelUpExponent                        float64                       `yaml:"cost_for_level_up_exponent"`
+		VeterancyDamageBonusForLevelPercent           int                           `yaml:"veterancy_damage_bonus_for_level_percent"`
+		VeterancyHpBonusForLevelPercent               int                           `yaml:"veterancy_hp_bonus_for_level_percent"`
+		VeterancyFireCooldownReductionForLevelPercent int                           `yaml:"veterancy_fire_cooldown_reduction_for_level_percent"`
+		VeterancySpeedBonusForLevel                   float64                       `yaml:"veterancy_speed_bonus_for_level"`
 	} `yaml:"gameplay"`
 
 	AiSettings struct {
@@ -84,6 +88,10 @@ func (c *yamlConfig) setDefaultValues() {
 	}
 	c.Gameplay.CostForLevelUpMultiplier = 1.5
 	c.Gameplay.CostForLevelUpExponent = 1.35
+	c.Gameplay.VeterancyDamageBonusForLevelPercent = 10
+	c.Gameplay.VeterancyHpBonusForLevelPercent = 5
+	c.Gameplay.VeterancyFireCooldownReductionForLevelPercent = 4
+	c.Gameplay.VeterancySpeedBonusForLevel = 0.05
 
 	c.AiSettings.AiActPeriod = 60
 	c.AiSettings.AiAnalyzePeriod = 70
