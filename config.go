@@ -33,6 +33,8 @@ type yamlConfig struct {
 		ResourceInTilePoorMax       int `yaml:"resource_in_tile_poor_max,omitempty"`
 		ResourceInTileMediumMax     int `yaml:"resource_in_tile_medium_max,omitempty"`
 		ResourceInTileRichMax       int `yaml:"resource_in_tile_rich_max,omitempty"`
+		HarvestingSpeed             int `yaml:"harvesting_speed"`
+		HarvesterUnloadSpeed        int `yaml:"harvester_unload_speed"`
 	} `yaml:"economy"`
 
 	Gameplay struct {
@@ -79,6 +81,8 @@ func (c *yamlConfig) setDefaultValues() {
 	c.Economy.ResourceInTilePoorMax = 100
 	c.Economy.ResourceInTileMediumMax = 225
 	c.Economy.ResourceInTileRichMax = 350
+	c.Economy.HarvestingSpeed = 2
+	c.Economy.HarvesterUnloadSpeed = 3
 
 	c.Gameplay.DamageOnArmorFactorsTable = map[string]map[string]float64{
 		string(DAMAGETYPE_ANTI_INFANTRY): {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 0.25, string(ARMORTYPE_HEAVY): 0.25},

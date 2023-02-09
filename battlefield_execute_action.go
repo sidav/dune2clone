@@ -107,8 +107,7 @@ func (b *battlefield) executeWaitActionForBuilding(bld *building) {
 	if bld.getStaticData().ReceivesResources && bld.unitPlacedInside != nil {
 		if bld.unitPlacedInside.currentCargoAmount > 0 {
 			// Receive resources
-			const HARVEST_PER_TICK = 8
-			received := min(HARVEST_PER_TICK, bld.unitPlacedInside.currentCargoAmount) // TODO: replace
+			received := min(config.Economy.HarvesterUnloadSpeed, bld.unitPlacedInside.currentCargoAmount)
 			if bld.faction.getStorageRemaining() > 0 {
 				received = min(received, int(bld.faction.getStorageRemaining()))
 			} else {
@@ -149,12 +148,11 @@ func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 }
 
 func (b *battlefield) executeHarvestActionForActor(a actor) {
-	const HARVEST_PER_TICK = 3
 	if u, ok := a.(*unit); ok {
 		x, y := u.getPhysicalCenterCoords()
 		utx, uty := geometry.TrueCoordsToTileCoords(x, y)
 		if u.currentCargoAmount < u.getStaticData().MaxCargoAmount && b.tiles[utx][uty].resourcesAmount > 0 {
-			harvestedAmount := min(b.tiles[utx][uty].resourcesAmount, HARVEST_PER_TICK) // TODO: replace
+			harvestedAmount := min(config.Economy.HarvestingSpeed, b.tiles[utx][uty].resourcesAmount)
 			harvestedAmount = min(harvestedAmount, u.getStaticData().MaxCargoAmount-u.currentCargoAmount)
 			b.tiles[utx][uty].resourcesAmount -= harvestedAmount
 			u.currentCargoAmount += harvestedAmount
