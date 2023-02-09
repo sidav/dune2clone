@@ -85,12 +85,11 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int, conditions []*star
 
 		if conditions[spNumber].aiType != "player" {
 			b.ais = append(b.ais, createAi(b.factions[spNumber], fmt.Sprintf("Enemy %d", spNumber), conditions[spNumber].aiType))
-			b.factions[spNumber].experienceMultiplier = 2
-			b.factions[spNumber].storagesMultiplier = 1
 			b.factions[spNumber].playerName = fmt.Sprintf("Player %d (AI %s)", spNumber+1, conditions[spNumber].aiType)
-			// b.factions[spNumber].buildSpeedMultiplier = 10
-			// b.factions[spNumber].visibilityCheat = true
-			// b.factions[spNumber].explorationCheat = true
+			b.factions[spNumber].buildSpeedMultiplier = config.AiSettings.AiBuildSpeedMultiplier
+			b.factions[spNumber].experienceMultiplier = config.AiSettings.AiExperienceMultiplier
+			b.factions[spNumber].storagesMultiplier = config.AiSettings.AiStoragesMultiplier
+			b.factions[spNumber].visibilityCheat = config.AiSettings.AiVisionCheat
 		} else {
 			// player faction settings
 			//b.factions[spNumber].buildSpeedMultiplier = 10

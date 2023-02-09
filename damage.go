@@ -68,7 +68,7 @@ func calculateDamageOnArmor(dmg int, dmgType damageCode, armType armorCode) int 
 		panic("Oh, armor is nothing")
 	}
 
-	factor := config.DamageOnArmorFactorsTable[string(dmgType)][string(armType)]
+	factor := config.Gameplay.DamageOnArmorFactorsTable[string(dmgType)][string(armType)]
 
 	if factor == 0 {
 		debugWritef("Factor for damage %s on armor %s may be not set!", dmgType, armType)

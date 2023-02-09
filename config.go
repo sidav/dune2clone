@@ -33,14 +33,19 @@ type yamlConfig struct {
 		ResourceInTileRichMax       int `yaml:"resource_in_tile_rich_max,omitempty"`
 	} `yaml:"economy"`
 
-	DamageOnArmorFactorsTable map[string]map[string]float64 `yaml:"damage_on_armor_factors_table"`
-
-	CostForLevelUpMultiplier float64 `yaml:"cost_for_level_up_multiplier"`
-	CostForLevelUpExponent   float64 `yaml:"cost_for_level_up_exponent"`
+	Gameplay struct {
+		DamageOnArmorFactorsTable map[string]map[string]float64 `yaml:"damage_on_armor_factors_table"`
+		CostForLevelUpMultiplier  float64                       `yaml:"cost_for_level_up_multiplier"`
+		CostForLevelUpExponent    float64                       `yaml:"cost_for_level_up_exponent"`
+	} `yaml:"gameplay"`
 
 	AiSettings struct {
-		AiActPeriod     int `yaml:"ai_act_period"`
-		AiAnalyzePeriod int `yaml:"ai_analyze_period"`
+		AiActPeriod            int     `yaml:"ai_act_period"`
+		AiAnalyzePeriod        int     `yaml:"ai_analyze_period"`
+		AiBuildSpeedMultiplier float64 `yaml:"ai_build_speed_multiplier"`
+		AiExperienceMultiplier float64 `yaml:"ai_experience_multiplier"`
+		AiStoragesMultiplier   float64 `yaml:"ai_storages_multiplier"`
+		AiVisionCheat          bool    `yaml:"ai_vision_cheat"`
 	} `yaml:"aiSettings"`
 }
 
@@ -67,17 +72,21 @@ func (c *yamlConfig) setDefaultValues() {
 	c.Economy.ResourceInTileMediumMax = 225
 	c.Economy.ResourceInTileRichMax = 350
 
-	c.DamageOnArmorFactorsTable = map[string]map[string]float64{
+	c.Gameplay.DamageOnArmorFactorsTable = map[string]map[string]float64{
 		string(DAMAGETYPE_ANTI_INFANTRY): {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 0.25, string(ARMORTYPE_HEAVY): 0.25},
 		string(DAMAGETYPE_HEAVY):         {string(ARMORTYPE_INFANTRY): 0.25, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 1},
 		string(DAMAGETYPE_ANTI_BUILDING): {string(ARMORTYPE_INFANTRY): 0.25, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 0.25},
 		string(DAMAGETYPE_OMNI):          {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 1},
 	}
-	c.CostForLevelUpMultiplier = 1.5
-	c.CostForLevelUpExponent = 1.35
+	c.Gameplay.CostForLevelUpMultiplier = 1.5
+	c.Gameplay.CostForLevelUpExponent = 1.35
 
 	c.AiSettings.AiActPeriod = 60
 	c.AiSettings.AiAnalyzePeriod = 70
+	c.AiSettings.AiBuildSpeedMultiplier = 1.05
+	c.AiSettings.AiStoragesMultiplier = 2
+	c.AiSettings.AiExperienceMultiplier = 2.5
+	c.AiSettings.AiVisionCheat = false
 }
 
 func (c *yamlConfig) initFromFileOrCreate() {

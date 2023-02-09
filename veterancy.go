@@ -1,8 +1,8 @@
 package main
 
 func getExperienceLevelByAmountAndCost(totalExp, cost int) int {
-	multipliedCost := float64(cost) * config.CostForLevelUpMultiplier
-	exponent := config.CostForLevelUpExponent
+	multipliedCost := float64(cost) * config.Gameplay.CostForLevelUpMultiplier
+	exponent := config.Gameplay.CostForLevelUpExponent
 	floatTotalExp := float64(totalExp)
 	switch {
 	case floatTotalExp < multipliedCost:
