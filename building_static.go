@@ -30,36 +30,39 @@ const (
 )
 
 type buildingStatic struct {
-	W, H              int
-	DisplayedName     string
-	Cost              int
-	BuildTime         int // seconds
-	RequiresToBeBuilt []buildingCode
-	RequiresTechLevel int
-	GivesTechLevel    int
+	W                 int            `json:"w,omitempty"`
+	H                 int            `json:"h,omitempty"`
+	DisplayedName     string         `json:"displayed_name,omitempty"`
+	Cost              int            `json:"cost,omitempty"`
+	BuildTime         int            `json:"build_time,omitempty"` // seconds
+	RequiresToBeBuilt []buildingCode `json:"requires_to_be_built,omitempty"`
+	RequiresTechLevel int            `json:"requires_tech_level,omitempty"`
+	GivesTechLevel    int            `json:"gives_tech_level,omitempty"`
 
-	Builds       []buildingCode // buildings
-	BuildType    buildTypeCode
-	Produces     []int // units
-	MaxHitpoints int
+	Builds       []buildingCode `json:"builds,omitempty"` // buildings
+	BuildType    buildTypeCode  `json:"build_type,omitempty"`
+	Produces     []int          `json:"produces,omitempty"` // units
+	MaxHitpoints int            `json:"max_hitpoints,omitempty"`
 
-	TurretData *TurretStatic
+	TurretData *TurretStatic `json:"turret_data,omitempty"`
 
-	ReceivesResources                  bool // is refinery
-	RepairsUnits                       bool
-	UnitPlacementX, UnitPlacementY     int // tile coords for placed unit draw
-	NeedsEmptyRowBelowWhenConstructing bool
+	ReceivesResources                  bool `json:"receives_resources,omitempty"` // is refinery
+	RepairsUnits                       bool `json:"repairs_units,omitempty"`
+	UnitPlacementX                     int  `json:"unit_placement_x,omitempty"`
+	UnitPlacementY                     int  `json:"unit_placement_y,omitempty"` // tile coords for placed unit draw
+	NeedsEmptyRowBelowWhenConstructing bool `json:"needs_empty_row_below_when_constructing,omitempty"`
 
-	GivesFreeUnitOnCreation   bool
-	CodeForFreeUnitOnCreation int
+	GivesFreeUnitOnCreation   bool `json:"gives_free_unit_on_creation,omitempty"`
+	CodeForFreeUnitOnCreation int  `json:"code_for_free_unit_on_creation,omitempty"`
 
-	GivesEnergy, ConsumesEnergy int
-	StorageAmount               float64
+	GivesEnergy    int     `json:"gives_energy,omitempty"`
+	ConsumesEnergy int     `json:"consumes_energy,omitempty"`
+	StorageAmount  float64 `json:"storage_amount,omitempty"`
 
-	SpriteCode string
+	SpriteCode string `json:"sprite_code,omitempty"`
 
 	// ui-only things:
-	HotkeyToBuild string
+	HotkeyToBuild string `json:"hotkey_to_build,omitempty"`
 }
 
 func (bs *buildingStatic) canUnitBePlacedIn() bool {
