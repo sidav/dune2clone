@@ -1,14 +1,17 @@
 package main
 
 func getExperienceLevelByAmountAndCost(totalExp, cost int) int {
+	multipliedCost := float64(cost) * config.CostForLevelUpMultiplier
+	exponent := config.CostForLevelUpExponent
+	floatTotalExp := float64(totalExp)
 	switch {
-	case totalExp < cost:
+	case floatTotalExp < multipliedCost:
 		return 0
-	case totalExp < 2*cost:
+	case floatTotalExp < 2*multipliedCost*exponent:
 		return 1
-	case totalExp < 3*cost:
+	case floatTotalExp < 3*multipliedCost*exponent*exponent:
 		return 2
-	case totalExp < 4*cost:
+	case floatTotalExp < 4*multipliedCost*exponent*exponent*exponent:
 		return 3
 	default:
 		return 4
