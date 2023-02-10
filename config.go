@@ -85,7 +85,7 @@ func (c *yamlConfig) setDefaultValues() {
 	c.Economy.HarvesterUnloadSpeed = 3
 
 	c.Gameplay.DamageOnArmorFactorsTable = map[string]map[string]float64{
-		string(DAMAGETYPE_ANTI_INFANTRY): {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 0.25, string(ARMORTYPE_HEAVY): 0.25},
+		string(DAMAGETYPE_ANTI_INFANTRY): {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 0.1, string(ARMORTYPE_HEAVY): 0.1},
 		string(DAMAGETYPE_HEAVY):         {string(ARMORTYPE_INFANTRY): 0.25, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 1},
 		string(DAMAGETYPE_ANTI_BUILDING): {string(ARMORTYPE_INFANTRY): 0.25, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 0.25},
 		string(DAMAGETYPE_OMNI):          {string(ARMORTYPE_INFANTRY): 1, string(ARMORTYPE_BUILDING): 1, string(ARMORTYPE_HEAVY): 1},
@@ -99,7 +99,7 @@ func (c *yamlConfig) setDefaultValues() {
 
 	c.AiSettings.AiActPeriod = 60
 	c.AiSettings.AiAnalyzePeriod = 70
-	c.AiSettings.AiBuildSpeedMultiplier = 1.05
+	c.AiSettings.AiBuildSpeedMultiplier = 1.11
 	c.AiSettings.AiStoragesMultiplier = 2
 	c.AiSettings.AiExperienceMultiplier = 2.5
 	c.AiSettings.AiVisionCheat = false
