@@ -68,7 +68,7 @@ func loadSprites(r *renderer) {
 	buildingsAtlaces["airfactory2"] = CreateAtlasFromFile(currPath+"airfactory2.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["refinery1"] = CreateAtlasFromFile(currPath+"refinery1.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["refinery2"] = CreateAtlasFromFile(currPath+"anjaopterix/refinery2.png", 0, 0, 96, 64, 48, 32, 1, false, true)
-	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 48, 32, 48, 32, 1, false, true)
+	buildingsAtlaces["depot"] = CreateAtlasFromFile(currPath+"depot.png", 0, 0, 96, 64, 48, 32, 1, false, true)
 	buildingsAtlaces["silo"] = CreateAtlasFromFile(currPath+"silo.png", 0, 0, 32, 64, 16, 32, 1, false, true)
 	buildingsAtlaces["turret_base"] = CreateAtlasFromFile(currPath+"turret_base.png", 0, 0, 32, 32, 16, 16, 1, false, true)
 	buildingsAtlaces["bld_aaturret"] = CreateAtlasFromFile(currPath+"aa_turret.png", 0, 0, 32, 32, 16, 16, 1, false, true)
