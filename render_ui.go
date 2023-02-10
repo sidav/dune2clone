@@ -58,28 +58,52 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerController) {
 	const ticksForAnimation = 30
 	ticksSince := b.currentTick - pc.tickOrderGiven
-	completionPercent := int32(100 * ticksSince / ticksForAnimation)
+	animationPercent := int32(100 * ticksSince / ticksForAnimation)
 	if ticksSince > ticksForAnimation {
 		return
 	}
 	osx, osy := r.physicalToOnScreenCoords(float64(pc.orderGivenX*TILE_PHYSICAL_SIZE), float64(pc.orderGivenY*TILE_PHYSICAL_SIZE))
-	if completionPercent <= 50 {
-		r.drawBoldRect(
-			osx+TILE_SIZE_IN_PIXELS*completionPercent/100,
-			osy+TILE_SIZE_IN_PIXELS*completionPercent/100,
-			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
-			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
-			3, rl.Green,
-		)
-	} else {
-		completionPercent = 100 - completionPercent
-		r.drawBoldRect(
-			osx+TILE_SIZE_IN_PIXELS*completionPercent/100,
-			osy+TILE_SIZE_IN_PIXELS*completionPercent/100,
-			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
-			TILE_SIZE_IN_PIXELS*(100-2*completionPercent)/100,
-			3, rl.Green,
-		)
+	var color rl.Color
+	animType := 0
+	switch pc.orderGivenCode {
+	case ORDER_MOVE:
+		color = rl.Green
+	case ORDER_ATTACK:
+		color = rl.Red
+		animType = 1
+	default:
+		color = rl.Blue
+		animType = 1
+	}
+	switch animType {
+	case 0:
+		if animationPercent <= 50 {
+			r.drawBoldRect(
+				osx+TILE_SIZE_IN_PIXELS*animationPercent/100,
+				osy+TILE_SIZE_IN_PIXELS*animationPercent/100,
+				TILE_SIZE_IN_PIXELS*(100-2*animationPercent)/100,
+				TILE_SIZE_IN_PIXELS*(100-2*animationPercent)/100,
+				3, color,
+			)
+		} else {
+			animationPercent = 100 - animationPercent
+			r.drawBoldRect(
+				osx+TILE_SIZE_IN_PIXELS*animationPercent/100,
+				osy+TILE_SIZE_IN_PIXELS*animationPercent/100,
+				TILE_SIZE_IN_PIXELS*(100-2*animationPercent)/100,
+				TILE_SIZE_IN_PIXELS*(100-2*animationPercent)/100,
+				3, color,
+			)
+		}
+	case 1:
+		r.drawBoldRect(osx+TILE_SIZE_IN_PIXELS*animationPercent/100, osy,
+			3, TILE_SIZE_IN_PIXELS, 3, color)
+		r.drawBoldRect(osx+TILE_SIZE_IN_PIXELS*(100-animationPercent)/100, osy,
+			3, TILE_SIZE_IN_PIXELS, 3, color)
+		r.drawBoldRect(osx, osy+TILE_SIZE_IN_PIXELS*animationPercent/100,
+			TILE_SIZE_IN_PIXELS, 3, 3, color)
+		r.drawBoldRect(osx, osy+TILE_SIZE_IN_PIXELS*(100-animationPercent)/100,
+			TILE_SIZE_IN_PIXELS, 3, 3, color)
 	}
 }
 

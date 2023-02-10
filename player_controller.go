@@ -18,6 +18,7 @@ type playerController struct {
 
 	// for drawing that "order given thing"
 	tickOrderGiven, orderGivenX, orderGivenY int
+	orderGivenCode                           orderCode
 }
 
 func (pc *playerController) getFirstSelection() actor {
@@ -188,25 +189,31 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 			u.currentOrder.targetTileX = tx
 			u.currentOrder.targetTileY = ty
 			u.currentOrder.code = ORDER_MOVE
+			pc.orderGivenCode = ORDER_MOVE
 			if aac != nil && aac.getFaction() != u.getFaction() {
 				u.currentOrder.code = ORDER_ATTACK
+				pc.orderGivenCode = ORDER_ATTACK
 				u.currentOrder.targetActor = aac
 				return
 			}
 			if len(pc.selection) == 1 && aac == pc.selection[0] && u.getStaticData().CanBeDeployed {
 				u.currentOrder.code = ORDER_DEPLOY
+				pc.orderGivenCode = ORDER_DEPLOY
 			}
 			if u.getStaticData().MaxCargoAmount > 0 && b.tiles[tx][ty].resourcesAmount > 0 {
 				u.currentOrder.code = ORDER_HARVEST
+				pc.orderGivenCode = ORDER_HARVEST
 			}
 			if bld, ok := aac.(*building); ok {
 				if bld.getStaticData().RepairsUnits {
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_MOVE_TO_REPAIR
+					pc.orderGivenCode = ORDER_MOVE_TO_REPAIR
 				}
 				if bld.getStaticData().ReceivesResources && u.getStaticData().MaxCargoAmount > 0 {
 					u.currentOrder.targetActor = bld
 					u.currentOrder.code = ORDER_RETURN_TO_REFINERY
+					pc.orderGivenCode = ORDER_RETURN_TO_REFINERY
 				}
 			}
 		}

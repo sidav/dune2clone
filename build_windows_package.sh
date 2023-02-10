@@ -1,6 +1,6 @@
 DATE=$(date +%d_%m_%y)
 EXE_NAME=sidavRTS_${DATE}.exe
-ZIP_NAME=sidavRTS${DATE}.zip
+ZIP_NAME=sidavRTS_${DATE}.zip
 
 echo "Building ${EXE_NAME}..."
 GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -ldflags="-s -w" -o ${EXE_NAME} *.go
