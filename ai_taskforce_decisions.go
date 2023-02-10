@@ -100,7 +100,7 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 			u.currentOrder.code = ORDER_ATTACK_MOVE
 			u.currentOrder.setTargetTileCoords(geometry.TrueCoordsToTileCoords(tf.target.getPhysicalCenterCoords()))
 			u.currentOrder.targetActor = tf.target
-			tf.nextTickToGiveOrders = b.currentTick + 10*config.Engine.TicksPerNominalSecond
+			tf.nextTickToGiveOrders = b.currentTick + 7*config.Engine.TicksPerNominalSecond
 		}
 	} else {
 		tf.target = ai.findVisibleTargetNearBase(b, basePatrolRadius)
@@ -111,7 +111,7 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 }
 
 func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskForce) {
-	const radius = 20
+	const radius = 25
 	if ai.currBaseCenterX > 0 && ai.currBaseCenterY > 0 {
 		for i := 0; i < 100; i++ {
 			coordX := rnd.RandInRange(ai.currBaseCenterX-radius, ai.currBaseCenterX+radius)
@@ -172,7 +172,12 @@ func (ai *aiStruct) findVisibleTargetNearBase(b *battlefield, radius int) actor 
 		if currActor.getFaction() == ai.controlsFaction {
 			continue
 		}
-		if ai.isActorInRangeFromBase(currActor, radius) && b.canFactionSeeActor(ai.controlsFaction, currActor) {
+		ttx, tty := geometry.TrueCoordsToTileCoords(currActor.getPhysicalCenterCoords())
+		isSeen := b.canFactionSeeActor(ai.controlsFaction, currActor) ||
+			// slight cheats
+			geometry.GetApproxDistFromTo(ai.currBaseCenterX, ai.currBaseCenterY, ttx, tty) < 25
+
+		if ai.isActorInRangeFromBase(currActor, radius) && isSeen {
 			return currActor
 		}
 	}
@@ -182,6 +187,7 @@ func (ai *aiStruct) findVisibleTargetNearBase(b *battlefield, radius int) actor 
 func (ai *aiStruct) findVisibleTargetForAttack(b *battlefield) actor {
 	var selectedTarget actor = nil
 	attackBuildings := rnd.OneChanceFrom(2)
+	preferHarvesters := rnd.OneChanceFrom(3)
 	if attackBuildings {
 		for i := b.buildings.Front(); i != nil; i = i.Next() {
 			currActor := i.Value.(actor)
@@ -193,8 +199,14 @@ func (ai *aiStruct) findVisibleTargetForAttack(b *battlefield) actor {
 		}
 	} else {
 		for i := b.units.Front(); i != nil; i = i.Next() {
-			currActor := i.Value.(actor)
+			currActor := i.Value.(*unit)
 			if currActor.getFaction() != ai.controlsFaction && b.canFactionSeeActor(ai.controlsFaction, currActor) {
+				if preferHarvesters {
+					if currActor.getStaticData().MaxCargoAmount > 0 {
+						selectedTarget = currActor
+						break
+					}
+				}
 				if selectedTarget == nil || rnd.OneChanceFrom(4) {
 					selectedTarget = currActor
 				}
