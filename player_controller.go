@@ -190,9 +190,18 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 			u.currentOrder.targetTileY = ty
 			u.currentOrder.code = ORDER_MOVE
 			pc.orderGivenCode = ORDER_MOVE
+			if rl.IsKeyDown(rl.KeyRightControl) || rl.IsKeyDown(rl.KeyLeftControl) {
+				u.currentOrder.code = ORDER_ATTACK_MOVE
+				pc.orderGivenCode = ORDER_ATTACK_MOVE
+			}
 			if aac != nil && aac.getFaction() != u.getFaction() {
-				u.currentOrder.code = ORDER_ATTACK
-				pc.orderGivenCode = ORDER_ATTACK
+				if rl.IsKeyDown(rl.KeyRightControl) || rl.IsKeyDown(rl.KeyLeftControl) {
+					u.currentOrder.code = ORDER_ATTACK_MOVE
+					pc.orderGivenCode = ORDER_ATTACK_MOVE
+				} else {
+					u.currentOrder.code = ORDER_ATTACK
+					pc.orderGivenCode = ORDER_ATTACK
+				}
 				u.currentOrder.targetActor = aac
 				return
 			}

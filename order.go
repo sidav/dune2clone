@@ -40,6 +40,8 @@ func (o *order) getTextDescription() string {
 		return "Moving"
 	case ORDER_ATTACK:
 		return "Attacking"
+	case ORDER_ATTACK_MOVE:
+		return "Moving while engaging"
 	case ORDER_HARVEST:
 		return "Harvesting"
 	case ORDER_RETURN_TO_REFINERY:
@@ -66,6 +68,7 @@ const (
 	ORDER_NONE orderCode = iota
 	ORDER_MOVE
 	ORDER_ATTACK
+	ORDER_ATTACK_MOVE
 	ORDER_HARVEST
 	ORDER_RETURN_TO_REFINERY
 	ORDER_MOVE_TO_REPAIR

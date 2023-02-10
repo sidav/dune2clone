@@ -27,6 +27,8 @@ func (b *battlefield) executeOrderForUnit(u *unit) {
 		b.executeMoveOrder(u)
 	case ORDER_ATTACK:
 		b.executeAttackOrder(u)
+	case ORDER_ATTACK_MOVE:
+		b.executeAttackMoveOrder(u)
 	case ORDER_HARVEST:
 		b.executeHarvestOrder(u)
 	case ORDER_RETURN_TO_REFINERY:
@@ -88,6 +90,16 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 			)
 			b.SetActionForUnitForPathTo(u, orderTileX, orderTileY)
 		}
+	}
+}
+
+func (b *battlefield) executeAttackMoveOrder(u *unit) {
+	if len(u.turrets) == 0 || u.turrets[0].targetActor == nil {
+		b.executeMoveOrder(u)
+		return
+	}
+	if u.currentOrder.targetActor != nil && u.currentOrder.targetActor.getFaction() != u.getFaction() {
+		b.executeAttackOrder(u)
 	}
 }
 
