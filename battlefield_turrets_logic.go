@@ -58,9 +58,16 @@ func (b *battlefield) actTurret(shooter actor, t *turret) {
 			targetCandidate := l.Value.(actor)
 			if targetCandidate.getFaction() != shooter.getFaction() &&
 				b.canTurretAttackActor(t, targetCandidate) && b.canFactionSeeActor(shooter.getFaction(), targetCandidate) {
-
-				t.targetActor = targetCandidate
-				break
+				// try to select a target which pose max danger to the shooter
+				if t.targetActor != nil {
+					if b.canActorAttackActor(t.targetActor, shooter) {
+						break
+					} else {
+						t.targetActor = targetCandidate
+					}
+				} else {
+					t.targetActor = targetCandidate
+				}
 			}
 		}
 	}
