@@ -106,7 +106,7 @@ func (r *renderer) renderBuilding(b *battlefield, pc *playerController, bld *bui
 			r.drawProgressBar(osx, osy+2, int32(TILE_SIZE_IN_PIXELS*w), bld.currentAction.getCompletionPercent(), 100, &rl.Blue)
 		}
 		if bld.currentHitpoints < bld.getMaxHitpoints() {
-			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getStaticData().MaxHitpoints,
+			r.drawProgressBar(osx, osy-4, int32(TILE_SIZE_IN_PIXELS*w), bld.currentHitpoints, bld.getMaxHitpoints(),
 				&factionColors[bld.getFaction().colorNumber])
 		}
 		// render unit inside
