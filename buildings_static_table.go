@@ -362,10 +362,10 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		HotkeyToBuild:                      "F",
 	},
 	BLD_AIRFACTORY2: {
-		SpriteCode:        "airfactory",
+		SpriteCode:        "airfactory2",
 		MaxHitpoints:      750,
-		W:                 2,
-		H:                 3,
+		W:                 3,
+		H:                 2,
 		DisplayedName:     "Commonwealth Avionics Facility",
 		Cost:              1000,
 		RequiresTechLevel: 3,

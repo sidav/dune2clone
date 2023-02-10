@@ -73,10 +73,10 @@ func (c *yamlConfig) setDefaultValues() {
 	c.Engine.BuildingAnimationTicks = 12
 	c.Engine.TicksPerNominalSecond = 60
 
-	c.Economy.ResourcesGrowthPeriod = 420
-	c.Economy.ResourcesGrowthRadius = 5
-	c.Economy.ResourcesGrowthMin = 10
-	c.Economy.ResourcesGrowthMax = 100
+	c.Economy.ResourcesGrowthPeriod = 300
+	c.Economy.ResourcesGrowthRadius = 4
+	c.Economy.ResourcesGrowthMin = 25
+	c.Economy.ResourcesGrowthMax = 75
 	c.Economy.ResourcesInTileMinGenerated = 50
 	c.Economy.ResourceInTilePoorMax = 100
 	c.Economy.ResourceInTileMediumMax = 225

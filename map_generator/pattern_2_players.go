@@ -64,12 +64,12 @@ func generateByTwoPlayersPattern(gm *GeneratedMap) {
 		0, 0, w, h,
 	)
 
-	gm.performNAutomatasLike(2*rnd.RandInRange(1, 4),
+	gm.performNAutomatasLike(2*rnd.RandInRange(2, 5),
 		0,
 		1,
 		automat{
 			drawsChar:           RESOURCE_VEIN,
-			canDrawOn:           []tileCode{RICH_RESOURCES},
+			canDrawOn:           []tileCode{MEDIUM_RESOURCES, RICH_RESOURCES},
 			radialSymmetryCount: 2,
 		},
 		0, 0, w, h,

@@ -117,7 +117,7 @@ func (b *battlefield) placeInitialStuff(startPoints [][2]int, conditions []*star
 	//coord := 0
 	//for k, _ := range sTableUnits {
 	//	b.addActor(createUnit(k, startPoints[0][0]-10+coord, startPoints[0][1]+2, b.factions[0]))
-	//	b.addActor(createUnit(k, startPoints[1][0]-10+coord, startPoints[1][1]+2, b.factions[1]))
+	//	// b.addActor(createUnit(k, startPoints[1][0]-10+coord, startPoints[1][1]+2, b.factions[1]))
 	//	coord++
 	//}
 	// b.addActor(createUnit(UNT_JUGGERNAUT, startPoints[0][0]-1, startPoints[0][1]+2, b.factions[0]))
