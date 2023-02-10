@@ -94,12 +94,21 @@ func (b *battlefield) executeAttackOrder(u *unit) {
 }
 
 func (b *battlefield) executeAttackMoveOrder(u *unit) {
-	if len(u.turrets) == 0 || u.turrets[0].targetActor == nil {
-		b.executeMoveOrder(u)
+	if len(u.turrets) == 0 {
+		u.currentOrder.code = ORDER_MOVE
 		return
 	}
-	if u.currentOrder.targetActor != nil && u.currentOrder.targetActor.getFaction() != u.getFaction() {
-		b.executeAttackOrder(u)
+	if u.turrets[0].targetActor != nil {
+		return
+	}
+	if u.currentOrder.targetActor != nil {
+		u.currentOrder.setTargetTileCoords(geometry.TrueCoordsToTileCoords(u.currentOrder.targetActor.getPhysicalCenterCoords()))
+	}
+	if u.getStaticData().IsAircraft {
+		u.currentAction.code = ACTION_MOVE
+		u.currentAction.targetTileX, u.currentAction.targetTileY = u.currentOrder.targetTileX, u.currentOrder.targetTileY
+	} else {
+		b.SetActionForUnitForPathTo(u, u.currentOrder.targetTileX, u.currentOrder.targetTileY)
 	}
 }
 

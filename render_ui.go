@@ -72,6 +72,10 @@ func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerControlle
 	case ORDER_ATTACK:
 		color = rl.Red
 		animType = 2
+		// center on target pawn
+		osx, osy = r.physicalToOnScreenCoords(pc.targetActorInOrder.getPhysicalCenterCoords())
+		osx -= TILE_SIZE_IN_PIXELS / 2
+		osy -= TILE_SIZE_IN_PIXELS / 2
 	case ORDER_ATTACK_MOVE:
 		color = rl.Green
 		animType = 2
@@ -111,31 +115,35 @@ func (r *renderer) renderOrderGivenAnimation(b *battlefield, pc *playerControlle
 	}
 	// triangles
 	if animType == 2 {
-		distFromCenter := float32((100-animationPercent+25)*TILE_SIZE_IN_PIXELS) / 100
-		triangleSize := float32(TILE_SIZE_IN_PIXELS / 3)
+		if animationPercent > 75 {
+			return
+		}
+		distFromCenter := float32((100-animationPercent)*TILE_SIZE_IN_PIXELS) / 100
+		triangleHeight := float32(TILE_SIZE_IN_PIXELS / 4)
+		triangleHalfBase := triangleHeight / 2
 		cx, cy := float32(osx+TILE_SIZE_IN_PIXELS/2), float32(osy+TILE_SIZE_IN_PIXELS/2)
 		var thick float32
 		for thick = 0; thick < 4; thick++ {
 			// top triangle
 			rl.DrawTriangleLines(
-				rl.Vector2{cx - triangleSize + thick, cy - (distFromCenter + thick)},
-				rl.Vector2{cx + triangleSize - thick, cy - (distFromCenter + thick)},
-				rl.Vector2{cx, cy - distFromCenter + triangleSize - thick}, color)
+				rl.Vector2{cx - triangleHalfBase - thick, cy - distFromCenter - thick},
+				rl.Vector2{cx + triangleHalfBase + thick, cy - distFromCenter - thick},
+				rl.Vector2{cx, cy - distFromCenter + triangleHeight + thick}, color)
 			// bottom triangle
 			rl.DrawTriangleLines(
-				rl.Vector2{cx - triangleSize + thick, cy + distFromCenter + thick},
-				rl.Vector2{cx + triangleSize - thick, cy + distFromCenter + thick},
-				rl.Vector2{cx, cy + distFromCenter - triangleSize + thick}, color)
+				rl.Vector2{cx - triangleHalfBase - thick, cy + distFromCenter + thick},
+				rl.Vector2{cx + triangleHalfBase + thick, cy + distFromCenter + thick},
+				rl.Vector2{cx, cy + distFromCenter - triangleHeight - thick}, color)
 			// left triangle
 			rl.DrawTriangleLines(
-				rl.Vector2{cx - distFromCenter + thick, cy - triangleSize},
-				rl.Vector2{cx - distFromCenter + thick, cy + triangleSize},
-				rl.Vector2{cx - distFromCenter + triangleSize + thick, cy}, color)
+				rl.Vector2{cx - distFromCenter - thick, cy - triangleHalfBase - thick},
+				rl.Vector2{cx - distFromCenter - thick, cy + triangleHalfBase + thick},
+				rl.Vector2{cx - distFromCenter + triangleHeight + thick, cy}, color)
 			// right triangle
 			rl.DrawTriangleLines(
-				rl.Vector2{cx + distFromCenter - thick, cy - triangleSize},
-				rl.Vector2{cx + distFromCenter - thick, cy + triangleSize},
-				rl.Vector2{cx + distFromCenter - triangleSize - thick, cy}, color)
+				rl.Vector2{cx + distFromCenter + thick, cy - triangleHalfBase - thick},
+				rl.Vector2{cx + distFromCenter + thick, cy + triangleHalfBase + thick},
+				rl.Vector2{cx + distFromCenter - triangleHeight - thick, cy}, color)
 		}
 	}
 }

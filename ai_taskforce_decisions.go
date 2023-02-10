@@ -70,9 +70,14 @@ func (ai *aiStruct) giveOrderToAttackTaskForce(b *battlefield, tf *aiTaskForce) 
 		if tf.target != nil {
 			ai.debugWritef("Attack TF: attack %s!\n", tf.target.getName())
 			for _, u := range tf.units {
-				u.currentOrder.code = ORDER_ATTACK
+				if rnd.OneChanceFrom(4) {
+					u.currentOrder.code = ORDER_ATTACK
+				} else {
+					u.currentOrder.code = ORDER_ATTACK_MOVE
+					u.currentOrder.setTargetTileCoords(geometry.TrueCoordsToTileCoords(tf.target.getPhysicalCenterCoords()))
+				}
 				u.currentOrder.targetActor = tf.target
-				tf.nextTickToGiveOrders = b.currentTick + 5*config.Engine.TicksPerNominalSecond
+				tf.nextTickToGiveOrders = b.currentTick + 15*config.Engine.TicksPerNominalSecond
 			}
 		} else {
 			tf.target = ai.findVisibleTargetForAttack(b)
@@ -92,9 +97,10 @@ func (ai *aiStruct) giveOrderToDefendingTaskForce(b *battlefield, tf *aiTaskForc
 	const basePatrolRadius = 20
 	if tf.target != nil {
 		for _, u := range tf.units {
-			u.currentOrder.code = ORDER_ATTACK
+			u.currentOrder.code = ORDER_ATTACK_MOVE
+			u.currentOrder.setTargetTileCoords(geometry.TrueCoordsToTileCoords(tf.target.getPhysicalCenterCoords()))
 			u.currentOrder.targetActor = tf.target
-			tf.nextTickToGiveOrders = b.currentTick + 5*config.Engine.TicksPerNominalSecond
+			tf.nextTickToGiveOrders = b.currentTick + 10*config.Engine.TicksPerNominalSecond
 		}
 	} else {
 		tf.target = ai.findVisibleTargetNearBase(b, basePatrolRadius)
@@ -113,7 +119,7 @@ func (ai *aiStruct) giveRoamNearBaseOrderToTaskForce(b *battlefield, tf *aiTaskF
 			if b.isTileClearToBeMovedInto(coordX, coordY, nil) {
 				for _, u := range tf.units {
 					u.currentOrder.resetOrder()
-					u.currentOrder.code = ORDER_MOVE
+					u.currentOrder.code = ORDER_ATTACK_MOVE
 					u.currentOrder.setTargetTileCoords(coordX, coordY)
 				}
 				return

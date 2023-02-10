@@ -19,6 +19,7 @@ type playerController struct {
 	// for drawing that "order given thing"
 	tickOrderGiven, orderGivenX, orderGivenY int
 	orderGivenCode                           orderCode
+	targetActorInOrder                       actor
 }
 
 func (pc *playerController) getFirstSelection() actor {
@@ -177,6 +178,7 @@ func (pc *playerController) scroll(b *battlefield) {
 }
 
 func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty int) {
+	pc.targetActorInOrder = nil
 	if !b.areTileCoordsValid(tx, ty) {
 		return
 	}
@@ -201,6 +203,7 @@ func (pc *playerController) rightClickWithActorSelected(b *battlefield, tx, ty i
 				} else {
 					u.currentOrder.code = ORDER_ATTACK
 					pc.orderGivenCode = ORDER_ATTACK
+					pc.targetActorInOrder = aac
 				}
 				u.currentOrder.targetActor = aac
 				return
