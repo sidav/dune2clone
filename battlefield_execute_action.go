@@ -100,6 +100,17 @@ func (b *battlefield) executeWaitActionForUnit(u *unit) {
 			y -= u.centerY
 			u.rotateChassisTowardsVector(x, y)
 		}
+		// idle rotating
+		if u.turrets != nil && u.turrets[0].canRotate() && u.turrets[0].targetActor == nil && (b.currentTick/config.Engine.UnitsActionPeriod)%5 == 0 {
+			rotSpeed := u.turrets[0].getStaticData().RotateSpeed
+			if geometry.GetDiffForRotationStep(u.chassisDegree, u.turrets[0].rotationDegree, 360) >= 45 && (b.currentTick/config.Engine.UnitsActionPeriod)%5 == 0 {
+				u.turrets[0].rotationDegree += geometry.GetDiffForRotationStep(u.turrets[0].rotationDegree, u.chassisDegree, rotSpeed)
+			} else if (b.currentTick/config.Engine.UnitsActionPeriod)%60 == 0 {
+				// here be glitches
+				u.turrets[0].rotationDegree += rnd.RandInRange(-1, 1) * 55
+			}
+			u.turrets[0].normalizeDegrees()
+		}
 	}
 }
 
