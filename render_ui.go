@@ -26,32 +26,35 @@ func (r *renderer) renderUI(b *battlefield, pc *playerController) {
 		r.renderElasticSelection(b, pc)
 	}
 	r.renderOrderGivenAnimation(b, pc)
-	// technical
-	rl.DrawRectangle(0, 0, 32*WINDOW_W/100, 30*WINDOW_H/100, rl.Color{
-		R: 32,
-		G: 32,
-		B: 32,
-		A: 128,
-	})
-	r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
-	r.drawText(b.collectStatisticsForDebug(), 0, 28, 24, rl.White)
-	for i := range r.timeDebugInfosToRender {
-		color := rl.White
-		ind := geometry.GetPartitionIndex(int(r.timeDebugInfosToRender[i].duration*time.Microsecond), 0, int(r.timeDebugInfosToRender[i].criticalDuration*time.Microsecond), 4)
-		// debugWritef("%d from %d is %d\n", int(r.timeDebugInfosToRender[i].duration * time.Microsecond), int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), ind)
-		if ind == 2 {
-			color = rl.Yellow
+
+	if config.DebugOutput {
+		// technical
+		rl.DrawRectangle(0, 0, 32*WINDOW_W/100, 30*WINDOW_H/100, rl.Color{
+			R: 32,
+			G: 32,
+			B: 32,
+			A: 128,
+		})
+		r.drawText(fmt.Sprintf("TICK %d, frame rendered in %dms", b.currentTick, r.lastFrameRenderingTime), 0, 0, 24, rl.White)
+		r.drawText(b.collectStatisticsForDebug(), 0, 28, 24, rl.White)
+		for i := range r.timeDebugInfosToRender {
+			color := rl.White
+			ind := geometry.GetPartitionIndex(int(r.timeDebugInfosToRender[i].duration*time.Microsecond), 0, int(r.timeDebugInfosToRender[i].criticalDuration*time.Microsecond), 4)
+			// debugWritef("%d from %d is %d\n", int(r.timeDebugInfosToRender[i].duration * time.Microsecond), int(r.timeDebugInfosToRender[i].criticalDuration * time.Microsecond), ind)
+			if ind == 2 {
+				color = rl.Yellow
+			}
+			if ind == 3 {
+				color = rl.Red
+			}
+			logicNameString := fmt.Sprintf("%-18s", r.timeDebugInfosToRender[i].logicName+":")
+			durationString := fmt.Sprintf("%5d (max %5d, mean %4d)",
+				r.timeDebugInfosToRender[i].duration,
+				r.timeDebugInfosToRender[i].maxRecordedDuration,
+				r.timeDebugInfosToRender[i].calculatedMeanDuration,
+			)
+			r.drawText(fmt.Sprintf("%s %s", logicNameString, durationString), 0, int32(56+23*i), 18, color)
 		}
-		if ind == 3 {
-			color = rl.Red
-		}
-		logicNameString := fmt.Sprintf("%-18s", r.timeDebugInfosToRender[i].logicName+":")
-		durationString := fmt.Sprintf("%5d (max %5d, mean %4d)",
-			r.timeDebugInfosToRender[i].duration,
-			r.timeDebugInfosToRender[i].maxRecordedDuration,
-			r.timeDebugInfosToRender[i].calculatedMeanDuration,
-		)
-		r.drawText(fmt.Sprintf("%s %s", logicNameString, durationString), 0, int32(56+23*i), 18, color)
 	}
 }
 
