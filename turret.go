@@ -3,9 +3,10 @@ package main
 import "dune2clone/geometry"
 
 type turret struct {
-	staticData     *TurretStatic
-	rotationDegree int
-	nextTickToAct  int
+	staticData           *TurretStatic
+	rotationDegree       int
+	nextTickToAct        int
+	shotsInCurrentVolley int
 
 	targetActor              actor
 	targetTileX, targetTileY int

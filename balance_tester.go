@@ -129,7 +129,7 @@ func (bt *balanceTester) getTotalDamageOfSingleTurretOnActorInRound(t *TurretSta
 		if u, ok := target.(*unit); ok {
 			armorType = u.getStaticData().ArmorType
 		}
-		if round%t.AttackCooldown == 0 {
+		if round%t.CooldownAfterVolley == 0 {
 			dmg += calculateDamageOnArmor(t.FiredProjectileData.HitDamage,
 				t.FiredProjectileData.DamageType, armorType)
 			dmg += calculateDamageOnArmor(t.FiredProjectileData.SplashDamage,

@@ -115,7 +115,17 @@ func (b *battlefield) shootAsTurretAtTarget(shooter actor, t *turret) {
 		proj.fuel *= 1.5
 	}
 	b.addProjectile(proj)
-	t.nextTickToAct = b.currentTick + modifyTurretCooldownByExpLevel(t.getStaticData().AttackCooldown, shooter.getExperienceLevel())
+
+	if t.getStaticData().MaxShotsInVolley > 1 {
+		t.shotsInCurrentVolley++
+		if t.shotsInCurrentVolley < t.getStaticData().MaxShotsInVolley {
+			t.nextTickToAct = b.currentTick + t.getStaticData().CooldownPerShot
+			return
+		} else {
+			t.shotsInCurrentVolley = 0
+		}
+	}
+	t.nextTickToAct = b.currentTick + modifyTurretCooldownByExpLevel(t.getStaticData().CooldownAfterVolley, shooter.getExperienceLevel())
 }
 
 func (b *battlefield) canTurretAttackActor(t *turret, a actor) bool {
