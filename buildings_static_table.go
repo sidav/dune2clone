@@ -258,7 +258,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		BuildTime:                          25,
 		Builds:                             nil,
 		ConsumesEnergy:                     15,
-		Produces:                           []int{UNT_TANK1, UNT_DEVASTATOR, UNT_MCV1, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_FAST_HARVESTER},
+		Produces:                           []int{UNT_TANK1, UNT_DEVASTATOR, UNT_MCV1, UNT_QUAD, UNT_MSLTANK1, UNT_AATANK, UNT_FAST_HARVESTER},
 		HotkeyToBuild:                      "F",
 	},
 	BLD_AIRFACTORY1: {
@@ -349,7 +349,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		MaxHitpoints:                       750,
 		W:                                  3,
 		H:                                  2,
-		DisplayedName:                      "Factory",
+		DisplayedName:                      "CMW Manufactory",
 		RequiresTechLevel:                  2,
 		RequiresToBeBuilt:                  []buildingCode{BLD_REFINERY2},
 		NeedsEmptyRowBelowWhenConstructing: true,
@@ -358,7 +358,7 @@ var sTableBuildings = map[buildingCode]*buildingStatic{
 		BuildTime:                          25,
 		Builds:                             nil,
 		ConsumesEnergy:                     15,
-		Produces:                           []int{UNT_TANK2, UNT_JUGGERNAUT, UNT_MCV2, UNT_QUAD, UNT_MSLTANK, UNT_AATANK, UNT_COMBAT_HARVESTER},
+		Produces:                           []int{UNT_TANK2, UNT_JUGGERNAUT, UNT_MCV2, UNT_QUAD, UNT_MSLTANK2, UNT_AATANK, UNT_COMBAT_HARVESTER},
 		HotkeyToBuild:                      "F",
 	},
 	BLD_AIRFACTORY2: {
