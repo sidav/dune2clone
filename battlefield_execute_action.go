@@ -151,6 +151,9 @@ func (b *battlefield) executeEnterBuildingActionForUnit(u *unit) {
 		ptx, pty := geometry.TileCoordsToTrueCoords(u.currentAction.targetActor.(*building).getUnitPlacementAbsoluteCoords())
 		u.setPhysicalCenterCoords(ptx, pty)
 		u.chassisDegree = 90
+		for i := range u.turrets {
+			u.turrets[i].rotationDegree = 90
+		}
 		ux, uy := u.getTileCoords()
 		b.removeActor(u)
 		b.setTilesOccupiedByActor(ux, uy, 1, 1, u) // WORKAROUND so that the entry space will be occupied
