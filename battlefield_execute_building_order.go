@@ -36,7 +36,9 @@ func (b *battlefield) executeBuildOrder(bld *building) {
 	case BTYPE_PLACE_FIRST:
 		if bld.currentOrder.targetActor == nil {
 			bld.currentOrder.resetOrder()
-			bld.currentOrder.targetActor = createBuilding(buildingCode(bld.currentOrder.targetActorCode), 0, 0, bld.faction)
+			creatingBuilding := createBuilding(buildingCode(bld.currentOrder.targetActorCode), 0, 0, bld.faction)
+			creatingBuilding.currentHitpoints = creatingBuilding.getMaxHitpoints()/100 + creatingBuilding.getMaxHitpoints()%100
+			bld.currentOrder.targetActor = creatingBuilding
 			bld.currentOrder.code = ORDER_WAIT_FOR_BUILDING_PLACEMENT
 			return
 		} else if bld.currentAction.getCompletionPercent() >= 100 {

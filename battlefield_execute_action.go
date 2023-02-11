@@ -275,6 +275,8 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 		moneySpent = float64(unt.getStaticData().Cost) /
 			float64(unt.getStaticData().BuildTime*(config.Engine.TicksPerNominalSecond/config.Engine.BuildingsActionPeriod))
 	}
+	// initial percent
+	initalPercent := act.getCompletionPercent()
 	// spend money
 	coeff := a.getFaction().getEnergyProductionMultiplier()
 	moneySpent *= coeff
@@ -285,6 +287,12 @@ func (b *battlefield) executeBuildActionForActor(a actor) {
 			if bld.getStaticData().BuildType == BTYPE_PLACE_FIRST {
 				if tBld, ok := a.(*building).currentAction.targetActor.(*building); ok {
 					tBld.getCurrentAction().completionAmount = act.completionAmount
+					// increase bld curr hitpoints
+					// > 0 because the building has already received starting HP at 0%
+					if initalPercent > 0 && act.getCompletionPercent() > initalPercent {
+						diff := act.getCompletionPercent() - initalPercent
+						tBld.currentHitpoints += diff * tBld.getStaticData().MaxHitpoints / 100
+					}
 				}
 			}
 		}
