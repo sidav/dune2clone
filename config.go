@@ -1,11 +1,5 @@
 package main
 
-import (
-	"errors"
-	"gopkg.in/yaml.v3"
-	"os"
-)
-
 type yamlConfig struct {
 	DebugOutput bool `yaml:"debug_output"`
 	LogToFile   bool `yaml:"log_to_file"`
@@ -103,32 +97,4 @@ func (c *yamlConfig) setDefaultValues() {
 	c.AiSettings.AiStoragesMultiplier = 2
 	c.AiSettings.AiExperienceMultiplier = 2.5
 	c.AiSettings.AiVisionCheat = false
-}
-
-func (c *yamlConfig) initFromFileOrCreate() {
-	const filePath = "config.yaml"
-
-	fiBytes, err := os.ReadFile(filePath)
-	if errors.Is(err, os.ErrNotExist) {
-		// set default values for current config
-		c.setDefaultValues()
-
-		res, _ := yaml.Marshal(c)
-		fo, err := os.Create(filePath)
-		if err != nil {
-			panic(err)
-		}
-		defer func() {
-			if err := fo.Close(); err != nil {
-				panic(err)
-			}
-		}()
-		fo.Write(res)
-		return
-
-	} else if err != nil {
-		panic(err)
-	}
-
-	err = yaml.Unmarshal(fiBytes, c)
 }
